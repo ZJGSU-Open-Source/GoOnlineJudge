@@ -1,4 +1,3 @@
-
-	{{template "head" .}}
+{{template "head" .}}
 	
-	{{template "foot"}}
+{{template "foot"}}

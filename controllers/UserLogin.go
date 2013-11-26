@@ -9,7 +9,7 @@ import (
 
 type Result struct {
 	Uid string
-	Ok int
+	Ok  int
 }
 
 type UserLoginController struct {
@@ -30,16 +30,21 @@ func (this *UserLoginController) POST(w http.ResponseWriter, r *http.Request) {
 		cookie := http.Cookie{Name: "uid", Value: uid, Path: "/"}
 		http.SetCookie(w, &cookie)
 
-		out := &Result{
-			Uid: uid,
-			Ok: 1}
+		out := &Result{}
+		out.Uid = uid
+		out.Ok = 1
+
 		b, _ := json.Marshal(out)
 		w.Write(b)
 	} else {
-		out := &Result{
-			Uid: uid,
-			Ok: 0}
+		log.Println("User Login Failed")
+
+		out := &Result{}
+		out.Uid = uid
+		out.Ok = 0
+
 		b, _ := json.Marshal(out)
 		w.Write(b)
 	}
+	return
 }

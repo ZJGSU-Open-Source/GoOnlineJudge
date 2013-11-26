@@ -18,10 +18,10 @@ func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Home")
 
 	cookie, _ := r.Cookie("uid")
-	uid := "Sign In"
-	if cookie != nil {
-		uid = "Hi, " + cookie.Value
-	}
+    user := "Sign In"
+    if cookie != nil {
+        user = "Hi, " + cookie.Value
+    }
 
 	t, err := template.ParseFiles("views/home.tpl", "views/head.tpl", "views/foot.tpl")
 	if err != nil {
@@ -30,6 +30,6 @@ func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 
 	data := &Data{}
 	data.Title = "Home"
-	data.User = uid
+	data.User = user
 	t.Execute(w, data)
 }
