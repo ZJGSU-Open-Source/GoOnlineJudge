@@ -46,5 +46,4 @@ func (this *UserLoginController) POST(w http.ResponseWriter, r *http.Request) {
 		b, _ := json.Marshal(out)
 		w.Write(b)
 	}
-	return
 }
