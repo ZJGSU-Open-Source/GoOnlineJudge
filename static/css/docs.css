@@ -125,6 +125,7 @@ div.code {
   height: 100px;
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 255)), to(rgba(255, 255, 255, 0)));
   background: -moz-linear-gradient(top, rgba(255, 255, 255, 255), rgba(255, 255, 255, 0));
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 255), rgba(255, 255, 255, 0));
 }
 
 #flybar {
@@ -140,6 +141,7 @@ div.code {
   background: #eee;
   background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#dadada));
   background: -moz-linear-gradient(top, #f8f8f8, #dadada);
+  background: -ms-linear-gradient(top, #f8f8f8, #dadada);
   border: 1px solid #aaa;
   border-top: 1px solid #bbb;
   border-bottom: 1px solid #888;
@@ -166,7 +168,8 @@ div.code {
     padding: 0 0 0 15px;
     background: #fdcdcc;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffedec), to(#ff9a95));
-    background: -moz-linear-gradient(top, #f8f8f8, #dadada);
+    background: -moz-linear-gradient(top, #ffedec, #ff9a95);
+    background: -ms-linear-gradient(top, #ffedec, #ff9a95);
     color: #862322;
     font-size: 10px;
     line-height: 50px;
@@ -193,12 +196,14 @@ div.code {
       background: #eee;
       background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#f8f8f8));
       background: -moz-linear-gradient(top, #eee, #f8f8f8);
+      background: -ms-linear-gradient(top, #eee, #f8f8f8);
     }
       .navigation.active {
         height: 51px;
         color: #000;
         background: -webkit-gradient(linear, left top, left bottom, from(#e5e5e5), to(#fff));
         background: -moz-linear-gradient(top, #e5e5e5, #fff);
+        background: -ms-linear-gradient(top, #e5e5e5, #fff);
       }
     .navigation .button {
       font-weight: bold;

@@ -17,10 +17,10 @@ type HomeController struct {
 func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Home")
 
-	c, _ := r.Cookie("uid")
+	cookie, _ := r.Cookie("uid")
 	uid := "Sign In"
-	if c != nil {
-		uid = c.Value
+	if cookie != nil {
+		uid = "Hi, " + cookie.Value
 	}
 
 	t, err := template.ParseFiles("views/home.tpl", "views/head.tpl", "views/foot.tpl")
@@ -30,6 +30,6 @@ func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 
 	data := &Data{}
 	data.Title = "Home"
-	data.User = "Hi, " + uid
+	data.User = uid
 	t.Execute(w, data)
 }

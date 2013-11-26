@@ -9,7 +9,7 @@ import (
 type UserModel struct {
 }
 
-func (this *UserModel) SignIn(uid, pwd string) bool {
+func (this *UserModel) Login(uid, pwd string) bool {
 	session, err := mgo.Dial(config.Host)
 	if err != nil {
 		panic(err)
@@ -18,10 +18,7 @@ func (this *UserModel) SignIn(uid, pwd string) bool {
 
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(config.DB).C("user")
+
 	count, _ := c.Find(bson.M{"uid": uid, "pwd": pwd}).Count()
-	if count > 0 {
-		return true
-	} else {
-		return false
-	}
+	return count > 0
 }
