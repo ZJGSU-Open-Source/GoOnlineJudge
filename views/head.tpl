@@ -10,13 +10,13 @@
 	<body>
 		<div id="fadeout"></div>
 		<div id="flybar">
-			<div class="navigation">
+			<div class="navigation no">
       			<div class="button">Home</div>
     		</div>
 			<div class="navigation">
       			<div class="button">Online Practice</div>
       			<div class="contents menu">
-			        <a href="#overview">Problem Set</a>
+			        <a href="/problem/list">Problem List</a>
 			        <a href="#installation">Realtime Status</a>
 			        <a href="#usage">User Ranklist</a>
 			    </div>

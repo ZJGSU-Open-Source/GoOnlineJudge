@@ -8,7 +8,7 @@ var closeMenus = function() {
 };
 
 $('.navigation').click(function(e) {
-    if (e.target.tagName.toLowerCase() == 'input') {
+    if ($(this).hasClass('no') || e.target.tagName.toLowerCase() == 'input') {
 		    return false;
     }
     if ($(this).hasClass('active')) {
