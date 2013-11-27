@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"GoOnlineJudge/models"
+	"encoding/json"
 	"log"
 	"net/http"
-	"encoding/json"
 )
 
 type Result struct {

@@ -14,7 +14,7 @@ func (this *UserModel) Login(uid, pwd string) bool {
 	if err != nil {
 		panic(err)
 	}
-	// defer session.Close()
+	defer session.Close()
 
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(config.DB).C("user")
