@@ -2,7 +2,7 @@ body {
   font-size: 14px;
   line-height: 21px;
   color: #333;
-  background: #f6f6f6 url(../images/background.png);
+  background: #f6f6f6 url(../img/background.png);
   font-family: "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif !important;
 }
 .container {
