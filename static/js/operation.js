@@ -2,6 +2,8 @@ $(document).ready(function() {
     setMenu();  
 });
 
+// Cookie
+
 var setMenu = function() {
     var uid = $.cookie('uid');
     if (uid == '' || uid == null) {
@@ -53,6 +55,8 @@ var setAlreadyLogin = function(uid) {
         });
     });
 };
+
+// Menu
 
 var closeMenu = function() {
     $('.navigation.active').removeClass('active');
