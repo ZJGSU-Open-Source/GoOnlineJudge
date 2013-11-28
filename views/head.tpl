@@ -4,19 +4,19 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<link type="text/css" rel="stylesheet" href="css/docs.css">
+		<link type="text/css" rel="stylesheet" href="static/css/docs.css">
 		<title>{{.Title}}</title>
 	</head>
 	<body>
 		<div id="fadeout"></div>
 		<div id="flybar">
-			<div class="navigation no">
+			<div class="navigation home">
       			<div class="button">Home</div>
     		</div>
 			<div class="navigation">
       			<div class="button">Online Practice</div>
       			<div class="contents menu">
-			        <a href="/problem/list">Problem List</a>
+			        <a href="/problem">Problem List</a>
 			        <a href="#installation">Realtime Status</a>
 			        <a href="#usage">User Ranklist</a>
 			    </div>
@@ -36,15 +36,8 @@
 			    </div>
       		</div>
 			<div class="navigation">
-      			<div class="button">{{.User}}</div>
-      			<div class="contents menu">
-      				<form id="login">
-	      				<input type="text" name="uid" placeholder="User ID">
-	      				<input type="password" name="pwd" placeholder="Password">
-	      				<button class="minibutton ok" type="submit">Sign In</button>
-	      				<button class="minibutton" type="button">Sign Up</button>
-      				</form>
-      			</div>
+      			<div id="loginLabel" class="button"></div>
+      			<div id="loginContent" class="contents menu"></div>
       		</div>
       		<div id="error" style="display: none;"></div>
 		</div>
