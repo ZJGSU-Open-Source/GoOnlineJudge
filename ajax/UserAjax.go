@@ -1,4 +1,4 @@
-package controllers
+package ajax
 
 import (
 	"GoOnlineJudge/models"
@@ -12,16 +12,16 @@ type Result struct {
 	Ok  int
 }
 
-type UserLoginController struct {
+type UserAjax struct {
 }
 
-func (this *UserLoginController) POST(w http.ResponseWriter, r *http.Request) {
+func (this *UserAjax) Login(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Login")
-
-	w.Header().Set("content-type", "application/json")
 
 	uid := r.FormValue("uid")
 	pwd := r.FormValue("pwd")
+
+	w.Header().Set("content-type", "application/json")
 
 	m := &models.UserModel{}
 	if m.Login(uid, pwd) {
@@ -46,4 +46,20 @@ func (this *UserLoginController) POST(w http.ResponseWriter, r *http.Request) {
 		b, _ := json.Marshal(out)
 		w.Write(b)
 	}
+}
+
+func (this *UserAjax) Logout(w http.ResponseWriter, r *http.Request) {
+	log.Println("User Logout")
+
+	w.Header().Set("content-type", "application/json")
+
+	cookie := http.Cookie{Name: "uid", Value: "", Path: "/"}
+	http.SetCookie(w, &cookie)
+
+	out := &Result{}
+	out.Uid = ""
+	out.Ok = 1
+
+	b, _ := json.Marshal(out)
+	w.Write(b)
 }

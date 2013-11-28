@@ -5,18 +5,13 @@ import (
 )
 
 func main() {
-	http.Handle("/css/", http.FileServer(http.Dir("static")))
-	http.Handle("/js/", http.FileServer(http.Dir("static")))
-	http.Handle("/img/", http.FileServer(http.Dir("static")))
-
-	http.HandleFunc("/home", homeHandler)
-
-	http.HandleFunc("/problem/list", problemListHandler)
-	http.HandleFunc("/problem/detail", problemDetailHandler)
-
-	http.HandleFunc("/user/login", userLoginHandler)
+	http.Handle("/static/", http.FileServer(http.Dir(".")))
 
 	http.HandleFunc("/", notFoundHandler)
+	http.HandleFunc("/home", homeHandler)
+	http.HandleFunc("/problem", problemListHandler)
+
+	http.HandleFunc("/user/", userAjaxHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

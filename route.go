@@ -1,10 +1,14 @@
 package main
 
 import (
+	"GoOnlineJudge/ajax"
 	"GoOnlineJudge/controllers"
 	"net/http"
 	"reflect"
+	"strings"
 )
+
+// Controller
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controllers.HomeController{}
@@ -38,12 +42,18 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func userLoginHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controllers.UserLoginController{}
-	m := r.Method
+// Ajax
+
+func userAjaxHandler(w http.ResponseWriter, r *http.Request) {
+	c := &ajax.UserAjax{}
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	m := strings.Title(s[len(s)-1])
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }
+
+// Common
 
 func callMethod(c interface{}, m string, rv []reflect.Value) {
 	rc := reflect.ValueOf(c)
