@@ -16,6 +16,8 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		m := r.Method
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
+	} else {
+		http.NotFound(w, r)
 	}
 }
 
