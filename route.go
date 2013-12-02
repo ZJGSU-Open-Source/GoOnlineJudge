@@ -37,6 +37,15 @@ func problemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func closeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/close/" {
+		c := &controllers.CloseController{}
+		m := r.Method
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
 // Ajax
 
 func userAjaxHandler(w http.ResponseWriter, r *http.Request) {

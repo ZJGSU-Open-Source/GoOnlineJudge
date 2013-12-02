@@ -64,7 +64,7 @@ var closeMenu = function() {
 
 $('.navigation').click(function(e) {
     if ($(this).hasClass('home')) {
-        window.location.href = "/home";
+        window.location.href = "/";
         return false;
     }
     if (e.target.tagName.toLowerCase() == 'input') {

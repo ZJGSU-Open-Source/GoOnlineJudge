@@ -1,27 +1,23 @@
 package controllers
 
 import (
+	"GoOnlineJudge/classes"
 	"html/template"
 	"log"
 	"net/http"
 )
 
-type Data struct {
-	Title string
-}
-
 type HomeController struct {
+	classes.Controller
 }
 
 func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Home")
+	this.Init()
 
 	t, err := template.ParseFiles("views/home.tpl", "views/head.tpl", "views/foot.tpl")
-	if err != nil {
-		log.Println(err)
-	}
+	this.CheckError(err)
 
-	data := &Data{}
-	data.Title = "Home"
-	t.Execute(w, data)
+	this.Data["Title"] = "Home"
+	t.Execute(w, this.Data)
 }

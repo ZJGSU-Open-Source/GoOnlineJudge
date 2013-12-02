@@ -1,16 +1,19 @@
 package classes
 
 import (
-	"net/http"
+	"log"
 )
 
 type Controller struct {
+	Data map[string]interface{}
 }
 
-func (this *Controller) GET(w http.ResponseWriter, r *http.Request) {
-
+func (this *Controller) Init() {
+	this.Data = make(map[string]interface{})
 }
 
-func (this *Controller) POST(w http.ResponseWriter, r *http.Request) {
-
+func (this *Controller) CheckError(err error) {
+	if err != nil {
+		log.Println(err)
+	}
 }

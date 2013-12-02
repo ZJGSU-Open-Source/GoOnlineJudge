@@ -16,7 +16,6 @@ func (this *UserModel) Login(uid, pwd string) bool {
 	}
 	defer session.Close()
 
-	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(config.DB).C("user")
 
 	count, _ := c.Find(bson.M{"uid": uid, "pwd": pwd}).Count()
