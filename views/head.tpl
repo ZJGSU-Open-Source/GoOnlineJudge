@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<link type="text/css" rel="stylesheet" href="static/css/docs.css">
+		<link type="text/css" rel="stylesheet" href="/static/css/docs.css">
 		<title>{{.Title}}</title>
 	</head>
 	<body>

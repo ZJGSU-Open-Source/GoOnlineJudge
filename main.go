@@ -7,11 +7,10 @@ import (
 func main() {
 	http.Handle("/static/", http.FileServer(http.Dir(".")))
 
-	http.HandleFunc("/", notFoundHandler)
-	http.HandleFunc("/home", homeHandler)
-	http.HandleFunc("/problem", problemListHandler)
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/problem/", problemHandler)
 
-	http.HandleFunc("/user/", userAjaxHandler)
+	http.HandleFunc("/userAjax/", userAjaxHandler)
 
 	http.ListenAndServe(":8080", nil)
 }
