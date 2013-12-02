@@ -9,6 +9,7 @@ func main() {
 
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/problem/", problemHandler)
+	http.HandleFunc("/close/", closeHandler)
 
 	http.HandleFunc("/userAjax/", userAjaxHandler)
 
