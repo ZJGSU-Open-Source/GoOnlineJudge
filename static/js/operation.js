@@ -25,7 +25,7 @@ var prepareToLogin = function() {
     $('#loginForm').submit(function(e) {
         e.preventDefault();
         var target = e.target;
-        var action = '/user/login';
+        var action = '/userAjax/login';
         $.post(action, $(target).serialize(), function(json) {
             if (json.Ok) {
                 setMenu();
@@ -45,7 +45,7 @@ var prepareToLogout = function(uid) {
     $('#logoutForm').submit(function(e) {
         e.preventDefault();
         var target = e.target;
-        var action = '/user/logout';
+        var action = '/userAjax/logout';
         $.post(action, $(target).serialize(), function(json) {
             if (json.Ok) {
                 setMenu();

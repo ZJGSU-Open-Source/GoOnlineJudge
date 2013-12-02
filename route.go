@@ -11,46 +11,43 @@ import (
 // Controller
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controllers.HomeController{}
-	m := r.Method
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
-}
-
-func problemListHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controllers.ProblemListController{}
-	m := r.Method
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
-}
-
-func problemDetailHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controllers.ProblemDetailController{}
-	m := r.Method
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
-}
-
-func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		http.Redirect(w, r, "/home", http.StatusFound)
-	} else {
-		c := &controllers.NotFoundController{}
+		c := &controllers.HomeController{}
 		m := r.Method
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}
 }
 
+func problemHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l <= 2 {
+		if l == 1 {
+			c := &controllers.ProblemListController{}
+			m := r.Method
+			rv := getReflectValue(w, r)
+			callMethod(c, m, rv)
+		} else {
+			c := &controllers.ProblemDetailController{}
+			m := r.Method
+			rv := getReflectValue(w, r)
+			callMethod(c, m, rv)
+		}
+	}
+}
+
 // Ajax
 
 func userAjaxHandler(w http.ResponseWriter, r *http.Request) {
-	c := &ajax.UserAjax{}
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
-	m := strings.Title(s[len(s)-1])
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	if l := len(s); l >= 2 {
+		c := &ajax.UserAjax{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
 }
 
 // Common
