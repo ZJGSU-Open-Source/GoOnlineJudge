@@ -7,22 +7,22 @@ $(document).ready(function() {
 var setMenu = function() {
     var uid = $.cookie('uid');
     if (uid == '' || uid == null) {
-        setAlreadyLogout();
+        prepareToLogin();
     } else {
-        setAlreadyLogin(uid);
+        prepareToLogout(uid);
     }
 };
 
-var setAlreadyLogout = function() {
-    $('#loginLabel').html('Sign In');
-    $('#loginContent').html('<form id="login">\
-        <input type="text" name="uid" placeholder="User ID">\
-        <input type="password" name="pwd" placeholder="Password">\
-        <button class="minibutton ok" type="submit">Sign In</button>\
-        <button class="minibutton" type="button">Sign Up</button>\
-        </form>');
+var prepareToLogin = function() {
+    $('#login').html('<div class="button">Sign In</div>\
+        <div class="contents menu"><form id="loginForm">\
+            <input type="text" name="uid" placeholder="User ID">\
+            <input type="password" name="pwd" placeholder="Password">\
+            <button class="minibutton ok" type="submit">Sign In</button>\
+            <button class="minibutton" type="button">Sign Up</button>\
+        </form></div>');
 
-    $('#login').submit(function(e) {
+    $('#loginForm').submit(function(e) {
         e.preventDefault();
         var target = e.target;
         var action = '/user/login';
@@ -36,13 +36,13 @@ var setAlreadyLogout = function() {
     });
 };
 
-var setAlreadyLogin = function(uid) {
-    $('#loginLabel').html('Hi, ' + uid);
-    $('#loginContent').html('<form id="logout">\
-        <button class="minibutton ok" type="submit">Sign Out</button>\
-        </form>');
+var prepareToLogout = function(uid) {
+    $('#login').html('<div class="button">Hi, ' + uid + '</div>\
+        <div class="contents menu"><form id="logoutForm">\
+            <button class="minibutton ok" type="submit">Sign Out</button>\
+        </form></div>');
 
-    $('#logout').submit(function(e) {
+    $('#logoutForm').submit(function(e) {
         e.preventDefault();
         var target = e.target;
         var action = '/user/logout';

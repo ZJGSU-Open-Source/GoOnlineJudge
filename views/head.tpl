@@ -35,10 +35,7 @@
 			        <a href="#overview">Frequently Asked Questions</a>
 			    </div>
       		</div>
-			<div class="navigation">
-      			<div id="loginLabel" class="button"></div>
-      			<div id="loginContent" class="contents menu"></div>
-      		</div>
+			<div id="login" class="navigation"></div>
       		<div id="error" style="display: none;"></div>
 		</div>
 {{end}}
