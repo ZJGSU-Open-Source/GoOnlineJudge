@@ -21,12 +21,6 @@ func (this *ProblemListController) GET(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/close", http.StatusFound)
 	}
 
-	c, err := r.Cookie("uid")
-	this.CheckError(err)
-	if c.Value == "" {
-		log.Println("Logout")
-	}
-
 	m := &models.ProblemModel{}
 	list := m.List()
 
