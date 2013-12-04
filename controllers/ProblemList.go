@@ -24,8 +24,7 @@ func (this *ProblemListController) GET(w http.ResponseWriter, r *http.Request) {
 	m := &models.ProblemModel{}
 	list := m.List()
 
-	t, err := template.ParseFiles("views/problemlist.tpl", "views/head.tpl", "views/foot.tpl")
-	this.CheckError(err)
+	t, _ := template.ParseFiles("views/problemlist.tpl", "views/head.tpl", "views/foot.tpl")
 
 	this.Data["Title"] = "Problem List"
 	this.Data["Problem"] = list

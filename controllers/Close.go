@@ -15,8 +15,7 @@ func (this *CloseController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Close")
 	this.Init()
 
-	t, err := template.ParseFiles("views/close.tpl", "views/head.tpl", "views/foot.tpl")
-	this.CheckError(err)
+	t, _ := template.ParseFiles("views/close.tpl", "views/head.tpl", "views/foot.tpl")
 
 	this.Data["Title"] = "Feature Closed"
 	t.Execute(w, this.Data)
