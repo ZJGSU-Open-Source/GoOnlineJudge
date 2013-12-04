@@ -228,7 +228,7 @@ div.code {
     /* Custom */
       .navigation .contents input {
         display: block;
-        width: 290px;
+        width: 200px;
         height: 12px;
         line-height: 12px;
         margin: 4px 10px;
@@ -239,7 +239,7 @@ div.code {
       .navigation .contents .minibutton {
         display: block;
         float: left;
-        width: 146px;
+        width: 101px;
         height: 22px;
         line-height: 12px;
         margin: 4px 10px;
