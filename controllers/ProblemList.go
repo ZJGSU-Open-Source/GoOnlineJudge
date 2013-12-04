@@ -18,7 +18,7 @@ func (this *ProblemListController) GET(w http.ResponseWriter, r *http.Request) {
 	this.Init()
 
 	if !config.Problem {
-		http.Redirect(w, r, "/close/", http.StatusFound)
+		http.Redirect(w, r, "/close", http.StatusFound)
 	}
 
 	c, err := r.Cookie("uid")
