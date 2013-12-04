@@ -19,7 +19,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func problemListHandler() (w http.ResponseWriter, r *http.Request) {
+func problemListHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controllers.ProblemListController{}
 	m := r.Method
 	rv := getReflectValue(w, r)
