@@ -12,6 +12,8 @@ func main() {
 	http.HandleFunc("/problem/", problemDetailHandler)
 	http.HandleFunc("/close", closeHandler)
 
+	http.HandleFunc("/admin", adminMenuHandler)
+
 	http.HandleFunc("/userAjax/", userAjaxHandler)
 
 	http.ListenAndServe(":80", nil)

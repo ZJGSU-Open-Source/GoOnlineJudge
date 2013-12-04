@@ -1,0 +1,48 @@
+body {
+  font-size: 14px;
+  line-height: 21px;
+  color: #333;
+  background: #f6f6f6 url(../img/background.png);
+  font-family: "Helvetica Neue", "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif !important;
+}
+.container {
+  width: 950px;
+  margin: 0;
+  padding: 50px 0px 50px 50px;
+}
+p, li {
+  width: 625px;
+}
+a {
+  color: #191933;
+}
+h1, h2, h3, h4, h5, h6, b.header {
+  font-size: 18px;
+  color: #000;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  text-shadow: #fff 0 1px 1px;
+}
+br.clear {
+  height: 0;
+  clear: both;
+}
+ul {
+	list-style: none;
+  padding-left: 20px;
+}
+b.header {
+  display: block;
+}
+li {
+  margin-bottom: 10px;
+}
+.menu {
+	float: left;
+	width: 100px;
+}
+.content {
+  margin-left: 50px;
+	float: left;
+	width: 800px;
+}

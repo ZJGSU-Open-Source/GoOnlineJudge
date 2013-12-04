@@ -3,12 +3,13 @@ package main
 import (
 	"GoOnlineJudge/ajax"
 	"GoOnlineJudge/controllers"
+	"GoOnlineJudge/controllers/admin"
 	"net/http"
 	"reflect"
 	"strings"
 )
 
-// Controller
+// Page
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
@@ -35,6 +36,15 @@ func problemDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 func closeHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controllers.CloseController{}
+	m := r.Method
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
+// Admin
+
+func adminMenuHandler(w http.ResponseWriter, r *http.Request) {
+	c := &admin.AdminMenuController{}
 	m := r.Method
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
