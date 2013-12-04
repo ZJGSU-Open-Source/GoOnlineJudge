@@ -16,36 +16,28 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		m := r.Method
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
-	} else {
-		http.NotFound(w, r)
 	}
 }
 
-func problemHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l <= 2 {
-		if l == 1 {
-			c := &controllers.ProblemListController{}
-			m := r.Method
-			rv := getReflectValue(w, r)
-			callMethod(c, m, rv)
-		} else {
-			c := &controllers.ProblemDetailController{}
-			m := r.Method
-			rv := getReflectValue(w, r)
-			callMethod(c, m, rv)
-		}
-	}
+func problemListHandler() (w http.ResponseWriter, r *http.Request) {
+	c := &controllers.ProblemListController{}
+	m := r.Method
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
+func problemDetailHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controllers.ProblemDetailController{}
+	m := r.Method
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
 }
 
 func closeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/close/" {
-		c := &controllers.CloseController{}
-		m := r.Method
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
+	c := &controllers.CloseController{}
+	m := r.Method
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
 }
 
 // Ajax
