@@ -1,6 +1,7 @@
 package ajax
 
 import (
+	"GoOnlineJudge/classes"
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"io/ioutil"
@@ -29,12 +30,14 @@ func (this *UserAjax) Login(w http.ResponseWriter, r *http.Request) {
 
 	if response.StatusCode == 200 {
 		body, _ := ioutil.ReadAll(response.Body)
-		jsonBody := result{}
-		json.Unmarshal(body, &jsonBody)
+		jsonBody := &result{}
+		json.Unmarshal(body, jsonBody)
 
 		if jsonBody.Ok == 1 {
-			cookie := http.Cookie{Name: "uid", Value: jsonBody.Uid, Path: "/"}
-			http.SetCookie(w, &cookie)
+			s := &classes.Session{Name: "uid", Value: jsonBody.Uid}
+			s.Set(w, r)
+			// cookie := http.Cookie{Name: "uid", Value: jsonBody.Uid, Path: "/"}
+			// http.SetCookie(w, &cookie)
 			// cookie := http.Cookie{Name: "privilege", Value: jsonBody["privilege"], Path: "/"}
 			// http.SetCookie(w, &cookie)
 		}
@@ -56,12 +59,12 @@ func (this *UserAjax) Logout(w http.ResponseWriter, r *http.Request) {
 
 	if response.StatusCode == 200 {
 		body, _ := ioutil.ReadAll(response.Body)
-		jsonBody := result{}
-		json.Unmarshal(body, &jsonBody)
+		jsonBody := &result{}
+		json.Unmarshal(body, jsonBody)
 
 		if jsonBody.Ok == 1 {
-			cookie := http.Cookie{Name: "uid", Value: "", Path: "/"}
-			http.SetCookie(w, &cookie)
+			s := &classes.Session{Name: "uid", Value: jsonBody.Uid}
+			s.Set(w, r)
 			// cookie := http.Cookie{Name: "privilege", Value: "", Path: "/"}
 			// http.SetCookie(w, &cookie)
 		}
