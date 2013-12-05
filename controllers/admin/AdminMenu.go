@@ -13,7 +13,7 @@ type AdminMenuController struct {
 
 func (this *AdminMenuController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Menu")
-	this.Init()
+	this.Init(w, r)
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/home.tpl")
 
