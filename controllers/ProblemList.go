@@ -15,7 +15,7 @@ type ProblemListController struct {
 
 func (this *ProblemListController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
-	this.Init()
+	this.Init(w, r)
 
 	if !config.Problem {
 		http.Redirect(w, r, "/close", http.StatusFound)

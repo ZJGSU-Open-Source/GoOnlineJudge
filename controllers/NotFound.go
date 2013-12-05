@@ -12,5 +12,5 @@ type NotFoundController struct {
 
 func (this *NotFoundController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Not Found")
-	this.Init()
+	this.Init(w, r)
 }
