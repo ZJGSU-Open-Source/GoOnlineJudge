@@ -1,15 +1,18 @@
 package ajax
 
 import (
-	"GoOnlineJudge/models"
+	"GoOnlineJudge/config"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-type Result struct {
-	Uid string
-	Ok  int
+type result struct {
+	Uid       string
+	Ok        int
+	Privilege int
+	Status    int
 }
 
 type UserAjax struct {
@@ -17,49 +20,54 @@ type UserAjax struct {
 
 func (this *UserAjax) Login(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Login")
-
-	uid := r.FormValue("uid")
-	pwd := r.FormValue("pwd")
-
 	w.Header().Set("content-type", "application/json")
 
-	m := &models.UserModel{}
-	if m.Login(uid, pwd) {
-		log.Println("User Login Successfully")
+	r.ParseForm()
 
-		cookie := http.Cookie{Name: "uid", Value: uid, Path: "/"}
-		http.SetCookie(w, &cookie)
+	response, _ := http.PostForm(config.Server+"/user/login", r.PostForm)
+	defer response.Body.Close()
 
-		out := &Result{}
-		out.Uid = uid
-		out.Ok = 1
+	if response.StatusCode == 200 {
+		body, _ := ioutil.ReadAll(response.Body)
+		jsonBody := result{}
+		json.Unmarshal(body, &jsonBody)
 
-		b, _ := json.Marshal(out)
-		w.Write(b)
+		if jsonBody.Ok == 1 {
+			cookie := http.Cookie{Name: "uid", Value: jsonBody.Uid, Path: "/"}
+			http.SetCookie(w, &cookie)
+			// cookie := http.Cookie{Name: "privilege", Value: jsonBody["privilege"], Path: "/"}
+			// http.SetCookie(w, &cookie)
+		}
+
+		w.Write(body)
 	} else {
-		log.Println("User Login Failed")
-
-		out := &Result{}
-		out.Uid = uid
-		out.Ok = 0
-
-		b, _ := json.Marshal(out)
-		w.Write(b)
+		log.Println("User Login Response Error")
 	}
 }
 
 func (this *UserAjax) Logout(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Logout")
-
 	w.Header().Set("content-type", "application/json")
 
-	cookie := http.Cookie{Name: "uid", Value: "", Path: "/"}
-	http.SetCookie(w, &cookie)
+	r.ParseForm()
 
-	out := &Result{}
-	out.Uid = ""
-	out.Ok = 1
+	response, _ := http.PostForm(config.Server+"/user/logout", r.PostForm)
+	defer response.Body.Close()
 
-	b, _ := json.Marshal(out)
-	w.Write(b)
+	if response.StatusCode == 200 {
+		body, _ := ioutil.ReadAll(response.Body)
+		jsonBody := result{}
+		json.Unmarshal(body, &jsonBody)
+
+		if jsonBody.Ok == 1 {
+			cookie := http.Cookie{Name: "uid", Value: "", Path: "/"}
+			http.SetCookie(w, &cookie)
+			// cookie := http.Cookie{Name: "privilege", Value: "", Path: "/"}
+			// http.SetCookie(w, &cookie)
+		}
+
+		w.Write(body)
+	} else {
+		log.Println("User Logout Response Error")
+	}
 }

@@ -27,7 +27,7 @@ var prepareToLogin = function() {
         var target = e.target;
         var action = '/userAjax/login';
         $.post(action, $(target).serialize(), function(json) {
-            if (json.Ok) {
+            if (json.ok) {
                 setMenu();
             } else {
                 alert('Failed!');
@@ -47,7 +47,7 @@ var prepareToLogout = function(uid) {
         var target = e.target;
         var action = '/userAjax/logout';
         $.post(action, $(target).serialize(), function(json) {
-            if (json.Ok) {
+            if (json.ok) {
                 setMenu();
             } else {
                 alert('Failed!');
