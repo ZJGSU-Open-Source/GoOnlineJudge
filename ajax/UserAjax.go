@@ -24,7 +24,7 @@ func (this *UserAjax) Login(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	response, _ := http.PostForm(config.Server+"/user/login", r.PostForm)
+	response, _ := http.PostForm(config.Host+"/user/login", r.PostForm)
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
@@ -51,7 +51,7 @@ func (this *UserAjax) Logout(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	response, _ := http.PostForm(config.Server+"/user/logout", r.PostForm)
+	response, _ := http.PostForm(config.Host+"/user/logout", r.PostForm)
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
