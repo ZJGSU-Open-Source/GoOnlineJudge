@@ -27,6 +27,21 @@
 					"status":				<account_status>
 				}
 			}
+	logout:
+		request:
+			POST /user/logout
+			(uid)
+		response:
+			{
+				"head": 			<http_head>
+				"status": 			<status_code>
+				"error":			<error_description>
+				"data":
+				{
+					"uid":			<user_id>
+					"ok":			<is_successful>
+				}
+			}
 	list:
 		request: /user/list
 		(uid, name, privilege, status, ORDER, OFFSET, LIMIT)
