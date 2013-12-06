@@ -44,10 +44,28 @@ func closeHandler(w http.ResponseWriter, r *http.Request) {
 // Admin
 
 func adminMenuHandler(w http.ResponseWriter, r *http.Request) {
-	c := &admin.AdminMenuController{}
+	c := &admin.MenuController{}
 	m := r.Method
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
+}
+
+func adminNoticeHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		var c interface{}
+		m := r.Method
+		rv := getReflectValue(w, r)
+		switch s[1] {
+		case "notice":
+			c = &admin.NoticeController{}
+		case "news":
+			c = &admin.NewsController{}
+			m = strings.Title(s[2])
+		}
+		callMethod(c, m, rv)
+	}
 }
 
 // Ajax

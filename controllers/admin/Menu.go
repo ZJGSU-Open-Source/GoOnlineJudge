@@ -7,11 +7,11 @@ import (
 	"net/http"
 )
 
-type AdminMenuController struct {
+type MenuController struct {
 	classes.Controller
 }
 
-func (this *AdminMenuController) GET(w http.ResponseWriter, r *http.Request) {
+func (this *MenuController) GET(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Menu")
 	this.Init(w, r)
 

@@ -13,6 +13,7 @@ func main() {
 	http.HandleFunc("/close", closeHandler)
 
 	http.HandleFunc("/admin", adminMenuHandler)
+	http.HandleFunc("/admin/", adminNoticeHandler)
 
 	http.HandleFunc("/userAjax/", userAjaxHandler)
 
