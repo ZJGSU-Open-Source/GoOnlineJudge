@@ -12,21 +12,21 @@ type NewsController struct {
 }
 
 func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Menu")
+	log.Println("Admin News")
 	this.Init(w, r)
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/newsadd.tpl")
 
-	this.Data["Title"] = "Admin Notice Add"
+	this.Data["Title"] = "Admin News Add"
 	t.Execute(w, this.Data)
 }
 
 func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Menu")
+	log.Println("Admin News")
 	this.Init(w, r)
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/newsedit.tpl")
 
-	this.Data["Title"] = "Admin Notice Edit"
+	this.Data["Title"] = "Admin News Edit"
 	t.Execute(w, this.Data)
 }

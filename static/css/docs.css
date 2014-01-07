@@ -125,7 +125,7 @@ div.code {
   position: fixed;
   z-index: 100;
   height: 50px;
-  min-width: 920px;
+  min-width: 970px;
   left: 40px; right: 40px; top: 25px;
   /*padding-left: 252px;*/
   background: #eee;

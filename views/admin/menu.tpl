@@ -59,8 +59,8 @@
 				</ul>
 			</div>
 			<script src="/static/js/jquery.min.js" type="text/javascript"></script>
-			<script charset="utf-8" src="/static/kindeditor/kindeditor.js"></script>
-			<script charset="utf-8" src="/static/kindeditor/lang/zh_CN.js"></script>
+			<script charset="utf-8" src="/static/kindeditor/kindeditor.js" type="text/javascript"></script>
+			<script charset="utf-8" src="/static/kindeditor/lang/zh_CN.js" type="text/javascript"></script>
 			<div class="content">
 				{{template "content" .}}
 			</div>

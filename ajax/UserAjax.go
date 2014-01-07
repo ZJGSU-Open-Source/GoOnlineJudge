@@ -36,10 +36,6 @@ func (this *UserAjax) Login(w http.ResponseWriter, r *http.Request) {
 		if jsonBody.Ok == 1 {
 			s := &classes.Session{Name: "uid", Value: jsonBody.Uid}
 			s.Set(w, r)
-			// cookie := http.Cookie{Name: "uid", Value: jsonBody.Uid, Path: "/"}
-			// http.SetCookie(w, &cookie)
-			// cookie := http.Cookie{Name: "privilege", Value: jsonBody["privilege"], Path: "/"}
-			// http.SetCookie(w, &cookie)
 		}
 
 		w.Write(body)
@@ -65,8 +61,6 @@ func (this *UserAjax) Logout(w http.ResponseWriter, r *http.Request) {
 		if jsonBody.Ok == 1 {
 			s := &classes.Session{Name: "uid", Value: jsonBody.Uid}
 			s.Set(w, r)
-			// cookie := http.Cookie{Name: "privilege", Value: "", Path: "/"}
-			// http.SetCookie(w, &cookie)
 		}
 
 		w.Write(body)
