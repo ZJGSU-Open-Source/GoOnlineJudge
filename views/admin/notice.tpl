@@ -1,5 +1,5 @@
 {{define "content"}}
-<p>Edit Notice:</p>
+<p><b>Edit Notice:</b></p>
 <form id="noticeForm">
 	<textarea id="notice" name="notice"></textarea>
 	<div class="section">

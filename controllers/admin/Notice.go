@@ -12,7 +12,7 @@ type NoticeController struct {
 }
 
 func (this *NoticeController) GET(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Menu")
+	log.Println("Admin Notice")
 	this.Init(w, r)
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/notice.tpl")

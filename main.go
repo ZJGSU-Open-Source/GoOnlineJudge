@@ -13,9 +13,10 @@ func main() {
 	http.HandleFunc("/close", closeHandler)
 
 	http.HandleFunc("/admin", adminMenuHandler)
-	http.HandleFunc("/admin/", adminNoticeHandler)
+	http.HandleFunc("/admin/", adminItemHandler)
 
 	http.HandleFunc("/userAjax/", userAjaxHandler)
+	http.HandleFunc("/newsAjax/", newsAjaxHandler)
 
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":8080", nil)
 }
