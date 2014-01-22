@@ -44,7 +44,7 @@
 					<li><a href="/admin/notice">Edit Notice</a></li>
 					<li><a href="/admin/news/add">Add News</a></li>
 					<li><a href="/admin/news/edit">Edit News</a></li>
-					<li>Add  Problem</li>
+					<li><a href="/admin/problem/add">Add  Problem</a></li>
 					<li>Edit Problem</li>
 					<li>Add  Exam</li>
 					<li>Edit Exam</li>
@@ -64,6 +64,7 @@
 			<div class="content">
 				{{template "content" .}}
 			</div>
+			<div class="clearboth"></div>
 		</div>
 		<script src="/static/js/jquery.cookie.js" type="text/javascript"></script>
 		<script src="/static/js/operation.js" type="text/javascript"></script>

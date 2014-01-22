@@ -17,6 +17,7 @@ func main() {
 
 	http.HandleFunc("/userAjax/", userAjaxHandler)
 	http.HandleFunc("/newsAjax/", newsAjaxHandler)
+	http.HandleFunc("/problemAjax/", problemAjaxHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

@@ -228,7 +228,7 @@ div.code {
       }
       .navigation .contents .minibutton {
         width: 101px;
-        margin: 4px 10px;
+        margin: 2px 10px;
       }
     /* End Custom */
       .navigation .contents a {
@@ -284,16 +284,17 @@ div.code {
             top: 38px;
             display: block;
           }
-
 .bookmark {
   display: block;
   width: 0; height: 0;
   position: relative;
   top: -90px;
 }
-
 .section {
   margin: 14px 0;
+}
+.clearboth{
+  clear: both;
 }
 
 /*----------------------------- Mini Buttons ---------------------------------*/
