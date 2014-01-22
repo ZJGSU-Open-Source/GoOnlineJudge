@@ -2,23 +2,23 @@ package controllers
 
 import (
 	"GoOnlineJudge/classes"
-	"GoOnlineJudge/config"
 	"html/template"
 	"log"
 	"net/http"
 )
 
-type ProblemListController struct {
+type ProblemController struct {
 	classes.Controller
 }
 
-func (this *ProblemListController) GET(w http.ResponseWriter, r *http.Request) {
+func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+	log.Println("Problem Detail")
+	this.Init(w, r)
+}
+
+func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
-
-	if !config.Problem {
-		http.Redirect(w, r, "/close", http.StatusFound)
-	}
 
 	t, _ := template.ParseFiles("views/problemlist.tpl", "views/head.tpl", "views/foot.tpl")
 
