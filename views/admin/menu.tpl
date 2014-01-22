@@ -16,7 +16,7 @@
 			<div class="navigation">
       			<div class="button">Online Practice</div>
       			<div class="contents menu">
-			        <a href="/problem">Problem List</a>
+			        <a href="/problem/list">Problem List</a>
 			        <a href="#installation">Realtime Status</a>
 			        <a href="#usage">User Ranklist</a>
 			    </div>
