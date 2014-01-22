@@ -17,7 +17,7 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/newsadd.tpl")
 
-	this.Data["Title"] = "Admin News Add"
+	this.Data["Title"] = "Add News"
 	t.Execute(w, this.Data)
 }
 
@@ -27,6 +27,6 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 
 	t, _ := template.ParseFiles("views/admin/menu.tpl", "views/admin/newsedit.tpl")
 
-	this.Data["Title"] = "Admin News Edit"
+	this.Data["Title"] = "Edit News"
 	t.Execute(w, this.Data)
 }

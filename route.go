@@ -60,6 +60,9 @@ func adminItemHandler(w http.ResponseWriter, r *http.Request) {
 		case "news":
 			c = &admin.NewsController{}
 			m = strings.Title(s[2])
+		case "problem":
+			c = &admin.ProblemController{}
+			m = strings.Title(s[2])
 		}
 		callMethod(c, m, rv)
 	}
@@ -83,6 +86,17 @@ func newsAjaxHandler(w http.ResponseWriter, r *http.Request) {
 	s := strings.Split(p, "/")
 	if l := len(s); l >= 2 {
 		c := &ajax.NewsAjax{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func problemAjaxHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &ajax.ProblemAjax{}
 		m := strings.Title(s[1])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
