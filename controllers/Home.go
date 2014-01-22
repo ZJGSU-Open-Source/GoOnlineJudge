@@ -18,7 +18,7 @@ func (this *HomeController) GET(w http.ResponseWriter, r *http.Request) {
 	s := &classes.Session{Name: "uid"}
 	s.Get(w, r)
 
-	t, _ := template.ParseFiles("views/home.tpl", "views/head.tpl", "views/foot.tpl")
+	t, _ := template.ParseFiles("views/layout.tpl", "views/home.tpl")
 
 	this.Data["Title"] = "Home"
 	t.Execute(w, this.Data)
