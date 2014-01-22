@@ -1,5 +1,3 @@
-{{template "head" .}}
-	<div class="container">
-		<p>This feature is temporarily <b>closed</b>.</p>
-	</div>
-{{template "foot"}}
+{{define "content"}}
+<p>This feature is temporarily <b>closed</b>.</p>
+{{end}}

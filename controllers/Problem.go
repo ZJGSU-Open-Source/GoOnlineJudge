@@ -20,7 +20,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
 
-	t, _ := template.ParseFiles("views/problemlist.tpl", "views/head.tpl", "views/foot.tpl")
+	t, _ := template.ParseFiles("views/layout.tpl", "views/problemlist.tpl")
 
 	this.Data["Title"] = "Problem List"
 	t.Execute(w, this.Data)
