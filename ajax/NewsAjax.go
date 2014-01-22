@@ -16,8 +16,7 @@ func (this *NewsAjax) Insert(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	response, err := http.PostForm(config.Host+"/news/insert", r.PostForm)
-	log.Println(err, "123")
+	response, _ := http.PostForm(config.Host+"/news/insert", r.PostForm)
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
