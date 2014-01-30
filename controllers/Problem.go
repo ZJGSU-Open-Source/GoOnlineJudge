@@ -11,11 +11,6 @@ type ProblemController struct {
 	classes.Controller
 }
 
-func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem Detail")
-	this.Init(w, r)
-}
-
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
@@ -24,4 +19,9 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "Problem List"
 	t.Execute(w, this.Data)
+}
+
+func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+	log.Println("Problem Detail")
+	this.Init(w, r)
 }
