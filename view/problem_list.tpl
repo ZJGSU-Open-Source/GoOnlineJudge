@@ -10,12 +10,14 @@
   </thead>
   <tbody>
     {{with .Problem}}  
-      {{range .}}  
-        <tr>
-          <td>{{.Pid}}</td>
-          <td>{{.Title}}</td>
-          <td>{{.Solve}}/{{.Submit}}</td>
-        </tr>
+      {{range .}} 
+        {{if ShowStatus .Status}} 
+          <tr>
+            <td>{{.Pid}}</td>
+            <td>{{.Title}}</td>
+            <td>{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</td>
+          </tr>
+        {{end}}
       {{end}}  
     {{end}}
   </tbody>
