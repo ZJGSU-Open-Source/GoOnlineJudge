@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	// "strconv"
 )
 
 type problem struct {
@@ -65,14 +64,19 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Problem"] = one["list"]
 	}
 
-	t, err := template.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
+	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
 	this.Data["Title"] = "Problem List"
-	t.Execute(w, this.Data)
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 }
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
