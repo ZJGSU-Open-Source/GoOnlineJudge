@@ -1,0 +1,20 @@
+body{
+	font-family:Tahoma, SimSun !important;
+}#navibar li{
+	margin-bottom:-1em;
+}#navibar #psnavi ul{
+	margin-bottom:1px;
+}#navibar #psnavi{
+	margin-bottom:0px;
+	border:0px;
+}input,select{
+	border-width:1px;
+	border-color:#bbb;
+	border-style:solid;
+}div.field{
+	padding-bottom:1em !important;
+}div.actions input,div.actions a{
+	border:1px solid #ddd;
+}textarea{
+	width:98% !important;
+}

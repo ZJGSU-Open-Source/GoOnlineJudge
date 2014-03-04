@@ -1,4 +1,4 @@
-package classes
+package class
 
 import (
 	"GoOnlineJudge/config"
@@ -16,13 +16,13 @@ func (this *Session) Set(w http.ResponseWriter, r *http.Request) {
 	this.Lock()
 	defer this.Unlock()
 
-	cookie := &http.Cookie{
+	cookie := http.Cookie{
 		Name:   this.Name,
 		Value:  this.Value,
 		Path:   "/",
-		MaxAge: config.Expires,
+		MaxAge: config.CookieExpires,
 	}
-	http.SetCookie(w, cookie)
+	http.SetCookie(w, &cookie)
 }
 
 func (this *Session) Get(w http.ResponseWriter, r *http.Request) interface{} {
@@ -33,7 +33,7 @@ func (this *Session) Get(w http.ResponseWriter, r *http.Request) interface{} {
 	if err != nil || cookie.Value == "" {
 		return nil
 	} else {
-		cookie.MaxAge = config.Expires
+		cookie.MaxAge = config.CookieExpires
 		http.SetCookie(w, cookie)
 		return cookie.Value
 	}
@@ -42,10 +42,11 @@ func (this *Session) Get(w http.ResponseWriter, r *http.Request) interface{} {
 func (this *Session) Delete(w http.ResponseWriter, r *http.Request) {
 	this.Lock()
 	defer this.Unlock()
-	cookie := &http.Cookie{
+
+	cookie := http.Cookie{
 		Name:   this.Name,
 		Path:   "/",
 		MaxAge: -1,
 	}
-	http.SetCookie(w, cookie)
+	http.SetCookie(w, &cookie)
 }
