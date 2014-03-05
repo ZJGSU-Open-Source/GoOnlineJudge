@@ -11,15 +11,15 @@
         <div class="value">{{.Memory}}kB<br></div>
       </div>
       <div class="checker">
-        <div class="key">Ratio</div>
-        <div class="value">
-          <span title="纯文本对比">{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
-        </div>
-      </div>
-      <div class="checker">
         <div class="key">Judge Program</div>
         <div class="value">
           <span title="纯文本对比">{{ShowSpecial .Special}}</span>
+        </div>
+      </div>
+      <div class="checker">
+        <div class="key">Ratio</div>
+        <div class="value">
+          <span title="纯文本对比">{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
         </div>
       </div>
     </div>
