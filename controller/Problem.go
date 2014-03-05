@@ -8,13 +8,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type problem struct {
 	Pid int `json:"pid"bson:"pid"`
 
-	Time   int `json:"time"bson:"time"`
-	Memory int `json:"memory"bson:"memory"`
+	Time    int `json:"time"bson:"time"`
+	Memory  int `json:"memory"bson:"memory"`
+	Special int `json:"special"bson:"special"`
 
 	Title       string `json:"title"bson:"title"`
 	Description string `json:"description"bson:"description"`
@@ -72,9 +74,10 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "Problem List"
+	this.Data["IsProblem"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, "tpl error", 500)
 		return
 	}
 }
@@ -82,4 +85,49 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem Detail")
 	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[2:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one problem
+	if response.StatusCode == 200 {
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			http.Error(w, "read error", 500)
+			return
+		}
+
+		err = json.Unmarshal(body, &one)
+		if err != nil {
+			http.Error(w, "json error", 500)
+			return
+		}
+		this.Data["Detail"] = one
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t, err = t.ParseFiles("view/layout.tpl", "view/problem_detail.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "Problem Detial " + strconv.Itoa(pid)
+	this.Data["IsProblem"] = true
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
 }

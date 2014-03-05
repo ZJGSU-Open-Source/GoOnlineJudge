@@ -9,6 +9,7 @@ func main() {
 
 	http.HandleFunc("/", homeHandler)
 	http.HandleFunc("/problem/", problemHandler)
+	http.HandleFunc("/user/", userHandler)
 
 	http.ListenAndServe(":8080", nil)
 }
