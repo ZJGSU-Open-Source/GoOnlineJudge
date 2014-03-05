@@ -38,8 +38,10 @@
         <p><b>Hint:</b></p>
         <p>{{.Hint}}</p>
       {{end}}
-      <p><b>Source:</b></p>
-      <p>{{.Source}}</p>
+      {{if .Source}}
+        <p><b>Source:</b></p>
+        <p>{{.Source}}</p>
+      {{end}}
     </div>
     <hr>
   {{end}}
