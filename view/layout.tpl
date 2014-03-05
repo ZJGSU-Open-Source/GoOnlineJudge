@@ -13,18 +13,18 @@
     <div class="container">
       <div id="pageHeader">
         <div id="logo" class="lfloat">
-          <a href="/"><img alt="Logo" src="/images/logo.png" /></a>
+          <a href="/"><img alt="Logo" src="/static/img/logo.png" /></a>
         </div>
         <div id="headerInfo" class="rfloat">
-          <a href="/users/sign_in">[登录]</a>
-          <a href="/users/sign_up">[注册]</a>
+          {{if .IsUserLogin}}[Sign In]{{else}}<a href="/user/login">[Sign In]</a>{{end}}
+          <a href="/user/register">[Sign Up]</a>
         </div>
         <hr> 
         </div>
         <div id="navibar" class="span-3">
         <ul>
-          <li><span>Home</span></li>
-          <li><a href="/problem/list">Problem</a></li>
+          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
+          <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
         </ul>
       </div>
       <div id="body" class="span-22 last">

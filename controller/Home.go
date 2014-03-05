@@ -22,6 +22,7 @@ func (this *HomeController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "Home"
+	this.Data["IsHome"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
