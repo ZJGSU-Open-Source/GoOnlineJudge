@@ -16,7 +16,7 @@ func ShowRatio(solve int, submit int) (ratio string) {
 }
 
 func ShowSpecial(num int) (special string) {
-	switch special {
+	switch num {
 	case config.SpecialST:
 		special = "Standard"
 	case config.SpecialSP:
