@@ -5,22 +5,24 @@ import (
 	"strconv"
 )
 
-func ShowStatus(status int) bool {
-	return status%2 != 0
+func ShowStatus(num int) (status bool) {
+	status = num%2 != 0
+	return
 }
 
-func ShowRatio(solve int, submit int) string {
-	return strconv.FormatFloat(float64(solve)/float64(submit)*100, 'f', 2, 64) + "%"
+func ShowRatio(solve int, submit int) (ratio string) {
+	ratio = strconv.FormatFloat(float64(solve)/float64(submit)*100, 'f', 2, 64) + "%"
+	return
 }
 
-func ShowSpecial(special int) string {
+func ShowSpecial(num int) (special string) {
 	switch special {
 	case config.SpecialST:
-		return "Standard"
+		special = "Standard"
 	case config.SpecialSP:
-		return "Special"
+		special = "Special"
 	default:
-		return "None"
+		special = "None"
 	}
-	return "None"
+	return
 }
