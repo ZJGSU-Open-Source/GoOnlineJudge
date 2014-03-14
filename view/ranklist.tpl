@@ -15,7 +15,7 @@
     <tbody>
       {{$rank := 1}}
       {{with .User}}  
-        {{range .}} 
+        {{range .}}
           {{if ShowStatus .Status}}
             <tr>
               <td>{{$rank}}</td>
