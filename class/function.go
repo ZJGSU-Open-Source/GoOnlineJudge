@@ -1,12 +1,20 @@
 package class
 
 import (
-	"GoOnlineJudge/config"
 	"strconv"
 )
 
+var specialArr = []string{"Standard", "Special"}
+var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded"}
+var languageArr = []string{"None", "C", "C++", "Java"}
+
 func ShowStatus(num int) (status bool) {
 	status = num%2 != 0
+	return
+}
+
+func ShowExpire(str string, time string) (expire bool) {
+	expire = time > str
 	return
 }
 
@@ -16,13 +24,16 @@ func ShowRatio(solve int, submit int) (ratio string) {
 }
 
 func ShowSpecial(num int) (special string) {
-	switch num {
-	case config.SpecialST:
-		special = "Standard"
-	case config.SpecialSP:
-		special = "Special"
-	default:
-		special = "None"
-	}
+	special = specialArr[num]
+	return
+}
+
+func ShowJudge(num int) (judge string) {
+	judge = judgeArr[num]
+	return
+}
+
+func ShowLanguage(num int) (language string) {
+	language = languageArr[num]
 	return
 }

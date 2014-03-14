@@ -3,6 +3,7 @@ package class
 import (
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Controller struct {
@@ -22,5 +23,11 @@ func (this *Controller) ParseURL(url string) (args map[string]string) {
 	for i := 1; i < len(list); i += 2 {
 		args[list[i-1]] = list[i]
 	}
+	return
+}
+
+func (this *Controller) GetTime() (ft string) {
+	t := time.Now().Unix()
+	ft = time.Unix(t, 0).Format("2006-01-02 15:04:05")
 	return
 }

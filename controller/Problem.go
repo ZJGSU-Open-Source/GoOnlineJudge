@@ -14,9 +14,10 @@ import (
 type problem struct {
 	Pid int `json:"pid"bson:"pid"`
 
-	Time    int `json:"time"bson:"time"`
-	Memory  int `json:"memory"bson:"memory"`
-	Special int `json:"special"bson:"special"`
+	Time    int    `json:"time"bson:"time"`
+	Memory  int    `json:"memory"bson:"memory"`
+	Special int    `json:"special"bson:"special"`
+	Expire  string `json:"expire"bson:"expire"`
 
 	Title       string `json:"title"bson:"title"`
 	Description string `json:"description"bson:"description"`
@@ -66,13 +67,14 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Problem"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus, "ShowExpire": class.ShowExpire})
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
+	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Problem List"
 	this.Data["IsProblem"] = true
 	err = t.Execute(w, this.Data)
