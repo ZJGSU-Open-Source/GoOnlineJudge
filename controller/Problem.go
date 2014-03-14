@@ -19,12 +19,12 @@ type problem struct {
 	Special int    `json:"special"bson:"special"`
 	Expire  string `json:"expire"bson:"expire"`
 
-	Title       string `json:"title"bson:"title"`
-	Description string `json:"description"bson:"description"`
-	Input       string `json:"input"bson:"input"`
-	Output      string `json:"output"bson:"output"`
-	Source      string `json:"source"bson:"source"`
-	Hint        string `json:"hint"bson:"hint"`
+	Title       string        `json:"title"bson:"title"`
+	Description template.HTML `json:"description"bson:"description"`
+	Input       template.HTML `json:"input"bson:"input"`
+	Output      template.HTML `json:"output"bson:"output"`
+	Source      string        `json:"source"bson:"source"`
+	Hint        string        `json:"hint"bson:"hint"`
 
 	In  string `json:"in"bson:"in"`
 	Out string `json:"out"bson:"out"`

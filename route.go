@@ -2,6 +2,7 @@ package main
 
 import (
 	"GoOnlineJudge/controller"
+	"GoOnlineJudge/controller/admin"
 	"net/http"
 	"reflect"
 	"strings"
@@ -53,6 +54,19 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	if l := len(s); l >= 2 {
 		c := &controller.UserController{}
 		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+// Admin
+
+func adminProblemHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &admin.ProblemController{}
+		m := strings.Title(s[2])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}

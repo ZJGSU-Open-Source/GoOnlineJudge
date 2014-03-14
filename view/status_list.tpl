@@ -25,8 +25,8 @@
             <td>{{ShowJudge .Judge}}</td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
-            <td>{{ShowLanguage .Language}}<a href="/status/code/sid/{{.Sid}}"></td>
-            <td><a href="/status/code/sid/{{.Sid}}">{{.Length}}B</a></td>
+            <td>{{ShowLanguage .Language}}<a href="/status/code/sid/{{.Sid}}"> <a href="/status/code/sid/{{.Sid}}">[view]</a></td>
+            <td>{{.Length}}B</td>
             <td>{{.Create}}</td>
           </tr>
         {{end}}
