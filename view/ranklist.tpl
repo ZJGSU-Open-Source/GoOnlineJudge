@@ -1,7 +1,7 @@
 {{define "content"}}
   <h1>Ranklist</h1>
   <div class="pagination">
-    <span class="previous_page disabled">上一页</span> <em class="current">1</em> <a class="next_page" rel="next" href="/contests/ds/ranklist?page=2">下一页</a>
+    <span class="previous_page disabled">上一页</span> <em class="current">1</em> <a class="next_page" rel="next">下一页</a>
   </div>
   <table id="ranklist">
     <thead>
@@ -9,7 +9,7 @@
         <th class="header">Rank</th>
         <th class="header">User</th>
         <th class="header">Motto</th>
-        <th class="header">Status</th>
+        <th class="header">Ratio</th>
       </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
               <td>{{$rank}}</td>
               <td>{{.Uid}}</td>
               <td>{{.Motto}}</td>
-              <td>{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</td>
+              <td>{{ShowRatio .Solve .Submit}} ({{.Solve}}/{{.Submit}})</td>
             </tr>
           {{end}}
         {{end}}  

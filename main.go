@@ -13,5 +13,7 @@ func main() {
 	http.HandleFunc("/ranklist/", ranklistHandler)
 	http.HandleFunc("/user/", userHandler)
 
+	http.HandleFunc("/admin/problem/", adminProblemHandler)
+
 	http.ListenAndServe(":8080", nil)
 }
