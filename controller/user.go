@@ -14,6 +14,7 @@ type user struct {
 	Nick   string `json:"nick"bson:"nick"`
 	Mail   string `json:"mail"bson:"mail"`
 	School string `json:"school"bson:"school"`
+	Motto  string `json:"motto"bson:"motto"`
 
 	Privilege int `json:"privilege"bson:"privilege"`
 

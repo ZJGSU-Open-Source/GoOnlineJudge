@@ -1,9 +1,5 @@
 package config
 
-var ModuleProblem = true
-var ModuleContest = true
-var ModuleExercise = true
-
 var ProblemPerPage = 100
 var ContestPerPage = 100
 var ExercisePerPage = 100
@@ -21,6 +17,12 @@ var JudgeTLE = 7 //Time Limit Exceeded
 var JudgeMLE = 8 //Memory Limit Exceeded
 var JudgeOLE = 9 //Output Limit Exceeded
 
-var SpecialNA = 0 //None
-var SpecialST = 1 //Standard
-var SpecialSP = 2 //Special
+var LanguageNA = 0   //None
+var LanguageC = 1    //C
+var LanguageCPP = 2  //C++
+var LanguageJAVA = 3 //Java
+
+var ModuleNA = 0 //None
+var ModuleP = 1  //None
+var ModuleC = 2  //Contest
+var ModuleE = 3  //Exercise

@@ -29,6 +29,24 @@ func problemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func statusHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &controller.StatusController{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func ranklistHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controller.RanklistController{}
+	m := "Index"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
