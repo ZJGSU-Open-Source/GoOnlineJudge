@@ -20,5 +20,5 @@
       <input name="commit" type="submit" value="Sign In">
     </div>
   </form>
-  <a href="/user/register">Register a new account.</a>
+  <a href="/user/signup">Register a new account.</a>
 {{end}}

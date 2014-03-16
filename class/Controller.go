@@ -1,6 +1,8 @@
 package class
 
 import (
+	"encoding/json"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -31,3 +33,13 @@ func (this *Controller) GetTime() (ft string) {
 	ft = time.Unix(t, 0).Format("2006-01-02 15:04:05")
 	return
 }
+
+func (this *Controller) LoadJson(r io.Reader, i interface{}) (err error) {
+	err = json.NewDecoder(r).Decode(i)
+	return
+}
+
+// func (this *Controller) GenerateJson(w io.Writer, i interface{}) (err error) {
+// 	err = json.NewEncoder(w).Encode(i)
+// 	return
+// }
