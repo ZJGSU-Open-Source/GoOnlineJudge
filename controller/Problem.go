@@ -51,7 +51,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	one := make(map[string][]*problem)
 	if response.StatusCode == 200 {
-		err := this.LoadJson(response.Body, &one)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
 			http.Error(w, "load error", 400)
 			return
@@ -96,7 +96,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	var one problem
 	if response.StatusCode == 200 {
-		err := this.LoadJson(response.Body, &one)
+		err = this.LoadJson(response.Body, &one)
 		if err != nil {
 			http.Error(w, "load error", 400)
 			return
