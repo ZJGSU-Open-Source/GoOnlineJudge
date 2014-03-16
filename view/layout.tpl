@@ -20,8 +20,8 @@
           <a href="/"><img alt="Logo" src="/static/img/logo.png" /></a>
         </div>
         <div id="headerInfo" class="rfloat">
-          {{if .IsUserLogin}}[Sign In]{{else}}<a href="/user/login">[Sign In]</a>{{end}}
-          <a href="/user/register">[Sign Up]</a>
+          {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
+          <a href="/user/signup">[Sign Up]</a>
         </div>
         <hr> 
         </div>

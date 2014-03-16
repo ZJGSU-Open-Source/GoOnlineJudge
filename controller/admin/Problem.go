@@ -3,9 +3,7 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"encoding/json"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -40,7 +38,7 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem List")
+	log.Println("Admin Problem List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
@@ -52,15 +50,9 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	one := make(map[string][]*problem)
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err := this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Problem"] = one["list"]
@@ -73,12 +65,56 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Admin - Problem List"
 	this.Data["IsProblem"] = true
+	this.Data["IsList"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
+	}
+}
+
+func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Add")
+	this.Init(w, r)
+
+	t := template.New("layout.tpl")
+	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_add.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "Admin - Problem Add"
+	this.Data["IsProblem"] = true
+	this.Data["IsAdd"] = true
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Insert")
+	this.Init(w, r)
+
+	//TODO r.body to json
+	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", r.Body)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	ret := make(map[string]interface{})
+	if response.StatusCode == 200 {
+		err := this.LoadJson(response.Body, &ret)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		log.Println(ret["pid"])
 	}
 }

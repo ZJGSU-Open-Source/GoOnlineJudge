@@ -3,9 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"encoding/json"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -48,15 +46,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 
 	one := make(map[string][]*solution)
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err := this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Solution"] = one["list"]
@@ -98,15 +90,9 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 
 	var one solution
 	if response.StatusCode == 200 {
-		body, err := ioutil.ReadAll(response.Body)
+		err := this.LoadJson(response.Body, &one)
 		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		err = json.Unmarshal(body, &one)
-		if err != nil {
-			http.Error(w, "json error", 500)
+			http.Error(w, "load error", 400)
 			return
 		}
 		this.Data["Solution"] = one
