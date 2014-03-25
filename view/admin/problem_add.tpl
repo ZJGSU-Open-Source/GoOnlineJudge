@@ -61,9 +61,9 @@ var options = {
         'preview', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 
         'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 
         'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript', 
-        'clearhtml', 'quickformat', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
+        'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
         'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
-        'lineheight', 'removeformat', '|', 'image', 'multiimage','table', 'hr', 
+        'removeformat', '|', 'image', 'multiimage','table', 'hr', 
         'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
 	]
 }
