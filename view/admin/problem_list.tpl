@@ -17,7 +17,7 @@
         <tr>
           <td>{{.Pid}}</td>
           <td><a href="/problem/detail/pid/{{.Pid}}">{{.Title}}</a></td>
-          <td>[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</td>
+          <td><a href="/admin/problem/status/pid/{{.Pid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
           <td>[Delete]</td>
           <td>[Edit]</td>
           <td>[Test Data]</td>

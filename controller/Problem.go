@@ -112,7 +112,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "Problem Detial " + strconv.Itoa(pid)
-	this.Data["IsProblem"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

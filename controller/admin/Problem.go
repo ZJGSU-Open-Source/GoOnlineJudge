@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type problem struct {
@@ -101,7 +102,39 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	//TODO r.body to json
-	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", r.Body)
+	one := make(map[string]interface{})
+	one["title"] = r.FormValue("title")
+	time, err := strconv.Atoi(r.FormValue("time"))
+	if err != nil {
+		http.Error(w, "conv error", 400)
+		return
+	}
+	one["time"] = time
+	memory, err := strconv.Atoi(r.FormValue("memory"))
+	if err != nil {
+		http.Error(w, "conv error", 400)
+		return
+	}
+	one["memory"] = memory
+	if special := r.FormValue("special"); special == "" {
+		one["special"] = 0
+	} else {
+		one["special"] = 1
+	}
+	one["description"] = r.FormValue("description")
+	one["input"] = r.FormValue("input")
+	one["output"] = r.FormValue("output")
+	one["in"] = r.FormValue("in")
+	one["out"] = r.FormValue("out")
+	one["source"] = r.FormValue("source")
+	one["hint"] = r.FormValue("hint")
+
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", reader)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -115,6 +148,30 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "load error", 400)
 			return
 		}
-		log.Println(ret["pid"])
+		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
+	}
+}
+
+func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Status")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	log.Println(args)
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/status/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	if response.StatusCode == 200 {
+		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 	}
 }

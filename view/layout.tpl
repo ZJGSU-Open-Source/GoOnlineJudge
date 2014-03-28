@@ -21,13 +21,13 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
-          <a href="/user/signup">[Sign Up]</a>
+          {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
         </div>
         <hr> 
         </div>
         <div id="navibar" class="span-3">
         <ul>
-          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
+          <li>{{if .IsNews}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
           <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
           <li>{{if .IsStatus}}<span>Status</span>{{else}}<a href="/status/list">Status</a>{{end}}</li>
           <li>{{if .IsRanklist}}<span>Ranklist</span>{{else}}<a href="/ranklist">Ranklist</a>{{end}}</li>

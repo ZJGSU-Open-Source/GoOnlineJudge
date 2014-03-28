@@ -12,8 +12,19 @@ import (
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		c := &controller.HomeController{}
-		m := "Index"
+		c := &controller.NewsController{}
+		m := "List"
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+func newsHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &controller.NewsController{}
+		m := strings.Title(s[1])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}
@@ -60,6 +71,17 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Admin
+
+func adminNewsHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &admin.NewsController{}
+		m := strings.Title(s[2])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
 
 func adminProblemHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
