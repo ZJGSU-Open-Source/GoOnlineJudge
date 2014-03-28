@@ -39,7 +39,11 @@ func (this *Controller) LoadJson(r io.Reader, i interface{}) (err error) {
 	return
 }
 
-// func (this *Controller) GenerateJson(w io.Writer, i interface{}) (err error) {
-// 	err = json.NewEncoder(w).Encode(i)
-// 	return
-// }
+func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
+	b, err := json.Marshal(i)
+	if err != nil {
+		return
+	}
+	r = strings.NewReader(string(b))
+	return
+}

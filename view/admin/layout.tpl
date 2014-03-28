@@ -21,13 +21,22 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
-          <a href="/user/signup">[Sign Up]</a>
+          {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
         </div>
         <hr> 
         </div>
         <div id="navibar" class="span-3">
         <ul>
           <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
+          <li><a href="/admin/news/list">News</a></li>
+          {{if .IsNews}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news/list">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news/add">Add</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
           <li><a href="/admin/problem/list">Problem</a></li>
           {{if .IsProblem}}
             <div id="psnavi">
