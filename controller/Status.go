@@ -106,6 +106,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "View Code"
+	this.Data["IsCode"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
