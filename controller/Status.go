@@ -44,7 +44,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*solution)
+	one := make(map[string][]solution)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
