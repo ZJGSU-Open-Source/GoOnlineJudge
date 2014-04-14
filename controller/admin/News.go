@@ -33,7 +33,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*news)
+	one := make(map[string][]news)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {

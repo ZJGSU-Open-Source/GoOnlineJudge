@@ -7,6 +7,12 @@ import (
 var specialArr = []string{"Standard", "Special"}
 var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded"}
 var languageArr = []string{"None", "C", "C++", "Java"}
+var encryptArr = []string{"None", "Public", "Private", "Password"}
+
+func ShowNext(num int) (next int) {
+	next = num + 1
+	return
+}
 
 func ShowStatus(num int) (status bool) {
 	status = num%2 != 0
@@ -35,5 +41,10 @@ func ShowJudge(num int) (judge string) {
 
 func ShowLanguage(num int) (language string) {
 	language = languageArr[num]
+	return
+}
+
+func ShowEncrypt(num int) (encrypt string) {
+	encrypt = encryptArr[num]
 	return
 }

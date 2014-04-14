@@ -3,6 +3,7 @@ package main
 import (
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
+	"GoOnlineJudge/controller/contest"
 	"net/http"
 	"reflect"
 	"strings"
@@ -59,12 +60,35 @@ func ranklistHandler(w http.ResponseWriter, r *http.Request) {
 	callMethod(c, m, rv)
 }
 
+func contestHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := &controller.ContestController{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
 	if l := len(s); l >= 2 {
 		c := &controller.UserController{}
 		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
+// Contest
+func contestProblemHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &contest.ProblemController{}
+		m := strings.Title(s[2])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
 	}

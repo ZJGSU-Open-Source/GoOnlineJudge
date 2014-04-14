@@ -23,7 +23,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]*user)
+	one := make(map[string][]user)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
