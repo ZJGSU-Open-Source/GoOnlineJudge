@@ -15,7 +15,7 @@ func main() {
 
 	http.HandleFunc("/contest/", contestHandler)
 	http.HandleFunc("/contest/problem/", contestProblemHandler)
-	// http.HandleFunc("/contest/status/", contestStatusHandler)
+	http.HandleFunc("/contest/status/", contestStatusHandler)
 	// http.HandleFunc("/contest/ranklist/", contestRanklistHandler)
 
 	http.HandleFunc("/user/", userHandler)

@@ -35,17 +35,15 @@ type problem struct {
 }
 
 type ProblemController struct {
-	class.Controller
 	Contest
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Contest Problem List")
-	this.Init(w, r)
 	this.InitContest(w, r)
 
-	list := make([]problem, len(this.Detail.List))
-	for k, v := range this.Detail.List {
+	list := make([]problem, len(this.ContestDetail.List))
+	for k, v := range this.ContestDetail.List {
 		response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(v), "application/json", nil)
 		defer response.Body.Close()
 		if err != nil {
@@ -61,9 +59,23 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			one.Pid = k
+
+			one.Solve, err = this.GetCount(k, "solve")
+			if err != nil {
+				http.Error(w, "count error", 500)
+				return
+			}
+
+			one.Submit, err = this.GetCount(k, "submit")
+			if err != nil {
+				http.Error(w, "count error", 500)
+				return
+			}
+
 			list[k] = one
 		}
 	}
+	this.Data["Problem"] = list
 
 	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
 	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
@@ -72,11 +84,49 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "Contest Detail " + strconv.Itoa(this.Cid)
-	this.Data["Contest"] = this.Detail.Title
-	this.Data["Problem"] = list
-	this.Data["IsContestDetail"] = true
 	this.Data["IsContestProblem"] = true
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+	log.Println("Contest Problem Detail")
+	this.InitContest(w, r)
+
+	args := this.ParseURL(r.URL.Path[8:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(this.ContestDetail.List[pid]), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Detail"] = one
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t, err = t.ParseFiles("view/layout.tpl", "view/contest/problem_detail.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

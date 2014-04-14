@@ -1,4 +1,4 @@
-package controller
+package contest
 
 import (
 	"GoOnlineJudge/class"
@@ -30,14 +30,14 @@ type solution struct {
 }
 
 type StatusController struct {
-	class.Controller
+	Contest
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Status List")
-	this.Init(w, r)
+	log.Println("Contest Status List")
+	this.InitContest(w, r)
 
-	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -54,15 +54,18 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one["list"]
 	}
 
+	for _, v := range one["list"] {
+		v.Pid = this.Index[v.Pid]
+	}
+
 	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus, "ShowJudge": class.ShowJudge, "ShowLanguage": class.ShowLanguage})
-	t, err = t.ParseFiles("view/layout.tpl", "view/status_list.tpl")
+	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
-	this.Data["Title"] = "Status List"
-	this.Data["IsStatus"] = true
+	this.Data["IsContestStatus"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -73,8 +76,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status Code")
 	this.Init(w, r)
+	this.InitContest(w, r)
 
-	args := this.ParseURL(r.URL.Path[2:])
+	args := this.ParseURL(r.URL.Path[8:])
 	sid, err := strconv.Atoi(args["sid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -99,14 +103,12 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/status_code.tpl")
+	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_code.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
-	this.Data["Title"] = "View Code"
-	this.Data["IsCode"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

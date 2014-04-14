@@ -94,6 +94,17 @@ func contestProblemHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func contestStatusHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 3 {
+		c := &contest.StatusController{}
+		m := strings.Title(s[2])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
 // Admin
 
 func adminNewsHandler(w http.ResponseWriter, r *http.Request) {

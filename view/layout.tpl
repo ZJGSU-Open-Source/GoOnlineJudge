@@ -8,12 +8,12 @@
     <!--[if lt IE 7]><link href="/static/css/style-lt7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    {{if .IsStatus}}
+    {{if .IsCode}}
       <link href="/static/prettify/prettify.css" rel="stylesheet" type="text/css" />
       <script src="/static/prettify/prettify.js" type="text/javascript"></script>
     {{end}}
   </head>
-  <body {{if .IsStatus}}onload="prettyPrint()"{{end}}>
+  <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
     <div class="container">
       <div id="pageHeader">
         <div id="logo" class="lfloat">
