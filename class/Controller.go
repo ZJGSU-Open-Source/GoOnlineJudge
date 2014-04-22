@@ -1,20 +1,41 @@
 package class
 
 import (
+	"GoOnlineJudge/config"
 	"encoding/json"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
 
 type Controller struct {
-	Data map[string]interface{}
+	Data      map[string]interface{}
+	Uid       string
+	Privilege int
 }
 
 func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	this.Data = make(map[string]interface{})
+
+	this.Uid = this.GetSession(w, r, "CurrentUser")
+	if this.Uid != "" {
+		this.Data["IsCurrentUser"] = true
+		this.Data["CurrentUser"] = this.Uid
+
+		var err error
+		this.Privilege, err = strconv.Atoi(this.GetSession(w, r, "CurrentPrivilege"))
+		if err != nil {
+			http.Error(w, "args error", 400)
+			return
+		}
+
+		if this.Privilege > config.PrivilegeSB {
+			this.Data["IsShowAdmin"] = true
+		}
+	}
 }
 
 func (this *Controller) ParseURL(url string) (args map[string]string) {
@@ -46,4 +67,27 @@ func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
 	}
 	r = strings.NewReader(string(b))
 	return
+}
+
+func (this *Controller) SetSession(w http.ResponseWriter, r *http.Request, name string, value string) {
+	s := Session{
+		Name:  name,
+		Value: value,
+	}
+	s.Set(w, r)
+}
+
+func (this *Controller) GetSession(w http.ResponseWriter, r *http.Request, name string) (value string) {
+	s := Session{
+		Name: name,
+	}
+	value = s.Get(w, r)
+	return
+}
+
+func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request, name string) {
+	s := Session{
+		Name: name,
+	}
+	s.Delete(w, r)
 }

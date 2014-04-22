@@ -1,5 +1,28 @@
 {{define "content"}}
 <h1>Status List</h1>
+<form accept-charset="UTF-8" id="search_form">
+User: <input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">
+Problem: <input id="search_pid" name="search_pid" size="10" type="text" value="{{.SearchPid}}">
+Result: <select id="search_judge" name="search_judge">
+  <option value="0" {{if .SearchJudge0}}selected{{end}}>All</option>
+  <option value="1" {{if .SearchJudge1}}selected{{end}}>Pending</option>
+  <option value="2" {{if .SearchJudge2}}selected{{end}}>Running & Judging</option>
+  <option value="3" {{if .SearchJudge3}}selected{{end}}>Accept</option>
+  <option value="4" {{if .SearchJudge4}}selected{{end}}>Compile Error</option>
+  <option value="5" {{if .SearchJudge5}}selected{{end}}>Runtime Error</option>
+  <option value="6" {{if .SearchJudge6}}selected{{end}}>Wrong Answer</option>
+  <option value="7" {{if .SearchJudge7}}selected{{end}}>Time Limit Exceeded</option>
+  <option value="8" {{if .SearchJudge8}}selected{{end}}>Memory Limit Exceeded</option>
+  <option value="9" {{if .SearchJudge9}}selected{{end}}>Output Limit Exceeded</option>
+</select>
+Language: <select id="search_language" name="search_language">
+  <option value="0" {{if .SearchLanguage0}}selected{{end}}>All</option>
+  <option value="1" {{if .SearchLanguage1}}selected{{end}}>C</option>
+  <option value="2" {{if .SearchLanguage2}}selected{{end}}>C++</option>
+  <option value="3" {{if .SearchLanguage3}}selected{{end}}>Java</option>
+</select>
+<input name="commit" type="submit" value="Go">
+</form>
 <table id="contest_list">
   <thead>
     <tr>
@@ -34,4 +57,23 @@
     {{end}}
   </tbody>
 </table>
+<script type="text/javascript">
+  $('#search_form').submit( function(e) {
+    e.preventDefault();
+    var uid = $('#search_uid').val();
+    var pid = $('#search_pid').val();
+    var judge = $('#search_judge').val();
+    var language = $('#search_language').val();
+    var url = '/status/list';
+    if (uid != '')
+      url += '/uid/' + uid;
+    if (pid != '')
+      url += '/pid/' + pid;
+    if (judge > 0)
+      url += '/judge/' + judge;
+    if (language > 0)
+      url += '/language/' + language;
+    window.location.href = url;
+  });
+  </script>
 {{end}}

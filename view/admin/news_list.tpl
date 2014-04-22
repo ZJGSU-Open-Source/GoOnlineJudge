@@ -14,15 +14,26 @@
 			{{with .News}}
 				{{range .}}
 					<tr>
-						<td><a href="/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
+						<td><a href="/admin/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
 						<td>{{.Create}}</td>
-						<td>[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</td>
-						<td>[Delete]</td>
-						<td>[Edit]</td>
+						<td><a class="news_status" href="#">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
+						<td><a class="delete" href="" onclick="ConfirmDelete('/admin/news/delete/nid/{{.Nid}}', 'Delete The News ?')">[Delete]</a></td>
+						<td><a href="/admin/news/edit/nid/{{.Nid}}">[Edit]</a></td>
 					</tr>
 				{{end}}
 			{{end}}
 		</tbody>
 </table>
+<script type="text/javascript">
+$('.news_status').onclick( function(e) {
+	e.preventDefault();
+	$.ajax({
+		type:'POST',
+		url:'/admin/news/status/nid/{{.Nid}}',
+		data:$(this).serialize(),
+		error: function
+	});
+});
+</script>
 
 {{end}}
