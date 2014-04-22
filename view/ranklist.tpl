@@ -13,12 +13,11 @@
       </tr>
     </thead>
     <tbody>
-      {{$rank := 1}}
       {{with .User}}  
         {{range .}}
           {{if ShowStatus .Status}}
             <tr>
-              <td>{{$rank}}</td>
+              <td>{{.Index}}</td>
               <td>{{.Uid}}</td>
               <td>{{.Motto}}</td>
               <td>{{ShowRatio .Solve .Submit}} ({{.Solve}}/{{.Submit}})</td>

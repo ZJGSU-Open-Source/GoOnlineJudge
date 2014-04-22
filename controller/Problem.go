@@ -42,7 +42,25 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
+	args := this.ParseURL(r.URL.Path)
+	url := "/problem/list"
+	if v, ok := args["pid"]; ok {
+		url += "/pid/" + v
+		this.Data["SearchPid"] = true
+		this.Data["SearchValue"] = v
+	}
+	if v, ok := args["title"]; ok {
+		url += "/title/" + v
+		this.Data["SearchTitle"] = true
+		this.Data["SearchValue"] = v
+	}
+	if v, ok := args["source"]; ok {
+		url += "/source/" + v
+		this.Data["SearchSource"] = true
+		this.Data["SearchValue"] = v
+	}
+
+	response, err := http.Post(config.PostHost+url, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)

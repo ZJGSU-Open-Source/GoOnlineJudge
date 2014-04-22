@@ -107,6 +107,15 @@ func contestStatusHandler(w http.ResponseWriter, r *http.Request) {
 
 // Admin
 
+func adminHomeHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path[6:] == "/" {
+		c := &admin.HomeController{}
+		m := "Home"
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
 func adminNewsHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")

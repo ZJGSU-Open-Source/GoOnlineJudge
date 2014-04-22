@@ -38,6 +38,55 @@ type ProblemController struct {
 	class.Controller
 }
 
+func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Detail")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Detail"] = one
+	} else {
+		http.Error(w, "resp error", 500)
+		return
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t, err = t.ParseFiles("view/admin/layout.tpl", "view/problem_detail.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "Admin - Problem Detail"
+	this.Data["IsProblem"] = true
+	this.Data["IsList"] = false
+
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem List")
 	this.Init(w, r)
@@ -132,6 +181,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)
+		return
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", reader)
@@ -173,5 +223,134 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
+	}
+}
+
+func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Delete")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/delete/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	w.WriteHeader(response.StatusCode)
+}
+
+func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Edit")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Detail"] = one
+	} else {
+		http.Error(w, "resp error", 500)
+		return
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_edit.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "Admin - Problem Edit"
+	this.Data["IsProblem"] = true
+	this.Data["IsList"] = false
+
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Problem Update")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 500)
+		return
+	}
+
+	one := make(map[string]interface{})
+	one["title"] = r.FormValue("title")
+	time, err := strconv.Atoi(r.FormValue("time"))
+	if err != nil {
+		http.Error(w, "conv error", 400)
+		return
+	}
+	one["time"] = time
+	memory, err := strconv.Atoi(r.FormValue("memory"))
+	if err != nil {
+		http.Error(w, "conv error", 400)
+		return
+	}
+	one["memory"] = memory
+	if special := r.FormValue("special"); special == "" {
+		one["special"] = 0
+	} else {
+		one["special"] = 1
+	}
+	one["description"] = r.FormValue("description")
+	one["input"] = r.FormValue("input")
+	one["output"] = r.FormValue("output")
+	one["in"] = r.FormValue("in")
+	one["out"] = r.FormValue("out")
+	one["source"] = r.FormValue("source")
+	one["hint"] = r.FormValue("hint")
+
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+		return
+	}
+
+	response, err := http.Post(config.PostHost+"/problem/update/pid/"+strconv.Itoa(pid), "application/json", reader)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	if response.StatusCode == 200 {
+		http.Redirect(w, r, "/admin/problem/detail/nid/"+strconv.Itoa(pid), http.StatusFound)
+	} else {
+		http.Error(w, "resp error", 500)
+		return
 	}
 }

@@ -25,14 +25,15 @@ func (this *Session) Set(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 }
 
-func (this *Session) Get(w http.ResponseWriter, r *http.Request) interface{} {
+func (this *Session) Get(w http.ResponseWriter, r *http.Request) string {
 	this.Lock()
 	defer this.Unlock()
 
 	cookie, err := r.Cookie(this.Name)
-	if err != nil || cookie.Value == "" {
-		return nil
+	if err != nil {
+		return ""
 	} else {
+		cookie.Path = "/"
 		cookie.MaxAge = config.CookieExpires
 		http.SetCookie(w, cookie)
 		return cookie.Value

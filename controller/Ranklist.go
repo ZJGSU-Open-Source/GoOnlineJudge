@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+type rank struct {
+	user
+	Index int `json:"index"bson:"index"`
+}
+
 type RanklistController struct {
 	class.Controller
 }
@@ -23,12 +28,20 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string][]user)
+	one := make(map[string][]rank)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
 			http.Error(w, "load error", 400)
 			return
+		}
+		var count = 1
+		var len = len(one["list"])
+		for i := 0; i < len; i++ {
+			if one["list"][i].Status%2 != 0 {
+				one["list"][i].Index = count
+				count += 1
+			}
 		}
 		this.Data["User"] = one["list"]
 	}
