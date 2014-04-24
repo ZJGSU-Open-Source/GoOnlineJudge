@@ -21,22 +21,22 @@
         </tr>
         <tr>
           <th>Problems Submitted</th>
-          <td>{{.Submit}}</td>
+          <th>{{.Submit}}</th>
         </tr>
         <tr>
           <th>Problems Solved</th>
-          <td>{{.Solve}}</td>
+          <th>{{.Solve}}</th>
         </tr>
       {{end}}
         <tr>
           <th>Achieve</th>
-          <td>
+          <th>
             {{with .List}}
               {{range .}}
-                <a href="/problem/detail/pid/{{.}}">{{.}}</a> 
+                <a href="/problem/detail/pid/{{.}}">{{.}} </a>
               {{end}}
             {{end}}
-          </td>
+          </th>
         </tr>
     </tbody>
   </table>

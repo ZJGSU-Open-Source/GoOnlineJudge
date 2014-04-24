@@ -16,49 +16,23 @@
 					<tr>
 						<td><a href="/admin/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
 						<td>{{.Create}}</td>
-						<td><a class="news_status" href="#" data-id="{{.Nid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
-						<td><a class="news_delete" href="#" data-id="{{.Nid}}">[Delete]</a></td>
-						<td><a class="news_edit" href="#" data-id="{{.Nid}}">[Edit]</a></td>
+						<td><a class="news_status" href="#">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
+						<td><a class="delete" href="" onclick="ConfirmDelete('/admin/news/delete/nid/{{.Nid}}', 'Delete The News ?')">[Delete]</a></td>
+						<td><a href="/admin/news/edit/nid/{{.Nid}}">[Edit]</a></td>
 					</tr>
 				{{end}}
 			{{end}}
 		</tbody>
 </table>
 <script type="text/javascript">
-$('.news_status').on('click', function() {
-	var nid = $(this).data('id');
+$('.news_status').onclick( function(e) {
+	e.preventDefault();
 	$.ajax({
 		type:'POST',
-		url:'/admin/news/status/nid/'+nid,
+		url:'/admin/news/status/nid/{{.Nid}}',
 		data:$(this).serialize(),
-		error: function() {
-			alert('failed!');
-		},
-		success: function() {
-			window.location.reload();
-		}
+		error: function
 	});
-});
-$('.news_delete').on('click', function() {
-	var ret = confirm('Delete the News?');
-	if(ret == true) {
-		var nid = $(this).data('id');
-		$.ajax({
-			type:'POST',
-			url:'/admin/news/delete/nid/'+nid,
-			data:$(this).serialize(),
-			error: function() {			
-				alert('failed!');
-			},
-			success: function() {
-				window.location.reload();
-			}
-		});
-	}
-});
-$('.news_edit').on('click', function() {
-	var nid = $(this).data('id');
-	window.location.href = '/admin/news/edit/nid/'+nid;
 });
 </script>
 

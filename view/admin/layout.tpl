@@ -9,7 +9,7 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    {{if .IsEdit}}
+    {{if .IsAdd}}
       <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
       <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
     {{end}}
