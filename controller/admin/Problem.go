@@ -139,6 +139,8 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - Problem Add"
 	this.Data["IsProblem"] = true
 	this.Data["IsAdd"] = true
+	this.Data["IsEdit"] = true
+
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -288,6 +290,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - Problem Edit"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
+	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {

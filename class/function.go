@@ -48,3 +48,17 @@ func ShowEncrypt(num int) (encrypt string) {
 	encrypt = encryptArr[num]
 	return
 }
+
+func NumEqual(a int, b int) (ret bool) {
+	return a == b
+}
+
+func NumAdd(a int, b int) (ret int) {
+	ret = a + b
+	return
+}
+
+func NumSub(a int, b int) (ret int) {
+	ret = a - b
+	return
+}
