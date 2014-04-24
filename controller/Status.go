@@ -37,26 +37,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status List")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path)
-	url := "/solution/list"
-	if v, ok := args["uid"]; ok {
-		url += "/uid/" + v
-		this.Data["SearchUid"] = v
-	}
-	if v, ok := args["pid"]; ok {
-		url += "/pid/" + v
-		this.Data["SearchPid"] = v
-	}
-	if v, ok := args["judge"]; ok {
-		url += "/judge/" + v
-		this.Data["SearchJudge"+v] = v
-	}
-	if v, ok := args["language"]; ok {
-		url += "/language/" + v
-		this.Data["SearchLanguage"+v] = v
-	}
-
-	response, err := http.Post(config.PostHost+url+"/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
