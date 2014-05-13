@@ -51,8 +51,8 @@
 					$('#user_warning_nick').text('');
 				}			
 			},
-			success: function(response) {
-				var json = eval('('+response+')');
+			success: function(result) {
+				var json = eval('('+result+')');
 				window.location.href = '/user/detail/uid/'+json.uid;
 			}
 		});

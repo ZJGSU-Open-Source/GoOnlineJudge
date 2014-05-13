@@ -22,6 +22,7 @@ func main() {
 	http.HandleFunc("/admin/", adminHomeHandler)
 	http.HandleFunc("/admin/news/", adminNewsHandler)
 	http.HandleFunc("/admin/problem/", adminProblemHandler)
+	http.HandleFunc("/admin/contest/", adminContestHandler)
 
 	http.ListenAndServe(":8080", nil)
 }

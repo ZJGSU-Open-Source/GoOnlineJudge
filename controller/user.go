@@ -119,26 +119,26 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Register")
 	this.Init(w, r)
 
-	one := make(map[string]string)
-	one["uid"] = r.FormValue("user[handle]")
-	one["nick"] = r.FormValue("user[nick]")
-	one["pwd"] = r.FormValue("user[password]")
-	one["pwdConfirm"] = r.FormValue("user[confirmPassword]")
+	one := make(map[string]interface{})
+
+	uid := r.FormValue("user[handle]")
+	nick := r.FormValue("user[nick]")
+	pwd := r.FormValue("user[password]")
+	pwdConfirm := r.FormValue("user[confirmPassword]")
 	one["mail"] = r.FormValue("user[mail]")
 	one["school"] = r.FormValue("user[school]")
 	one["motto"] = r.FormValue("user[motto]")
 
 	ok := 1
 	hint := make(map[string]string)
-
-	response, err := http.Post(config.PostHost+"/user/list/uid/"+one["uid"], "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
 
-	if one["uid"] == "" {
+	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty."
 	} else {
 		ret := make(map[string][]*user)
@@ -154,17 +154,21 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	if one["nick"] == "" {
+	if nick == "" {
 		ok, hint["nick"] = 0, "Nick should not be empty."
 	}
-	if len(one["pwd"]) < 6 {
+	if len(pwd) < 6 {
 		ok, hint["pwd"] = 0, "Password should contain at least six characters."
 	}
-	if one["pwd"] != one["pwdConfirm"] {
+	if pwd != pwdConfirm {
 		ok, hint["pwdConfirm"] = 0, "Confirmation mismatched."
 	}
-
 	if ok == 1 {
+		one["uid"] = uid
+		one["nick"] = nick
+		one["pwd"] = pwd
+		one["pwdConfirm"] = pwdConfirm
+		one["privilege"] = config.PrivilegePU
 		reader, err := this.PostReader(&one)
 		if err != nil {
 			http.Error(w, "read error", 500)
@@ -178,7 +182,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		this.SetSession(w, r, "CurrentUser", one["uid"])
+		this.SetSession(w, r, "CurrentUser", uid)
 		this.SetSession(w, r, "CurrentPrivilege", "1")
 		w.WriteHeader(200)
 	} else {

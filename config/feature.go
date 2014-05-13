@@ -1,33 +1,48 @@
 package config
 
-var ProblemPerPage = 100
-var ContestPerPage = 100
-var ExercisePerPage = 100
-var SolutionPerPage = 50
-var UserPerPage = 50
+const ProblemPerPage = 100
+const ContestPerPage = 100
+const ExercisePerPage = 100
+const SolutionPerPage = 50
+const UserPerPage = 50
 
-var JudgeNA = 0  //None
-var JudgePD = 1  //Pending
-var JudgeRJ = 2  //Running & judging
-var JudgeAC = 3  //Accepted
-var JudgeCE = 4  //Compile Error
-var JudgeRE = 5  //Runtime Error
-var JudgeWA = 6  //Wrong Answer
-var JudgeTLE = 7 //Time Limit Exceeded
-var JudgeMLE = 8 //Memory Limit Exceeded
-var JudgeOLE = 9 //Output Limit Exceeded
+// const ProblemPerPage = 1
+// const ContestPerPage = 1
+// const ExercisePerPage = 1
+// const SolutionPerPage = 5
+// const UserPerPage = 50
 
-var LanguageNA = 0   //None
-var LanguageC = 1    //C
-var LanguageCPP = 2  //C++
-var LanguageJAVA = 3 //Java
+const PageHeadLimit = 1
+const PageTailLimit = 1
+const PageMidLimit = 2
 
-var ModuleNA = 0 //None
-var ModuleP = 1  //Problem
-var ModuleC = 2  //Contest
-var ModuleE = 3  //Exercise
+const JudgeNA = 0  //None
+const JudgePD = 1  //Pending
+const JudgeRJ = 2  //Running & judging
+const JudgeAC = 3  //Accepted
+const JudgeCE = 4  //Compile Error
+const JudgeRE = 5  //Runtime Error
+const JudgeWA = 6  //Wrong Answer
+const JudgeTLE = 7 //Time Limit Exceeded
+const JudgeMLE = 8 //Memory Limit Exceeded
+const JudgeOLE = 9 //Output Limit Exceeded
 
-var PrivilegeNA = 0 //None
-var PrivilegePU = 1 //Primary User
-var PrivilegeSB = 2 //Source Broswer
-var PrivilegeAD = 3 //Admin
+const LanguageNA = 0   //None
+const LanguageC = 1    //C
+const LanguageCPP = 2  //C++
+const LanguageJAVA = 3 //Java
+
+const ModuleNA = 0 //None
+const ModuleP = 1  //None
+const ModuleC = 2  //Contest
+const ModuleE = 3  //Exercise
+
+const PrivilegeNA = 0 //None
+const PrivilegePU = 1 //Primary User
+const PrivilegeSB = 2 //Source Broswer
+const PrivilegeAD = 3 //Admin
+
+const EncryptNA = 0 //None
+const EncryptPB = 1 //Public
+const EncryptPT = 2 //Private
+const EncryptPW = 3 //Password

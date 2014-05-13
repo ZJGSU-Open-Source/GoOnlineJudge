@@ -1,8 +1,60 @@
 {{define "content"}}
-  <h1>Ranklist</h1>
-  <div class="pagination">
-    <span class="previous_page disabled">上一页</span> <em class="current">1</em> <a class="next_page" rel="next">下一页</a>
-  </div>
+<h1>Ranklist</h1>
+  
+<div class="pagination">
+  {{$current := .CurrentPage}}
+  {{$url := .URL}}
+  {{if .IsPreviousPage}}
+  <a href="{{$url}}/page/{{NumSub .CurrentPage 1}}">Prev</a>
+  {{else}}
+  <span>Prev</span>
+  {{end}}
+
+  {{if .IsPageHead}}
+    {{with .PageHeadList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageMid}}
+  ...
+    {{with .PageMidList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageTail}}
+  ...
+    {{with .PageTailList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsNextPage}}
+  <a href="{{$url}}/page/{{NumAdd .CurrentPage 1}}">Next</a>
+  {{else}}
+  <span>Next</span>
+  {{end}}
+</div>
+
   <table id="ranklist">
     <thead>
       <tr>
