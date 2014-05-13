@@ -43,11 +43,11 @@
     </div>
     <div class="field">
       <label for="problem_in">Sample Input</label><br>
-      <textarea id="problem_in" name="in" style="width:640px;height:200px;" value="{{.In}}"></textarea>
+      <textarea id="problem_in" name="in" style="width:640px;height:200px;" >{{.In}}</textarea>
     </div>
     <div class="field">
       <label for="problem_out">Sample Output</label><br>
-      <textarea id="problem_out" name="out" style="width:640px;height:200px;" value="{{.Out}}"></textarea>
+      <textarea id="problem_out" name="out" style="width:640px;height:200px;" >{{.Out}}</textarea>
     </div>
     <div class="actions">
       <input name="commit" type="submit" value="Submit">

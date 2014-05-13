@@ -23,6 +23,61 @@ Language: <select id="search_language" name="search_language">
 </select>
 <input name="commit" type="submit" value="Go">
 </form>
+
+<div class="pagination">
+  {{$current := .CurrentPage}}
+  {{$url := .URL}}
+  {{if .IsPreviousPage}}
+  <a href="{{$url}}/page/{{NumSub .CurrentPage 1}}">Prev</a>
+  {{else}}
+  <span>Prev</span>
+  {{end}}
+
+  {{if .IsPageHead}}
+    {{with .PageHeadList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageMid}}
+  ...
+    {{with .PageMidList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageTail}}
+  ...
+    {{with .PageTailList}}
+      {{range .}}
+        {{if NumEqual . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsNextPage}}
+  <a href="{{$url}}/page/{{NumAdd .CurrentPage 1}}">Next</a>
+  {{else}}
+  <span>Next</span>
+  {{end}}
+</div>
+
 <table id="contest_list">
   <thead>
     <tr>
@@ -48,7 +103,7 @@ Language: <select id="search_language" name="search_language">
             <td>{{ShowJudge .Judge}}</td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
-            <td>{{ShowLanguage .Language}}<a href="/status/code/sid/{{.Sid}}"> <a href="/status/code/sid/{{.Sid}}">[view]</a></td>
+            <td>{{ShowLanguage .Language}}<a href="/status/code/sid/{{.Sid}}">[view]</a></td>
             <td>{{.Length}}B</td>
             <td>{{.Create}}</td>
           </tr>

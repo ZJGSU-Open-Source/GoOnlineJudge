@@ -9,11 +9,16 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    {{if .IsAdd}}
+    {{if .IsEdit}}
       <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
       <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
     {{end}}
   </head>
+  {{if not .IsShowAdmin}}
+  <body>
+  <p style="color: red">Warning:You are not admin</p>
+  </body>
+  {{else}}
   <body>
     <div class="container">
       <div id="pageHeader">
@@ -52,6 +57,15 @@
               </ul>
             </div>
           {{end}}
+          <li><a href="/admin/contest/list">Contest</a></li>
+          {{if .IsContest}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add">Add</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
         </ul>
       </div>
       <div id="body" class="span-22 last">
@@ -81,5 +95,6 @@
     });
     </script>
   </body>
+  {{end}}
 </html>
 

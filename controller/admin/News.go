@@ -124,6 +124,8 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - News Add"
 	this.Data["IsNews"] = true
 	this.Data["IsAdd"] = true
+	this.Data["IsEdit"] = true
+
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -242,6 +244,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - News Edit"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = false
+	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
