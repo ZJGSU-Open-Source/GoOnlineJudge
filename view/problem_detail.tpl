@@ -61,7 +61,7 @@
     </div>
     <div class="field">
       <label for="code">Code</label><br>
-      <textarea id="code" name="code" style="" required=""></textarea>
+      <textarea id="code" name="code" style="" required="" autofocus=""></textarea><!-- 这里需要保证有字 和自动对焦，否则屏幕过小完全看不到这里-->
     </div>
     <div class="actions">
       <input name="submit" type="submit" value="Submit">
