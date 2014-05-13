@@ -227,6 +227,12 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post error", 500)
 		return
 	}
+	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
 	/////
 	one["code"] = r.FormValue("code")
 	one["len"] = this.GetCodeLen(len(r.FormValue("code")))
