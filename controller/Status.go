@@ -66,7 +66,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/solution/count"+searchUrl+"/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution/count"+searchUrl+"/module/"+strconv.Itoa(config.ModuleP)+"/action/submit", "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)

@@ -7,7 +7,7 @@
     </div>
     <div class="field">
       <label for="user_handle">Handle</label><br>
-      <input id="user_handle" name="user[handle]" size="30" type="text">
+      <input id="user_handle" name="user[handle]" size="30" type="text" autofocus>
     </div>
     <div class="field">
       <label for="user_password">Password</label><br>
