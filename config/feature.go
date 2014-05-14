@@ -16,16 +16,19 @@ const PageHeadLimit = 1
 const PageTailLimit = 1
 const PageMidLimit = 2
 
-const JudgeNA = 0  //None
-const JudgePD = 1  //Pending
-const JudgeRJ = 2  //Running & judging
-const JudgeAC = 3  //Accepted
-const JudgeCE = 4  //Compile Error
-const JudgeRE = 5  //Runtime Error
-const JudgeWA = 6  //Wrong Answer
-const JudgeTLE = 7 //Time Limit Exceeded
-const JudgeMLE = 8 //Memory Limit Exceeded
-const JudgeOLE = 9 //Output Limit Exceeded
+const (
+	JudgeNA  = 0  //None
+	JudgePD  = 1  //Pending
+	JudgeRJ  = 2  //Running & judgingconst
+	JudgeAC  = 3  //Accepted
+	JudgeCE  = 4  //Compile Error
+	JudgeRE  = 5  //Runtime Error
+	JudgeWA  = 6  //Wrong Answer
+	JudgeTLE = 7  //Time Limit Exceeded
+	JudgeMLE = 8  //Memory Limit Exceeded
+	JudgeOLE = 9  //Output Limit Exceeded
+	JudgeCP  = 10 //wait to Compare Output
+)
 
 const LanguageNA = 0   //None
 const LanguageC = 1    //C

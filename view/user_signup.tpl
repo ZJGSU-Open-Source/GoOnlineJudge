@@ -7,7 +7,7 @@
 		<div class="field">
 		  	<label for="user_handle">Handle</label><font color="red">*</font>
 		  	<font  id="user_warning_handle" color="red"></font><br>
-		 	<input id="user_handle" name="user[handle]" size="30" type="text">
+		 	<input id="user_handle" name="user[handle]" size="30" type="text" autofocus>
 		</div>
 		<div class="field">
 			<label for="user_nick">Nick</label><font color="red">*</font>

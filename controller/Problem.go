@@ -3,10 +3,12 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	//"GoOnlineJudge/sljudge"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type problem struct {
@@ -214,26 +216,43 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["module"] = config.ModuleP
 	one["mid"] = config.ModuleP
 	/////TODO. Judge
-	one["judge"] = config.JudgeAC
-	one["time"] = 1000
-	one["memory"] = 888
-	action := "submit"
-	if one["judge"] == config.JudgeAC { //Judge whether the solution is accepted
-		action = "solve"
-	}
-	response, err := http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	var pro problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &pro)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+	}
+
+	action := "submit"
+	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888 //sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
+	if one["judge"] == config.JudgeAC {                                  //Judge whether the solution is accepted
+		action = "solve"
+	}
+
+	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
 	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
-	/////
+	/////end Judge
+
 	one["code"] = r.FormValue("code")
 	one["len"] = this.GetCodeLen(len(r.FormValue("code")))
 	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
