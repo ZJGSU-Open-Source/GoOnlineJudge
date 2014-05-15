@@ -1,6 +1,6 @@
 {{define "content"}}
 {{with .Detail}}
-  <h1>{{.Title}}</h1>
+ 
   <div id="problemInfo" class="rfloat">
     <div class="limit">
       <div class="key">Time Limit</div>
@@ -19,20 +19,21 @@
     <div class="checker">
       <div class="key">Ratio</div>
       <div class="value">
-        <span title="纯文本对比">{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
+        <span title="纯文本对比">{{ShowRatio .Solve .Submit}}(<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}})</a></span>
       </div>
     </div>
   </div>
   <div id="problemContent">
-    <p><b>Description:</b></p>
+  <h1 style="text-align: center">{{.Title}}</h1>
+    <p class="problemIteam">Description:</p>
     <p>{{.Description}}</p>
-    <p><b>Input:</b></p>
+    <p class="problemIteam">Input:</p>
     <p>{{.Input}}</p>
-    <p><b>Output:</b></p>
+    <p class="problemIteam">Output:</p>
     <p>{{.Output}}</p>
-    <b>Sample Input:</b>
+    <span class="problemIteam">Sample Input:</span>
     <pre>{{.In}}</pre>
-    <b>Sample Output:</b>
+    <span class="problemIteam">Sample Output:</span>
     <pre>{{.Out}}</pre>
     {{if .Hint}}
       <p><b>Hint:</b></p>
@@ -61,7 +62,7 @@
     </div>
     <div class="field">
       <label for="code">Code</label><br>
-      <textarea id="code" name="code" style="" required="" autofocus=""></textarea><!-- 这里需要保证有字 和自动对焦，否则屏幕过小完全看不到这里-->
+      <textarea id="code" name="code" style="" required="" autofocus=""></textarea>
     </div>
     <div class="actions">
       <input name="submit" type="submit" value="Submit">

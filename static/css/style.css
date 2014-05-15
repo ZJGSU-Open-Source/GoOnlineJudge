@@ -1000,9 +1000,10 @@ html{
 	background:none repeat scroll 0 0 #eee;
 }#navibar a{
 	display:block;
+	font-weight: bold;
 	padding:3px 15px;
 	text-decoration:none;
-	color:#333;
+	color:#0072E3;//#333;
 }#navibar span{
 	color:#DD4C39;
 	font-weight:bold;
@@ -1018,7 +1019,15 @@ html{
 	border:1px solid #ddd;
 	padding:2px;
 	text-align:center;
-}.field_with_errors{
+}#problemInfo .key{
+	padding:0px 20px;
+	background-color:#ddd;
+}.problemIteam{
+	font-size: 20px;
+	font-weight: bold;
+	//margin: 0 0 1.5em 
+}
+.field_with_errors{
 	margin-top:-1em;
 	padding:2px;
 	background-color:red;
@@ -1129,12 +1138,15 @@ html{
 	background-position:right center;
 	background-repeat:no-repeat;
 	cursor:pointer;
+	text-align: center;
 }table thead tr .headerSortDown{
 	background-image:url("/images/desc.gif");
 	background-color:#B0C3E6;
 }table thead tr .headerSortUp{
 	background-image:url("/images/asc.gif");
 	background-color:#B0C3E6;
+}table tbody tr td{
+	text-align: center;
 }.countDown{
 	line-height:1em;
 	font-size:3em;
@@ -1143,7 +1155,4 @@ html{
 	font-family:Consolas, monospace;
 }.jsLink{
 	cursor:pointer;
-}#problemInfo .key{
-	padding:0px 20px;
-	background-color:#ddd;
 }

@@ -81,7 +81,7 @@ Language: <select id="search_language" name="search_language">
 <table id="contest_list">
   <thead>
     <tr>
-      <th class="header">ID</th>
+      <th class="header">Run ID</th>
       <th class="header">User</th>
       <th class="header">Problem</th>
       <th class="header">Result</th>
@@ -98,10 +98,10 @@ Language: <select id="search_language" name="search_language">
         {{if ShowStatus .Status}} 
           <tr>
             <td>{{.Sid}}</td>
-            <td>{{.Uid}}</td>
+            <td><a href="/user/detail/uid/{{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/problem/detail/pid/{{.Pid}}">{{.Pid}}</a></td>
-            <td>{{ShowJudge .Judge}}</td>
-            <td>{{.Time}}ms</td>
+            <td><span class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
+            <td>{{.Time}}MS</td>
             <td>{{.Memory}}kB</td>
             <td>{{ShowLanguage .Language}}<a href="/status/code/sid/{{.Sid}}">[view]</a></td>
             <td>{{.Length}}B</td>

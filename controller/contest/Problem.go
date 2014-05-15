@@ -119,7 +119,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	}
-
+	this.Data["Pid"] = pid
 	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/problem_detail.tpl")
 	if err != nil {
@@ -132,4 +132,111 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "tpl error", 500)
 		return
 	}
+}
+
+/////////submit ------
+
+func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
+	log.Println("Problem Submit")
+	this.InitContest(w, r)
+
+	args := this.ParseURL(r.URL.Path[8:])
+
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	log.Println(pid)
+	pid = this.ContestDetail.List[pid]
+
+	uid := this.Uid
+	if uid == "" {
+		w.WriteHeader(401)
+		return
+	}
+
+	one := make(map[string]interface{})
+	one["pid"] = pid
+	one["uid"] = uid
+	one["module"] = config.ModuleP
+	one["mid"] = config.ModuleP
+	/////TODO. Judge
+
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+	var pro problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &pro)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+	}
+
+	action := "submit"
+	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888
+	//sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
+	if one["judge"] == config.JudgeAC { //Judge whether the solution is accepted
+		action = "solve"
+	}
+
+	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	///count if the problem has been solved
+	response, err = http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(pid)+"/uid/"+this.Uid+"/action/solve", "application/json", nil)
+	//solution 中需要添加一个cid字段
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	c := make(map[string]int)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &c)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+
+	}
+	///end count
+	if !(c["count"] >= 1 && action == "solve") {
+		response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+		defer response.Body.Close()
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+	}
+	/////end Judge
+
+	one["code"] = r.FormValue("code")
+	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
+	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+		return
+	}
+
+	response, err = http.Post(config.PostHost+"/solution/insert", "application/json", reader)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	w.WriteHeader(200)
 }
