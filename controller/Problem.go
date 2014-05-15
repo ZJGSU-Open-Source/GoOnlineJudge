@@ -190,7 +190,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 }
 
 // URL /problem/submit/pid/<pid>
-
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem Submit")
 	this.Init(w, r)
@@ -230,20 +229,22 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if pro.Pid == 0 {
-		http.Error(w, "Error Problem ID", 400)
+		http.Error(w, "Error Problem ID", 403)
 		return
 	}
+	one["code"] = r.FormValue("code")
+	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
+	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+
+	if r.FormValue("code") == "" {
+		http.Error(w, "source code is too short", 403)
+		return
+	}
+
 	action := "submit"
 	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888 //sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
 	if one["judge"] == config.JudgeAC {                                  //Judge whether the solution is accepted
 		action = "solve"
-	}
-
-	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
-	defer response.Body.Close()
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
 	}
 
 	///count if the problem has been solved
@@ -264,19 +265,23 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	}
 	///end count
-	if !(c["count"] >= 1 && action == "solve") {
-		response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
-		defer response.Body.Close()
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
+	if c["count"] >= 1 && action == "solve" { //当结果正确且不是第一次提交，只记录为提交而不记录为solve
+		action = "submit"
+	}
+	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
 	}
 	/////end Judge
-
-	one["code"] = r.FormValue("code")
-	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
-	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	reader, err := this.PostReader(&one)
 	if err != nil {

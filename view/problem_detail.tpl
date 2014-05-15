@@ -1,7 +1,7 @@
 {{define "content"}}
 {{with .Detail}}
  
-  <div id="problemInfo" class="rfloat">
+  <div id="problemInfo" class="rfloat" title="Problem Information">
     <div class="limit">
       <div class="key">Time Limit</div>
       <div class="value">{{.Time}}ms<br></div>
@@ -13,13 +13,13 @@
     <div class="checker">
       <div class="key">Judge Program</div>
       <div class="value">
-        <span title="纯文本对比">{{ShowSpecial .Special}}</span>
+        <span>{{ShowSpecial .Special}}</span>
       </div>
     </div>
     <div class="checker">
       <div class="key">Ratio</div>
       <div class="value">
-        <span title="纯文本对比">{{ShowRatio .Solve .Submit}}(<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}})</a></span>
+        <span>{{ShowRatio .Solve .Submit}}(<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}})</a></span>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
     {{end}}
     {{if .Source}}
       <p><b>Source:</b></p>
-      <p>{{.Source}}</p>
+      <p><a href="/problem/list/source/{{.Source}}">{{.Source}}</a></p>
     {{end}}
   </div>
   <hr>

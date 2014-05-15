@@ -21,7 +21,7 @@
         </tr>
         <tr>
           <th>Problems Submitted</th>
-          <td>{{.Submit}}</td>
+          <td><a href="/status/list/uid/{{.Uid}}">{{.Submit}}</a></td>
         </tr>
         <tr>
           <th>Problems Solved</th>
