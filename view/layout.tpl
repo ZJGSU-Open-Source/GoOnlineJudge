@@ -23,7 +23,7 @@
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
             {{if .IsShowAdmin}}<a href="/admin/">[Admin]</a>{{end}}
-            <a href="/user/detail/uid/{{.CurrentUser}}">[{{.CurrentUser}}]</a>
+            <a href="/user/settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{else}}
             {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
@@ -68,7 +68,7 @@
       <div id="pageFooter" class="center">
         <hr class="nomarginbottom">
         <div id="footerContainer">
-          <div class="center">Copyright (C) 2013-2014 Zhejiang Gongshang University ACM Club</div>
+          <div class="center">Copyright &copy; 2013-2014 Zhejiang Gongshang University ACM Club</div>
         </div>
       </div>
     </div>

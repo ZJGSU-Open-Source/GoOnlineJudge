@@ -25,7 +25,11 @@ func ShowExpire(str string, time string) (expire bool) {
 }
 
 func ShowRatio(solve int, submit int) (ratio string) {
-	ratio = strconv.FormatFloat(float64(solve)/float64(submit)*100, 'f', 2, 64) + "%"
+	if submit == 0 {
+		ratio = "0.00%"
+	} else {
+		ratio = strconv.FormatFloat(float64(solve)/float64(submit)*100, 'f', 2, 64) + "%"
+	}
 	return
 }
 

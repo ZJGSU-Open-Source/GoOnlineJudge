@@ -1145,7 +1145,11 @@ html{
 }table thead tr .headerSortUp{
 	background-image:url("/images/asc.gif");
 	background-color:#B0C3E6;
-}table tbody tr td{
+}#contest_list tbody tr td{
+	text-align: center;
+}#ranklist tbody tr td{
+	text-align: center;
+}#problem_list tbody tr td{
 	text-align: center;
 }.countDown{
 	line-height:1em;
