@@ -6,7 +6,7 @@
     </div>
     <div class="field">
     	<label for="content_title">Title</label><br>
-    	<input id="content_title" name="title" size="60" type="text">
+    	<input id="content_title" name="title" size="60" type="text" required="">
     </div>
     <div class="field">
     	<label for="content_type">Contest Type</label><br>

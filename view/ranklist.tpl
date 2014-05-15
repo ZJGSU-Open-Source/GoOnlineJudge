@@ -70,9 +70,9 @@
           {{if ShowStatus .Status}}
             <tr>
               <td>{{.Index}}</td>
-              <td>{{.Uid}}</td>
+              <td><a href="/user/detail/uid/{{.Uid}}">{{.Uid}}</a></td>
               <td>{{.Motto}}</td>
-              <td>{{ShowRatio .Solve .Submit}} ({{.Solve}}/{{.Submit}})</td>
+              <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list/uid/{{.Uid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/uid/{{.Uid}}">{{.Submit}}</a>)</td>
             </tr>
           {{end}}
         {{end}}  

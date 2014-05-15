@@ -248,7 +248,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["List"] = solvedList["list"]
 	}
-
+	//log.Println(solvedList["list"])
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
@@ -288,6 +288,23 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		this.Data["Detail"] = one
+	}
+
+	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+this.Uid, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	solvedList := make(map[string][]int)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &solvedList)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["List"] = solvedList["list"]
 	}
 
 	t := template.New("layout.tpl")

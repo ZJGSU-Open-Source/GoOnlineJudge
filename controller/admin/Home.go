@@ -20,6 +20,7 @@ func (this *HomeController) Home(w http.ResponseWriter, r *http.Request) {
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/home.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

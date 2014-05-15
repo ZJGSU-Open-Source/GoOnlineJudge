@@ -14,7 +14,7 @@
       <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
     {{end}}
   </head>
-  {{if not .IsShowAdmin}}
+  {{if not .IsAdmin}}
   <body>
   <p style="color: red">Warning:You are not admin</p>
   </body>
@@ -65,6 +65,17 @@
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add">Add</a>{{end}}</li>
               </ul>
             </div>
+          {{end}}
+          {{if .IsAdmin }}
+          <li><a href="/admin/user/list">User</a></li>
+          {{if .IsUser}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/privilege">Privilege</a>{{end}}</li>
+                <li>{{if .IsList}}<span>Change Pwd</sapn>{{else}}<a href="/admin/user">Change Pwd</a>{{end}}</li>
+              </ul>
+            </div>
+            {{end}}
           {{end}}
         </ul>
       </div>

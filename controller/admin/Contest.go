@@ -189,7 +189,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		}
 		list = append(list, pid)
 	}
-	one["list"] = list
+	one["list"] = list //problemList 建议检查下problem是否存在，存在的将其在普通列表中不可见
 
 	reader, err := this.PostReader(&one)
 	if err != nil {

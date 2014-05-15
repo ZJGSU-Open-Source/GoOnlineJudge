@@ -36,6 +36,9 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 		if this.Privilege > config.PrivilegeSB {
 			this.Data["IsShowAdmin"] = true
 		}
+		if this.Privilege == config.PrivilegeAD {
+			this.Data["IsAdmin"] = true
+		}
 	}
 }
 

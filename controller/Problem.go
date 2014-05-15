@@ -3,12 +3,10 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	//"GoOnlineJudge/sljudge"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type problem struct {
@@ -183,7 +181,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "Problem Detial " + strconv.Itoa(pid)
+	this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -231,7 +229,10 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
+	if pro.Pid == 0 {
+		http.Error(w, "Error Problem ID", 400)
+		return
+	}
 	action := "submit"
 	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888 //sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
 	if one["judge"] == config.JudgeAC {                                  //Judge whether the solution is accepted
@@ -245,16 +246,36 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+	///count if the problem has been solved
+	response, err = http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(pid)+"/uid/"+this.Uid+"/action/solve", "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+
+	c := make(map[string]int)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &c)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+
+	}
+	///end count
+	if !(c["count"] >= 1 && action == "solve") {
+		response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+		defer response.Body.Close()
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+	}
 	/////end Judge
 
 	one["code"] = r.FormValue("code")
-	one["len"] = this.GetCodeLen(len(r.FormValue("code")))
+	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
 	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	reader, err := this.PostReader(&one)
