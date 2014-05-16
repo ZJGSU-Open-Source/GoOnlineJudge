@@ -42,6 +42,28 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Contest Problem List")
 	this.InitContest(w, r)
 
+	if (this.GetTime() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
+
+		this.Data["Info"] = "The contest has not started yet"
+		if this.ContestDetail.Status == config.StatusReverse {
+			this.Data["Info"] = "No such contest"
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
+
 	list := make([]problem, len(this.ContestDetail.List))
 	for k, v := range this.ContestDetail.List {
 		response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(v), "application/json", nil)
@@ -76,10 +98,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	this.Data["Problem"] = list
-
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowStatus": class.ShowStatus})
+	this.Data["Time"] = this.GetTime()
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowRatio":  class.ShowRatio,
+		"ShowExpire": class.ShowExpire})
 	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -87,6 +112,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestProblem"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -95,6 +121,28 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Contest Problem Detail")
 	this.InitContest(w, r)
+
+	if (this.ContestDetail.Status == config.StatusReverse || this.GetTime() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
+
+		this.Data["Info"] = "The contest has not started yet"
+		if this.ContestDetail.Status == config.StatusReverse {
+			this.Data["Info"] = "No such contest"
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
 
 	args := this.ParseURL(r.URL.Path[8:])
 	pid, err := strconv.Atoi(args["pid"])
@@ -120,7 +168,12 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		this.Data["Detail"] = one
 	}
 	this.Data["Pid"] = pid
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	this.Data["Status"] = this.ContestDetail.Status
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowRatio":   class.ShowRatio,
+		"ShowStatus":  class.ShowStatus,
+		"ShowSpecial": class.ShowSpecial})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -134,7 +187,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-/////////submit ------
+/////////Todo submit ,need to updata------
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem Submit")
@@ -159,6 +212,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 	one["pid"] = pid
 	one["uid"] = uid
+	one["cid"] = this.ContestDetail.Cid
 	one["module"] = config.ModuleP
 	one["mid"] = config.ModuleP
 	/////TODO. Judge

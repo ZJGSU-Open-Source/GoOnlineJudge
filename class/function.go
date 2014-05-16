@@ -1,6 +1,7 @@
 package class
 
 import (
+	"GoOnlineJudge/config"
 	"strconv"
 )
 
@@ -8,19 +9,19 @@ var specialArr = []string{"Standard", "Special"}
 var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded"}
 var languageArr = []string{"None", "C", "C++", "Java"}
 var encryptArr = []string{"None", "Public", "Private", "Password"}
+var privilegeArr = []string{"None", "Primary User", "Source Broswer", "Admin"}
 
 func ShowNext(num int) (next int) {
 	next = num + 1
 	return
 }
 
-func ShowStatus(num int) (status bool) {
-	status = num%2 != 0
-	return
+func ShowStatus(status int) bool {
+	return status == config.StatusAvailable
 }
 
 func ShowExpire(str string, time string) (expire bool) {
-	expire = time > str
+	expire = str < time
 	return
 }
 
@@ -65,4 +66,12 @@ func NumAdd(a int, b int) (ret int) {
 func NumSub(a int, b int) (ret int) {
 	ret = a - b
 	return
+}
+
+func LargePU(privilege int) bool {
+	return privilege > config.PrivilegePU
+}
+
+func PriToString(privilege int) string {
+	return privilegeArr[privilege]
 }

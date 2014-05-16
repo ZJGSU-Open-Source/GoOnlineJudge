@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strconv"
 )
 
 type user struct {
@@ -27,12 +26,17 @@ type user struct {
 	Create string `json:"create"bson:'create'`
 }
 
+type privilegeUser struct {
+	user
+	Index int `json:"index"bson:"index"`
+}
+
 type UserController struct {
 	class.Controller
 }
 
-func (this *UserController) List() {
-	log.Println("Admin Problem List")
+func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Privilege User List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/user/list", "application/json", nil)
@@ -42,35 +46,28 @@ func (this *UserController) List() {
 		return
 	}
 
-	one := make(map[string][]user)
+	one := make(map[string][]privilegeUser)
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &one)
 		if err != nil {
 			http.Error(w, "load error", 400)
 			return
 		}
-		var len = len(one["list"])
-		for i := 0; i < len; i++ {
-			if one["list"][i].Privilege > config.PrivilegePU {
-				one["list"][i].Index = count
-				count += 1
-			}
-		}
 		this.Data["User"] = one["list"]
 	}
 
-	funcMap := map[string]interface{}{
-		"NumEqual": class.NumEqual,
-	}
-
-	t := template.New("layout.tpl").Funcs(funcMap)
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/userlist.tpl")
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"LargePU":     class.LargePU,
+		"PriToString": class.PriToString})
+	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/user_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
 	this.Data["Title"] = "Privilege User List"
+	this.Data["IsUser"] = true
+	this.Data["IsList"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)

@@ -1003,7 +1003,7 @@ html{
 	font-weight: bold;
 	padding:3px 15px;
 	text-decoration:none;
-	color:#0072E3;//#333;
+	color:#8DA2B8;//#333;
 }#navibar span{
 	color:#DD4C39;
 	font-weight:bold;
@@ -1150,6 +1150,8 @@ html{
 }#ranklist tbody tr td{
 	text-align: center;
 }#problem_list tbody tr td{
+	text-align: center;
+}#news_list tbody tr td{
 	text-align: center;
 }.countDown{
 	line-height:1em;

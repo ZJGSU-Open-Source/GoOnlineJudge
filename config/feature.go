@@ -1,20 +1,18 @@
 package config
 
-const ProblemPerPage = 100
-const ContestPerPage = 100
-const ExercisePerPage = 100
-const SolutionPerPage = 50
-const UserPerPage = 50
+const (
+	ProblemPerPage  = 100
+	ContestPerPage  = 100
+	ExercisePerPage = 100
+	SolutionPerPage = 50
+	UserPerPage     = 50
+)
 
-// const ProblemPerPage = 1
-// const ContestPerPage = 1
-// const ExercisePerPage = 1
-// const SolutionPerPage = 5
-// const UserPerPage = 50
-
-const PageHeadLimit = 1
-const PageTailLimit = 1
-const PageMidLimit = 2
+const (
+	PageHeadLimit = 1
+	PageTailLimit = 1
+	PageMidLimit  = 2
+)
 
 const (
 	JudgeNA  = 0  //None
@@ -30,22 +28,36 @@ const (
 	JudgeCP  = 10 //wait to Compare Output
 )
 
-const LanguageNA = 0   //None
-const LanguageC = 1    //C
-const LanguageCPP = 2  //C++
-const LanguageJAVA = 3 //Java
+const (
+	LanguageNA   = 0 //None
+	LanguageC    = 1 //C
+	LanguageCPP  = 2 //C++
+	LanguageJAVA = 3 //Java
+)
 
-const ModuleNA = 0 //None
-const ModuleP = 1  //None
-const ModuleC = 2  //Contest
-const ModuleE = 3  //Exercise
+const (
+	ModuleNA = 0 //None
+	ModuleP  = 1 //None
+	ModuleC  = 2 //Contest
+	ModuleE  = 3 //Exercise
+)
 
-const PrivilegeNA = 0 //None
-const PrivilegePU = 1 //Primary User
-const PrivilegeSB = 2 //Source Broswer
-const PrivilegeAD = 3 //Admin
+const (
+	PrivilegeNA = 0 //None
+	PrivilegePU = 1 //Primary User
+	PrivilegeSB = 2 //Source Broswer
+	PrivilegeAD = 3 //Admin
+)
 
-const EncryptNA = 0 //None
-const EncryptPB = 1 //Public
-const EncryptPT = 2 //Private
-const EncryptPW = 3 //Password
+const (
+	EncryptNA = 0 //None
+	EncryptPB = 1 //Public
+	EncryptPT = 2 //Private
+	EncryptPW = 3 //Password
+)
+
+const (
+	StatusReverse   = 0 //不可用
+	StatusIncon     = 1 //正在比赛中
+	StatusAvailable = 2 //可用
+)

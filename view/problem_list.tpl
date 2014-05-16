@@ -75,9 +75,10 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   </thead>
   <tbody>
     {{$time := .Time}}
+    {{$privilege := .Privilege}}
     {{with .Problem}}  
       {{range .}} 
-        {{if ShowStatus .Status}}
+        {{if or (ShowStatus .Status) (LargePU $privilege)}}
           {{if ShowExpire .Expire $time}}
             <tr>
               <td>{{.Pid}}</td>

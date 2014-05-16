@@ -220,14 +220,37 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
-	log.Println(args)
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/status/cid/"+strconv.Itoa(cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one contest
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+	}
+
+	var action int
+	switch one.Status {
+	case config.StatusAvailable:
+		action = config.StatusReverse
+	default:
+		action = config.StatusAvailable
+	}
+
+	response, err = http.Post(config.PostHost+"/contest/status/cid/"+strconv.Itoa(cid)+"/action/"+strconv.Itoa(action), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)

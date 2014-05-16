@@ -15,7 +15,7 @@
       {{range .}} 
         <tr>
           <td>{{.Cid}}</td>
-          <td><span>{{.Title}}</span></td>
+          <td><a href="/contest/problem/list/cid/{{.Cid}}">{{.Title}}</a></td>
           <td><a class="contest_status" href="#" data-id="{{.Cid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
           <td><a class="contest_delete" href="#" data-id="{{.Cid}}">[Delete]</a></td>
           <td><a class="contest_edit" href="#" data-id="{{.Cid}}">[Edit]</a></td>
