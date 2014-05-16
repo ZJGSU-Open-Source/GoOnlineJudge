@@ -11,9 +11,10 @@
   </thead>
   <tbody>
     {{$time := .Time}}
-    {{with .Contest}}  
+    {{$privilege := .Privilege}}
+    {{with .Contest}}
       {{range .}} 
-        {{if ShowStatus .Status}}
+        {{if or (ShowStatus .Status) (LargePU $privilege)}}
           <tr>
             <td>{{.Cid}}</td>
             <td><a href="/contest/problem/list/cid/{{.Cid}}">{{.Title}}</a></td>

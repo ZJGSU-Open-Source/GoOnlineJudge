@@ -216,7 +216,33 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/status/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
+	var one problem
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Detail"] = one
+	} else {
+		http.Error(w, "resp error", 500)
+		return
+	}
+	var action int
+	switch one.Status {
+	case config.StatusAvailable:
+		action = config.StatusReverse
+	case config.StatusReverse:
+		action = config.StatusAvailable
+	}
+	response, err = http.Post(config.PostHost+"/problem/status/pid/"+strconv.Itoa(pid)+"/action/"+strconv.Itoa(action), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)

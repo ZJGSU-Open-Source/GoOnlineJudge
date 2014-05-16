@@ -169,8 +169,30 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
+	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
 
-	response, err := http.Post(config.PostHost+"/news/status/nid/"+strconv.Itoa(nid), "application/json", nil)
+	var one news
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+	}
+	var action int
+	switch one.Status {
+	case config.StatusAvailable:
+		action = config.StatusReverse
+	default:
+		action = config.StatusAvailable
+	}
+
+	response, err = http.Post(config.PostHost+"/news/status/nid/"+strconv.Itoa(nid)+"/action/"+strconv.Itoa(action), "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)

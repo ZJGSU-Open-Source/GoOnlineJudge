@@ -49,9 +49,14 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Contest"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus, "ShowExpire": class.ShowExpire, "ShowEncrypt": class.ShowEncrypt})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowStatus":  class.ShowStatus,
+		"ShowExpire":  class.ShowExpire,
+		"ShowEncrypt": class.ShowEncrypt,
+		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest_list.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -59,8 +64,10 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Contest List"
 	this.Data["IsContest"] = true
+	this.Data["Privilege"] = this.Privilege
 	err = t.Execute(w, this.Data)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

@@ -128,14 +128,15 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		"NumEqual":   class.NumEqual,
 		"NumAdd":     class.NumAdd,
 		"NumSub":     class.NumSub,
+		"LargePU":    class.LargePU,
 	}
 	t := template.New("layout.tpl").Funcs(funcMap)
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
-		http.Error(w, "tpl1 error", 500)
+		http.Error(w, "tpl error", 500)
 		return
 	}
-
+	this.Data["Privilege"] = this.Privilege
 	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Problem List"
 	this.Data["IsProblem"] = true
@@ -173,14 +174,38 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Detail"] = one
 	}
+	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse {
+		t := template.New("layout.tpl")
+		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+		this.Data["Info"] = "No such problem"
+		this.Data["Title"] = "No such problem"
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowRatio":   class.ShowRatio,
+		"ShowSpecial": class.ShowSpecial,
+		"ShowStatus":  class.ShowStatus,
+		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
 
+	this.Data["Privilege"] = this.Privilege
 	this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -203,7 +228,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	uid := this.Uid
 	if uid == "" {
-		w.WriteHeader(401)
+		http.Error(w, "need sign in", 401)
 		return
 	}
 
@@ -228,16 +253,31 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if pro.Pid == 0 {
-		http.Error(w, "Error Problem ID", 403)
-		return
-	}
-	one["code"] = r.FormValue("code")
+	code := r.FormValue("code")
+	one["code"] = code
 	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
 	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
 
-	if r.FormValue("code") == "" {
-		http.Error(w, "source code is too short", 403)
+	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
+		switch {
+		case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
+			this.Data["Info"] = "No such problem"
+		case code == "":
+			this.Data["Info"] = "Your source code is too short"
+		}
+		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
+
+		t := template.New("layout.tpl")
+		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
 		return
 	}
 
@@ -246,7 +286,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	if one["judge"] == config.JudgeAC {                                  //Judge whether the solution is accepted
 		action = "solve"
 	}
-
+	/////end Judge
 	///count if the problem has been solved
 	response, err = http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(pid)+"/uid/"+this.Uid+"/action/solve", "application/json", nil)
 	defer response.Body.Close()
@@ -281,7 +321,8 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post error", 500)
 		return
 	}
-	/////end Judge
+
+	one["status"] = config.StatusAvailable
 
 	reader, err := this.PostReader(&one)
 	if err != nil {

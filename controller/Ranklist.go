@@ -49,7 +49,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		count = 1
 		var len = len(ret["list"])
 		for i := 0; i < len; i++ {
-			if ret["list"][i].Status%2 != 0 {
+			if ret["list"][i].Status == config.StatusAvailable {
 				ret["list"][i].Index = count
 				count += 1
 			}
@@ -90,7 +90,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		var count = 1
 		var len = len(one["list"])
 		for i := 0; i < len; i++ {
-			if one["list"][i].Status%2 != 0 {
+			if one["list"][i].Status == config.StatusAvailable {
 				one["list"][i].Index = count
 				count += 1
 			}

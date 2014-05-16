@@ -1,5 +1,5 @@
 {{define "content"}}
-<meta http-equiv="refresh" content="2">
+<meta http-equiv="refresh" content="4">
 <h1>Status List</h1>
 <form accept-charset="UTF-8" id="search_form">
 User: <input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">

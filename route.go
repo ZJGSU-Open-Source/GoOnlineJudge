@@ -153,7 +153,7 @@ func adminUserHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
 	if l := len(s); l >= 3 {
-		c := &admin.ContestController{}
+		c := &admin.UserController{}
 		m := strings.Title(s[2])
 		rv := getReflectValue(w, r)
 		callMethod(c, m, rv)
