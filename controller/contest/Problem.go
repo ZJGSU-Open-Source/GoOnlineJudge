@@ -81,14 +81,14 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			one.Pid = k
-
-			one.Solve, err = this.GetCount(k, "solve")
+			query := "/pid/" + strconv.Itoa(v) + "/action/accept"
+			one.Solve, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
 				return
 			}
-
-			one.Submit, err = this.GetCount(k, "submit")
+			query = "/pid/" + strconv.Itoa(v) + "/action/submit"
+			one.Submit, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
 				return
@@ -98,10 +98,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	this.Data["Problem"] = list
-	this.Data["Time"] = this.GetTime()
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio":  class.ShowRatio,
-		"ShowExpire": class.ShowExpire})
+		"ShowRatio": class.ShowRatio})
 	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
 		log.Println(err)
@@ -190,7 +188,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 /////////Todo submit ,need to updata------
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem Submit")
+	log.Println("Contest Problem Submit")
 	this.InitContest(w, r)
 
 	args := this.ParseURL(r.URL.Path[8:])
@@ -200,9 +198,8 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	log.Println(pid)
-	pid = this.ContestDetail.List[pid]
 
+	pid = this.ContestDetail.List[pid]
 	uid := this.Uid
 	if uid == "" {
 		w.WriteHeader(401)
@@ -212,9 +209,8 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 	one["pid"] = pid
 	one["uid"] = uid
-	one["cid"] = this.ContestDetail.Cid
-	one["module"] = config.ModuleP
-	one["mid"] = config.ModuleP
+	one["mid"] = this.ContestDetail.Cid
+	one["module"] = config.ModuleC
 	/////TODO. Judge
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
@@ -239,46 +235,60 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		action = "solve"
 	}
 
+	code := r.FormValue("code")
+	one["code"] = code
+	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
+	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+
+	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
+		switch {
+		case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
+			this.Data["Info"] = "No such problem"
+		case code == "":
+			this.Data["Info"] = "Your source code is too short"
+		}
+		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
+
+		t := template.New("layout.tpl")
+		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
+
+	query := "/pid/" + strconv.Itoa(pid) + "/uid/" + this.Uid + "/action/solve"
+	cnt, err := this.GetCount(query)
+	if err != nil {
+		http.Error(w, "query erro", 500)
+	}
+	///end count
+	///count if the problem has been solved
+	if cnt >= 1 && action == "solve" {
+		action = "submit"
+	}
+	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
+	defer response.Body.Close()
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+
 	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
-
-	///count if the problem has been solved
-	response, err = http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(pid)+"/uid/"+this.Uid+"/action/solve", "application/json", nil)
-	//solution 中需要添加一个cid字段
-	defer response.Body.Close()
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-
-	c := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &c)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-
-	}
-	///end count
-	if !(c["count"] >= 1 && action == "solve") {
-		response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
-		defer response.Body.Close()
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
-	}
 	/////end Judge
 
-	one["code"] = r.FormValue("code")
-	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
-	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
-
+	one["status"] = config.StatusAvailable
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)

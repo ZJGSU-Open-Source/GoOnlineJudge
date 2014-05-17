@@ -66,8 +66,8 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestDetail"] = true
 }
 
-func (this *Contest) GetCount(pid int, action string) (count int, err error) {
-	response, err := http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(this.ContestDetail.List[pid])+"/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid)+"/action/"+action, "application/json", nil)
+func (this *Contest) GetCount(query string) (count int, err error) {
+	response, err := http.Post(config.PostHost+"/solution/count/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid)+query, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
 		return

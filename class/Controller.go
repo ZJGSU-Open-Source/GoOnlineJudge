@@ -22,10 +22,9 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	this.Data = make(map[string]interface{})
 
 	this.Uid = this.GetSession(w, r, "CurrentUser")
+	this.Data["CurrentUser"] = this.Uid
 	if this.Uid != "" {
 		this.Data["IsCurrentUser"] = true
-		this.Data["CurrentUser"] = this.Uid
-
 		var err error
 		this.Privilege, err = strconv.Atoi(this.GetSession(w, r, "CurrentPrivilege"))
 		if err != nil {

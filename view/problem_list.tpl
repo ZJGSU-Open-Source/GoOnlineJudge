@@ -70,7 +70,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
     <tr>
       <th class="header">ID</th>
       <th class="header">Title</th>
-      <th class="header">Ratio</th>
+      <th class="header">Ratio(Solve/Submit)</th>
     </tr>
   </thead>
   <tbody>

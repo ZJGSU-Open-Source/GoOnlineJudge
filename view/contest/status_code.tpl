@@ -1,5 +1,6 @@
 {{define "content"}}
 <h1>{{.Contest}}</h1>
+  {{if or (SameID .CurrentUser .Solution.Uid) (LargePU .Privilege)}}
   {{with .Solution}}
     <textarea id="sourceCode" name="sourceCode" readonly="readonly" style="display: none;">{{.Code}}</textarea>
     <table class="CodeRay">
@@ -21,5 +22,7 @@
       $('#sourceCode').blur(function(){$('.CodeRay').show(); $('#sourceCode').hide();}).hide();
     //]]>
     </script>
+  {{end}}
+  {{else}}<div class="flash notice">You can't see it</div>
   {{end}}
 {{end}}

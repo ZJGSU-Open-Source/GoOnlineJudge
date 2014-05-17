@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="checker">
-      <div class="key">Ratio</div>
+      <div class="key">Ratio(Solve/Submit)</div>
       <div class="value">
         <span>{{ShowRatio .Solve .Submit}}(<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}})</a></span>
       </div>

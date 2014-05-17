@@ -75,3 +75,7 @@ func LargePU(privilege int) bool {
 func PriToString(privilege int) string {
 	return privilegeArr[privilege]
 }
+
+func SameID(ID1, ID2 string) bool {
+	return ID1 == ID2
+}
