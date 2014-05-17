@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="checker">
-        <div class="key">Ratio</div>
+        <div class="key">Ratio(Solve/Submit)</div>
         <div class="value">
           <span title="纯文本对比">{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
         </div>

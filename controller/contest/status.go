@@ -51,20 +51,25 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "load error", 400)
 			return
 		}
+		for i, v := range one["list"] {
+			one["list"][i].Pid = this.Index[v.Pid]
+		}
 		this.Data["Solution"] = one["list"]
 	}
 
-	for _, v := range one["list"] {
-		v.Pid = this.Index[v.Pid]
-	}
-
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus, "ShowJudge": class.ShowJudge, "ShowLanguage": class.ShowLanguage})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowStatus":   class.ShowStatus,
+		"ShowJudge":    class.ShowJudge,
+		"ShowLanguage": class.ShowLanguage,
+		"LargePU":      class.LargePU,
+		"SameID":       class.SameID})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_list.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
-
+	this.Data["Privilege"] = this.Privilege
 	this.Data["IsContestStatus"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -102,7 +107,11 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one
 	}
 
-	t := template.New("layout.tpl")
+	this.Data["Privilege"] = this.Privilege
+
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"LargePU": class.LargePU,
+		"SameID":  class.SameID})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_code.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -111,6 +120,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

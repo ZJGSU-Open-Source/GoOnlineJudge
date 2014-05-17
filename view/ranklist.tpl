@@ -61,7 +61,7 @@
         <th class="header">Rank</th>
         <th class="header">User</th>
         <th class="header">Motto</th>
-        <th class="header">Ratio</th>
+        <th class="header">Ratio(Solve/Submit)</th>
       </tr>
     </thead>
     <tbody>

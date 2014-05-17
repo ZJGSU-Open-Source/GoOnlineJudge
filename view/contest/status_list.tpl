@@ -16,17 +16,19 @@
   </thead>
   <tbody>
     {{$cid := .Cid}}
+    {{$privilege := .Privilege}}
+    {{$uid := .CurrentUser}}
     {{with .Solution}}  
       {{range .}} 
         {{if ShowStatus .Status}} 
           <tr>
             <td>{{.Sid}}</td>
-            <td>{{.Uid}}</td>
+            <td><a href="/user/detail/uid/{{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/contest/problem/detail/cid/{{$cid}}/pid/{{.Pid}}">{{.Pid}}</a></td>
             <td>{{ShowJudge .Judge}}</td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
-            <td>{{ShowLanguage .Language}}<a href="/contest/status/code/cid/{{$cid}}/sid/{{.Sid}}">[view]</a></td>
+            <td>{{ShowLanguage .Language}}{{if or (SameID .Uid $uid) (LargePU $privilege)}}<a href="/contest/status/code/cid/{{$cid}}/sid/{{.Sid}}">[view]</a>{{end}}</td>
             <td>{{.Length}}B</td>
             <td>{{.Create}}</td>
           </tr>

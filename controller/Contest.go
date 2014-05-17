@@ -48,7 +48,6 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Contest"] = one["list"]
 	}
-
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"ShowStatus":  class.ShowStatus,
 		"ShowExpire":  class.ShowExpire,

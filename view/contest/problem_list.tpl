@@ -5,7 +5,7 @@
     <tr>
       <th class="header">ID</th>
       <th class="header">Title</th>
-      <th class="header">Ratio</th>
+      <th class="header">Ratio(Accept/Submit)</th>
     </tr>
   </thead>
   <tbody>
