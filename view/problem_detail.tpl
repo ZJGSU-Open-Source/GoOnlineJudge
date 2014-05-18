@@ -88,6 +88,7 @@
         }
       },
       success: function(result) {
+        $('textarea').val('')
         window.location.href = '/status/list';
       }
     });

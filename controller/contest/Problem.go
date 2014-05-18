@@ -211,7 +211,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["uid"] = uid
 	one["mid"] = this.ContestDetail.Cid
 	one["module"] = config.ModuleC
-	/////TODO. Judge
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
 	defer response.Body.Close()
@@ -228,17 +227,11 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	action := "submit"
-	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888
-	//sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
-	if one["judge"] == config.JudgeAC { //Judge whether the solution is accepted
-		action = "solve"
-	}
-
 	code := r.FormValue("code")
 	one["code"] = code
 	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
 	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+	one["status"] = config.StatusAvailable
 
 	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
 		switch {
@@ -262,6 +255,14 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	/////TODO. Judge
+	action := "submit"
+	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888
+	//sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
+
+	if one["judge"] == config.JudgeAC { //Judge whether the solution is accepted
+		action = "solve"
+	}
 
 	query := "/pid/" + strconv.Itoa(pid) + "/uid/" + this.Uid + "/action/solve"
 	cnt, err := this.GetCount(query)
@@ -273,6 +274,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	if cnt >= 1 && action == "solve" {
 		action = "submit"
 	}
+	/////end Judge
 	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
 	defer response.Body.Close()
 	if err != nil {
@@ -286,9 +288,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post error", 500)
 		return
 	}
-	/////end Judge
 
-	one["status"] = config.StatusAvailable
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)

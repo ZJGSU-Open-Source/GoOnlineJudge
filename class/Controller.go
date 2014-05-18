@@ -23,6 +23,7 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 
 	this.Uid = this.GetSession(w, r, "CurrentUser")
 	this.Data["CurrentUser"] = this.Uid
+	this.Data["Privilege"] = this.Privilege
 	if this.Uid != "" {
 		this.Data["IsCurrentUser"] = true
 		var err error
