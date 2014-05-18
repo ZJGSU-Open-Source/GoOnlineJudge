@@ -69,9 +69,14 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"ShowRatio":   class.ShowRatio,
+		"ShowSpecial": class.ShowSpecial,
+		"ShowStatus":  class.ShowStatus,
+		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/admin/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

@@ -1,7 +1,7 @@
 {{define "content"}}
   {{with .Detail}}
     <h1>{{.Title}}</h1>
-    <div id="problemInfo" class="rfloat">
+    <div id="problemInfo" class="rfloat" title="Problem Information">
       <div class="limit">
         <div class="key">Time Limit</div>
         <div class="value">{{.Time}}ms<br></div>
@@ -13,35 +13,31 @@
       <div class="checker">
         <div class="key">Judge Program</div>
         <div class="value">
-          <span title="纯文本对比">{{ShowSpecial .Special}}</span>
+          <span>{{ShowSpecial .Special}}</span>
         </div>
       </div>
       <div class="checker">
         <div class="key">Ratio(Solve/Submit)</div>
         <div class="value">
-          <span title="纯文本对比">{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
+          <span>{{ShowRatio .Solve .Submit}}({{.Solve}}/{{.Submit}})</span>
         </div>
       </div>
     </div>
     <div id="problemContent">
-      <p><b>Description:</b></p>
-      <p>{{.Description}}</p>
-      <p><b>Input:</b></p>
-      <p>{{.Input}}</p>
-      <p><b>Output:</b></p>
-      <p>{{.Output}}</p>
-      <b>Sample Input:</b>
-      <pre>{{.In}}</pre>
-      <b>Sample Output:</b>
-      <pre>{{.Out}}</pre>
-      {{if .Hint}}
-        <p><b>Hint:</b></p>
-        <p>{{.Hint}}</p>
-      {{end}}
-      {{if .Source}}
-        <p><b>Source:</b></p>
-        <p>{{.Source}}</p>
-      {{end}}
+      <p class="problemIteam">Description:</p>
+    <p>{{.Description}}</p>
+    <p class="problemIteam">Input:</p>
+    <p>{{.Input}}</p>
+    <p class="problemIteam">Output:</p>
+    <p>{{.Output}}</p>
+    <span class="problemIteam">Sample Input:</span>
+    <pre>{{.In}}</pre>
+    <span class="problemIteam">Sample Output:</span>
+    <pre>{{.Out}}</pre>
+    {{if .Hint}}
+      <p><b>Hint:</b></p>
+      <p>{{.Hint}}</p>
+    {{end}}
     </div>
     <hr>
   <a href="#" id="submission_link" onclick="show_submission(); return false;">Submit</a>

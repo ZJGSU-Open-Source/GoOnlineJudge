@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os/exec"
 	"strconv"
 )
 
@@ -237,7 +238,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["uid"] = uid
 	one["module"] = config.ModuleP
 	one["mid"] = config.ModuleP
-	/////TODO. Judge
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
 	defer response.Body.Close()
@@ -280,49 +280,8 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
-	action := "submit"
-	one["judge"], one["time"], one["memory"] = config.JudgeAC, 1000, 888 //sljudge.SJudge(1, pro.Time, pro.Memory, pid, r.FormValue("code")) //solution judge 最好做成外部程序
-	if one["judge"] == config.JudgeAC {                                  //Judge whether the solution is accepted
-		action = "solve"
-	}
-	/////end Judge
-	///count if the problem has been solved
-	response, err = http.Post(config.PostHost+"/solution/count/pid/"+strconv.Itoa(pid)+"/uid/"+this.Uid+"/action/solve", "application/json", nil)
-	defer response.Body.Close()
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-
-	c := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &c)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-
-	}
-	///end count
-	if c["count"] >= 1 && action == "solve" { //当结果正确且不是第一次提交，只记录为提交而不记录为solve
-		action = "submit"
-	}
-	response, err = http.Post(config.PostHost+"/user/record/uid/"+uid+"/action/"+action, "application/json", nil)
-	defer response.Body.Close()
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-
-	response, err = http.Post(config.PostHost+"/problem/record/pid/"+strconv.Itoa(pid)+"/action/"+action, "application/json", nil)
-	defer response.Body.Close()
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-
 	one["status"] = config.StatusAvailable
+	one["judge"] = config.JudgePD
 
 	reader, err := this.PostReader(&one)
 	if err != nil {
@@ -337,5 +296,21 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sl := make(map[string]int)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &sl)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+
+	}
+	/////TODO. Judge
+
+	cmd := exec.Command("RunServer.exe", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+	err = cmd.Start()
+	if err != nil {
+		log.Println(err)
+	}
 	w.WriteHeader(200)
 }
