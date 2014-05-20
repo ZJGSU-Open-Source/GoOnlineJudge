@@ -1,7 +1,6 @@
 {{define "content"}}
 {{$privilege := .Privilege}}
 {{with .Detail}}
-  {{if or (ShowStatus .Status) (LargePU $privilege)}}
   <div id="problemInfo" class="rfloat" title="Problem Information">
     <div class="limit">
       <div class="key">Time Limit</div>
@@ -94,8 +93,5 @@
     });
   });
   </script>
-{{else}}
-<p>forbid use the problem</p>
-{{end}}
 {{end}}
 {{end}}

@@ -38,7 +38,7 @@
           <li>{{if .IsProblem}}<span>Problem</span>{{else}}<a href="/problem/list">Problem</a>{{end}}</li>
           <li>{{if .IsStatus}}<span>Status</span>{{else}}<a href="/status/list">Status</a>{{end}}</li>
           <li>{{if .IsRanklist}}<span>Ranklist</span>{{else}}<a href="/ranklist">Ranklist</a>{{end}}</li>
-          <li>{{if .IsContest}}<span>Contest</span>{{else}}<a href="/contest/list">Contest</a>{{end}}</li>
+          <li>{{if .IsContest}}<span>Contest</span>{{else}}<a href="/contestlist/list">Contest</a>{{end}}</li>
           {{if .IsContestDetail}}
             <div id="psnavi">
               <ul>

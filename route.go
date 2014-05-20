@@ -60,15 +60,11 @@ func ranklistHandler(w http.ResponseWriter, r *http.Request) {
 	callMethod(c, m, rv)
 }
 
-func contestHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 2 {
-		c := &controller.ContestController{}
-		m := strings.Title(s[1])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
+func contestlistHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controller.ContestController{}
+	m := "List"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
 }
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
@@ -83,81 +79,20 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Contest
-func contestProblemHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &contest.ProblemController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}
-
-func contestStatusHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &contest.StatusController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
+func contestHandler(w http.ResponseWriter, r *http.Request) {
+	c := &contest.ContestUserContorller{}
+	m := "Register"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
 }
 
 // Admin
 
-func adminHomeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path[6:] == "/" {
-		c := &admin.HomeController{}
-		m := "Home"
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}
-
-func adminNewsHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &admin.NewsController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}
-
-func adminProblemHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &admin.ProblemController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}
-
-func adminContestHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &admin.ContestController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
-}
-
-func adminUserHandler(w http.ResponseWriter, r *http.Request) {
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if l := len(s); l >= 3 {
-		c := &admin.UserController{}
-		m := strings.Title(s[2])
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-	}
+func adminHandler(w http.ResponseWriter, r *http.Request) {
+	c := &admin.AdminUserController{}
+	m := "Register"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
 }
 
 // Common
