@@ -14,11 +14,6 @@
       <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
     {{end}}
   </head>
-  {{if not .IsAdmin}}
-  <body>
-  <p style="color: red">Warning:You are not admin</p>
-  </body>
-  {{else}}
   <body>
     <div class="container">
       <div id="pageHeader">
@@ -106,6 +101,5 @@
     });
     </script>
   </body>
-  {{end}}
 </html>
 

@@ -14,15 +14,9 @@ func main() {
 	http.HandleFunc("/ranklist/", ranklistHandler)
 	http.HandleFunc("/user/", userHandler)
 
+	http.HandleFunc("/contestlist/", contestlistHandler)
 	http.HandleFunc("/contest/", contestHandler)
-	http.HandleFunc("/contest/problem/", contestProblemHandler)
-	http.HandleFunc("/contest/status/", contestStatusHandler)
-	// http.HandleFunc("/contest/ranklist/", contestRanklistHandler)
 
-	http.HandleFunc("/admin/", adminHomeHandler)
-	http.HandleFunc("/admin/news/", adminNewsHandler)
-	http.HandleFunc("/admin/problem/", adminProblemHandler)
-	http.HandleFunc("/admin/contest/", adminContestHandler)
-	http.HandleFunc("/admin/user/", adminUserHandler)
+	http.HandleFunc("/admin/", adminHandler)
 	http.ListenAndServe(":8080", nil)
 }
