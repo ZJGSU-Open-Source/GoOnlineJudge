@@ -168,7 +168,8 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		one["nick"] = nick
 		one["pwd"] = pwd
 		one["pwdConfirm"] = pwdConfirm
-		one["privilege"] = config.PrivilegePU
+		//one["privilege"] = config.PrivilegePU
+		one["privilege"] = config.PrivilegeAD
 		reader, err := this.PostReader(&one)
 		if err != nil {
 			http.Error(w, "read error", 500)
