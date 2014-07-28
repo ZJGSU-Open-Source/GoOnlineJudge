@@ -307,7 +307,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 	/////TODO. Judge
 
-	cmd := exec.Command("./JudgeServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+	cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 	err = cmd.Start()
 	if err != nil {
 		log.Println(err)
