@@ -78,6 +78,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
 func helpHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
@@ -88,6 +89,7 @@ func helpHandler(w http.ResponseWriter, r *http.Request) {
 		callMethod(c, m, rv)
 	}
 }
+*/
 
 // Contest
 func contestHandler(w http.ResponseWriter, r *http.Request) {
