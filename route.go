@@ -78,6 +78,17 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func helpHandler(w http.ResponseWriter, r *http.Request) {
+	p := strings.Trim(r.URL.Path, "/")
+	s := strings.Split(p, "/")
+	if l := len(s); l >= 2 {
+		c := %controller.HelpController{}
+		m := strings.Title(s[1])
+		rv := getReflectValue(w, r)
+		callMethod(c, m, rv)
+	}
+}
+
 // Contest
 func contestHandler(w http.ResponseWriter, r *http.Request) {
 	c := &contest.ContestUserContorller{}
