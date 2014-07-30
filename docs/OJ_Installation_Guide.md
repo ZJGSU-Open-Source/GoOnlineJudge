@@ -89,3 +89,6 @@ go build
 ```
 
 start web broswer, and visit http://127.0.0.1:8080
+
+###Installation of Docker
+We use Docker as the container to judge the code. [Here](./Docker.md) is a quick start of Docker on Ubuntu.
