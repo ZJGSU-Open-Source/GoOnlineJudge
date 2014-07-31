@@ -52,7 +52,8 @@ Just run
 ```bash
 sudo apt-get install mongodb
 cd ~
-mkdir Data
+mkdir Data #Directory for Mongodb database
+mkdir ProblemData #Directory for Problem sets 
 vim Mongod.conf
 ```
 Add "mongod -port 8090 --dbpath ~/Data/" to Mongod.conf
@@ -75,6 +76,9 @@ git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git
 git clone https://github.com/ZJGSU-Open-Source/GoServer.git
 ```
+
+> Note: You need to download [`labix.org`](http://pan.baidu.com/s/1dDf9dID) to support communication between Go and Mongodb.
+Just download it and extract to the same directory of GoOnlineJudge and GoServer.
 
 ###Start
 
