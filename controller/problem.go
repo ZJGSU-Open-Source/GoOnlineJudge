@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	//"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -306,13 +305,14 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
-	/////TODO. Judge
-
-	//Why no such file or directory?
-	cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
-	err = cmd.Run()
-	if err != nil {
-		log.Println(err)
-	}
 	w.WriteHeader(200)
+	/////TODO. Judge
+	go func() {
+		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+		err = cmd.Run()
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 }
+
