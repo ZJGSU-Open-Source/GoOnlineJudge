@@ -22,16 +22,18 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		args := this.ParseURL(r.URL.Path[6:])
 
 		file := make(map[string]string)
-		fp, err := os.Open(config.Datapath + args["pid"] + "/test.in")
+		fp, err := os.Open(config.Datapath + args["pid"] + "/sample.in")
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
-			file["testin"] = "test.in"
+			file["testin"] = "sample.in"
+			file["testin_path"] = config.Datapath + args["pid"] + "/sample.in"
 		}
 
-		fp, err = os.Open(config.Datapath + args["pid"] + "/test.out")
+		fp, err = os.Open(config.Datapath + args["pid"] + "/sample.out")
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
-			file["testout"] = "test.out"
+			file["testout"] = "sample.out"
+			file["testout_path"] = config.Datapath + args["pid"] + "/sample.out"
 		}
 
 		if len(file) > 0 {

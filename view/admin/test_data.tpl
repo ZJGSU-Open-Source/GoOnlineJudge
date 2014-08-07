@@ -5,21 +5,51 @@
     <tr>
       <th class="header">Data File</th>
       <th class="header">Delete</th>
-      <th class="header">Get</th>
+      <th class="header">Download</th>
     </tr>
   </thead>
   <tbody>
-  {{range .Files}}
         <tr>
-          <td>{{.}}</td>
-          <td><a>[Delete]</a></td>
-          <td><a>[Get]</a></td>
+        {{if .Files.testin}}
+          <td><a>{{.Files.testin}}</a></td>
+          <td><a class="testdata_delete" href="#">[Delete]</a></td>
+          <td><a>[Download]</a></td>
         </tr>
-  {{end}}
+        {{end}}
+
+        {{if .Files.testout}}
+          <td><a>{{.Files.testout}}</a></td>
+          <td><a class="testdata_delete" href="#">[Delete]</a></td>
+          <td><a>[Download]</a></td>
+        </tr>
+        {{end}}
   </tbody>
 </table>
 <form name="uplodafiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload/pid/{{.Pid}}">
-<label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="upload" /> </label>
+<label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="上传" /> </label>
 </form>
-	<div class="flash notice">You can just add test.in and test.out</div>
+	<div class="flash notice">You can just add sample.in and sample.out</div>
+
+<script type="text/javascript">
+$('.testdata_delete').on('click', function() {
+	var ret = confirm('Delete the Testdata?');
+	 if (ret == true) {
+	 	//这里考虑直接通过js代码来删除指定目录下的文件，而不用通过数据库的操作
+	 	//alert('Yes!');
+	 	//var inpath = $(this).data('testin_path');
+		//var outpath = $(this).data('testout_path');
+		/*var fso, file;
+		fso = new ActiveXObject("Scripting.FileSystemObject"); 
+		if (inpath){
+			file = fso.GetFile (inpath);
+			file.Delete();
+			
+		} else if (outpath) {
+			file = fso.GetFile(outpath);
+			file.Delete();
+		}
+		*/
+	 }
+});
+</script>
 {{end}}
