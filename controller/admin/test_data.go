@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"strconv"
 )
 
 type TestdataController struct {
@@ -93,5 +95,33 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin TestData Delete")
+	this.Init(w, r)
 
+	args := this.ParseURL(r.URL.Path[6:])
+	log.Println(args)
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.in")
+	log.Println(config.Datapath+strconv.Itoa(pid), "/test.in")
+	//cmd := exec.Command("rm", "/home/jinwei/Go/src/GoOnlineJudge/hello")
+	err = cmd.Run()
+	if err != nil {
+		log.Println(err)
+	}
+
+	/*
+		response, err := http.Post(config.PostHost+"/testdata/delete/pid/"+strconv.Itoa(pid), "application/json", nil)
+		defer response.Body.Close()
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+
+		w.WriteHeader(response.StatusCode)
+	*/
 }

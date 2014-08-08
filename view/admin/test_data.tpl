@@ -11,7 +11,7 @@
   <tbody>
         <tr>
         {{if .Files.testin}}
-          <td><a>{{.Files.testin}}</a></td>
+          <td><a>{{.Files.testin_path}}</a></td>
           <td><a class="testdata_delete" href="#">[Delete]</a></td>
           <td><a>[Download]</a></td>
         </tr>
@@ -34,21 +34,18 @@
 $('.testdata_delete').on('click', function() {
 	var ret = confirm('Delete the Testdata?');
 	 if (ret == true) {
-	 	//这里考虑直接通过js代码来删除指定目录下的文件，而不用通过数据库的操作
-	 	//alert('Yes!');
-	 	//var inpath = $(this).data('testin_path');
-		//var outpath = $(this).data('testout_path');
-		/*var fso, file;
-		fso = new ActiveXObject("Scripting.FileSystemObject"); 
-		if (inpath){
-			file = fso.GetFile (inpath);
-			file.Delete();
-			
-		} else if (outpath) {
-			file = fso.GetFile(outpath);
-			file.Delete();
-		}
-		*/
+                var pid = $(this).data('pid');    //现在的问题只剩如何获取pid,this is the wrong way
+               $.ajax({
+                type: 'POST',
+                url: '/admin/testdata/delete/pid/' + pid,
+                data:$(this).serialize(),
+                error: function() {
+                    alert('failed!');
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            });
 	 }
 });
 </script>
