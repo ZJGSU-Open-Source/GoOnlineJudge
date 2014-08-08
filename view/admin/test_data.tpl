@@ -28,7 +28,7 @@
 <form name="uplodafiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload/pid/{{.Pid}}">
 <label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="上传" /> </label>
 </form>
-	<div class="flash notice">You can just add sample.in and sample.out</div>
+	<div class="flash notice">You can just add test.in and test.out</div>
 
 <script type="text/javascript">
 $('.testdata_delete').on('click', function() {
