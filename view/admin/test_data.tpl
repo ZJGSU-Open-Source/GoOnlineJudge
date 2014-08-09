@@ -11,7 +11,7 @@
   <tbody>
         <tr>
         {{if .Files.testin}}
-          <td><a>{{.Files.testin_path}}</a></td>
+          <td><a>{{.Files.testin}}</a></td>
           <td><a class="testdata_delete" href="#">[Delete]</a></td>
           <td><a>[Download]</a></td>
         </tr>
