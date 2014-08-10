@@ -21,17 +21,17 @@
         </tr>
 
         <tr>
-          <td class="purple">Compiler Error</td>
+          <td class="purple">Compile Error</td>
           <td>您提交的代码无法完成编译，点击“编译错误”可以看到编译器输出的错误信息</td>
         </tr>
 
         <tr>
-          <td class="red">Accept</td>
+          <td class="red">Accepted</td>
           <td>恭喜！您通过了这道题</td>
         </tr> 
 
         <tr>
-          <td class="green">Print Error</td>
+          <td class="green">Presentation Error</td>
           <td>您的程序输出的格式不符合要求（比如空格和换行与要求不一致）</td>
         </tr> 
 
@@ -41,7 +41,7 @@
         </tr> 
 
         <tr>
-          <td class="green">Wrong Error</td>
+          <td class="green">Wrong Answer</td>
           <td>您的程序未能对评测系统的数据返回正确的结果</td>
         </tr> 
 
