@@ -58,11 +58,14 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		c = &UserController{}
 	case "testdata":
 		c = &TestdataController{}
+	case "image":
+		c = &ImageController{}
 	default:
 		log.Println("args err")
 		return
 	}
 	m := strings.Title(s[2])
+	log.Println(m)
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }

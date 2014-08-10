@@ -9,9 +9,12 @@
 
 KindEditor.plugin('emoticons', function(K) {
 	var self = this, name = 'emoticons',
-		path = (self.emoticonsPath || self.pluginsPath + 'emoticons/images/'),
+		//path = (self.emoticonsPath || self.pluginsPath + 'emoticons/images/'),
+		path = '/static/kindeditor/plugins/emoticons/images/'
 		allowPreview = self.allowPreviewEmoticons === undefined ? true : self.allowPreviewEmoticons,
 		currentPageNum = 1;
+
+
 	self.clickToolbar(name, function() {
 		var rows = 5, cols = 9, total = 135, startNum = 0,
 			cells = rows * cols, pages = Math.ceil(total / cells),

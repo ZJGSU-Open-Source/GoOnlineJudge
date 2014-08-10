@@ -283,6 +283,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["status"] = config.StatusAvailable
 	one["judge"] = config.JudgePD
 
+	log.Println(one["language"])
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)

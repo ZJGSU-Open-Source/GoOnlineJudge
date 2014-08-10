@@ -6,7 +6,7 @@ import (
 )
 
 var specialArr = []string{"Standard", "Special"}
-var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded"}
+var judgeArr = []string{"None", "Pengding", "Running & Judging", "Accept", "Compile Error", "Runtime Error", "Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded", "Presentation Error"}
 var languageArr = []string{"None", "C", "C++", "Java"}
 var encryptArr = []string{"None", "Public", "Private", "Password"}
 var privilegeArr = []string{"None", "Primary User", "Source Broswer", "Admin"}
