@@ -78,11 +78,11 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//Help
+//FAQ
 
-func helpHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.HelpController{}
-	m := "Help"
+func FAQHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controller.FAQController{}
+	m := "FAQ"
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }

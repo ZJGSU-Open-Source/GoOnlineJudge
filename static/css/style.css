@@ -1100,7 +1100,7 @@ html{
 }h4{
 	margin-top:1em;
 	margin-bottom:0.5em;
-	color:grey;
+	color:gray;
 	font-weight:bold;
 }div.actions input{
 	background-color:#DD4C39;
@@ -1139,9 +1139,23 @@ html{
 	background-repeat:no-repeat;
 	cursor:pointer;
 	text-align: center;
+}table thead tr .lheader{
+	background-position:right center;
+	background-repeat:no-repeat;
+	text-align: left;	
 }table thead tr .headerSortDown{
 	background-image:url("/images/desc.gif");
 	background-color:#B0C3E6;
+}table tbody tr .yellow{
+	color:#FFD700;
+}table tbody tr .blue{
+	color:blue;
+}table tbody tr .purple{
+	color:purple;
+}table tbody tr .red{
+	color:red;
+}table tbody tr .green{
+	color:green;
 }table thead tr .headerSortUp{
 	background-image:url("/images/asc.gif");
 	background-color:#B0C3E6;
@@ -1153,6 +1167,8 @@ html{
 	text-align: center;
 }#news_list tbody tr td{
 	text-align: center;
+}#FAQ_list tbody tr td{
+	text-align: left;
 }.countDown{
 	line-height:1em;
 	font-size:3em;
