@@ -11,11 +11,11 @@
     </div>
     <div class="field">
       <label for="problem_time">Time Limit</label><br>
-      <input id="problem_time" name="time" size="30" type="text" value="{{.Time}}"> ms
+      <input id="problem_time" name="time" size="30" type="number" value="{{.Time}}"> ms
     </div>
     <div class="field">
       <label for="problem_memory">Memory Limit</label><br>
-      <input id="problem_memory" name="memory" size="30" type="text" value="{{.Memory}}"> kB
+      <input id="problem_memory" name="memory" size="30" type="number" value="{{.Memory}}"> kB
     </div>
     <div class="field">
       <label for="problem_source">Source</label><br>
@@ -31,15 +31,15 @@
     </div>
     <div class="field">
       <label for="problem_description">Description</label><br>
-      <input id="problem_description" name="description" type="text" value="{{.Description}}">
+      <textarea id="problem_description" name="description" style="width:640px;height:200px;" >{{.Description}}</textarea>
     </div>
     <div class="field">
       <label for="problem_input">Input</label><br>
-      <input id="problem_input" name="input" type="text" value="{{.Input}}">
+      <textarea id="problem_input" name="input" style="width:640px;height:200px;">{{.Input}}></textarea>
     </div>
     <div class="field">
       <label for="problem_output">Output</label><br>
-      <input id="problem_output" name="output" type="text" value="{{.Output}}">
+      <textarea id="problem_output" name="output"  style="width:640px;height:200px;">{{.Output}}</textarea>
     </div>
     <div class="field">
       <label for="problem_in">Sample Input</label><br>
