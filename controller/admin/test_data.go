@@ -28,14 +28,12 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
 			file["testin"] = "test.in"
-			file["testin_path"] = config.Datapath + args["pid"] + "/test.in"
 		}
 
 		fp, err = os.Open(config.Datapath + args["pid"] + "/test.out")
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
 			file["testout"] = "test.out"
-			file["testout_path"] = config.Datapath + args["pid"] + "/test.out"
 		}
 
 		if len(file) > 0 {
@@ -94,34 +92,36 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
+func (this *TestdataController) Deletein(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin TestData Delete")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
-	log.Println(args)
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
-
 	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.in")
-	log.Println(config.Datapath+strconv.Itoa(pid), "/test.in")
-	//cmd := exec.Command("rm", "/home/jinwei/Go/src/GoOnlineJudge/hello")
 	err = cmd.Run()
 	if err != nil {
 		log.Println(err)
 	}
+}
 
-	/*
-		response, err := http.Post(config.PostHost+"/testdata/delete/pid/"+strconv.Itoa(pid), "application/json", nil)
-		defer response.Body.Close()
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
+func (this *TestdataController) Deleteout(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin TestData Delete")
+	this.Init(w, r)
 
-		w.WriteHeader(response.StatusCode)
-	*/
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.out")
+	err = cmd.Run()
+	if err != nil {
+		log.Println(err)
+	}
 }

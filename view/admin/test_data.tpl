@@ -12,14 +12,14 @@
         <tr>
         {{if .Files.testin}}
           <td><a>{{.Files.testin}}</a></td>
-          <td><a class="testdata_delete" href="#">[Delete]</a></td>
+          <td><a class="testdata_in_delete" href="#">[Delete]</a></td>
           <td><a>[Download]</a></td>
         </tr>
         {{end}}
 
         {{if .Files.testout}}
           <td><a>{{.Files.testout}}</a></td>
-          <td><a class="testdata_delete" href="#">[Delete]</a></td>
+          <td><a class="testdata_out_delete" href="#">[Delete]</a></td>
           <td><a>[Download]</a></td>
         </tr>
         {{end}}
@@ -31,13 +31,13 @@
 	<div class="flash notice">You can just add test.in and test.out</div>
 
 <script type="text/javascript">
-$('.testdata_delete').on('click', function() {
+$('.testdata_in_delete').on('click', function() {
 	var ret = confirm('Delete the Testdata?');
 	 if (ret == true) {
-                var pid = $(this).data('pid');    //现在的问题只剩如何获取pid,this is the wrong way
+               var pid = {{.Pid}}
                $.ajax({
                 type: 'POST',
-                url: '/admin/testdata/delete/pid/' + pid,
+                url: '/admin/testdata/Deletein/pid/' + pid,
                 data:$(this).serialize(),
                 error: function() {
                     alert('failed!');
@@ -47,6 +47,26 @@ $('.testdata_delete').on('click', function() {
                 }
             });
 	 }
+});
+</script>
+
+<script type="text/javascript">
+$('.testdata_out_delete').on('click', function() {
+  var ret = confirm('Delete the Testdata?');
+   if (ret == true) {
+               var pid = {{.Pid}}
+               $.ajax({
+                type: 'POST',
+                url: '/admin/testdata/Deleteout/pid/' + pid,
+                data:$(this).serialize(),
+                error: function() {
+                    alert('failed!');
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            });
+   }
 });
 </script>
 {{end}}
