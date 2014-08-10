@@ -11,7 +11,7 @@
     </div>
     <div class="field">
     	<label for="news_content">Content</label><br>
-    	<input id="news_content" name="content" size="60" type="text" value="{{.Content}}">
+    	<textarea id="news_content" name="content" style="width:640px;height:200px;">{{.Content}}</textarea> 
     <div class="actions">
       <input name="commit" type="submit" value="Submit">
     </div>
