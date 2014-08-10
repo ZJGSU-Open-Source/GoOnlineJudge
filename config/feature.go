@@ -17,7 +17,7 @@ const (
 const (
 	JudgeNA  = 0  //None
 	JudgePD  = 1  //Pending
-	JudgeRJ  = 2  //Running & judgingconst
+	JudgeRJ  = 2  //Running & judging
 	JudgeAC  = 3  //Accepted
 	JudgeCE  = 4  //Compile Error
 	JudgeRE  = 5  //Runtime Error
@@ -25,7 +25,7 @@ const (
 	JudgeTLE = 7  //Time Limit Exceeded
 	JudgeMLE = 8  //Memory Limit Exceeded
 	JudgeOLE = 9  //Output Limit Exceeded
-	JudgeCP  = 10 //wait to Compare Output
+	JudgePE  = 10 //Presentation Error
 )
 
 const (

@@ -96,7 +96,6 @@ func contestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Admin
-
 func adminHandler(w http.ResponseWriter, r *http.Request) {
 	c := &admin.AdminUserController{}
 	m := "Register"
