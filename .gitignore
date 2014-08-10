@@ -3,6 +3,8 @@ GoOnlineJudge
 RunServer
 compiler
 runner
+# log file
+log
 #################
 ## Eclipse
 #################

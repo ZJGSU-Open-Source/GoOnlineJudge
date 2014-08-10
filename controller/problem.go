@@ -283,7 +283,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["status"] = config.StatusAvailable
 	one["judge"] = config.JudgePD
 
-	log.Println(one["language"])
 	reader, err := this.PostReader(&one)
 	if err != nil {
 		http.Error(w, "read error", 500)
@@ -307,7 +306,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	}
 	w.WriteHeader(200)
-	/////TODO. Judge
+
 	go func() {
 		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 		err = cmd.Run()
@@ -316,4 +315,3 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 }
-
