@@ -1,7 +1,8 @@
 ##Installation
 
+We integrate [docker](http://www.docker.com) in our system, so a 64bit version of Ubuntu is needed.[Here](./Docker.md) is a quick start of Docker on Ubuntu.
+
 ###Independences
-+ We integrate [docker](http://www.docker.com) in our system, so a 64bit version of Ubuntu is needed.
 
 ```bash
 sudo apt-get update
@@ -12,20 +13,22 @@ chsh -s /bin/zsh
 + Note that zsh is optional, but I prefer zsh instead of bash...
 
 ###Install Go
-You can download Go for Linux on [Golang.org](http://golang.org/dl/). For Chinese users, VPN might be needed. You can download the version I'm currently using at [here](http://pan.baidu.com/s/1jGfyO2y)
+You can download Go for Linux on [Golang.org](http://golang.org/dl/). For Chinese users which you can not download the official verison, you can also download the version we currently use at [here](http://pan.baidu.com/s/1jGfyO2y)
 
 ```bash
 sudo mkdir /usr/local/go
 mkdir $HOME/go
 sudo tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz
+#replace $VERSION, $OS, $ARCH depending on the version you downloaded.
 ```
 
-If you are using zsh(I assume you are...), cd to the home directory, and run `vim .zshrc` to edit .zshrc file and add the following lines:
+**Optional**: If you are using zsh(I assume you are...), cd to the home directory, and run `vim .zshrc` to edit .zshrc file and add the following lines:
 
-+ export PATH=$PATH:/usr/local/go/bin
-+ export GOPATH=$HOME/go
-
-Start a new shell, test if go is correctly installed
+```bash
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+```
+Start a new terminal, test if golang is correctly installed
 
 ```Go
 //hello.go
@@ -53,7 +56,6 @@ Just run
 sudo apt-get install mongodb
 cd ~
 mkdir Data #Directory for Mongodb database
-mkdir ProblemData #Directory for Problem sets 
 vim Mongod.conf
 ```
 Add "mongod -port 8090 --dbpath ~/Data/" to Mongod.conf
@@ -80,6 +82,19 @@ git clone https://github.com/ZJGSU-Open-Source/GoServer.git
 > Note: You need to download [`labix.org`](http://pan.baidu.com/s/1dDf9dID) to support communication between Go and Mongodb.
 Just download it and extract to the same directory of GoOnlineJudge and GoServer.
 
+```bash
+mkdir ProblemData #Directory for Problem sets 
+mkdir run         #Directory for judge
+```
+
+Now, make sure you have these folders in the same directory
+> + GoOnlineJudge
+> + GoServer
+> + RunServer
+> + labix.org
+> + run
+> + ProblemData
+
 ###Start
 
 ```bash
@@ -90,9 +105,10 @@ go build
 cd $GOPATH/src/GoOnlineJudge
 go build 
 ./GoOnlineJudge
+
+cd $GOPATH/src/RunServer
+go build
+mv RunServer ../GoOnlineJudge
 ```
 
-start web broswer, and visit http://127.0.0.1:8080
-
-###Installation of Docker
-We use Docker as the container to judge the code. [Here](./Docker.md) is a quick start of Docker on Ubuntu.
+start a web broswer, and visit http://127.0.0.1:8080

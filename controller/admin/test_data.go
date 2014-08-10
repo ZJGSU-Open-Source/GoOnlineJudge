@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
+	"strconv"
 )
 
 type TestdataController struct {
@@ -90,6 +92,36 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
+func (this *TestdataController) Deletein(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin TestData Delete")
+	this.Init(w, r)
 
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.in")
+	err = cmd.Run()
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func (this *TestdataController) Deleteout(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin TestData Delete")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.Path[6:])
+	pid, err := strconv.Atoi(args["pid"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.out")
+	err = cmd.Run()
+	if err != nil {
+		log.Println(err)
+	}
 }
