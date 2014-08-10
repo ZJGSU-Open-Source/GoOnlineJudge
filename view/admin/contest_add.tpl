@@ -18,21 +18,21 @@
     </div>
     <div class="field">
       <label for="content_startTimeYear">Start Time[Year-Month-Day Hour:Minute:Second]</label><br>
-      <input id="content_startTimeYear" name="startTimeYear" size="3" type="text">-
-      <input id="content_startTimeMonth" name="startTimeMonth" size="1" type="text">-
-      <input id="content_startTimeDay" name="startTimeDay" size="1" type="text">   
-      <input id="content_startTimeHour" name="startTimeHour" size="1" type="text">:
-      <input id="content_startTimeMinute" name="startTimeMinute" size="1" type="text">:
-      <input id="content_startTimeSecond" name="startTimeSecond" size="1" type="text">
+      <input id="content_startTimeYear" name="startTimeYear" size="4" type="text">-
+      <input id="content_startTimeMonth" name="startTimeMonth" size="4" type="text">-
+      <input id="content_startTimeDay" name="startTimeDay" size="4" type="text">   
+      <input id="content_startTimeHour" name="startTimeHour" size="4" type="text">:
+      <input id="content_startTimeMinute" name="startTimeMinute" size="4" type="text">:
+      <input id="content_startTimeSecond" name="startTimeSecond" size="4" type="text">
     </div>
     <div class="field">
       <label for="content_endTimeYear">End Time[Year-Month-Day Hour:Minute:Second]</label><br>
-      <input id="content_endTimeYear" name="endTimeYear" size="3" type="text">-
-      <input id="content_endTimeMonth" name="endTimeMonth" size="1" type="text">-
-      <input id="content_endTimeDay" name="endTimeDay" size="1" type="text">   
-      <input id="content_endTimeHour" name="endTimeHour" size="1" type="text">:
-      <input id="content_endTimeMinute" name="endTimeMinute" size="1" type="text">:
-      <input id="content_endTimeSecond" name="endTimeSecond" size="1" type="text">
+      <input id="content_endTimeYear" name="endTimeYear" size="4" type="text">-
+      <input id="content_endTimeMonth" name="endTimeMonth" size="4" type="text">-
+      <input id="content_endTimeDay" name="endTimeDay" size="4" type="text">   
+      <input id="content_endTimeHour" name="endTimeHour" size="4" type="text">:
+      <input id="content_endTimeMinute" name="endTimeMinute" size="4" type="text">:
+      <input id="content_endTimeSecond" name="endTimeSecond" size="4" type="text">
     </div>
     <div class="field">
     	<label for="content_problemList">Problem List[Please using ";" split each problem.]</label><br>

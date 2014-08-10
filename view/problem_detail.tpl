@@ -1,6 +1,7 @@
 {{define "content"}}
 {{$privilege := .Privilege}}
 {{with .Detail}}
+  <h1 style="text-align: center">{{.Title}}</h1>
   <div id="problemInfo" class="rfloat" title="Problem Information">
     <div class="limit">
       <div class="key">Time Limit</div>
@@ -24,7 +25,6 @@
     </div>
   </div>
   <div id="problemContent">
-  <h1 style="text-align: center">{{.Title}}</h1>
     <p class="problemIteam">Description:</p>
     <p>{{.Description}}</p>
     <p class="problemIteam">Input:</p>
