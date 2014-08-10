@@ -65,7 +65,6 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		return
 	}
 	m := strings.Title(s[2])
-	log.Println(m)
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }
