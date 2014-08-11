@@ -13,7 +13,8 @@
         {{if .Files.testin}}
           <td><a>{{.Files.testin}}</a></td>
           <td><a class="testdata_in_delete" href="#">[Delete]</a></td>
-          <td><input type="submit" value="Download" class="testdata_in_download" /></td>
+          <td><a href="/admin/testdata/Downloadin/pid/{{.Pid}}">[Download] </a></td>
+          <!-- <td><input type="submit" value="Download" class="testdata_in_download" /></td> -->
         </tr>
         {{end}}
 
@@ -30,41 +31,41 @@
 </form>
 	<div class="flash notice">You can just add test.in and test.out</div>
 
-<script type="text/javascript">
-$('.testdata_in_download').on('click', function() {
-	var pid = {{.Pid}}
-	$.ajax({
-                type: 'POST',
-                url: '/admin/testdata/Downloadin/pid/' + pid,
-                data:$(this).serialize(),
-                error: function() {
-                	alert('failed!');
-                },
-                success: function() {
-                	alert('Downloaded at $HOME directory');
-                	window.location.reload();
-                }
-            });
-});
-</script>
+// <script type="text/javascript">
+// $('.testdata_in_download').on('click', function() {
+// 	var pid = {{.Pid}}
+// 	$.ajax({
+//                 type: 'POST',
+//                 url: '/admin/testdata/Downloadin/pid/' + pid,
+//                 data:$(this).serialize(),
+//                 error: function() {
+//                 	alert('failed!');
+//                 },
+//                 success: function() {
+//                 	alert('Downloaded at $HOME directory');
+//                 	window.location.reload();
+//                 }
+//             });
+// });
+// </script>
 
-<script type="text/javascript">
-$('.testdata_out_download').on('click', function() {
-	var pid = {{.Pid}}
-	$.ajax({
-                type: 'POST',
-                url: '/admin/testdata/Downloadout/pid/' + pid,
-                data:$(this).serialize(),
-                error: function() {
-                	alert('failed!');
-                },
-                success: function() {
-                	alert('Downloaded at $HOME directory');
-                	window.location.reload();
-                }
-            });
-});
-</script>
+// <script type="text/javascript">
+// $('.testdata_out_download').on('click', function() {
+// 	var pid = {{.Pid}}
+// 	$.ajax({
+//                 type: 'POST',
+//                 url: '/admin/testdata/Downloadout/pid/' + pid,
+//                 data:$(this).serialize(),
+//                 error: function() {
+//                 	alert('failed!');
+//                 },
+//                 success: function() {
+//                 	alert('Downloaded at $HOME directory');
+//                 	window.location.reload();
+//                 }
+//             });
+// });
+// </script>
 
 <script type="text/javascript">
 $('.testdata_in_delete').on('click', function() {
