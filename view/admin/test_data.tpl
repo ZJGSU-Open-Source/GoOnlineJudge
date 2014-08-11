@@ -30,24 +30,4 @@
 <label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="上传" /> </label>
 </form>
 	<div class="flash notice">You can just add test.in and test.out</div>
-
-<script type="text/javascript">
-$('.testdata_delete').on('click', function() {
-	var ret = confirm('Delete the Testdata?');
-	 if (ret == true) {
-               var pid = {{.Pid}}
-               $.ajax({
-                type: 'POST',
-                url: '/admin/testdata/delete/pid/' + pid + "/type/" + {{.Files.types}},
-                data:$(this).serialize(),
-                error: function() {
-                    alert('failed!');
-                },
-                success: function() {
-                    window.location.reload();
-                }
-            });
-	 }
-});
-</script>
 {{end}}
