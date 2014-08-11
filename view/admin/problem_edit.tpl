@@ -15,7 +15,7 @@
     </div>
     <div class="field">
       <label for="problem_memory">Memory Limit</label><br>
-      <input id="problem_memory" name="memory" size="30" type="number" value="{{.Memory}}"> kB
+      <input id="problem_memory" name="memory" size="30" type="number" value="{{.Memory}}"> KB
     </div>
     <div class="field">
       <label for="problem_source">Source</label><br>
