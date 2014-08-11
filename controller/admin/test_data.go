@@ -96,26 +96,21 @@ func (this *TestdataController) Downloadin(w http.ResponseWriter, r *http.Reques
 	log.Println("Admin Download files")
 	this.Init(w, r)
 
-	if r.Method == "POST" {
-		args := this.ParseURL(r.URL.Path[6:])
+	//if r.Method == "POST" {
+	args := this.ParseURL(r.URL.Path[6:])
 
-		file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.in")
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		defer file.Close()
-
-		filename := os.Getenv("HOME") + "/" + args["pid"]
-		os.Mkdir(filename, os.ModePerm)
-		f, err := os.OpenFile(filename+"/test.in", os.O_RDWR|os.O_CREATE, os.ModePerm)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		io.Copy(f, file)
-		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
+	file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.in")
+	if err != nil {
+		log.Println(err)
+		return
 	}
+	defer file.Close()
+	finfo, _ := file.Stat()
+	w.Header().Add("ContentType", "application/octet-stream")
+	w.Header().Add("Content-disposition", "attachment; filename=test.in")
+	w.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
+	io.Copy(w, file)
+	//}
 }
 
 func (this *TestdataController) Downloadout(w http.ResponseWriter, r *http.Request) {
