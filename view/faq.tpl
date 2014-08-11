@@ -151,8 +151,8 @@ Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 </code></pre>
-<li>编译选项</li>
-<pre><code>gcc Main.c -o Main -Wall -lm --static -std=c99 -DONLINE_JUDGE</code></pre>
+<li>编译运行选项</li>
+<pre><code>gcc Main.c -o Main -Wall -lm --static -std=c99 -DONLINE_JUDGE && ./Main</code></pre>
 <hr>
 
 <h4>g++ for C++</h4>
@@ -162,19 +162,18 @@ Copyright (C) 2013 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 </code></pre>
-<li>编译选项</li>
-<pre><code>g++ Main.cc -o Main -Wall -lm --static -std=c++0x -DONLINE_JUDGE</code></pre>
+<li>编译运行选项</li>
+<pre><code>g++ Main.cc -o Main -Wall -lm --static -std=c++0x -DONLINE_JUDGE && ./Main</code></pre>
 <hr>
 
-<h4>gcj for Java</h4>
+<h4>OpenJDK for Java</h4>
 <li>版本</li>
-<pre><code>gcj-4.7 (Debian 4.7.2-3) 4.7.2
-Copyright (C) 2012 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  
-There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+<pre><code>java version "1.7.0_55"
+OpenJDK Runtime Environment (IcedTea 2.4.7) (7u55-2.4.7-1ubuntu1)
+OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)
 </code></pre>
-<li>编译选项</li>
-<pre><code>gcj-4.7 --main=Main Main.java -o Main</code></pre>
+<li>编译运行选项</li>
+<pre><code>javac -J-Xms32m -J-Xmx256m Main.java &&/usr/bin/java /usr/bin/java -Xms128M -Xms512M -DONLINE_JUDGE=true Main</code></pre>
 
 <h2>其他问题</h2>
 <p>在考试或比赛中遇到其他问题请咨询现场工作人员</p>
