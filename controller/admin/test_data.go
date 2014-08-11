@@ -92,6 +92,60 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (this *TestdataController) Downloadin(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Download files")
+	this.Init(w, r)
+
+	if r.Method == "POST" {
+		args := this.ParseURL(r.URL.Path[6:])
+
+		file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.in")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer file.Close()
+
+		filename := os.Getenv("HOME") + "/" + args["pid"]
+		os.Mkdir(filename, os.ModePerm)
+		f, err := os.OpenFile(filename+"/test.in", os.O_RDWR|os.O_CREATE, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		io.Copy(f, file)
+		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
+	}
+}
+
+func (this *TestdataController) Downloadout(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Download files")
+	this.Init(w, r)
+
+	if r.Method == "POST" {
+		args := this.ParseURL(r.URL.Path[6:])
+
+		file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.out")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		defer file.Close()
+
+		filename := os.Getenv("HOME") + "/" + args["pid"]
+		log.Println(filename)
+
+		os.Mkdir(filename, os.ModePerm)
+		f, err := os.OpenFile(filename+"/test.out", os.O_RDWR|os.O_CREATE, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		io.Copy(f, file)
+		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
+	}
+}
+
 func (this *TestdataController) Deletein(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin TestData Delete")
 	this.Init(w, r)
