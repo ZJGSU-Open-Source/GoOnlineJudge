@@ -9,7 +9,7 @@
     </div>
     <div class="limit">
       <div class="key">Memory Limit</div>
-      <div class="value">{{.Memory}}kB<br></div>
+      <div class="value">{{.Memory}}KB<br></div>
     </div>
     <div class="checker">
       <div class="key">Judge Program</div>
@@ -54,11 +54,11 @@
       <input name="utf8" type="hidden" value="✓">
     </div>
     <div class="field">
-      <label for="compiler_id">Compiler</label><br>
+      <label for="compiler_id">Compiler</label>
       <select id="compiler_id" name="compiler_id">
-        <option value="1" selected="selected">C (gcc)</option>
-        <option value="2">C++ (g++)</option>
-        <option value="3">Java (gcj)</option>
+        <option value="1" selected="selected">C</option>
+        <option value="2">C++</option>
+        <option value="3">Java</option>
     </div>
     <div class="field">
       <label for="code">Code</label><br>

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type problem struct {
@@ -178,11 +179,17 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	} else {
 		one["special"] = 1
 	}
+
+	var cr rune = 13
+	crStr := string(cr)
+	in := r.FormValue("in")
+	out := r.FormValue("out")
+
 	one["description"] = r.FormValue("description")
 	one["input"] = r.FormValue("input")
 	one["output"] = r.FormValue("output")
-	one["in"] = r.FormValue("in")
-	one["out"] = r.FormValue("out")
+	one["in"] = in
+	one["out"] = out
 	one["source"] = r.FormValue("source")
 	one["hint"] = r.FormValue("hint")
 
@@ -218,13 +225,17 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 		defer infile.Close()
-		infile.WriteString(r.FormValue("in"))
+		in = strings.Replace(in, "\r\n", "\n", -1)
+		in = strings.Replace(in, crStr, "\n", -1)
+		infile.WriteString(in)
 		outfile, err := os.Create(config.Datapath + strconv.Itoa(ret["pid"]) + "/sample.out")
 		if err != nil {
 			log.Println(err)
 		}
 		defer outfile.Close()
-		outfile.WriteString(r.FormValue("out"))
+		out = strings.Replace(out, "\r\n", "\n", -1)
+		out = strings.Replace(out, crStr, "\n", -1)
+		outfile.WriteString(out)
 
 		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 	}
@@ -381,11 +392,17 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	} else {
 		one["special"] = 1
 	}
+
+	var cr rune = 13
+	crStr := string(cr)
+	in := r.FormValue("in")
+	out := r.FormValue("out")
+
 	one["description"] = r.FormValue("description")
 	one["input"] = r.FormValue("input")
 	one["output"] = r.FormValue("output")
-	one["in"] = r.FormValue("in")
-	one["out"] = r.FormValue("out")
+	one["in"] = in
+	one["out"] = out
 	one["source"] = r.FormValue("source")
 	one["hint"] = r.FormValue("hint")
 
@@ -394,13 +411,18 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	defer infile.Close()
-	infile.WriteString(r.FormValue("in"))
+	in = strings.Replace(in, "\r\n", "\n", -1)
+	in = strings.Replace(in, crStr, "\n", -1)
+	infile.WriteString(in)
+
 	outfile, err := os.Create(config.Datapath + args["pid"] + "/sample.out")
 	if err != nil {
 		log.Println(err)
 	}
 	defer outfile.Close()
-	outfile.WriteString(r.FormValue("out"))
+	out = strings.Replace(out, "\r\n", "\n", -1)
+	out = strings.Replace(out, crStr, "\n", -1)
+	outfile.WriteString(out)
 
 	reader, err := this.PostReader(&one)
 	if err != nil {
