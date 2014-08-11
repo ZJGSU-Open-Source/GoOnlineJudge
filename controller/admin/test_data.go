@@ -92,14 +92,14 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (this *TestdataController) Downloadin(w http.ResponseWriter, r *http.Request) {
+func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Download files")
 	this.Init(w, r)
 
-	//if r.Method == "POST" {
 	args := this.ParseURL(r.URL.Path[6:])
 
-	file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.in")
+	log.Println(r.URL.Path[6:])
+	file, err := os.Open(config.Datapath + args["pid"] + "/" + args["type"])
 	if err != nil {
 		log.Println(err)
 		return
@@ -107,38 +107,13 @@ func (this *TestdataController) Downloadin(w http.ResponseWriter, r *http.Reques
 	defer file.Close()
 	finfo, _ := file.Stat()
 	w.Header().Add("ContentType", "application/octet-stream")
-	w.Header().Add("Content-disposition", "attachment; filename=test.in")
+	if args["type"] == "test.in" {
+		w.Header().Add("Content-disposition", "attachment; filename=test.in")
+	} else if args["type"] == "test.out" {
+		w.Header().Add("Content-disposition", "attachment; filename=test.out")
+	}
 	w.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
 	io.Copy(w, file)
-	//}
-}
-
-func (this *TestdataController) Downloadout(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Download files")
-	this.Init(w, r)
-
-	if r.Method == "POST" {
-		args := this.ParseURL(r.URL.Path[6:])
-
-		file, err := os.Open(config.Datapath + args["pid"] + "/" + "test.out")
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		defer file.Close()
-
-		filename := os.Getenv("HOME") + "/" + args["pid"]
-		log.Println(filename)
-
-		os.Mkdir(filename, os.ModePerm)
-		f, err := os.OpenFile(filename+"/test.out", os.O_RDWR|os.O_CREATE, os.ModePerm)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-		io.Copy(f, file)
-		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
-	}
 }
 
 func (this *TestdataController) Deletein(w http.ResponseWriter, r *http.Request) {
