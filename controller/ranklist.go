@@ -32,11 +32,11 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/user/list", "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var count int
 	ret := make(map[string][]rank)
@@ -74,11 +74,11 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 
 	//
 	response, err = http.Post(config.PostHost+"/user/list"+url, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string][]rank)
 	if response.StatusCode == 200 {

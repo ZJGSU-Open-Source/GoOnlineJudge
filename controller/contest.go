@@ -33,11 +33,11 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/contest/list", "application", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string][]*contest)
 	if response.StatusCode == 200 {

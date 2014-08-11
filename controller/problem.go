@@ -72,11 +72,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/count"+searchUrl, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	c := make(map[string]int)
 	var count int
@@ -106,11 +106,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	//
 	response, err = http.Post(config.PostHost+url, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string][]problem)
 	if response.StatusCode == 200 {
@@ -160,11 +160,11 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one problem
 	if response.StatusCode == 200 {
@@ -240,11 +240,12 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["mid"] = config.ModuleP
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
+
 	var pro problem
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &pro)
@@ -290,11 +291,11 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err = http.Post(config.PostHost+"/solution/insert", "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	sl := make(map[string]int)
 	if response.StatusCode == 200 {

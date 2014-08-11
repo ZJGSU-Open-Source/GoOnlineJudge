@@ -41,11 +41,11 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Cid = cid
 
 	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &this.ContestDetail)
@@ -67,10 +67,10 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 
 func (this *Contest) GetCount(query string) (count int, err error) {
 	response, err := http.Post(config.PostHost+"/solution/count/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid)+query, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string]int)
 	if response.StatusCode == 200 {

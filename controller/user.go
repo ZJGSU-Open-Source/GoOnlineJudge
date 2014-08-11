@@ -67,11 +67,11 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var ret user
 	err = this.LoadJson(response.Body, &ret)
@@ -132,11 +132,11 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	ok := 1
 	hint := make(map[string]string)
 	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty."
@@ -177,11 +177,11 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response, err = http.Post(config.PostHost+"/user/insert", "application/json", reader)
-		defer response.Body.Close()
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
 		}
+		defer response.Body.Close()
 
 		this.SetSession(w, r, "CurrentUser", uid)
 		this.SetSession(w, r, "CurrentPrivilege", "1")
@@ -217,11 +217,11 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	args := this.ParseURL(r.URL.Path)
 	uid := args["uid"]
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one user
 	if response.StatusCode == 200 {
@@ -234,11 +234,11 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	solvedList := make(map[string][]int)
 	if response.StatusCode == 200 {
@@ -275,11 +275,11 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+this.Uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one user
 	if response.StatusCode == 200 {
@@ -292,11 +292,11 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+this.Uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	solvedList := make(map[string][]int)
 	if response.StatusCode == 200 {
@@ -332,11 +332,11 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 
 	uid := this.Uid
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one user
 	if response.StatusCode == 200 {
@@ -392,11 +392,12 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response, err := http.Post(config.PostHost+"/user/update/uid/"+this.Uid, "application/json", reader)
-		defer response.Body.Close()
 		if err != nil {
 			http.Error(w, "post error", 500)
 			return
 		}
+		defer response.Body.Close()
+
 		w.WriteHeader(200)
 	} else {
 		w.WriteHeader(400)
@@ -457,11 +458,11 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var ret user
 	if response.StatusCode == 200 {
@@ -491,11 +492,11 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response, err = http.Post(config.PostHost+"/user/password/uid/"+this.Uid, "application/json", reader)
-		defer response.Body.Close()
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
 		}
+		defer response.Body.Close()
 
 		w.WriteHeader(200)
 	} else {
