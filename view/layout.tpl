@@ -55,7 +55,7 @@
               <ul>
                 <li>{{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail/uid/{{.CurrentUser}}">Detail</a>{{end}}</li>
                 <li>{{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/edit">Edit Info</a>{{end}}</li>
-                <li>{{if .IsSettingsPassword}}<span>Edit Password</span>{{else}}<a href="/user/pagepassword">Edit Password</a>{{end}}</li>
+                <li>{{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/user/pagepassword">Password</a>{{end}}</li>
               </ul>
             </div>
             {{end}}

@@ -15,17 +15,17 @@ const (
 )
 
 const (
-	JudgeNA  = 0  //None
-	JudgePD  = 1  //Pending
-	JudgeRJ  = 2  //Running & judging
+	JudgePD  = 0  //Pending
+	JudgeRJ  = 1  //Running & judging
+	JudgeCE  = 2  //Compile Error
 	JudgeAC  = 3  //Accepted
-	JudgeCE  = 4  //Compile Error
-	JudgeRE  = 5  //Runtime Error
-	JudgeWA  = 6  //Wrong Answer
-	JudgeTLE = 7  //Time Limit Exceeded
-	JudgeMLE = 8  //Memory Limit Exceeded
-	JudgeOLE = 9  //Output Limit Exceeded
-	JudgePE  = 10 //Presentation Error
+	JudgeRE  = 4  //Runtime Error
+	JudgeWA  = 5  //Wrong Answer
+	JudgeTLE = 6  //Time Limit Exceeded
+	JudgeMLE = 7  //Memory Limit Exceeded
+	JudgeOLE = 8  //Output Limit Exceeded
+	JudgePE  = 9  //Presentation Error
+	JudgeNA  = 10 //None
 )
 
 const (
