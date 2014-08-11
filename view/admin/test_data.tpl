@@ -12,14 +12,14 @@
         <tr>
         {{if .Files.testin}}
           <td><a>{{.Files.testin}}</a></td>
-          <td><a href="/admin/testdata/delete/pid/{{.Pid}}/type/test.in">[Delete]</a></td>
+          <td><a class="testdata_in_delete" href="#">[Delete]</a></td>
           <td><a href="/admin/testdata/download/pid/{{.Pid}}/type/test.in">[Download] </a></td>
         </tr>
         {{end}}
 
         {{if .Files.testout}}
           <td><a>{{.Files.testout}}</a></td>
-          <td><a href="/admin/testdata/delete/pid/{{.Pid}}/type/test.out">[Delete]</a></td>
+          <td><a class="testdata_out_delete" href="#">[Delete]</a></td>
           <td><a href="/admin/testdata/download/pid/{{.Pid}}/type/test.out">[Download] </a></td>
         </tr>
         {{end}}
@@ -30,4 +30,44 @@
 <label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="上传" /> </label>
 </form>
 	<div class="flash notice">You can just add test.in and test.out</div>
+
+<script type="text/javascript">
+$('.testdata_in_delete').on('click', function() {
+  var ret = confirm('Delete the Testdata?');
+   if (ret == true) {
+               var pid = {{.Pid}}
+               $.ajax({
+                type: 'POST',
+                url: '/admin/testdata/delete/pid/'+pid+'/type/test.in',
+                data:$(this).serialize(),
+                error: function() {
+                    alert('failed!');
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            });
+   }
+});
+</script>
+
+<script type="text/javascript">
+$('.testdata_out_delete').on('click', function() {
+  var ret = confirm('Delete the Testdata?');
+   if (ret == true) {
+               var pid = {{.Pid}}
+               $.ajax({
+                type: 'POST',
+                url: '/admin/testdata/delete/pid/'+pid+'/type/test.out',
+                data:$(this).serialize(),
+                error: function() {
+                    alert('failed!');
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            });
+   }
+});
+</script>
 {{end}}
