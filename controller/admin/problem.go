@@ -51,11 +51,11 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one problem
 	if response.StatusCode == 200 {
@@ -98,11 +98,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string][]problem)
 	if response.StatusCode == 200 {
@@ -193,11 +193,11 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	ret := make(map[string]int)
 	if response.StatusCode == 200 {
@@ -243,11 +243,11 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one problem
 	if response.StatusCode == 200 {
@@ -269,11 +269,11 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		action = config.StatusAvailable
 	}
 	response, err = http.Post(config.PostHost+"/problem/status/pid/"+strconv.Itoa(pid)+"/action/"+strconv.Itoa(action), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
@@ -292,11 +292,11 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/delete/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	w.WriteHeader(response.StatusCode)
 }
@@ -313,11 +313,11 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one problem
 	if response.StatusCode == 200 {
@@ -409,11 +409,11 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/problem/update/pid/"+strconv.Itoa(pid), "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem/detail/pid/"+strconv.Itoa(pid), http.StatusFound)
