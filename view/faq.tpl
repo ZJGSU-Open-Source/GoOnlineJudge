@@ -173,7 +173,7 @@ OpenJDK Runtime Environment (IcedTea 2.4.7) (7u55-2.4.7-1ubuntu1)
 OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)
 </code></pre>
 <li>编译运行选项</li>
-<pre><code>javac -J-Xms32m -J-Xmx256m Main.java &&/usr/bin/java /usr/bin/java -Xms128M -Xms512M -DONLINE_JUDGE=true Main</code></pre>
+<pre><code>javac -J-Xms32m -J-Xmx256m Main.java &&/usr/bin/java -Xms128M -Xms512M -DONLINE_JUDGE=true Main</code></pre>
 
 <h2>其他问题</h2>
 <p>在考试或比赛中遇到其他问题请咨询现场工作人员</p>
