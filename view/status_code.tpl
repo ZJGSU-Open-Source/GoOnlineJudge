@@ -1,6 +1,6 @@
 {{define "content"}}
-<h1>View Code</h1>
-  {{with .Solution}}
+{{with .Solution}}
+<h1>View Code of Problem {{.Pid}}</h1>
     <textarea id="sourceCode" name="sourceCode" style="display: none;">{{.Code}}</textarea>
     <table class="CodeRay">
       <tbody>
@@ -11,6 +11,8 @@
       </tbody>
     </table>
     <p class="tip">Double click to view unformatted code.</p>
+	<br />
+	<a href="/problem/detail/pid/{{.Pid}}">Back to problem {{.Pid}}</a>
     <script defer="defer" type="text/javascript">
     //<![CDATA[
       $('.CodeRay .code').dblclick(function() {
