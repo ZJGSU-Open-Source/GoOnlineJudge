@@ -13,10 +13,10 @@
       <label for="user_password">Password</label><br>
       <input id="user_password" name="user[password]" size="30" type="password">
     </div>
-    <div class="field">
+   <!--  <div class="field">
       <label for="user_remember_me">Remember me</label><br>
       <input id="user_remember_me" name="user[remember_me]" type="checkbox" value="1">
-    </div>
+    </div> -->
     <div class="actions">
       <input name="commit" type="submit" value="Sign In">
     </div>
