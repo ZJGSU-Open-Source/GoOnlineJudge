@@ -38,11 +38,11 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/contest/list", "application", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	one := make(map[string][]*contest)
 	if response.StatusCode == 200 {
@@ -198,11 +198,11 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/contest/insert", "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	ret := make(map[string]interface{})
 	if response.StatusCode == 200 {
@@ -227,11 +227,11 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one contest
 	if response.StatusCode == 200 {
@@ -251,11 +251,11 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err = http.Post(config.PostHost+"/contest/status/cid/"+strconv.Itoa(cid)+"/action/"+strconv.Itoa(action), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
@@ -274,11 +274,11 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/contest/delete/cid/"+strconv.Itoa(cid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	w.WriteHeader(response.StatusCode)
 }
@@ -295,11 +295,11 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	var one struct {
 		contest
@@ -488,11 +488,11 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response, err := http.Post(config.PostHost+"/contest/update/cid/"+strconv.Itoa(cid), "application/json", reader)
-	defer response.Body.Close()
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
