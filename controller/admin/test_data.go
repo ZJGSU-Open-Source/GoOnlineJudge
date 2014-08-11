@@ -28,12 +28,14 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
 			file["testin"] = "test.in"
+			file["types"] = "test.in"
 		}
 
 		fp, err = os.Open(config.Datapath + args["pid"] + "/test.out")
 		defer fp.Close()
 		if os.IsNotExist(err) == false {
 			file["testout"] = "test.out"
+			file["types"] = "test.out"
 		}
 
 		if len(file) > 0 {
@@ -97,8 +99,6 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
-
-	log.Println(r.URL.Path[6:])
 	file, err := os.Open(config.Datapath + args["pid"] + "/" + args["type"])
 	if err != nil {
 		log.Println(err)
@@ -116,36 +116,21 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	io.Copy(w, file)
 }
 
-func (this *TestdataController) Deletein(w http.ResponseWriter, r *http.Request) {
+func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin TestData Delete")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
 	pid, err := strconv.Atoi(args["pid"])
+	filetype := args["type"]
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
-	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.in")
+	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/"+filetype)
 	err = cmd.Run()
 	if err != nil {
 		log.Println(err)
 	}
-}
-
-func (this *TestdataController) Deleteout(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin TestData Delete")
-	this.Init(w, r)
-
-	args := this.ParseURL(r.URL.Path[6:])
-	pid, err := strconv.Atoi(args["pid"])
-	if err != nil {
-		http.Error(w, "args error", 400)
-		return
-	}
-	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/test.out")
-	err = cmd.Run()
-	if err != nil {
-		log.Println(err)
-	}
+	http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
 }
