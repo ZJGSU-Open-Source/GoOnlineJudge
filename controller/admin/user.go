@@ -168,9 +168,11 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer response.Body.Close()
+		log.Println(r.URL.Path)
 
 		w.WriteHeader(200)
 	} else {
+		log.Println("Hello")
 		b, err := json.Marshal(&hint)
 		if err != nil {
 			http.Error(w, "json error", 400)
