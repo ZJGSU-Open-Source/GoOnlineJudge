@@ -1,53 +1,37 @@
 package class
 
 import (
-	"GoOnlineJudge/config"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Session struct {
-	Name  string
-	Value string
+	Sid          string
+	data         map[string]string
+	timeAccessed time.Time
 	sync.Mutex
 }
 
-func (this *Session) Set(w http.ResponseWriter, r *http.Request) {
+func (this *Session) Set(Key, Value string) {
 	this.Lock()
 	defer this.Unlock()
-
-	cookie := http.Cookie{
-		Name:   this.Name,
-		Value:  this.Value,
-		Path:   "/",
-		MaxAge: config.CookieExpires,
-	}
-	http.SetCookie(w, &cookie)
+	this.data[Key] = Value
 }
 
-func (this *Session) Get(w http.ResponseWriter, r *http.Request) string {
+func (this *Session) Get(Key string) string {
 	this.Lock()
 	defer this.Unlock()
-
-	cookie, err := r.Cookie(this.Name)
-	if err != nil {
-		return ""
-	} else {
-		cookie.Path = "/"
-		cookie.MaxAge = config.CookieExpires
-		http.SetCookie(w, cookie)
-		return cookie.Value
-	}
+	return this.data[Key]
 }
 
-func (this *Session) Delete(w http.ResponseWriter, r *http.Request) {
-	this.Lock()
-	defer this.Unlock()
+func (this *Session) Update() {
+	this.timeAccessed = time.Now()
+}
 
-	cookie := http.Cookie{
-		Name:   this.Name,
-		Path:   "/",
-		MaxAge: -1,
-	}
-	http.SetCookie(w, &cookie)
+func NewSession(sid string, w http.ResponseWriter, r *http.Request) (session *Session) {
+	session = &Session{Sid: sid}
+	session.data = make(map[string]string)
+	session.Update()
+	return
 }

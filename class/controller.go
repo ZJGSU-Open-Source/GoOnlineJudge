@@ -12,27 +12,29 @@ import (
 )
 
 type Controller struct {
-	Data      map[string]interface{}
 	Uid       string
 	Privilege int
+	Data      map[string]interface{}
 }
 
 func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	this.Data = make(map[string]interface{})
 
-	this.Uid = this.GetSession(w, r, "CurrentUser")
+	session := SessionManager.StartSession(w, r)
+	this.Uid = session.Get("Uid")
+
 	this.Data["CurrentUser"] = this.Uid
 	this.Data["Privilege"] = this.Privilege
+
 	if this.Uid != "" {
 		this.Data["IsCurrentUser"] = true
 		var err error
-		this.Privilege, err = strconv.Atoi(this.GetSession(w, r, "CurrentPrivilege"))
+		this.Privilege, err = strconv.Atoi(session.Get("Privilege"))
 		if err != nil {
 			http.Error(w, "args error", 400)
 			return
 		}
-
 		if this.Privilege > config.PrivilegeSB {
 			this.Data["IsShowAdmin"] = true
 		}
@@ -73,27 +75,19 @@ func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
 	return
 }
 
-func (this *Controller) SetSession(w http.ResponseWriter, r *http.Request, name string, value string) {
-	s := Session{
-		Name:  name,
-		Value: value,
-	}
-	s.Set(w, r)
+func (this *Controller) SetSession(w http.ResponseWriter, r *http.Request, key string, value string) {
+	session := SessionManager.StartSession(w, r)
+	session.Set(key, value)
 }
 
-func (this *Controller) GetSession(w http.ResponseWriter, r *http.Request, name string) (value string) {
-	s := Session{
-		Name: name,
-	}
-	value = s.Get(w, r)
+func (this *Controller) GetSession(w http.ResponseWriter, r *http.Request, key string) (value string) {
+	session := SessionManager.StartSession(w, r)
+	value = session.Get(key)
 	return
 }
 
-func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request, name string) {
-	s := Session{
-		Name: name,
-	}
-	s.Delete(w, r)
+func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request) {
+	SessionManager.DeleteSession(w, r)
 }
 
 func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
