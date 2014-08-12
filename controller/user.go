@@ -183,8 +183,8 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		}
 		defer response.Body.Close()
 
-		this.SetSession(w, r, "CurrentUser", uid)
-		this.SetSession(w, r, "CurrentPrivilege", "1")
+		this.SetSession(w, r, "Uid", uid)
+		this.SetSession(w, r, "Privilege", "1")
 		w.WriteHeader(200)
 	} else {
 		b, err := json.Marshal(&hint)
@@ -460,6 +460,8 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 	defer response.Body.Close()
 
+	log.Println("22223")
+
 	var ret user
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &ret)
@@ -496,13 +498,13 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(200)
 	} else {
-		b, err := json.Marshal(&hint)
-		if err != nil {
-			http.Error(w, "json error", 400)
-			return
-		}
-
-		w.Write(b)
 		w.WriteHeader(400)
 	}
+	b, err := json.Marshal(&hint)
+	if err != nil {
+		http.Error(w, "json error", 400)
+		return
+	}
+
+	w.Write(b)
 }
