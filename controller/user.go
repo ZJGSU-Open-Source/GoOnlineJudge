@@ -504,5 +504,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 		w.Write(b)
 		w.WriteHeader(400)
+		//return
 	}
 }
