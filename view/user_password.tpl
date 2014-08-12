@@ -53,6 +53,8 @@
 				}	
 			},
 			success: function(response) {
+				//alert(response.responseText)
+				//alert("success")
 				var json = eval('('+response+')');
 				window.location.href = '/user/detail/uid/'+json.uid;
 			}
