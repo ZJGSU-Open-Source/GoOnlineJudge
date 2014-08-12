@@ -17,10 +17,10 @@ type TestdataController struct {
 }
 
 func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin testdata list")
-	this.Init(w, r)
-
 	if r.Method == "GET" {
+		log.Println("Admin testdata list")
+		this.Init(w, r)
+
 		args := this.ParseURL(r.URL.Path[6:])
 
 		file := []string{}
@@ -63,10 +63,10 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Upload files")
-	this.Init(w, r)
-
 	if r.Method == "POST" {
+		log.Println("Admin Upload files")
+		this.Init(w, r)
+
 		args := this.ParseURL(r.URL.Path[6:])
 
 		r.ParseMultipartForm(32 << 20)
@@ -113,20 +113,22 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 }
 
 func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin TestData Delete")
-	this.Init(w, r)
+	if r.Method == "POST" {
+		log.Println("Admin TestData Delete")
+		this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
-	pid, err := strconv.Atoi(args["pid"])
-	filetype := args["type"]
-	if err != nil {
-		http.Error(w, "args error", 400)
-		return
+		args := this.ParseURL(r.URL.Path[6:])
+		pid, err := strconv.Atoi(args["pid"])
+		filetype := args["type"]
+		if err != nil {
+			http.Error(w, "args error", 400)
+			return
+		}
+		cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/"+filetype)
+		err = cmd.Run()
+		if err != nil {
+			log.Println(err)
+		}
+		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
 	}
-	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/"+filetype)
-	err = cmd.Run()
-	if err != nil {
-		log.Println(err)
-	}
-	http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
 }
