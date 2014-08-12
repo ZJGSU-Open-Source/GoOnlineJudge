@@ -23,24 +23,23 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		args := this.ParseURL(r.URL.Path[6:])
 
-		file := make(map[string]string)
-		fp, err := os.Open(config.Datapath + args["pid"] + "/test.in")
-		defer fp.Close()
-		if os.IsNotExist(err) == false {
-			file["testin"] = "test.in"
-			file["types"] = "test.in"
+		file := []string{}
+		dir, err := os.Open(config.Datapath + args["pid"])
+		defer dir.Close()
+
+		files, err := dir.Readdir(-1)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Problem Id error", 500)
+			return
+		} else {
+			for _, fi := range files {
+				if !fi.IsDir() && fi.Name() != "sample.in" && fi.Name() != "sample.out" {
+					file = append(file, fi.Name())
+				}
+			}
 		}
 
-		fp, err = os.Open(config.Datapath + args["pid"] + "/test.out")
-		defer fp.Close()
-		if os.IsNotExist(err) == false {
-			file["testout"] = "test.out"
-			file["types"] = "test.out"
-		}
-
-		if len(file) > 0 {
-			this.Data["hasFile"] = true
-		}
 		this.Data["Files"] = file
 		this.Data["Pid"] = args["pid"]
 
@@ -99,7 +98,8 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path[6:])
-	file, err := os.Open(config.Datapath + args["pid"] + "/" + args["type"])
+	filename := args["type"]
+	file, err := os.Open(config.Datapath + args["pid"] + "/" + filename)
 	if err != nil {
 		log.Println(err)
 		return
@@ -107,11 +107,7 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	defer file.Close()
 	finfo, _ := file.Stat()
 	w.Header().Add("ContentType", "application/octet-stream")
-	if args["type"] == "test.in" {
-		w.Header().Add("Content-disposition", "attachment; filename=test.in")
-	} else if args["type"] == "test.out" {
-		w.Header().Add("Content-disposition", "attachment; filename=test.out")
-	}
+	w.Header().Add("Content-disposition", "attachment; filename="+filename)
 	w.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
 	io.Copy(w, file)
 }

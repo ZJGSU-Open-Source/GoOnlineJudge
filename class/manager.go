@@ -34,20 +34,19 @@ func (m *Manager) StartSession(w http.ResponseWriter, r *http.Request) (session 
 
 	if err != nil || cookie.Value == "" || m.sessions[cookie.Value] == nil {
 		sid := m.sessionId()
-		log.Println(sid)
 		session = NewSession(sid, w, r)
 		m.sessions[sid] = session
 
 		cookie := http.Cookie{
-			Name:   m.cookieName,
-			Value:  sid,
-			Path:   "/",
-			MaxAge: config.CookieExpires,
+			Name:     m.cookieName,
+			Value:    sid,
+			Path:     "/",
+			HttpOnly: true,
+			MaxAge:   config.CookieExpires,
 		}
 		http.SetCookie(w, &cookie)
 	} else {
 		sid := cookie.Value
-		log.Println("find ", sid)
 		session = m.sessions[sid]
 		session.Update()
 	}
@@ -67,10 +66,11 @@ func (m *Manager) DeleteSession(w http.ResponseWriter, r *http.Request) {
 	delete(m.sessions, sid)
 
 	newcookie := http.Cookie{
-		Name:   m.cookieName,
-		Value:  "",
-		Path:   "/",
-		MaxAge: -1,
+		Name:     m.cookieName,
+		Value:    "",
+		Path:     "/",
+		HttpOnly: true,
+		MaxAge:   -1,
 	}
 	http.SetCookie(w, &newcookie)
 }
@@ -103,8 +103,5 @@ var SessionManager *Manager
 func init() {
 	SessionManager = NewManager()
 	log.Println("new Session Manage")
-	if SessionManager == nil {
-		log.Println("Yes")
-	}
 	go SessionManager.GC()
 }
