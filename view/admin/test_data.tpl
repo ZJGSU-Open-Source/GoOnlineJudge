@@ -9,21 +9,16 @@
     </tr>
   </thead>
   <tbody>
-        <tr>
-        {{if .Files.testin}}
-          <td><a>{{.Files.testin}}</a></td>
-          <td><a class="testdata_in_delete" href="#">[Delete]</a></td>
-          <td><a href="/admin/testdata/download/pid/{{.Pid}}/type/test.in">[Download] </a></td>
-        </tr>
-        {{end}}
-
-        {{if .Files.testout}}
-          <td><a>{{.Files.testout}}</a></td>
-          <td><a class="testdata_out_delete" href="#">[Delete]</a></td>
-          <td><a href="/admin/testdata/download/pid/{{.Pid}}/type/test.out">[Download] </a></td>
-        </tr>
-        {{end}}
-        
+    {{$Pid := .Pid}}
+    {{with .Files}}
+    {{range .}}
+    <tr>
+      <td><a>{{.}}</a></td>
+      <td><a class="testdata_in_delete" href="#" data-type="{{.}}">[Delete]</a></td>
+      <td><a href="/admin/testdata/download/pid/{{$Pid}}/type/{{.}}">[Download] </a></td>
+    </tr>
+    {{end}}
+    {{end}}     
   </tbody>
 </table>
 <form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload/pid/{{.Pid}}">
@@ -36,32 +31,13 @@
 
 <script type="text/javascript">
 $('.testdata_in_delete').on('click', function() {
-  var ret = confirm('Delete the Testdata?');
+  var type = $(this).data('type');
+  var ret = confirm('Delete the '+ type +'?');
    if (ret == true) {
                var pid = {{.Pid}}
                $.ajax({
                 type: 'POST',
-                url: '/admin/testdata/delete/pid/'+pid+'/type/test.in',
-                data:$(this).serialize(),
-                error: function() {
-                    alert('failed!');
-                },
-                success: function() {
-                    window.location.reload();
-                }
-            });
-   }
-});
-</script>
-
-<script type="text/javascript">
-$('.testdata_out_delete').on('click', function() {
-  var ret = confirm('Delete the Testdata?');
-   if (ret == true) {
-               var pid = {{.Pid}}
-               $.ajax({
-                type: 'POST',
-                url: '/admin/testdata/delete/pid/'+pid+'/type/test.out',
+                url: '/admin/testdata/delete/pid/' + pid + '/type/' + type,
                 data:$(this).serialize(),
                 error: function() {
                     alert('failed!');

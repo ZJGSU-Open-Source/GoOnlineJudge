@@ -55,7 +55,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	log.Println(count, len(ret["list"]))
+
 	var pageCount = (count-1)/config.UserPerPage + 1
 	page, err := strconv.Atoi(args["page"])
 	if err != nil {
