@@ -499,6 +499,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	} else {
 		w.WriteHeader(400)
+		//return
 	}
 	b, err := json.Marshal(&hint)
 	if err != nil {
