@@ -28,7 +28,7 @@ var options = {
         'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript', 
         'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
         'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
-        'removeformat', '|', 'image', 'multiimage','table', 'hr', 
+        'removeformat', '|', 'image', 'table', 'hr', 
         'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
     ]
 }

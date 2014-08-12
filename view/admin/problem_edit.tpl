@@ -35,7 +35,7 @@
     </div>
     <div class="field">
       <label for="problem_input">Input</label><br>
-      <textarea id="problem_input" name="input" style="width:640px;height:200px;">{{.Input}}></textarea>
+      <textarea id="problem_input" name="input" style="width:640px;height:200px;">{{.Input}}</textarea>
     </div>
     <div class="field">
       <label for="problem_output">Output</label><br>
@@ -65,7 +65,7 @@ var options = {
         'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript', 
         'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
         'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
-        'removeformat', '|', 'image', 'multiimage','table', 'hr', 
+        'removeformat', '|', 'image', 'table', 'hr', 
         'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
 	]
 }

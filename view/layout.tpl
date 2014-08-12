@@ -9,10 +9,10 @@
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
     <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
-    {{if .IsCode}}
+{{if .IsCode}}
       <link href="/static/prettify/prettify.css" rel="stylesheet" type="text/css" />
       <script src="/static/prettify/prettify.js" type="text/javascript"></script>
-    {{end}}
+{{end}}
   </head>
   <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
     <div class="container">

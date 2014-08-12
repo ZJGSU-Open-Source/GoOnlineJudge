@@ -84,8 +84,8 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		if ret.Uid == "" {
 			w.WriteHeader(400)
 		} else {
-			this.SetSession(w, r, "CurrentUser", one["uid"])
-			this.SetSession(w, r, "CurrentPrivilege", strconv.Itoa(ret.Privilege))
+			this.SetSession(w, r, "Uid", one["uid"])
+			this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 			w.WriteHeader(200)
 		}
 		return
@@ -202,11 +202,7 @@ func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Logout")
 	this.Init(w, r)
 
-	if this.GetSession(w, r, "CurrentUser") != "" {
-		this.DeleteSession(w, r, "CurrentUser")
-		this.DeleteSession(w, r, "CurrentPrivilege")
-	}
-
+	this.DeleteSession(w, r)
 	w.WriteHeader(200)
 }
 

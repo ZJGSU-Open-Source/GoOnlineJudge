@@ -27,7 +27,10 @@
   </tbody>
 </table>
 <form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload/pid/{{.Pid}}">
-<label><input type="file" multiple="" size="80" name="testfiles"/> <input type="submit" value="上传" /> </label>
+<div class="actions">
+<label><input type="file" multiple="" size="80" name="testfiles" style="background-color:white;color:black" />
+<input name="commit"type="submit" value="upload" /> </label>
+</div>
 </form>
 	<div class="flash notice">You can just add test.in and test.out</div>
 
