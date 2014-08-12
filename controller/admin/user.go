@@ -105,7 +105,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 	ok := 1
 	hint := make(map[string]string)
-	hint["uid"] = this.Uid
+	hint["uid"] = this.Uid //user id -> Handler
 
 	data := make(map[string]string)
 	data["userHandler"] = r.FormValue("user[Handler]")
@@ -113,34 +113,40 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
 	one := make(map[string]interface{})
-	one["uid"] = this.Uid
-	one["pwd"] = data["oldPassword"]
+	/*
+		one := make(map[string]interface{})
+		one["uid"] = this.Uid
+		one["pwd"] = data["oldPassword"]
 
-	reader, err := this.PostReader(&one)
-	if err != nil {
-		http.Error(w, "read error", 500)
-		return
-	}
-
-	response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	var ret user
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &ret)
+		reader, err := this.PostReader(&one)
 		if err != nil {
-			http.Error(w, "load error", 400)
+			http.Error(w, "read error", 500)
 			return
 		}
-	}
-
-	if ret.Uid == "" {
-		ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
-	}
+	*/
+	/*
+		response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+	*/
+	/*
+		var ret user
+		if response.StatusCode == 200 {
+			err = this.LoadJson(response.Body, &ret)
+			if err != nil {
+				http.Error(w, "load error", 400)
+				return
+			}
+		}
+	*/
+	/*
+		if ret.Uid == "" {
+			ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
+		}
+	*/
 	if len(data["newPassword"]) < 6 {
 		ok, hint["newPassword"] = 0, "Password should contain at least six characters."
 	}
@@ -150,13 +156,13 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 	if ok == 1 {
 		one["pwd"] = data["newPassword"]
-		reader, err = this.PostReader(&one)
+		reader, err := this.PostReader(&one)
 		if err != nil {
 			http.Error(w, "read error", 500)
 			return
 		}
 
-		response, err = http.Post(config.PostHost+"/user/password/uid/"+this.Uid, "application/json", reader)
+		response, err := http.Post(config.PostHost+"/admin/user/password/reset/uid/"+this.Uid, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
