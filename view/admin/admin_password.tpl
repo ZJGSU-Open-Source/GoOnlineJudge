@@ -5,9 +5,9 @@
 			<input name="utf8" type="hidden" value="✓">
 		</div>
 		<div class="field">
-			<label for="user_Handler">User Handler</label><font color="red">*</font>
-			<font id="user_warning_Handler" color="red"></font><br>
-			<input id="user_Handler" name="user[Handler]" size="30" type="text">
+			<label for="user_Handle">User Handle</label><font color="red">*</font>
+			<font id="user_warning_Handle" color="red"></font><br>
+			<input id="user_Handle" name="user[Handle]" size="30" type="text">
 		</div>	
 		<div class="field">
 			<label for="user_newPassword">New Password</label><font color="red">*</font>
@@ -33,11 +33,11 @@
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
-				if(json.Handler != null) {
-					$('#user_Handler').css({"border-color": "red"});
-					$('#user_warning_Handler').text(json.Handler);
+				if(json.uid != null) {
+					$('#user_Handle').css({"border-color": "red"});
+					$('#user_warning_Handle').text(json.uid);
 				} else {
-					$('#user_warning_Handler').text('');
+					$('#user_warning_Handle').text('');
 				}
 				if(json.newPassword != null) {
 					$('#user_newPassword').css({"border-color": "red"});
@@ -53,11 +53,8 @@
 				}	
 			},
 			success: function(response) {
-				//alert("success")
-				//var json = eval('('+response+')');
-				//window.location.href = '/'+json.uid;
-				window.location.href="/"
-				//window.location.href='/user/list'
+				var json = eval('('+response+')');
+				window.location.href='/admin/user/list'
 			}
 		});
 	});
