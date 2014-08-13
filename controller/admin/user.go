@@ -105,16 +105,16 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 	ok := 1
 	hint := make(map[string]string)
-	//hint["uid"] = this.Uid //user id -> Handler
 
 	data := make(map[string]string)
-	data["userHandler"] = r.FormValue("user[Handler]")
+	data["userHandle"] = r.FormValue("user[Handle]")
 	data["newPassword"] = r.FormValue("user[newPassword]")
 	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
 	one := make(map[string]interface{})
 
-	uid := r.FormValue("userHandler")
+	uid := r.FormValue("user[Handle]")
+
 	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -123,7 +123,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if uid == "" {
-		ok, hint["uid"] = 0, "Handle should not be empty."
+		ok, hint["uid"] = 0, "Handle should not be empty"
 	} else {
 		ret := make(map[string][]*user)
 		if response.StatusCode == 200 {
@@ -146,41 +146,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
 	}
 
-	/*
-		one := make(map[string]interface{})
-		one["uid"] = this.Uid
-		one["pwd"] = data["oldPassword"]
-
-		reader, err := this.PostReader(&one)
-		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-	*/
-	/*
-		response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
-		defer response.Body.Close()
-	*/
-	/*
-		var ret user
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &ret)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-		}
-	*/
-	/*
-		if ret.Uid == "" {
-			ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
-		}
-	*/
-
 	if ok == 1 {
 		one["pwd"] = data["newPassword"]
 		reader, err := this.PostReader(&one)
@@ -189,26 +154,25 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response, err := http.Post(config.PostHost+"/admin/user/password/reset/uid/"+this.Uid, "application/json", reader)
+		response, err := http.Post(config.PostHost+"/user/password/uid/"+uid, "application/json", reader)
+
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
 		}
 		defer response.Body.Close()
-		log.Println(r.URL.Path)
 
 		w.WriteHeader(200)
 	} else {
-		b, err := json.Marshal(&hint)
-		if err != nil {
-			http.Error(w, "json error", 400)
-			return
-		}
-
-		w.Write(b)
 		w.WriteHeader(400)
-		log.Println("Hello")
 	}
+	b, err := json.Marshal(&hint)
+	if err != nil {
+		http.Error(w, "json error", 400)
+		return
+	}
+
+	w.Write(b)
 }
 
 func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
