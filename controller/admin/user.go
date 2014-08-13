@@ -105,7 +105,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 	ok := 1
 	hint := make(map[string]string)
-	//hint["uid"] = this.Uid
 
 	data := make(map[string]string)
 	data["userHandle"] = r.FormValue("user[Handle]")
@@ -115,8 +114,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 
 	uid := r.FormValue("user[Handle]")
-	//one["uid"] = this.Uid
-	//one["pwd"] = data["oldPassword"]
 
 	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
 	if err != nil {
@@ -149,41 +146,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
 	}
 
-	/*
-		reader, err := this.PostReader(&one)
-		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
-		defer response.Body.Close()
-
-		log.Println("22223")
-
-		var ret user
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &ret)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-		}
-
-		if ret.Uid == "" {
-			ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
-		}
-		if len(data["newPassword"]) < 6 {
-			ok, hint["newPassword"] = 0, "Password should contain at least six characters."
-		}
-		if data["newPassword"] != data["confirmPassword"] {
-			ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
-		}
-	*/
 	if ok == 1 {
 		one["pwd"] = data["newPassword"]
 		reader, err := this.PostReader(&one)
@@ -192,7 +154,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//response, err = http.Post(config.PostHost+"/user/password/uid/"+this.Uid, "application/json", reader)
 		response, err := http.Post(config.PostHost+"/user/password/uid/"+uid, "application/json", reader)
 
 		if err != nil {
@@ -204,7 +165,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	} else {
 		w.WriteHeader(400)
-		//return
 	}
 	b, err := json.Marshal(&hint)
 	if err != nil {
