@@ -13,7 +13,7 @@
 				{{range .}}
 				{{if LargePU .Privilege}}
 					<tr>
-						<td>{{.Uid}}</td>
+						<td><a href="/user/detail/uid/{{.Uid}}" target="_new">{{.Uid}}</a></td>
 						<td>{{PriToString .Privilege}}</td>
 						<td>[Delete]</td>
 					</tr>
