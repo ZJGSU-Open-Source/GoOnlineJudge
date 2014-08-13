@@ -210,6 +210,23 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Detail")
 	this.Init(w, r)
 
+	if this.Privilege == config.PrivilegeNA {
+		this.Data["Title"] = "Warning"
+		this.Data["Info"] = "You must login!"
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
+
 	args := this.ParseURL(r.URL.Path)
 	uid := args["uid"]
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
@@ -270,6 +287,23 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Settings")
 	this.Init(w, r)
 
+	if this.Privilege == config.PrivilegeNA {
+		this.Data["Title"] = "Warning"
+		this.Data["Info"] = "You must login!"
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
+
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+this.Uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
@@ -325,6 +359,23 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Edit")
 	this.Init(w, r)
+
+	if this.Privilege == config.PrivilegeNA {
+		this.Data["Title"] = "Warning"
+		this.Data["Info"] = "You must login!"
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
 
 	uid := this.Uid
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
@@ -410,6 +461,23 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Password Page")
 	this.Init(w, r)
+
+	if this.Privilege == config.PrivilegeNA {
+		this.Data["Title"] = "Warning"
+		this.Data["Info"] = "You must login!"
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
 
 	var err error
 	t := template.New("layout.tpl")
