@@ -80,7 +80,8 @@
       <div id="pageFooter" class="center">
         <hr class="nomarginbottom">
         <div id="footerContainer">
-          <div class="center">Copyright &copy; 2013-2014 Zhejiang Gongshang University ACM Club</div>
+         <div class="center">ZJGSU Online Judge Beta 1.0 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_new">Github</a></div>
+          <div class="center">Copyright &copy; 2013-2014 ZJGSU ACM Club</div>
         </div>
       </div>
     </div>
