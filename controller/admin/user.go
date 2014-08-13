@@ -91,6 +91,8 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Data["Title"] = "Admin Password"
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsPassword"] = true
+	this.Data["IsUser"] = true
+	this.Data["IsPwd"] = true
 
 	err = t.Execute(w, this.Data)
 	if err != nil {

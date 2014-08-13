@@ -66,8 +66,8 @@
           {{if .IsUser}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/privilege">Privilege</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Change Pwd</sapn>{{else}}<a href="/admin/user/pagepassword">Change Pwd</a>{{end}}</li>
+                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/list">Privilege</a>{{end}}</li>
+                <li>{{if .IsPwd}}<span>Change Pwd</sapn>{{else}}<a href="/admin/user/pagepassword">Change Pwd</a>{{end}}</li>
               </ul>
             </div>
             {{end}}
