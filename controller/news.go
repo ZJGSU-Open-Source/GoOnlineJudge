@@ -51,7 +51,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "News List"
+	this.Data["Title"] = "Welcome to ZJGSU Online Judge"
 	this.Data["IsNews"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
