@@ -460,8 +460,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 	defer response.Body.Close()
 
-	log.Println("22223")
-
 	var ret user
 	if response.StatusCode == 200 {
 		err = this.LoadJson(response.Body, &ret)

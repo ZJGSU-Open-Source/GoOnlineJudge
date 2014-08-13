@@ -53,11 +53,7 @@
 				}	
 			},
 			success: function(response) {
-				//alert(response.responseText)
-				//alert("success")
 				var json = eval('('+response+')');
-				//alert(json.uid);
-				//window.location.href = '/user/detail/uid/'+json.uid;
 				window.location.href='/admin/user/list'
 			}
 		});
