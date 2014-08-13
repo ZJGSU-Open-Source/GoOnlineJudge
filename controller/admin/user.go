@@ -69,6 +69,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Privilege User List"
 	this.Data["IsUser"] = true
 	this.Data["IsList"] = true
+
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -175,6 +176,23 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(b)
+}
+
+func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
+	log.Println("Admin Delete User")
+	this.Init(w, r)
+
+	log.Println(r.URL.Path)
+	args := this.ParseURL(r.URL.Path[6:])
+	uid := args["uid"]
+	log.Println(uid)
+
+	response, err := http.Post(config.PostHost+"/admin/user/deleteuser/uid/"+uid, "application/json", nil)
+	if err != nil {
+		http.Error(w, "post error", 500)
+		return
+	}
+	defer response.Body.Close()
 }
 
 func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
