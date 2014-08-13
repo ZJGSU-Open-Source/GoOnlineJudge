@@ -54,6 +54,7 @@
 			},
 			success: function(response) {
 				var json = eval('('+response+')');
+				alert("Success");
 				window.location.href = '/user/detail/uid/'+json.uid;
 			}
 		});
