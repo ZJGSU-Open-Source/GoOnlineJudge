@@ -16,6 +16,7 @@ type AdminUserController struct {
 
 func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
+
 	if this.Privilege <= config.PrivilegePU {
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You are not admin!"
