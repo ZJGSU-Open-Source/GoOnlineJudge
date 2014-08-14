@@ -4,13 +4,13 @@ import (
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	"GoOnlineJudge/controller/contest"
+	"GoOnlineJudge/controller/exercise"
 	"net/http"
 	"reflect"
 	"strings"
 )
 
-// Page
-
+// normal Page
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		c := &controller.NewsController{}
@@ -67,6 +67,13 @@ func contestlistHandler(w http.ResponseWriter, r *http.Request) {
 	callMethod(c, m, rv)
 }
 
+func exerciselistHandler(w http.ResponseWriter, r *http.Request) {
+	c := &controller.ExerciseController{}
+	m := "List"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
 func userHandler(w http.ResponseWriter, r *http.Request) {
 	p := strings.Trim(r.URL.Path, "/")
 	s := strings.Split(p, "/")
@@ -79,7 +86,6 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 //FAQ
-
 func FAQHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controller.FAQController{}
 	m := "FAQ"
@@ -87,9 +93,19 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 	callMethod(c, m, rv)
 }
 
+//Register User Page,need some privilege.
+
 // Contest
 func contestHandler(w http.ResponseWriter, r *http.Request) {
 	c := &contest.ContestUserContorller{}
+	m := "Register"
+	rv := getReflectValue(w, r)
+	callMethod(c, m, rv)
+}
+
+//Exercise
+func exerciseHandler(w http.ResponseWriter, r *http.Request) {
+	c := &exercise.ExerciseUserContorller{}
 	m := "Register"
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
@@ -104,7 +120,6 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Common
-
 func callMethod(c interface{}, m string, rv []reflect.Value) {
 	rc := reflect.ValueOf(c)
 	rm := rc.MethodByName(m)

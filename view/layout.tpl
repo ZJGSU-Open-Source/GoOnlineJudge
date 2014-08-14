@@ -50,6 +50,16 @@
               </ul>
             </div>
           {{end}}
+           <li>{{if .IsExercise}}<span>Exercise</span>{{else}}<a href="/exerciselist/list">Exercise</a>{{end}}</li>
+          {{if .IsExerciseDetail}}
+            <div id="psnavi">
+              <ul>
+                <li>{{if .IsExerciseProblem}}<span>Problem</sapn>{{else}}<a href="/exercise/problem/list/cid/{{.Cid}}">Problem</a>{{end}}</li>
+                <li>{{if .IsExerciseStatus}}<span>Status</sapn>{{else}}<a href="/exercise/status/list/cid/{{.Cid}}">Status</a>{{end}}</li>
+                <li>{{if .IsExerciseRanklist}}<span>Ranklist</sapn>{{else}}<a href="/exercise/ranklist/cid/{{.Cid}}">Ranklist</a>{{end}}</li>
+              </ul>
+            </div>
+          {{end}}
           {{if .IsCurrentUser}}
             <li><a href="/user/settings">Settings</a></li>
             {{if .IsSettings}}
