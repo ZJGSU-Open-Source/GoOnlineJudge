@@ -1,4 +1,4 @@
-package exercise
+package contest
 
 import (
 	"GoOnlineJudge/class"
