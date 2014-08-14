@@ -210,23 +210,24 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Detail")
 	this.Init(w, r)
 
-	if this.Privilege == config.PrivilegeNA {
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You must login!"
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
+	/*
+		if this.Privilege == config.PrivilegeNA {
+			this.Data["Title"] = "Warning"
+			this.Data["Info"] = "You must login!"
+			t := template.New("layout.tpl")
+			t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+			if err != nil {
+				http.Error(w, "tpl error", 500)
+				return
+			}
+			err = t.Execute(w, this.Data)
+			if err != nil {
+				http.Error(w, "tpl error", 500)
+				return
+			}
 			return
 		}
-		err = t.Execute(w, this.Data)
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		return
-	}
-
+	*/
 	args := this.ParseURL(r.URL.Path)
 	uid := args["uid"]
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
