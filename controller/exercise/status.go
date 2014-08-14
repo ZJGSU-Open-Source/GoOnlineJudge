@@ -1,4 +1,4 @@
-package contest
+package Exercise
 
 import (
 	"GoOnlineJudge/class"
@@ -30,12 +30,12 @@ type solution struct {
 }
 
 type StatusController struct {
-	Contest
+	Exercise
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest Status List")
-	this.InitContest(w, r)
+	log.Println("Exercise Status List")
+	this.InitExercise(w, r)
 
 	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid), "application/json", nil)
 	if err != nil {
@@ -63,14 +63,14 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		"ShowLanguage": class.ShowLanguage,
 		"LargePU":      class.LargePU,
 		"SameID":       class.SameID})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_list.tpl")
+	t, err = t.ParseFiles("view/layout.tpl", "view/exercise/status_list.tpl")
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
 	this.Data["Privilege"] = this.Privilege
-	this.Data["IsContestStatus"] = true
+	this.Data["IsExerciseStatus"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -81,7 +81,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status Code")
 	this.Init(w, r)
-	this.InitContest(w, r)
+	this.InitExercise(w, r)
 
 	args := this.ParseURL(r.URL.Path[8:])
 	sid, err := strconv.Atoi(args["sid"])
@@ -112,7 +112,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"LargePU": class.LargePU,
 		"SameID":  class.SameID})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_code.tpl")
+	t, err = t.ParseFiles("view/layout.tpl", "view/exercise/status_code.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
