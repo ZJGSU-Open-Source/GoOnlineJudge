@@ -18,6 +18,9 @@ func main() {
 	http.HandleFunc("/contestlist/", contestlistHandler)
 	http.HandleFunc("/contest/", contestHandler)
 
+	http.HandleFunc("/exerciselist/", exerciseHandler)
+	http.HandleFunc("/exercise/", exerciseHandler)
+
 	http.HandleFunc("/admin/", adminHandler)
 	http.ListenAndServe(":8080", nil)
 }
