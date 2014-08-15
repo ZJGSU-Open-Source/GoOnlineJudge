@@ -24,6 +24,14 @@
 		</tbody>
 </table>
 
+<form accept-charset="UTF-8" id="search_form">
+Add Admin: <input id="add" name="add" size="20" type="text" value="{{.AddValue}}">
+<select id="option" name="option">
+  <option value="admin">Admin</option>
+</select>
+<input name="commit" type="submit" value="Add">
+</form>
+
 <script type="text/javascript">
 $('.admin_user_delete').on('click', function() {
   var uid = $(this).data("id");
