@@ -82,8 +82,8 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
           {{if ShowExpire .Expire $time}}
             <tr>
               <td>{{.Pid}}</td>
-              <td><a href="/problem/detail/pid/{{.Pid}}">{{.Title}}</a></td>
-              <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}}</a>)</td>
+              <td><a href="/problem?detail/pid?{{.Pid}}">{{.Title}}</a></td>
+              <td>{{ShowRatio .Solve .Submit}} (<a href="/status?list/pid?{{.Pid}}/judge?3">{{.Solve}}</a>/<a href="/status?list/pid?{{.Pid}}">{{.Submit}}</a>)</td>
             </tr>
           {{end}}
         {{end}}
@@ -97,7 +97,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
     e.preventDefault();
     var value = $('#search').val();
     var key = $('#option').val();
-    window.location.href = '/problem/list/'+key+'/'+value;
+    window.location.href = '/problem?list/'+key+'?'+value;
   });
   </script>
 {{end}}

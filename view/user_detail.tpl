@@ -21,7 +21,7 @@
         </tr>
         <tr>
           <th>Problems Submitted</th>
-          <td><a href="/status/list/uid/{{.Uid}}">{{.Submit}}</a></td>
+          <td><a href="/status?list/uid?{{.Uid}}">{{.Submit}}</a></td>
         </tr>
         <tr>
           <th>Problems Solved</th>
@@ -33,7 +33,7 @@
           <td>
             {{with .List}}
               {{range .}}
-                <a href="/problem/detail/pid/{{.}}">{{.}}</a> 
+                <a href="/problem?detail/pid?{{.}}">{{.}}</a> 
               {{end}}
             {{end}}
           </td>

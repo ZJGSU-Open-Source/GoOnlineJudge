@@ -37,29 +37,33 @@ type StatusController struct {
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status List")
 	this.Init(w, r)
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	url := "/solution/list"
 	searchUrl := ""
-
+	scUrl := ""
 	// Search
 	if v, ok := args["uid"]; ok {
 		searchUrl += "/uid/" + v
+		scUrl += "/uid?" + v
 		this.Data["SearchUid"] = v
 	}
 	if v, ok := args["pid"]; ok {
 		searchUrl += "/pid/" + v
+		scUrl += "/pid?" + v
 		this.Data["SearchPid"] = v
 	}
 	if v, ok := args["judge"]; ok {
 		searchUrl += "/judge/" + v
+		scUrl += "/judge?" + v
 		this.Data["SearchJudge"+v] = v
 	}
 	if v, ok := args["language"]; ok {
 		searchUrl += "/language/" + v
+		scUrl += "/language?" + v
 		this.Data["SearchLanguage"+v] = v
 	}
 	url += searchUrl
-	this.Data["URL"] = "/status/list" + searchUrl
+	this.Data["URL"] = "/status?list" + scUrl
 
 	// Page
 	if _, ok := args["page"]; !ok {
@@ -155,7 +159,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	log.Println("Status Code")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[2:])
+	args := this.ParseURL(r.URL.String())
 	sid, err := strconv.Atoi(args["sid"])
 	if err != nil {
 		http.Error(w, "args error", 400)

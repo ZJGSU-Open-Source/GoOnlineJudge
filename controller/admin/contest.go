@@ -16,6 +16,7 @@ type contest struct {
 	Title    string      `json:"title"bson:"title"`
 	Encrypt  int         `json:"encrypt"bson:"encrypt"`
 	Argument interface{} `json:"argument"bson:"argument"`
+	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
 
 	Start string `json:"start"bson:"start"`
 	End   string `json:"end"bson:"end"`
@@ -33,11 +34,15 @@ type ContestController struct {
 	class.Controller
 }
 
+// url:/admin/contest/list/type/<contest,exercise>
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Contest List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/contest/list", "application", nil)
+	args := this.ParseURL(r.URL.String())
+	Type := args["type"]
+
+	response, err := http.Post(config.PostHost+"/contest/list/type/"+Type, "application", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -61,8 +66,8 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "Admin - Contest List"
-	this.Data["IsContest"] = true
+	this.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
+	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsList"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -72,9 +77,14 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// url:/admin/contest/add/type/<contest,exercise>
 func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Add")
 	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.String())
+	Type := args["type"]
+	log.Println(Type)
 
 	t := template.New("layout.tpl")
 	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_add.tpl")
@@ -83,9 +93,10 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "Admin - Contest Add"
-	this.Data["IsContest"] = true
+	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
+	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsAdd"] = true
+	this.Data["Type"] = Type
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -94,12 +105,19 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// url:/admin/contest?insert/type?<contest,exercise>
 func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Insert")
 	this.Init(w, r)
 
+	args := this.ParseURL(r.URL.String())
+	Type := args["type"]
+
 	one := make(map[string]interface{})
 	one["title"] = r.FormValue("title")
+	one["type"] = Type
+	log.Println(one["type"])
+
 	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	if err != nil {
 		http.Error(w, "conv error", 400)
@@ -211,15 +229,16 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "load error", 400)
 			return
 		}
-		http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound)
 	}
 }
 
+// url:/admin/contest/status/
 func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Status")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -242,6 +261,8 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	Type := one.Type
+
 	var action int
 	switch one.Status {
 	case config.StatusAvailable:
@@ -258,15 +279,16 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/contest?list/type?"+strings.Title(Type), http.StatusFound)
 	}
 }
 
+// url:/admin/contest/delete/
 func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Delete")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -283,11 +305,12 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(response.StatusCode)
 }
 
+//// url:/admin/contest/edit/
 func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Edit")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -366,8 +389,9 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Title"] = "Admin - Contest Edit"
-	this.Data["IsContest"] = true
+	Type := one.Type
+	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Edit"
+	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsEdit"] = true
 
 	err = t.Execute(w, this.Data)
@@ -377,19 +401,23 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// url:/admin/contest/update/
 func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Contest Update")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
+	Type := args["type"]
 
 	one := make(map[string]interface{})
 	one["title"] = r.FormValue("title")
+	one["type"] = Type
+
 	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	if err != nil {
 		http.Error(w, "conv error", 400)
@@ -495,6 +523,6 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound)
 	}
 }

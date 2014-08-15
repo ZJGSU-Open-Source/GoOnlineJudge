@@ -43,7 +43,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem List")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	url := "/problem/list"
 	searchUrl := ""
 
@@ -152,7 +152,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[2:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -215,7 +215,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /problem/submit/pid/<pid>
+// URL /problem?submit/pid?<pid>
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Problem Submit")
 	this.Init(w, r)
