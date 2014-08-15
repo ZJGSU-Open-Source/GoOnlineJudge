@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	// "strconv"
+	"strings"
 )
 
 type contest struct {
@@ -14,6 +15,7 @@ type contest struct {
 	Title    string      `json:"title"bson:"title"`
 	Encrypt  int         `json:"encrypt"bson:"encrypt"`
 	Argument interface{} `json:"argument"bson:"argument"`
+	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
 
 	Start string `json:"start"bson:"start"`
 	End   string `json:"end"bson:"end"`
@@ -26,13 +28,17 @@ type contest struct {
 
 type ContestController struct {
 	class.Controller
+	Type string
 }
 
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	log.Println("Contest List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/contest/list", "application", nil)
+	args := this.ParseURL(r.URL.String())
+	log.Println(args)
+	Type := args["type"]
+	response, err := http.Post(config.PostHost+"/contest/list/type/"+Type, "application", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -61,8 +67,9 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Time"] = this.GetTime()
-	this.Data["Title"] = "Contest List"
-	this.Data["IsContest"] = true
+	this.Data["Type"] = Type
+	this.Data["Title"] = strings.Title(Type) + " List"
+	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["Privilege"] = this.Privilege
 	err = t.Execute(w, this.Data)
 	if err != nil {
@@ -70,5 +77,4 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "tpl error", 500)
 		return
 	}
-
 }

@@ -13,10 +13,10 @@
 				{{range .}}
 				{{if LargePU .Privilege}}
 					<tr>
-						<td><a href="/user/detail/uid/{{.Uid}}" target="_new">{{.Uid}}</a></td>
+						<td><a href="/user?detail/uid?{{.Uid}}" target="_new">{{.Uid}}</a></td>
 						<td>{{PriToString .Privilege}}</td>
 						<!--><td><a class="admin_user_delete" href="#" data-type="{{.}}">[Delete]</a></td><-->
-						<td><a href="/admin/user/deleteuser/uid/{{.Uid}}">[Delete]</a></td>
+						<td><a href="/admin/user?deleteuser/uid?{{.Uid}}">[Delete]</a></td>
 					</tr>
 				{{end}}
 				{{end}}
@@ -33,7 +33,7 @@ $('.admin_user_delete').on('click', function() {
                alert(uid);
                $.ajax({
                 type: 'POST',
-                url: '/admin/user/deleteuser/uid/' + uid,
+                url: '/admin/user?deleteuser/uid?' + uid,
                 data:$(this).serialize(),
                 error: function() {
                     alert('failed!');

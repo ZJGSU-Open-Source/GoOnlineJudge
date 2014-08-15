@@ -27,7 +27,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -155,7 +155,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/news/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/news?list", http.StatusFound)
 	}
 }
 
@@ -163,7 +163,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Status")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -200,7 +200,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/news/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/news?list", http.StatusFound)
 	}
 }
 
@@ -208,7 +208,7 @@ func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Delete")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -229,7 +229,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Edit")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -279,7 +279,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin News Update")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -304,7 +304,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/news/detail/nid/"+strconv.Itoa(nid), http.StatusFound)
+		http.Redirect(w, r, "/admin/news?detail/nid?"+strconv.Itoa(nid), http.StatusFound)
 	} else {
 		http.Error(w, "resp error", 500)
 		return

@@ -183,11 +183,11 @@ func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	log.Println(r.URL.Path)
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
 	log.Println(uid)
 
-	response, err := http.Post(config.PostHost+"/admin/user/deleteuser/uid/"+uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/admin/user?deleteuser/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

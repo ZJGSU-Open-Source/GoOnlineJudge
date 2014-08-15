@@ -1,7 +1,7 @@
 {{define "content"}}
 <h1>Admin - News Edit</h1>
 {{with .Detail}}
-<form accept-charset="UTF-8" class="new_news" id="new_news" method="post" action="/admin/news/update/nid/{{.Nid}}">
+<form accept-charset="UTF-8" class="new_news" id="new_news" method="post" action="/admin/news?update/nid?{{.Nid}}">
     <div style="margin:0;padding:0;display:inline">
       <input name="utf8" type="hidden" value="✓">
     </div>   

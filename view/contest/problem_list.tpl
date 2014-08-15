@@ -14,7 +14,7 @@
       {{range .}} 
             <tr>
               <td>{{.Pid}}</td>
-              <td><a href="/contest/problem/detail/cid/{{$cid}}/pid/{{.Pid}}">{{.Title}}</a></td>
+              <td><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.Pid}}">{{.Title}}</a></td>
               <td>{{ShowRatio .Solve .Submit}} ({{.Solve}}/{{.Submit}})</td>
             </tr>
       {{end}}  

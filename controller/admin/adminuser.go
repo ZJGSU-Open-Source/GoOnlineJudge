@@ -34,38 +34,34 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		return
 	}
 	var c interface{}
-	if r.URL.Path[6:] == "/" {
+	var m string
+	args := this.ParseURL(r.URL.String())
+	if len(args) == 1 {
 		c = &HomeController{}
-		m := "Home"
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
-		return
-	}
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if len(s) < 3 {
-		log.Println("args err")
-		return
-	}
-
-	switch s[1] {
-	case "news":
+		m = "Home"
+	} else if args["news"] != "" {
 		c = &NewsController{}
-	case "problem":
+		m = args["news"]
+	} else if args["problem"] != "" {
 		c = &ProblemController{}
-	case "contest":
+		m = args["problem"]
+	} else if args["contest"] != "" {
 		c = &ContestController{}
-	case "user":
+		m = args["contest"]
+	} else if args["user"] != "" {
 		c = &UserController{}
-	case "testdata":
+		m = args["user"]
+	} else if args["testdata"] != "" {
 		c = &TestdataController{}
-	case "image":
+		m = args["testdata"]
+	} else if args["image"] != "" {
 		c = &ImageController{}
-	default:
+		m = args["image"]
+	} else {
 		log.Println("args err")
 		return
 	}
-	m := strings.Title(s[2])
+	m = strings.Title(m)
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }
