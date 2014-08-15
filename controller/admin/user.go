@@ -182,19 +182,90 @@ func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Delete User")
 	this.Init(w, r)
 
-	log.Println(r.URL.Path)
 	args := this.ParseURL(r.URL.String())
-	uid := args["uid"]
-	log.Println(uid)
+	one := make(map[string]interface{})
 
-	response, err := http.Post(config.PostHost+"/admin/user?deleteuser/uid?"+uid, "application/json", nil)
+	uid := args["uid"]
+	privilege := config.PrivilegePU
+
+	response, err := http.Post(config.PostHost+"/admin/user/deleteuser/uid/"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
 	defer response.Body.Close()
+
+	one["uid"] = uid
+	one["privilege"] = privilege
+	reader, err := this.PostReader(&one)
+	if err != nil {
+		http.Error(w, "read error", 500)
+		return
+	}
+	response, err = http.Post(config.PostHost+"/user/privilege/uid/"+uid, "application/json", reader)
+	if err != nil {
+		http.Error(w, "post error", 400)
+		return
+	}
+	defer response.Body.Close()
+
+	w.WriteHeader(200)
+
 }
 
 func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
+	log.Println("User Privilege")
+	this.Init(w, r)
 
+	one := make(map[string]interface{})
+	args := this.ParseURL(r.URL.Path)
+	uid := args["uid"]
+	privilege := args["privilege"]
+
+	if privilege == "Admin" {
+		one["privilege"] = config.PrivilegeAD
+
+	} else if privilege == "Source broswer" {
+		one["privilege"] = config.PrivilegeSB
+	}
+
+	ok := 1
+	hint := make(map[string]string)
+
+	if uid == "" {
+		ok, hint["uid"] = 0, "Handle should not be empty."
+	} else {
+		response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+	}
+
+	if ok == 1 {
+		one["uid"] = uid
+		reader, err := this.PostReader(&one)
+		if err != nil {
+			http.Error(w, "read error", 500)
+			return
+		}
+		response, err := http.Post(config.PostHost+"/user/privilege/uid/"+uid, "application/json", reader)
+		if err != nil {
+			http.Error(w, "post error", 400)
+			return
+		}
+		defer response.Body.Close()
+
+		w.WriteHeader(200)
+	} else {
+		b, err := json.Marshal(&hint)
+		if err != nil {
+			http.Error(w, "json error", 500)
+			return
+		}
+
+		w.WriteHeader(400)
+		w.Write(b)
+	}
 }

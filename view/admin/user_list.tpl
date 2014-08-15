@@ -15,8 +15,7 @@
 					<tr>
 						<td><a href="/user?detail/uid?{{.Uid}}" target="_new">{{.Uid}}</a></td>
 						<td>{{PriToString .Privilege}}</td>
-						<!--><td><a class="admin_user_delete" href="#" data-type="{{.}}">[Delete]</a></td><-->
-						<td><a href="/admin/user?deleteuser/uid?{{.Uid}}">[Delete]</a></td>
+						<td><a class="admin_user_delete" href="#" data-id="{{.Uid}}">[Delete]</a></td>
 					</tr>
 				{{end}}
 				{{end}}
@@ -24,25 +23,53 @@
 		</tbody>
 </table>
 
+<form accept-charset="UTF-8" id="search_form">
+Add Admin: <input id="user" name="user" size="20" type="text">
+<select id="type" name="type">
+<option value="Admin">Admin</option>
+<option value="Source broswer">Source broswer</option>
+</select>
+<input name="commit" type="submit" value="Add">
+</form>
+
+<script type="text/javascript">
+$('#search_form').submit( function(e) {
+	e.preventDefault();
+	var user = $('#user').val();
+	var type = $('#type').val();
+	$.ajax({
+		type:'POST',
+		url:'/admin/user/privilege/'+type+'/uid?'+user,
+		data:$(this).serialize(),
+		error:function(){
+			if (user == ""){
+				alert("Handle must not be empty!")
+			}
+		},
+		success:function(){
+			window.location.reload();
+		}
+	});
+});
+</script>
+
 <script type="text/javascript">
 $('.admin_user_delete').on('click', function() {
-  var ret = confirm('Delete the user ?');
-   if (ret == true) {
-               //var pid = {{.User}}
-               var uid = $(this).data("Uid");
-               alert(uid);
-               $.ajax({
-                type: 'POST',
-                url: '/admin/user?deleteuser/uid?' + uid,
-                data:$(this).serialize(),
-                error: function() {
-                    alert('failed!');
-                },
-                success: function() {
-                    window.location.reload();
-                }
-            });
-   }
+	var uid = $(this).data("id");
+	var ret = confirm('Delete the user:  '+uid+'?');
+	if (ret == true) {
+		$.ajax({
+			type: 'POST',
+			url: '/admin/user?privilege/pu/uid?' + uid,
+			data:$(this).serialize(),
+			error: function() {
+				alert('failed!');
+			},
+			success: function() {
+				window.location.reload();
+			}
+		});
+	}
 });
 </script>
 {{end}}
