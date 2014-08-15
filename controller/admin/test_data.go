@@ -21,7 +21,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		log.Println("Admin testdata list")
 		this.Init(w, r)
 
-		args := this.ParseURL(r.URL.Path[6:])
+		args := this.ParseURL(r.URL.String())
 
 		file := []string{}
 		dir, err := os.Open(config.Datapath + args["pid"])
@@ -67,7 +67,7 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 		log.Println("Admin Upload files")
 		this.Init(w, r)
 
-		args := this.ParseURL(r.URL.Path[6:])
+		args := this.ParseURL(r.URL.String())
 
 		r.ParseMultipartForm(32 << 20)
 		fhs := r.MultipartForm.File["testfiles"]
@@ -89,7 +89,7 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 			defer f.Close()
 			io.Copy(f, file)
 		}
-		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
+		http.Redirect(w, r, "/admin/testdata?list/pid?"+args["pid"], http.StatusFound)
 	}
 }
 
@@ -97,7 +97,7 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	log.Println("Admin Download files")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	filename := args["type"]
 	file, err := os.Open(config.Datapath + args["pid"] + "/" + filename)
 	if err != nil {
@@ -117,7 +117,7 @@ func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 		log.Println("Admin TestData Delete")
 		this.Init(w, r)
 
-		args := this.ParseURL(r.URL.Path[6:])
+		args := this.ParseURL(r.URL.String())
 		pid, err := strconv.Atoi(args["pid"])
 		filetype := args["type"]
 		if err != nil {
@@ -129,6 +129,6 @@ func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		http.Redirect(w, r, "/admin/testdata/list/pid/"+args["pid"], http.StatusFound)
+		http.Redirect(w, r, "/admin/testdata?list/pid?"+args["pid"], http.StatusFound)
 	}
 }

@@ -44,7 +44,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -237,7 +237,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		out = strings.Replace(out, crStr, "\n", -1)
 		outfile.WriteString(out)
 
-		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
 	}
 }
 
@@ -245,7 +245,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem Status")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	log.Println(args)
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
@@ -287,7 +287,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
+		http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
 	}
 }
 
@@ -295,7 +295,7 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem Delete")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -316,7 +316,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem Edit")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -366,7 +366,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Problem Update")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[6:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -438,6 +438,6 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/problem/detail/pid/"+strconv.Itoa(pid), http.StatusFound)
+		http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
 	}
 }

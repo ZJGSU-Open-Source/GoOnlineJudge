@@ -12,6 +12,7 @@ type contest struct {
 	Title    string      `json:"title"bson:"title"`
 	Encrypt  int         `json:"encrypt"bson:"encrypt"`
 	Argument interface{} `json:"argument"bson:"argument"`
+	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
 
 	Start string `json:"start"bson:"start"`
 	End   string `json:"end"bson:"end"`
@@ -32,7 +33,7 @@ type Contest struct {
 func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[8:])
+	args := this.ParseURL(r.URL.String())
 	cid, err := strconv.Atoi(args["cid"])
 	if err != nil {
 		http.Error(w, "args error", 400)

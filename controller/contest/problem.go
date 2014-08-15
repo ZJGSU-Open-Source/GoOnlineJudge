@@ -143,7 +143,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args := this.ParseURL(r.URL.Path[8:])
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)

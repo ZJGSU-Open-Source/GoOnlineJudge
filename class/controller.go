@@ -49,8 +49,13 @@ func (this *Controller) ParseURL(url string) (args map[string]string) {
 	path := strings.Trim(url, "/")
 	list := strings.Split(path, "/")
 
-	for i := 1; i < len(list); i += 2 {
-		args[list[i-1]] = list[i]
+	for _, pair := range list {
+		k_v := strings.Split(pair, "?")
+		if len(k_v) <= 1 {
+			args[k_v[0]] = "Index"
+		} else {
+			args[k_v[0]] = k_v[1]
+		}
 	}
 	return
 }

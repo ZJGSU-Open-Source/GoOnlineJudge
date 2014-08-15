@@ -5,7 +5,7 @@
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}/page/{{NumSub .CurrentPage 1}}">Prev</a>
+  <a href="{{$url}}/page?{{NumSub .CurrentPage 1}}">Prev</a>
   {{else}}
   <span>Prev</span>
   {{end}}
@@ -16,7 +16,7 @@
         {{if NumEqual . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}/page?{{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -29,7 +29,7 @@
         {{if NumEqual . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}/page?{{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -42,14 +42,14 @@
         {{if NumEqual . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}/page?{{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
   {{end}}
 
   {{if .IsNextPage}}
-  <a href="{{$url}}/page/{{NumAdd .CurrentPage 1}}">Next</a>
+  <a href="{{$url}}/page?{{NumAdd .CurrentPage 1}}">Next</a>
   {{else}}
   <span>Next</span>
   {{end}}
@@ -70,9 +70,9 @@
           {{if ShowStatus .Status}}
             <tr>
               <td>{{.Index}}</td>
-              <td><a href="/user/detail/uid/{{.Uid}}">{{.Uid}}</a></td>
+              <td><a href="/user?detail/uid?{{.Uid}}">{{.Uid}}</a></td>
               <td>{{.Motto}}</td>
-              <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list/uid/{{.Uid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/uid/{{.Uid}}">{{.Submit}}</a>)</td>
+              <td>{{ShowRatio .Solve .Submit}} (<a href="/status?list/uid?{{.Uid}}/judge?3">{{.Solve}}</a>/<a href="/status?list/uid?{{.Uid}}">{{.Submit}}</a>)</td>
             </tr>
           {{end}}
         {{end}}  

@@ -182,8 +182,9 @@ func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
 	log.Println("Admin Delete User")
 	this.Init(w, r)
 
+	args := this.ParseURL(r.URL.String())
 	one := make(map[string]interface{})
-	args := this.ParseURL(r.URL.Path[6:])
+
 	uid := args["uid"]
 	privilege := config.PrivilegePU
 
