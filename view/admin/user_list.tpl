@@ -56,7 +56,7 @@ $('#search_form').submit( function(e) {
 <script type="text/javascript">
 $('.admin_user_delete').on('click', function() {
 	var uid = $(this).data("id");
-	var ret = confirm('Delete the user:  '+uid+'?');
+	var ret = confirm('Delete the user '+uid+'?');
 	if (ret == true) {
 		$.ajax({
 			type: 'POST',
