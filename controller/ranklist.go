@@ -22,7 +22,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	log.Println("Ranklist")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path[9:])
+	args := this.ParseURL(r.URL.String())
 	url := ""
 	this.Data["URL"] = "/ranklist"
 

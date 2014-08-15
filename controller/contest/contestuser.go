@@ -37,24 +37,24 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 		}
 	}
 	var c interface{}
-	p := strings.Trim(r.URL.Path, "/")
-	s := strings.Split(p, "/")
-	if len(s) < 3 {
-		log.Println("args err")
-		return
-	}
-	switch s[1] {
-	case "problem":
+	var m string
+
+	args := this.ParseURL(r.URL.String())
+	log.Println(args)
+	if args["problem"] != "" {
 		c = &ProblemController{}
-	case "status":
+		m = strings.Title(args["problem"])
+	} else if args["status"] != "" {
 		c = &StatusController{}
-	case "ranklist":
+		m = strings.Title(args["status"])
+	} else if args["ranklist"] != "" {
 		c = &RanklistController{}
-	default:
+		m = "Index"
+	} else {
 		log.Println("args err")
 		return
 	}
-	m := strings.Title(s[2])
+	log.Println(m)
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }

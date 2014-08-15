@@ -64,9 +64,10 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("News Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
+		log.Println(args["nid"])
 		http.Error(w, "args error", 400)
 		return
 	}

@@ -20,7 +20,7 @@
     <div class="checker">
       <div class="key">Ratio(Solve/Submit)</div>
       <div class="value">
-        <span>{{ShowRatio .Solve .Submit}}(<a href="/status/list/pid/{{.Pid}}/judge/3">{{.Solve}}</a>/<a href="/status/list/pid/{{.Pid}}">{{.Submit}})</a></span>
+        <span>{{ShowRatio .Solve .Submit}}(<a href="/status?list/pid?{{.Pid}}/judge?3">{{.Solve}}</a>/<a href="/status?list/pid?{{.Pid}}">{{.Submit}})</a></span>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
     {{end}}
     {{if .Source}}
       <p><b>Source:</b></p>
-      <p><a href="/problem/list/source/{{.Source}}">{{.Source}}</a></p>
+      <p><a href="/problem?list/source?{{.Source}}">{{.Source}}</a></p>
     {{end}}
   </div>
   <hr>
@@ -78,17 +78,17 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/problem/submit/pid/{{.Pid}}',
+      url:'/problem?submit/pid?{{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
-          window.location.href = '/user/signin';
+          window.location.href = '/user?signin';
         }
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/status/list';
+        window.location.href = '/status?list';
       }
     });
   });

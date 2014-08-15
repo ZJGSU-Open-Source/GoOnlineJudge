@@ -15,7 +15,7 @@
       {{range .}} 
         <tr>
           <td>{{.Cid}}</td>
-          <td><a href="/contest/problem/list/cid/{{.Cid}}">{{.Title}}</a></td>
+          <td><a href="/contest/problem?list/cid?{{.Cid}}">{{.Title}}</a></td>
           <td><a class="contest_status" href="#" data-id="{{.Cid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
           <td><a class="contest_delete" href="#" data-id="{{.Cid}}">[Delete]</a></td>
           <td><a class="contest_edit" href="#" data-id="{{.Cid}}">[Edit]</a></td>
@@ -29,7 +29,7 @@ $('.contest_status').on('click', function() {
   var cid = $(this).data('id');
   $.ajax({
     type:'POST',
-    url:'/admin/contest/status/cid/'+cid,
+    url:'/admin/contest?status/cid?'+cid,
     data:$(this).serialize(),
     error: function(){
       alert('failed!');
@@ -45,7 +45,7 @@ $('.contest_delete').on('click', function() {
     var cid = $(this).data('id');
     $.ajax({
       type:'POST',
-      url:'/admin/contest/delete/cid/'+cid,
+      url:'/admin/contest?delete/cid?'+cid,
       data:$(this).serialize(),
       error: function() {
         alert('failed!');
@@ -58,7 +58,7 @@ $('.contest_delete').on('click', function() {
 });
 $('.contest_edit').on('click', function() {
   var cid = $(this).data('id');
-  window.location.href = '/admin/contest/edit/cid/'+cid;
+  window.location.href = '/admin/contest?edit/cid?'+cid;
 });
 </script>
 {{end}}

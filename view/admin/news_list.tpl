@@ -14,7 +14,7 @@
 			{{with .News}}
 				{{range .}}
 					<tr>
-						<td><a href="/admin/news/detail/nid/{{.Nid}}">{{.Title}}</a></td>
+						<td><a href="/admin/news?detail/nid?{{.Nid}}">{{.Title}}</a></td>
 						<td>{{.Create}}</td>
 						<td><a class="news_status" href="#" data-id="{{.Nid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
 						<td><a class="news_delete" href="#" data-id="{{.Nid}}">[Delete]</a></td>
@@ -29,7 +29,7 @@ $('.news_status').on('click', function() {
 	var nid = $(this).data('id');
 	$.ajax({
 		type:'POST',
-		url:'/admin/news/status/nid/'+nid,
+		url:'/admin/news?status/nid?'+nid,
 		data:$(this).serialize(),
 		error: function() {
 			alert('failed!');
@@ -45,7 +45,7 @@ $('.news_delete').on('click', function() {
 		var nid = $(this).data('id');
 		$.ajax({
 			type:'POST',
-			url:'/admin/news/delete/nid/'+nid,
+			url:'/admin/news?delete/nid?'+nid,
 			data:$(this).serialize(),
 			error: function() {			
 				alert('failed!');
@@ -58,7 +58,7 @@ $('.news_delete').on('click', function() {
 });
 $('.news_edit').on('click', function() {
 	var nid = $(this).data('id');
-	window.location.href = '/admin/news/edit/nid/'+nid;
+	window.location.href = '/admin/news?edit/nid?'+nid;
 });
 </script>
 

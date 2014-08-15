@@ -21,13 +21,13 @@
       <input name="commit" type="submit" value="Sign In">
     </div>
   </form>
-  <a href="/user/signup">Register a new account.</a>
+  <a href="/user?signup">Register a new account.</a>
   <script type="text/javascript">
   $('#new_user').submit( function(e) {
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/user/login',
+      url:'/user?login',
       data:$(this).serialize(),
       error: function() {
         $('#signin_failed').css('display', 'block');
