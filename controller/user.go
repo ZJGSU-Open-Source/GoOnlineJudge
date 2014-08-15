@@ -210,7 +210,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	log.Println("User Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
 	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
 	if err != nil {
