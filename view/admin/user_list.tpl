@@ -25,12 +25,34 @@
 </table>
 
 <form accept-charset="UTF-8" id="search_form">
-Add Admin: <input id="add" name="add" size="20" type="text" value="{{.AddValue}}">
-<select id="option" name="option">
-  <option value="admin">Admin</option>
+Add Admin: <input id="user" name="user" size="20" type="text">
+<select id="type" name="type">
+
+  <option value="Admin">Admin</option>
+  <option value="Source broswer">Source broswer</option>
+
 </select>
 <input name="commit" type="submit" value="Add">
 </form>
+
+<script type="text/javascript">
+  $('#search_form').submit( function(e) {
+    e.preventDefault();
+    var user = $('#user').val();
+    var type = $('#type').val();
+    $.ajax({
+    type:'POST',
+    url:'/admin/user/privilege/'+type+'/uid/'+user,
+    data:$(this).serialize(),
+    error:function(){
+    	alert('failed!');
+    },
+    success:function(){
+    	window.location.reload();
+    }
+    });
+  });
+  </script>
 
 <script type="text/javascript">
 $('.admin_user_delete').on('click', function() {
@@ -39,7 +61,7 @@ $('.admin_user_delete').on('click', function() {
    if (ret == true) {
                $.ajax({
                 type: 'POST',
-                url: '/admin/user/deleteuser/uid/' + uid,
+                url: '/admin/user/privilege/pu/uid/' + uid,
                 data:$(this).serialize(),
                 error: function() {
                     alert('failed!');
