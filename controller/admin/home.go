@@ -11,7 +11,7 @@ type HomeController struct {
 }
 
 func (this *HomeController) Home(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Home")
+	class.Logger.Debug(r.RemoteAddr + "visit Admin Home")
 	this.Init(w, r)
 
 	var err error
