@@ -32,7 +32,6 @@ func newsHandler(w http.ResponseWriter, r *http.Request) {
 func problemHandler(w http.ResponseWriter, r *http.Request) {
 	args := ParseURL(r.URL.String())
 	if args["problem"] != "" {
-		log.Println("problem")
 		c := &controller.ProblemController{}
 		m := strings.Title(args["problem"])
 		rv := getReflectValue(w, r)
