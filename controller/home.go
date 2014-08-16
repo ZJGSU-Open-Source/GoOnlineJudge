@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -12,7 +11,7 @@ type HomeController struct {
 }
 
 func (this *HomeController) Index(w http.ResponseWriter, r *http.Request) {
-	log.Println("Home")
+	class.Logger.Debug("Home")
 	this.Init(w, r)
 
 	t, err := template.ParseFiles("view/layout.tpl", "view/home.tpl")

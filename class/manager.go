@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"io"
-	//"log"
 	"net/http"
 	"sync"
 	"time"

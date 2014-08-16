@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -40,14 +39,14 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest Problem List")
+	class.Logger.Debug("Contest Problem List")
 	this.InitContest(w, r)
 
 	if (this.GetTime() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
 		t := template.New("layout.tpl")
 		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -58,7 +57,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		}
 		err = t.Execute(w, this.Data)
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -103,7 +102,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		"ShowRatio": class.ShowRatio})
 	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -111,21 +110,21 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestProblem"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
 }
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest Problem Detail")
+	class.Logger.Debug("Contest Problem Detail")
 	this.InitContest(w, r)
 
 	if (this.ContestDetail.Status == config.StatusReverse || this.GetTime() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
 		t := template.New("layout.tpl")
 		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -136,7 +135,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		err = t.Execute(w, this.Data)
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -189,7 +188,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 /////////Todo submit ,need to updata------
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest Problem Submit")
+	class.Logger.Debug("Contest Problem Submit")
 	this.InitContest(w, r)
 
 	args := this.ParseURL(r.URL.Path[8:])
@@ -285,7 +284,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("./JudgeServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 	err = cmd.Start()
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 	}
 	w.WriteHeader(200)
 }

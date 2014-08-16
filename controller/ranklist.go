@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -19,7 +18,7 @@ type RanklistController struct {
 }
 
 func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
-	log.Println("Ranklist")
+	class.Logger.Debug("Ranklist")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

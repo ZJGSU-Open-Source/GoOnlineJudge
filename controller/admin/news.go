@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -24,7 +23,7 @@ type NewsController struct {
 }
 
 func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Detail")
+	class.Logger.Debug("Admin News Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -73,7 +72,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News List")
+	class.Logger.Debug("Admin News List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/news/list", "application/json", nil)
@@ -111,7 +110,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Add")
+	class.Logger.Debug("Admin News Add")
 	this.Init(w, r)
 
 	t := template.New("layout.tpl")
@@ -134,7 +133,7 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Insert")
+	class.Logger.Debug("Admin News Insert")
 	this.Init(w, r)
 
 	one := make(map[string]interface{})
@@ -160,7 +159,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Status")
+	class.Logger.Debug("Admin News Status")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -205,7 +204,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Delete")
+	class.Logger.Debug("Admin News Delete")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -226,7 +225,7 @@ func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Edit")
+	class.Logger.Debug("Admin News Edit")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -276,7 +275,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin News Update")
+	class.Logger.Debug("Admin News Update")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

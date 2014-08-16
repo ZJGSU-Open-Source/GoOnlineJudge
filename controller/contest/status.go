@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -34,7 +33,7 @@ type StatusController struct {
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest Status List")
+	class.Logger.Debug("Contest Status List")
 	this.InitContest(w, r)
 
 	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid), "application/json", nil)
@@ -65,7 +64,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		"SameID":       class.SameID})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_list.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -79,7 +78,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
-	log.Println("Status Code")
+	class.Logger.Debug("Status Code")
 	this.Init(w, r)
 	this.InitContest(w, r)
 
@@ -120,7 +119,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

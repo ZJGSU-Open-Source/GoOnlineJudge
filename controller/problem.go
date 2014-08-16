@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -40,7 +39,7 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem List")
+	class.Logger.Debug("Problem List")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -149,7 +148,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem Detail")
+	class.Logger.Debug("Problem Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -179,7 +178,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		t := template.New("layout.tpl")
 		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -201,7 +200,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -217,7 +216,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 // URL /problem?submit/pid?<pid>
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Problem Submit")
+	class.Logger.Debug("Problem Submit")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.Path)
@@ -312,7 +311,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 		err = cmd.Run()
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 		}
 	}()
 }

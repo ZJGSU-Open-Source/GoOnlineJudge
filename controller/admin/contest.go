@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/config"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -36,7 +35,7 @@ type ContestController struct {
 
 // url:/admin/contest/list/type/<contest,exercise>
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest List")
+	class.Logger.Debug("Contest List")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -79,12 +78,12 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 
 // url:/admin/contest/add/type/<contest,exercise>
 func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Add")
+	class.Logger.Debug("Admin Contest Add")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
 	Type := args["type"]
-	//log.Println(Type)
+	//class.Logger.Debug(Type)
 
 	t := template.New("layout.tpl")
 	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_add.tpl")
@@ -107,7 +106,7 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 
 // url:/admin/contest?insert/type?<contest,exercise>
 func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Insert")
+	class.Logger.Debug("Admin Contest Insert")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -116,7 +115,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 	one["title"] = r.FormValue("title")
 	one["type"] = Type
-	//log.Println(one["type"])
+	//class.Logger.Debug(one["type"])
 
 	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	if err != nil {
@@ -235,7 +234,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 
 // url:/admin/contest/status/
 func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Status")
+	class.Logger.Debug("Admin Contest Status")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -285,7 +284,7 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 
 // url:/admin/contest/delete/
 func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Delete")
+	class.Logger.Debug("Admin Contest Delete")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -307,7 +306,7 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 
 //// url:/admin/contest/edit/
 func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Edit")
+	class.Logger.Debug("Admin Contest Edit")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -403,7 +402,7 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 
 // url:/admin/contest/update/
 func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Contest Update")
+	class.Logger.Debug("Admin Contest Update")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

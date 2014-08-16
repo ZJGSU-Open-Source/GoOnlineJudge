@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -37,7 +36,7 @@ type UserController struct {
 }
 
 func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Privilege User List")
+	class.Logger.Debug("Admin Privilege User List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/user/list", "application/json", nil)
@@ -78,7 +77,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Password Page")
+	class.Logger.Debug("Admin Password Page")
 	this.Init(w, r)
 
 	var err error
@@ -103,7 +102,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 }
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Password")
+	class.Logger.Debug("Admin Password")
 	this.Init(w, r)
 
 	ok := 1
@@ -179,7 +178,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Delete User")
+	class.Logger.Debug("Admin Delete User")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -214,7 +213,7 @@ func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Privilege")
+	class.Logger.Debug("User Privilege")
 	this.Init(w, r)
 
 	one := make(map[string]interface{})

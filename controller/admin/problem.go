@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -41,7 +40,7 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Detail")
+	class.Logger.Debug("Admin Problem Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -78,7 +77,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/admin/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -95,7 +94,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem List")
+	class.Logger.Debug("Admin Problem List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
@@ -133,7 +132,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Add")
+	class.Logger.Debug("Admin Problem Add")
 	this.Init(w, r)
 
 	t := template.New("layout.tpl")
@@ -156,7 +155,7 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Insert")
+	class.Logger.Debug("Admin Problem Insert")
 	this.Init(w, r)
 
 	//TODO r.body to json
@@ -216,13 +215,13 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 
 		err = os.Mkdir(config.Datapath+strconv.Itoa(ret["pid"]), os.ModePerm)
 		if err != nil {
-			log.Println("create dir error")
+			class.Logger.Debug("create dir error")
 			return
 		}
 
 		infile, err := os.Create(config.Datapath + strconv.Itoa(ret["pid"]) + "/sample.in")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 		}
 		defer infile.Close()
 		in = strings.Replace(in, "\r\n", "\n", -1)
@@ -230,7 +229,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		infile.WriteString(in)
 		outfile, err := os.Create(config.Datapath + strconv.Itoa(ret["pid"]) + "/sample.out")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 		}
 		defer outfile.Close()
 		out = strings.Replace(out, "\r\n", "\n", -1)
@@ -242,11 +241,11 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Status")
+	class.Logger.Debug("Admin Problem Status")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	//log.Println(args)
+	//class.Logger.Debug(args)
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -292,7 +291,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Delete")
+	class.Logger.Debug("Admin Problem Delete")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -313,7 +312,7 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Edit")
+	class.Logger.Debug("Admin Problem Edit")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -363,7 +362,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Problem Update")
+	class.Logger.Debug("Admin Problem Update")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -408,7 +407,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 
 	infile, err := os.Create(config.Datapath + args["pid"] + "/sample.in")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 	}
 	defer infile.Close()
 	in = strings.Replace(in, "\r\n", "\n", -1)
@@ -417,7 +416,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 
 	outfile, err := os.Create(config.Datapath + args["pid"] + "/sample.out")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 	}
 	defer outfile.Close()
 	out = strings.Replace(out, "\r\n", "\n", -1)
