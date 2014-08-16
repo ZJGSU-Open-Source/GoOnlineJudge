@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	// "strconv"
 	"strings"
@@ -32,11 +31,11 @@ type ContestController struct {
 }
 
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest List")
+	class.Logger.Debug("Contest List")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	//log.Println(args)
+	//class.Logger.Debug(args)
 	Type := args["type"]
 	response, err := http.Post(config.PostHost+"/contest/list/type/"+Type, "application", nil)
 	if err != nil {
@@ -61,7 +60,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest_list.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -73,7 +72,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Privilege"] = this.Privilege
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

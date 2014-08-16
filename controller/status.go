@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -35,7 +34,7 @@ type StatusController struct {
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Status List")
+	class.Logger.Debug("Status List")
 	this.Init(w, r)
 	args := this.ParseURL(r.URL.String())
 	url := "/solution/list"
@@ -141,11 +140,11 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsStatus"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		log.Println(err.Error())
+		class.Logger.Debug(err.Error())
 		e := err.Error()
 		codefile, err := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE, 0644)
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			return
 		}
 		defer codefile.Close()
@@ -156,7 +155,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
-	log.Println("Status Code")
+	class.Logger.Debug("Status Code")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

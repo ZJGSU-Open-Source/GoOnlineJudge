@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	// "strconv"
 )
@@ -29,7 +28,7 @@ type ExerciseController struct {
 }
 
 func (this *ExerciseController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("Exercise List")
+	class.Logger.Debug("Exercise List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/exercise/list", "application", nil)
@@ -55,7 +54,7 @@ func (this *ExerciseController) List(w http.ResponseWriter, r *http.Request) {
 		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/exercise_list.tpl")
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -66,7 +65,7 @@ func (this *ExerciseController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Privilege"] = this.Privilege
 	err = t.Execute(w, this.Data)
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}

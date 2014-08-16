@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"io"
-	//"log"
 	"net/http"
 	"strconv"
 	"strings"

@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/config"
 	"encoding/json"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -33,7 +32,7 @@ type UserController struct {
 }
 
 func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Login")
+	class.Logger.Debug("User Login")
 	this.Init(w, r)
 
 	t := template.New("layout.tpl")
@@ -53,7 +52,7 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Login")
+	class.Logger.Debug("User Login")
 	this.Init(w, r)
 
 	one := make(map[string]string)
@@ -96,7 +95,7 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Sign Up")
+	class.Logger.Debug("User Sign Up")
 	this.Init(w, r)
 
 	t := template.New("layout.tpl")
@@ -116,7 +115,7 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Register")
+	class.Logger.Debug("User Register")
 	this.Init(w, r)
 
 	one := make(map[string]interface{})
@@ -199,7 +198,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Logout")
+	class.Logger.Debug("User Logout")
 	this.Init(w, r)
 
 	this.DeleteSession(w, r)
@@ -207,7 +206,7 @@ func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Detail")
+	class.Logger.Debug("User Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -245,7 +244,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["List"] = solvedList["list"]
 	}
-	//log.Println(solvedList["list"])
+	//class.Logger.Debug(solvedList["list"])
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
@@ -267,7 +266,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Settings")
+	class.Logger.Debug("User Settings")
 	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
@@ -340,7 +339,7 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Edit")
+	class.Logger.Debug("User Edit")
 	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
@@ -397,7 +396,7 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Update")
+	class.Logger.Debug("User Update")
 	this.Init(w, r)
 
 	ok := 1
@@ -442,7 +441,7 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Password Page")
+	class.Logger.Debug("User Password Page")
 	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
@@ -482,7 +481,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 }
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
-	log.Println("User Password")
+	class.Logger.Debug("User Password")
 	this.Init(w, r)
 
 	ok := 1

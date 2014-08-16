@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"os"
 )
@@ -21,7 +20,7 @@ type image struct {
 
 //Upload support kindeditor upload images,the response must return json eg. like {"err":0,"url":"http:...."}
 func (this *ImageController) Upload(w http.ResponseWriter, r *http.Request) {
-	log.Println("AdminUpload Image")
+	class.Logger.Debug("AdminUpload Image")
 	this.Init(w, r)
 
 	r.ParseMultipartForm(32 << 20)
@@ -32,10 +31,10 @@ func (this *ImageController) Upload(w http.ResponseWriter, r *http.Request) {
 
 	for _, fheader := range fhs {
 		filename := fheader.Filename
-		log.Println(filename)
+		class.Logger.Debug(filename)
 		file, err := fheader.Open()
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			errflag++
 			break
 		}
@@ -44,7 +43,7 @@ func (this *ImageController) Upload(w http.ResponseWriter, r *http.Request) {
 		path = "static/img/" + filename
 		f, err := os.Create(path)
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			errflag++
 			break
 		}

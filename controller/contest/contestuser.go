@@ -1,9 +1,9 @@
 package contest
 
 import (
+	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -15,7 +15,7 @@ type ContestUserContorller struct {
 }
 
 func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Request) {
-	log.Println("Contest User")
+	class.Logger.Debug("Contest User")
 	this.InitContest(w, r)
 
 	if this.ContestDetail.Encrypt == config.EncryptPW {
@@ -40,7 +40,7 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 	var m string
 
 	args := this.ParseURL(r.URL.String())
-	log.Println(args)
+	class.Logger.Debug(args)
 	if args["problem"] != "" {
 		c = &ProblemController{}
 		m = strings.Title(args["problem"])
@@ -51,10 +51,10 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 		c = &RanklistController{}
 		m = "Index"
 	} else {
-		log.Println("args err")
+		class.Logger.Debug("args err")
 		return
 	}
-	log.Println(m)
+	class.Logger.Debug(m)
 	rv := getReflectValue(w, r)
 	callMethod(c, m, rv)
 }

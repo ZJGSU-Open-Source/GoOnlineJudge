@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -24,7 +23,7 @@ type NewsController struct {
 }
 
 func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
-	log.Println("News List")
+	class.Logger.Debug("News List")
 	this.Init(w, r)
 
 	response, err := http.Post(config.PostHost+"/news/list", "application/json", nil)
@@ -61,13 +60,13 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
-	log.Println("News Detail")
+	class.Logger.Debug("News Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
 	if err != nil {
-		log.Println(args["nid"])
+		class.Logger.Debug(args["nid"])
 		http.Error(w, "args error", 400)
 		return
 	}

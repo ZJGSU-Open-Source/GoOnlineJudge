@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	"GoOnlineJudge/controller/contest"
-	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -32,7 +31,6 @@ func newsHandler(w http.ResponseWriter, r *http.Request) {
 
 func problemHandler(w http.ResponseWriter, r *http.Request) {
 	args := ParseURL(r.URL.String())
-	log.Println(args)
 	if args["problem"] != "" {
 		log.Println("problem")
 		c := &controller.ProblemController{}
@@ -43,7 +41,6 @@ func problemHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.URL.String())
 	args := ParseURL(r.URL.String())
 	if args["status"] != "" {
 		c := &controller.StatusController{}
@@ -89,7 +86,6 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 
 // Contest
 func contestHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("conetest")
 	c := &contest.ContestUserContorller{}
 	m := "Register"
 	rv := getReflectValue(w, r)
@@ -123,12 +119,8 @@ func ParseURL(url string) (args map[string]string) {
 	path := strings.Trim(url, "/")
 	list := strings.Split(path, "/")
 
-	log.Println(url)
-	log.Println(path)
-	log.Println(list)
 	for _, pair := range list {
 		k_v := strings.Split(pair, "?")
-		log.Println(k_v)
 		if len(k_v) <= 1 {
 			args[k_v[0]] = ""
 		} else {

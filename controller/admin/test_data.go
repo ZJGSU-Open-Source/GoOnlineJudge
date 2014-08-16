@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/config"
 	"html/template"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -18,7 +17,7 @@ type TestdataController struct {
 
 func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		log.Println("Admin testdata list")
+		class.Logger.Debug("Admin testdata list")
 		this.Init(w, r)
 
 		args := this.ParseURL(r.URL.String())
@@ -29,7 +28,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 
 		files, err := dir.Readdir(-1)
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "Problem Id error", 500)
 			return
 		} else {
@@ -46,7 +45,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		t := template.New("layout.tpl")
 		t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/test_data.tpl")
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
 			return
 		}
@@ -64,7 +63,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		log.Println("Admin Upload files")
+		class.Logger.Debug("Admin Upload files")
 		this.Init(w, r)
 
 		args := this.ParseURL(r.URL.String())
@@ -76,14 +75,14 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 			filename := fheader.Filename
 			file, err := fheader.Open()
 			if err != nil {
-				log.Println(err)
+				class.Logger.Debug(err)
 				return
 			}
 			defer file.Close()
 			//保存文件
 			f, err := os.Create(config.Datapath + args["pid"] + "/" + filename)
 			if err != nil {
-				log.Println(err)
+				class.Logger.Debug(err)
 				return
 			}
 			defer f.Close()
@@ -94,14 +93,14 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request) {
-	log.Println("Admin Download files")
+	class.Logger.Debug("Admin Download files")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
 	filename := args["type"]
 	file, err := os.Open(config.Datapath + args["pid"] + "/" + filename)
 	if err != nil {
-		log.Println(err)
+		class.Logger.Debug(err)
 		return
 	}
 	defer file.Close()
@@ -114,7 +113,7 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 
 func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		log.Println("Admin TestData Delete")
+		class.Logger.Debug("Admin TestData Delete")
 		this.Init(w, r)
 
 		args := this.ParseURL(r.URL.String())
@@ -127,7 +126,7 @@ func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 		cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/"+filetype)
 		err = cmd.Run()
 		if err != nil {
-			log.Println(err)
+			class.Logger.Debug(err)
 		}
 		http.Redirect(w, r, "/admin/testdata?list/pid?"+args["pid"], http.StatusFound)
 	}

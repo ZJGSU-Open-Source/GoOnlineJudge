@@ -31,9 +31,9 @@ sudo apt-get install build-essential
 Then you can download our source code.
 ```bash
 #Get our code from Github
-go get github.com/ZJGSU-Open-Source/GoOnlineJudge
-go get github.com/ZJGSU-Open-Source/GoServer
-go get github.com/ZJGSU-Open-Source/RunServer
+git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git
+git clone https://github.com/ZJGSU-Open-Source/RunServer.git
+git clone https://github.com/ZJGSU-Open-Source/GoServer.git
 ```
 Those source codes file will be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
 ```bash

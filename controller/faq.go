@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"html/template"
-	"log"
 	"net/http"
 )
 
@@ -12,7 +11,7 @@ type FAQController struct {
 }
 
 func (this *FAQController) FAQ(w http.ResponseWriter, r *http.Request) {
-	log.Println("FAQ Page")
+	class.Logger.Debug("FAQ Page")
 	this.Init(w, r)
 
 	t, err := template.ParseFiles("view/layout.tpl", "view/faq.tpl")

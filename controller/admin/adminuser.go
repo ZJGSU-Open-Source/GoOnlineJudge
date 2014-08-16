@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -58,7 +57,7 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		c = &ImageController{}
 		m = args["image"]
 	} else {
-		log.Println("args err")
+		class.Logger.Debug("args err")
 		return
 	}
 	m = strings.Title(m)
