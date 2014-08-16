@@ -84,7 +84,7 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 
 	args := this.ParseURL(r.URL.String())
 	Type := args["type"]
-	log.Println(Type)
+	//log.Println(Type)
 
 	t := template.New("layout.tpl")
 	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_add.tpl")
@@ -116,7 +116,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 	one["title"] = r.FormValue("title")
 	one["type"] = Type
-	log.Println(one["type"])
+	//log.Println(one["type"])
 
 	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	if err != nil {
