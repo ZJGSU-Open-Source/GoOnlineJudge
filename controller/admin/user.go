@@ -225,7 +225,7 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 	if privilege == "Admin" {
 		one["privilege"] = config.PrivilegeAD
 
-	} else if privilege == "Source broswer" {
+	} else if privilege == "SB" {
 		one["privilege"] = config.PrivilegeSB
 	}
 
@@ -241,6 +241,18 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		defer response.Body.Close()
+		ret := make(map[string][]*user)
+		if response.StatusCode == 200 {
+			err = this.LoadJson(response.Body, &ret)
+			if err != nil {
+				http.Error(w, "load error", 400)
+				return
+			}
+
+			if len(ret["list"]) == 0 {
+				ok, hint["uid"] = 0, "This handle does not exist!"
+			}
+		}
 	}
 
 	if ok == 1 {

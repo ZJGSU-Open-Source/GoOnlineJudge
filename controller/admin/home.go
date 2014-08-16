@@ -12,7 +12,6 @@ type HomeController struct {
 }
 
 func (this *HomeController) Home(w http.ResponseWriter, r *http.Request) {
-
 	log.Println("Admin Home")
 	this.Init(w, r)
 

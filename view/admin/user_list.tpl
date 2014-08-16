@@ -26,8 +26,8 @@
 <form accept-charset="UTF-8" id="search_form">
 Add Admin: <input id="user" name="user" size="20" type="text">
 <select id="type" name="type">
+<option value="SB">Source broswer</option>
 <option value="Admin">Admin</option>
-<option value="Source broswer">Source broswer</option>
 </select>
 <input name="commit" type="submit" value="Add">
 </form>
@@ -41,12 +41,16 @@ $('#search_form').submit( function(e) {
 		type:'POST',
 		url:'/admin/user?privilege/type?'+type+'/uid?'+user,
 		data:$(this).serialize(),
-		error:function(){
+		error:function(response){
 			if (user == ""){
 				alert("Handle must not be empty!")
 			}
+			var json = eval('('+response.responseText+')');
+			if(json.uid != null) {
+				alert(json.uid);
+			}
 		},
-		success:function(){
+		success:function(response){
 			window.location.reload();
 		}
 	});
