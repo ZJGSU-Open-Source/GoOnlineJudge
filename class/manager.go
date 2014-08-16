@@ -97,11 +97,3 @@ func NewManager() *Manager {
 	return &Manager{cookieName: "sessionID",
 		cookieExpires: config.CookieExpires, sessions: make(map[string]*Session)}
 }
-
-var SessionManager *Manager
-
-func init() {
-	SessionManager = NewManager()
-	log.Println("new Session Manage")
-	go SessionManager.GC()
-}
