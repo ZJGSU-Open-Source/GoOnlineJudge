@@ -39,7 +39,7 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Problem List")
+	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

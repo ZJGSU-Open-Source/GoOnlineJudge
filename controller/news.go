@@ -28,6 +28,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 
 	response, err := http.Post(config.PostHost+"/news/list", "application/json", nil)
 	if err != nil {
+		class.Logger.Debug(err)
 		http.Error(w, "post error", 500)
 		return
 	}

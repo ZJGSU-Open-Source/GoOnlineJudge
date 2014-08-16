@@ -17,6 +17,7 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 	this.Init(w, r)
 
 	if this.Privilege <= config.PrivilegePU {
+		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You are not admin!"
 		t := template.New("layout.tpl")
