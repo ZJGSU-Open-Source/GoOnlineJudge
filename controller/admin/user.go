@@ -218,9 +218,9 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	one := make(map[string]interface{})
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
-	privilege := args["privilege"]
+	privilege := args["type"]
 
 	if privilege == "Admin" {
 		one["privilege"] = config.PrivilegeAD

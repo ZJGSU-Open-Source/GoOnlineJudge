@@ -39,7 +39,7 @@ $('#search_form').submit( function(e) {
 	var type = $('#type').val();
 	$.ajax({
 		type:'POST',
-		url:'/admin/user/privilege/'+type+'/uid?'+user,
+		url:'/admin/user?privilege/type?'+type+'/uid?'+user,
 		data:$(this).serialize(),
 		error:function(){
 			if (user == ""){
