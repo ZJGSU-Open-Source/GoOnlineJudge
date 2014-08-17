@@ -12,7 +12,7 @@
     </table>
     <p class="tip">Double click to view unformatted code.</p>
 	<br />
-	<a href="/problem/detail/pid/{{.Pid}}">Back to problem {{.Pid}}</a>
+	<a href="/problem?detail/pid?{{.Pid}}">Back to problem {{.Pid}}</a>
     <script defer="defer" type="text/javascript">
     //<![CDATA[
       $('.CodeRay .code').dblclick(function() {
