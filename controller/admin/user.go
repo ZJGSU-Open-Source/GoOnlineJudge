@@ -184,32 +184,45 @@ func (this *UserController) Deleteuser(w http.ResponseWriter, r *http.Request) {
 	args := this.ParseURL(r.URL.String())
 	one := make(map[string]interface{})
 
+	ok := 1
+	hint := make(map[string]string)
+
 	uid := args["uid"]
-	privilege := config.PrivilegePU
+	if uid == this.Uid {
+		ok, hint["uid"] = 0, "You cannot delete youself."
+		b, err := json.Marshal(&hint)
+		if err != nil {
+			http.Error(w, "json error", 500)
+			return
+		}
 
-	response, err := http.Post(config.PostHost+"/admin/user/deleteuser/uid/"+uid, "application/json", nil)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
+		w.WriteHeader(400)
+		w.Write(b)
+	} else {
+		privilege := config.PrivilegePU
+
+		response, err := http.Post(config.PostHost+"/admin/user/deleteuser/uid/"+uid, "application/json", nil)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+
+		one["uid"] = uid
+		one["privilege"] = privilege
+		reader, err := this.PostReader(&one)
+		if err != nil {
+			http.Error(w, "read error", 500)
+			return
+		}
+		response, err = http.Post(config.PostHost+"/user/privilege/uid/"+uid, "application/json", reader)
+		if err != nil {
+			http.Error(w, "post error", 400)
+			return
+		}
+		defer response.Body.Close()
+		w.WriteHeader(200)
 	}
-	defer response.Body.Close()
-
-	one["uid"] = uid
-	one["privilege"] = privilege
-	reader, err := this.PostReader(&one)
-	if err != nil {
-		http.Error(w, "read error", 500)
-		return
-	}
-	response, err = http.Post(config.PostHost+"/user/privilege/uid/"+uid, "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 400)
-		return
-	}
-	defer response.Body.Close()
-
-	w.WriteHeader(200)
-
 }
 
 func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
