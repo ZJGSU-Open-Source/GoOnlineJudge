@@ -65,7 +65,7 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
+	response, err := http.Post(config.PostHost+"/user?login", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -130,7 +130,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 	ok := 1
 	hint := make(map[string]string)
-	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -175,7 +175,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response, err = http.Post(config.PostHost+"/user/insert", "application/json", reader)
+		response, err = http.Post(config.PostHost+"/user?insert", "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
@@ -211,7 +211,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
-	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?detail/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -228,7 +228,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		this.Data["Detail"] = one
 	}
 
-	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+uid, "application/json", nil)
+	response, err = http.Post(config.PostHost+"/solution?achieve/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -286,7 +286,7 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/user/detail/uid/"+this.Uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?detail/uid?"+this.Uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -303,7 +303,7 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		this.Data["Detail"] = one
 	}
 
-	response, err = http.Post(config.PostHost+"/solution/achieve/uid/"+this.Uid, "application/json", nil)
+	response, err = http.Post(config.PostHost+"/solution?achieve/uid?"+this.Uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -360,7 +360,7 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	uid := this.Uid
-	response, err := http.Post(config.PostHost+"/user/detail/uid/"+uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?detail/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -420,7 +420,7 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response, err := http.Post(config.PostHost+"/user/update/uid/"+this.Uid, "application/json", reader)
+		response, err := http.Post(config.PostHost+"/user?update/uid?"+this.Uid, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 500)
 			return
@@ -503,7 +503,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/user/login", "application/json", reader)
+	response, err := http.Post(config.PostHost+"/user?login", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -537,7 +537,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response, err = http.Post(config.PostHost+"/user/password/uid/"+this.Uid, "application/json", reader)
+		response, err = http.Post(config.PostHost+"/user?password/uid?"+this.Uid, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return
@@ -547,7 +547,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 	} else {
 		w.WriteHeader(400)
-		//return
 	}
 	b, err := json.Marshal(&hint)
 	if err != nil {

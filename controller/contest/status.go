@@ -36,7 +36,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
 	this.InitContest(w, r)
 
-	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution?list/module?"+strconv.Itoa(config.ModuleC)+"/mid?"+strconv.Itoa(this.Cid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -89,7 +89,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/solution/detail/sid/"+strconv.Itoa(sid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution?detail/sid?"+strconv.Itoa(sid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

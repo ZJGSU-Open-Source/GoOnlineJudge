@@ -37,39 +37,34 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status List")
 	this.Init(w, r)
 	args := this.ParseURL(r.URL.String())
-	url := "/solution/list"
+	url := "/solution?list"
 	searchUrl := ""
-	scUrl := ""
 	// Search
 	if v, ok := args["uid"]; ok {
-		searchUrl += "/uid/" + v
-		scUrl += "/uid?" + v
+		searchUrl += "/uid?" + v
 		this.Data["SearchUid"] = v
 	}
 	if v, ok := args["pid"]; ok {
-		searchUrl += "/pid/" + v
-		scUrl += "/pid?" + v
+		searchUrl += "/pid?" + v
 		this.Data["SearchPid"] = v
 	}
 	if v, ok := args["judge"]; ok {
-		searchUrl += "/judge/" + v
-		scUrl += "/judge?" + v
+		searchUrl += "/judge?" + v
 		this.Data["SearchJudge"+v] = v
 	}
 	if v, ok := args["language"]; ok {
-		searchUrl += "/language/" + v
-		scUrl += "/language?" + v
+		searchUrl += "/language?" + v
 		this.Data["SearchLanguage"+v] = v
 	}
 	url += searchUrl
-	this.Data["URL"] = "/status?list" + scUrl
+	this.Data["URL"] = "/status?list" + searchUrl
 
 	// Page
 	if _, ok := args["page"]; !ok {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/solution/count"+searchUrl+"/module/"+strconv.Itoa(config.ModuleP)+"/action/submit", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution?count"+searchUrl+"/module?"+strconv.Itoa(config.ModuleP)+"/action?submit", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -97,14 +92,14 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	url += "/offset/" + strconv.Itoa((page-1)*config.SolutionPerPage) + "/limit/" + strconv.Itoa(config.SolutionPerPage)
+	url += "/offset?" + strconv.Itoa((page-1)*config.SolutionPerPage) + "/limit?" + strconv.Itoa(config.SolutionPerPage)
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
 	}
 
 	//
-	response, err = http.Post(config.PostHost+url+"/module/"+strconv.Itoa(config.ModuleP), "application/json", nil)
+	response, err = http.Post(config.PostHost+url+"/module?"+strconv.Itoa(config.ModuleP), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -165,7 +160,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/solution/detail/sid/"+strconv.Itoa(sid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution?detail/sid?"+strconv.Itoa(sid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

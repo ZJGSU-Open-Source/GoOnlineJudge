@@ -30,7 +30,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/user/list", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?list", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -65,14 +65,14 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	url += "/offset/" + strconv.Itoa((page-1)*config.UserPerPage) + "/limit/" + strconv.Itoa(config.UserPerPage)
+	url += "/offset?" + strconv.Itoa((page-1)*config.UserPerPage) + "/limit?" + strconv.Itoa(config.UserPerPage)
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
 	}
 
 	//
-	response, err = http.Post(config.PostHost+"/user/list"+url, "application/json", nil)
+	response, err = http.Post(config.PostHost+"/user?list"+url, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

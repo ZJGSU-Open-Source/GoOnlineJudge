@@ -41,7 +41,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	args := this.ParseURL(r.URL.String())
 	Type := args["type"]
 
-	response, err := http.Post(config.PostHost+"/contest/list/type/"+Type, "application", nil)
+	response, err := http.Post(config.PostHost+"/contest?list/type?"+Type, "application", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -167,7 +167,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/insert", "application/json", reader)
+	response, err := http.Post(config.PostHost+"/contest?insert", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -197,7 +197,7 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/contest?detail/cid?"+strconv.Itoa(cid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -223,7 +223,7 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		action = config.StatusAvailable
 	}
 
-	response, err = http.Post(config.PostHost+"/contest/status/cid/"+strconv.Itoa(cid)+"/action/"+strconv.Itoa(action), "application/json", nil)
+	response, err = http.Post(config.PostHost+"/contest?status/cid?"+strconv.Itoa(cid)+"/action?"+strconv.Itoa(action), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -247,7 +247,7 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/delete/cid/"+strconv.Itoa(cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/contest?delete/cid?"+strconv.Itoa(cid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -269,7 +269,7 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/detail/cid/"+strconv.Itoa(cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/contest?detail/cid?"+strconv.Itoa(cid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -422,7 +422,7 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/contest/update/cid/"+strconv.Itoa(cid), "application/json", reader)
+	response, err := http.Post(config.PostHost+"/contest?update/cid?"+strconv.Itoa(cid), "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
