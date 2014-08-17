@@ -66,10 +66,16 @@ $('.admin_user_delete').on('click', function() {
 			type: 'POST',
 			url: '/admin/user?privilege/pu/uid?' + uid,
 			data:$(this).serialize(),
-			error: function() {
-				alert('failed!');
+			error: function(response) {
+				//alert('failed!');
+				var json = eval('('+response.responseText+')');
+				if (json.uid != null) {
+					alert(json.uid);
+				} else {
+					alert('failed!');
+				}
 			},
-			success: function() {
+			success: function(response) {
 				window.location.reload();
 			}
 		});
