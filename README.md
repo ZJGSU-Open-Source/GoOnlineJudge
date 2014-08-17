@@ -64,8 +64,10 @@ cd ../RunServer/
 #executabele file RunServer
 go build			
 cd CJudger/
-g++ runner.cc -o runner 	#executabele file runner
-g++ compiler.cc -o compiler #executabele file compiler
+#executabele file runner
+g++ runner.cc -o runner 
+#executabele file compiler
+g++ compiler.cc -o compiler 
 ```
 Then you should move 3 executable files runner, compiler and RunServer to GoOnlineJudge/.
 
