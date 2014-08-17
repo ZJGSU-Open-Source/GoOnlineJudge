@@ -3,10 +3,11 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"html/template"
 	"net/http"
-	//"time"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type RanklistController struct {
@@ -16,7 +17,7 @@ type RanklistController struct {
 func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
-	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid)+"/sort/resort/", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -53,7 +54,7 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 			pro.count++
 			pro.time += 20 * 60 //罚时20分钟
 		} else if v.Judge == config.JudgeAC {
-			//pro.time += time.Now().Unix() - this.ContestDetail.Start
+			pro.time += time.Now().Unix() - this.ContestDetail.Start
 			pro.Judge = config.JudgeAC
 			user.Time += pro.time
 		}
@@ -64,6 +65,18 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["UserList"] = UserList
 	this.Data["Cid"] = this.Cid
 	this.Data["ProblemList"] = this.Index
+	t := template.New("layout.tpl")
+	t, err = t.ParseFiles("view/layout.tpl", "view/contest/ranklist.tpl")
+	if err != nil {
+		class.Logger.Debug(err)
+		http.Error(w, "tpl error", 500)
+		return
+	}
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
 	return
 }
 
