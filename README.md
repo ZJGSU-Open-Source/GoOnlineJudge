@@ -37,8 +37,10 @@ git clone https://github.com/ZJGSU-Open-Source/GoServer.git
 ```
 Those source codes file will be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
 ```bash
-mkdir ProblemData	//directory for problem set
-mkdir run	//directory for running user's code
+#directory for problem set
+mkdir ProblemData
+#directory for running user's code
+mkdir run	
 ```
 Make sure you hava these directories in your $GOPATH/src:
 
@@ -52,15 +54,20 @@ Make sure you hava these directories in your $GOPATH/src:
 Now, it's time for compilation.
 ```bash
 cd $GOPATH/src/
-cd GoOnlineJudge/	//executabele file GoOnlineJudge
+#executabele file GoOnlineJudge
+cd GoOnlineJudge/	
 go build
 cd ../GoServer/
-go build			//executabele file GoServer
+#executabele file GoServer
+go build			
 cd ../RunServer/
-go build			//executabele file RunServer
+#executabele file RunServer
+go build			
 cd CJudger/
-g++ runner.cc -o runner 	//executabele file runner
-g++ compiler.cc -o compiler //executabele file compiler
+#executabele file runner
+g++ runner.cc -o runner 
+#executabele file compiler
+g++ compiler.cc -o compiler 
 ```
 Then you should move 3 executable files runner, compiler and RunServer to GoOnlineJudge/.
 
