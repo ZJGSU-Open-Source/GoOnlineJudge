@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os/exec"
 	"strconv"
+	"time"
 )
 
 type problem struct {
@@ -42,7 +43,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem List")
 	this.InitContest(w, r)
 
-	if (this.GetTime() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
+	if (time.Now().Unix() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
 		t := template.New("layout.tpl")
 		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
@@ -120,7 +121,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Detail")
 	this.InitContest(w, r)
 
-	if (this.ContestDetail.Status == config.StatusReverse || this.GetTime() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
+	if (this.ContestDetail.Status == config.StatusReverse || time.Now().Unix() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
 		t := template.New("layout.tpl")
 		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {

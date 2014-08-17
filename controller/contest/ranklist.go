@@ -9,10 +9,6 @@ import (
 	"strconv"
 )
 
-type ranklist struct {
-	Uid      string
-	costtime int
-}
 type RanklistController struct {
 	Contest
 }
@@ -64,6 +60,7 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	UserList := newSorter(UserMap)
 	sort.Sort(UserList)
+
 	this.Data["UserList"] = UserList
 	this.Data["Cid"] = this.Cid
 	this.Data["ProblemList"] = this.Index

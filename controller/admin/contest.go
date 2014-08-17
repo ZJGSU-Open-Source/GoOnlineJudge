@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type contest struct {
@@ -17,8 +18,8 @@ type contest struct {
 	Argument interface{} `json:"argument"bson:"argument"`
 	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
 
-	Start string `json:"start"bson:"start"`
-	End   string `json:"end"bson:"end"`
+	Start int64 `json:"start"bson:"start"`
+	End   int64 `json:"end"bson:"end"`
 
 	Status int    `json:"status"bson:"status"`
 	Create string `'json:"create"bson:"create"`
@@ -58,7 +59,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Contest"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus, "ShowExpire": class.ShowExpire, "ShowEncrypt": class.ShowEncrypt})
+	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
 	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -116,69 +117,22 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	one["title"] = r.FormValue("title")
 	one["type"] = Type
 	//class.Logger.Debug(one["type"])
+	year, err := strconv.Atoi(r.FormValue("startTimeYear"))
+	month, err := strconv.Atoi(r.FormValue("startTimeMonth"))
+	day, err := strconv.Atoi(r.FormValue("startTimeDay"))
+	hour, err := strconv.Atoi(r.FormValue("startTimeHour"))
+	min, err := strconv.Atoi(r.FormValue("startTimeMinute"))
+	start := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	one["start"] = start.Unix()
 
-	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeMonth, err := strconv.Atoi(r.FormValue("startTimeMonth"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeDay, err := strconv.Atoi(r.FormValue("startTimeDay"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeHour, err := strconv.Atoi(r.FormValue("startTimeHour"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeMinute, err := strconv.Atoi(r.FormValue("startTimeMinute"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeSecond, err := strconv.Atoi(r.FormValue("startTimeSecond"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	one["start"] = fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", startTimeYear, startTimeMonth, startTimeDay, startTimeHour, startTimeMinute, startTimeSecond)
-	endTimeYear, err := strconv.Atoi(r.FormValue("endTimeYear"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeMonth, err := strconv.Atoi(r.FormValue("endTimeMonth"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeDay, err := strconv.Atoi(r.FormValue("endTimeDay"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeHour, err := strconv.Atoi(r.FormValue("endTimeHour"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeMinute, err := strconv.Atoi(r.FormValue("endTimeMinute"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeSecond, err := strconv.Atoi(r.FormValue("endTimeSecond"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	one["end"] = fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", endTimeYear, endTimeMonth, endTimeDay, endTimeHour, endTimeMinute, endTimeSecond)
+	year, err = strconv.Atoi(r.FormValue("endTimeYear"))
+	month, err = strconv.Atoi(r.FormValue("endTimeMonth"))
+	day, err = strconv.Atoi(r.FormValue("endTimeDay"))
+	hour, err = strconv.Atoi(r.FormValue("endTimeHour"))
+	min, err = strconv.Atoi(r.FormValue("endTimeMinute"))
+	end := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	one["end"] = end.Unix()
+
 	switch r.FormValue("type") {
 	case "public":
 		one["encrypt"] = config.EncryptPB
@@ -325,18 +279,18 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 
 	var one struct {
 		contest
-		StartTimeYear   string
-		StartTimeMonth  string
-		StartTimeDay    string
-		StartTimeHour   string
-		StartTimeMinute string
-		StartTimeSecond string
-		EndTimeYear     string
-		EndTimeMonth    string
-		EndTimeDay      string
-		EndTimeHour     string
-		EndTimeMinute   string
-		EndTimeSecond   string
+		StartTimeYear   int
+		StartTimeMonth  int
+		StartTimeDay    int
+		StartTimeHour   int
+		StartTimeMinute int
+		StartTimeSecond int
+		EndTimeYear     int
+		EndTimeMonth    int
+		EndTimeDay      int
+		EndTimeHour     int
+		EndTimeMinute   int
+		EndTimeSecond   int
 		ProblemList     string
 		IsPublic        bool
 		IsPrivate       bool
@@ -348,18 +302,19 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "load error", 400)
 			return
 		}
-		one.StartTimeYear = one.Start[0:4]
-		one.StartTimeMonth = one.Start[5:7]
-		one.StartTimeDay = one.Start[8:10]
-		one.StartTimeHour = one.Start[11:13]
-		one.StartTimeMinute = one.Start[14:16]
-		one.StartTimeSecond = one.Start[17:19]
-		one.EndTimeYear = one.End[0:4]
-		one.EndTimeMonth = one.End[5:7]
-		one.EndTimeDay = one.End[8:10]
-		one.EndTimeHour = one.End[11:13]
-		one.EndTimeMinute = one.End[14:16]
-		one.EndTimeSecond = one.End[17:19]
+		start := time.Unix(one.Start, 0).Local()
+		one.StartTimeYear = start.Year()
+		one.StartTimeMonth = int(start.Month())
+		one.StartTimeDay = start.Day()
+		one.StartTimeHour = start.Hour()
+		one.StartTimeMinute = start.Minute()
+
+		end := time.Unix(one.End, 0).Local()
+		one.EndTimeYear = end.Year()
+		one.EndTimeMonth = int(end.Month())
+		one.EndTimeDay = end.Day()
+		one.EndTimeHour = end.Hour()
+		one.EndTimeMinute = end.Minute()
 		one.ProblemList = ""
 		for _, v := range one.List {
 			one.ProblemList += strconv.Itoa(v) + ";"
@@ -416,69 +371,23 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	one := make(map[string]interface{})
 	one["title"] = r.FormValue("title")
 	one["type"] = Type
+	year, _ := strconv.Atoi(r.FormValue("startTimeYear"))
+	month, _ := strconv.Atoi(r.FormValue("startTimeMonth"))
+	day, _ := strconv.Atoi(r.FormValue("startTimeDay"))
+	hour, _ := strconv.Atoi(r.FormValue("startTimeHour"))
+	min, _ := strconv.Atoi(r.FormValue("startTimeMinute"))
 
-	startTimeYear, err := strconv.Atoi(r.FormValue("startTimeYear"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeMonth, err := strconv.Atoi(r.FormValue("startTimeMonth"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeDay, err := strconv.Atoi(r.FormValue("startTimeDay"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeHour, err := strconv.Atoi(r.FormValue("startTimeHour"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeMinute, err := strconv.Atoi(r.FormValue("startTimeMinute"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	startTimeSecond, err := strconv.Atoi(r.FormValue("startTimeSecond"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	one["start"] = fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", startTimeYear, startTimeMonth, startTimeDay, startTimeHour, startTimeMinute, startTimeSecond)
-	endTimeYear, err := strconv.Atoi(r.FormValue("endTimeYear"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeMonth, err := strconv.Atoi(r.FormValue("endTimeMonth"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeDay, err := strconv.Atoi(r.FormValue("endTimeDay"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeHour, err := strconv.Atoi(r.FormValue("endTimeHour"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeMinute, err := strconv.Atoi(r.FormValue("endTimeMinute"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	endTimeSecond, err := strconv.Atoi(r.FormValue("endTimeSecond"))
-	if err != nil {
-		http.Error(w, "conv error", 400)
-		return
-	}
-	one["end"] = fmt.Sprintf("%04d-%02d-%02d %02d:%02d:%02d", endTimeYear, endTimeMonth, endTimeDay, endTimeHour, endTimeMinute, endTimeSecond)
+	start := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	one["start"] = start.Unix()
+
+	year, _ = strconv.Atoi(r.FormValue("endTimeYear"))
+	month, _ = strconv.Atoi(r.FormValue("endTimeMonth"))
+	day, _ = strconv.Atoi(r.FormValue("endTimeDay"))
+	hour, _ = strconv.Atoi(r.FormValue("endTimeHour"))
+	min, _ = strconv.Atoi(r.FormValue("endTimeMinute"))
+	end := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	one["end"] = end.Unix()
+
 	switch r.FormValue("type") {
 	case "public":
 		one["encrypt"] = config.EncryptPB

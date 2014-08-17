@@ -14,8 +14,8 @@ type contest struct {
 	Argument interface{} `json:"argument"bson:"argument"`
 	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
 
-	Start string `json:"start"bson:"start"`
-	End   string `json:"end"bson:"end"`
+	Start int64 `json:"start"bson:"start"`
+	End   int64 `json:"end"bson:"end"`
 
 	Status int    `json:"status"bson:"status"`
 	Create string `'json:"create"bson:"create"`
