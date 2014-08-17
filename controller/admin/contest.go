@@ -3,7 +3,6 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -122,7 +121,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	day, err := strconv.Atoi(r.FormValue("startTimeDay"))
 	hour, err := strconv.Atoi(r.FormValue("startTimeHour"))
 	min, err := strconv.Atoi(r.FormValue("startTimeMinute"))
-	start := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["start"] = start.Unix()
 
 	year, err = strconv.Atoi(r.FormValue("endTimeYear"))
@@ -130,7 +129,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	day, err = strconv.Atoi(r.FormValue("endTimeDay"))
 	hour, err = strconv.Atoi(r.FormValue("endTimeHour"))
 	min, err = strconv.Atoi(r.FormValue("endTimeMinute"))
-	end := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["end"] = end.Unix()
 
 	switch r.FormValue("type") {
@@ -377,7 +376,7 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	hour, _ := strconv.Atoi(r.FormValue("startTimeHour"))
 	min, _ := strconv.Atoi(r.FormValue("startTimeMinute"))
 
-	start := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["start"] = start.Unix()
 
 	year, _ = strconv.Atoi(r.FormValue("endTimeYear"))
@@ -385,7 +384,7 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	day, _ = strconv.Atoi(r.FormValue("endTimeDay"))
 	hour, _ = strconv.Atoi(r.FormValue("endTimeHour"))
 	min, _ = strconv.Atoi(r.FormValue("endTimeMinute"))
-	end := time.Date(year, month, day, hour, min, 0, 0, time.Local)
+	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["end"] = end.Unix()
 
 	switch r.FormValue("type") {
