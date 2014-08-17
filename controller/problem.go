@@ -43,22 +43,22 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	url := "/problem/list"
+	url := "/problem?list"
 	searchUrl := ""
 
 	// Search
 	if v, ok := args["pid"]; ok {
-		searchUrl += "/pid/" + v
+		searchUrl += "/pid?" + v
 		this.Data["SearchPid"] = true
 		this.Data["SearchValue"] = v
 	}
 	if v, ok := args["title"]; ok {
-		searchUrl += "/title/" + v
+		searchUrl += "/title?" + v
 		this.Data["SearchTitle"] = true
 		this.Data["SearchValue"] = v
 	}
 	if v, ok := args["source"]; ok {
-		searchUrl += "/source/" + v
+		searchUrl += "/source?" + v
 		this.Data["SearchSource"] = true
 		this.Data["SearchValue"] = v
 	}
@@ -70,7 +70,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/count"+searchUrl, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?count"+searchUrl, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -97,7 +97,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	url += "/offset/" + strconv.Itoa((page-1)*config.ProblemPerPage) + "/limit/" + strconv.Itoa(config.ProblemPerPage)
+	url += "/offset?" + strconv.Itoa((page-1)*config.ProblemPerPage) + "/limit?" + strconv.Itoa(config.ProblemPerPage)
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
@@ -158,7 +158,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -238,7 +238,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["module"] = config.ModuleP
 	one["mid"] = config.ModuleP
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -289,7 +289,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err = http.Post(config.PostHost+"/solution/insert", "application/json", reader)
+	response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

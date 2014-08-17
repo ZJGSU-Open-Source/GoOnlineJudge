@@ -50,7 +50,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -97,7 +97,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/problem/list", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?list", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -198,7 +198,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/insert", "application/json", reader)
+	response, err := http.Post(config.PostHost+"/problem?insert", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -252,7 +252,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -278,7 +278,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	case config.StatusReverse:
 		action = config.StatusAvailable
 	}
-	response, err = http.Post(config.PostHost+"/problem/status/pid/"+strconv.Itoa(pid)+"/action/"+strconv.Itoa(action), "application/json", nil)
+	response, err = http.Post(config.PostHost+"/problem?status/pid?"+strconv.Itoa(pid)+"/action?"+strconv.Itoa(action), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -301,7 +301,7 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/delete/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?delete/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -322,7 +322,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -429,7 +429,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/update/pid/"+strconv.Itoa(pid), "application/json", reader)
+	response, err := http.Post(config.PostHost+"/problem?update/pid?"+strconv.Itoa(pid), "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

@@ -17,7 +17,7 @@ type RanklistController struct {
 func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
-	response, err := http.Post(config.PostHost+"/solution/list/module/"+strconv.Itoa(config.ModuleC)+"/mid/"+strconv.Itoa(this.Cid)+"/sort/resort/", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/solution?list/module?"+strconv.Itoa(config.ModuleC)+"/mid?"+strconv.Itoa(this.Cid)+"/sort?resort/", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

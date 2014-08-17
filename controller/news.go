@@ -26,7 +26,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("News List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/news/list", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?list", "application/json", nil)
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "post error", 500)
@@ -72,7 +72,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?detail/nid?"+strconv.Itoa(nid), "application/json", nil)
 	defer response.Body.Close()
 
 	var one news

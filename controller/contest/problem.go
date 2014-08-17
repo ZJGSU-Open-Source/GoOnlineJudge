@@ -67,7 +67,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	list := make([]problem, len(this.ContestDetail.List))
 	for k, v := range this.ContestDetail.List {
-		response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(v), "application/json", nil)
+		response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(v), "application/json", nil)
 		if err != nil {
 			http.Error(w, "post error", 500)
 			return
@@ -82,13 +82,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			one.Pid = k
-			query := "/pid/" + strconv.Itoa(v) + "/action/accept"
+			query := "/pid/" + strconv.Itoa(v) + "/action?accept"
 			one.Solve, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
 				return
 			}
-			query = "/pid/" + strconv.Itoa(v) + "/action/submit"
+			query = "/pid/" + strconv.Itoa(v) + "/action?submit"
 			one.Submit, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
@@ -150,7 +150,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(this.ContestDetail.List[pid]), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(this.ContestDetail.List[pid]), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -213,7 +213,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one["mid"] = this.ContestDetail.Cid
 	one["module"] = config.ModuleC
 
-	response, err := http.Post(config.PostHost+"/problem/detail/pid/"+strconv.Itoa(pid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -264,7 +264,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err = http.Post(config.PostHost+"/solution/insert", "application/json", reader)
+	response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return

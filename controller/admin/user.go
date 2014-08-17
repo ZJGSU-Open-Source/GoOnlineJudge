@@ -39,7 +39,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/user/list", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?list", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -117,7 +117,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 	uid := r.FormValue("user[Handle]")
 
-	response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
+	response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -156,7 +156,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		response, err := http.Post(config.PostHost+"/user/password/uid/"+uid, "application/json", reader)
+		response, err := http.Post(config.PostHost+"/user?password/uid?"+uid, "application/json", reader)
 
 		if err != nil {
 			http.Error(w, "post error", 400)
@@ -201,7 +201,7 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 	} else if uid == this.Uid {
 		ok, hint["uid"] = 0, "You cannot delete yourself"
 	} else {
-		response, err := http.Post(config.PostHost+"/user/list/uid/"+uid, "application/json", nil)
+		response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
 		if err != nil {
 			http.Error(w, "post error", 500)
 			return
@@ -228,7 +228,7 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "read error", 500)
 			return
 		}
-		response, err := http.Post(config.PostHost+"/user/privilege/uid/"+uid, "application/json", reader)
+		response, err := http.Post(config.PostHost+"/user?privilege/uid?"+uid, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return

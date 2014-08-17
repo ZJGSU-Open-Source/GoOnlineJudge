@@ -33,7 +33,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?detail/nid?"+strconv.Itoa(nid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -75,7 +75,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/news/list", "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?list", "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -146,7 +146,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/insert", "application/json", reader)
+	response, err := http.Post(config.PostHost+"/news?insert", "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -168,7 +168,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?detail/nid?"+strconv.Itoa(nid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -191,7 +191,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 		action = config.StatusAvailable
 	}
 
-	response, err = http.Post(config.PostHost+"/news/status/nid/"+strconv.Itoa(nid)+"/action/"+strconv.Itoa(action), "application/json", nil)
+	response, err = http.Post(config.PostHost+"/news?status/nid?"+strconv.Itoa(nid)+"/action?"+strconv.Itoa(action), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -214,7 +214,7 @@ func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/delete/nid/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?delete/nid?"+strconv.Itoa(nid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -235,7 +235,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/detail/nid/"+strconv.Itoa(nid), "application/json", nil)
+	response, err := http.Post(config.PostHost+"/news?detail/nid?"+strconv.Itoa(nid), "application/json", nil)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
@@ -295,7 +295,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news/update/nid/"+strconv.Itoa(nid), "application/json", reader)
+	response, err := http.Post(config.PostHost+"/news?update/nid?"+strconv.Itoa(nid), "application/json", reader)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
