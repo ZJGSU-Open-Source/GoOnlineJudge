@@ -82,13 +82,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			one.Pid = k
-			query := "/pid/" + strconv.Itoa(v) + "/action?accept"
+			query := "/pid?" + strconv.Itoa(v) + "/action?accept"
 			one.Solve, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
 				return
 			}
-			query = "/pid/" + strconv.Itoa(v) + "/action?submit"
+			query = "/pid?" + strconv.Itoa(v) + "/action?submit"
 			one.Submit, err = this.GetCount(query)
 			if err != nil {
 				http.Error(w, "count error", 500)
