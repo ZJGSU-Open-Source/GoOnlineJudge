@@ -59,9 +59,8 @@ func (this *Controller) ParseURL(url string) (args map[string]string) {
 	return
 }
 
-func (this *Controller) GetTime() (ft string) {
-	t := time.Now().Unix()
-	ft = time.Unix(t, 0).Format("2006-01-02 15:04:05")
+func (this *Controller) GetTime() (t int64) {
+	t = time.Now().Unix()
 	return
 }
 

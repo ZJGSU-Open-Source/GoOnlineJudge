@@ -3,6 +3,7 @@ package class
 import (
 	"GoOnlineJudge/config"
 	"strconv"
+	"time"
 )
 
 var specialArr = []string{"Standard", "Special"}
@@ -21,9 +22,8 @@ func ShowStatus(status int) bool {
 	return status == config.StatusAvailable
 }
 
-func ShowExpire(str string, time string) (expire bool) {
-	expire = str < time
-	return
+func ShowTime(unixtime int64) string {
+	return time.Unix(unixtime, 0).Local().Format("2006-01-02 15:04:05")
 }
 
 func ShowRatio(solve int, submit int) (ratio string) {

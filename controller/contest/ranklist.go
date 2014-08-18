@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"sort"
 	"strconv"
-	"time"
 )
 
 type RanklistController struct {
@@ -40,23 +39,30 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	var user *userRank
 	for _, v := range one["list"] {
 		user = UserMap[v.Uid]
-		if user.Uid == "" {
+		if user == nil {
+			user = &userRank{}
+			UserMap[v.Uid] = user
 			user.ProblemList = make([]*probleminfo, len(this.Index), len(this.Index))
 		}
 		user.Uid = v.Uid
 		pid := this.Index[v.Pid]
 		pro = user.ProblemList[pid]
+		if pro == nil {
+			pro = &probleminfo{}
+			user.ProblemList[pid] = pro
+		}
 		if pro.Judge == config.JudgeAC {
 			continue
 		}
 		pro.Pid = pid
 		if v.Judge != config.JudgeAC && v.Judge != config.JudgePD && v.Judge != config.JudgeRJ {
-			pro.count++
-			pro.time += 20 * 60 //罚时20分钟
+			pro.Count++
+			pro.Time += 20 * 60 //罚时20分钟
 		} else if v.Judge == config.JudgeAC {
-			pro.time += time.Now().Unix() - this.ContestDetail.Start
+			pro.Time += v.Create - this.ContestDetail.Start
 			pro.Judge = config.JudgeAC
-			user.Time += pro.time
+			user.Time += pro.Time
+			user.Solved += 1
 		}
 	}
 	UserList := newSorter(UserMap)
@@ -65,10 +71,10 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["UserList"] = UserList
 	this.Data["Cid"] = this.Cid
 	this.Data["ProblemList"] = this.Index
-	t := template.New("layout.tpl")
+	t := template.New("layout.tpl").Funcs(template.FuncMap{
+		"NumAdd": class.NumAdd})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest/ranklist.tpl")
 	if err != nil {
-		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -84,12 +90,13 @@ type userRank struct {
 	Uid         string
 	ProblemList []*probleminfo
 	Time        int64
+	Solved      int
 }
 
 type probleminfo struct {
 	Pid   int
-	time  int64
-	count int
+	Time  int64
+	Count int
 	Judge int
 }
 
@@ -108,7 +115,16 @@ func (u UserSorter) Len() int {
 }
 
 func (u UserSorter) Less(i, j int) bool {
-	return u[i].Time < u[j].Time
+	if u[i].Solved > u[j].Solved {
+		return true
+	} else if u[i].Solved == u[j].Solved {
+		if u[i].Time < u[j].Time {
+			return true
+		} else if u[i].Time >= u[j].Time {
+			return false
+		}
+	}
+	return false
 }
 
 func (u UserSorter) Swap(i, j int) {

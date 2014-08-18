@@ -30,7 +30,7 @@
             <td>{{.Memory}}kB</td>
             <td>{{ShowLanguage .Language}}{{if or (SameID .Uid $uid) (LargePU $privilege)}}<a href="/contest/status?code/cid?{{$cid}}/sid?{{.Sid}}">[view]</a>{{end}}</td>
             <td>{{.Length}}B</td>
-            <td>{{.Create}}</td>
+            <td>{{ShowTime .Create}}</td>
           </tr>
         {{end}}
       {{end}}  

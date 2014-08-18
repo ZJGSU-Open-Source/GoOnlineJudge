@@ -101,6 +101,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		"ShowRatio":  class.ShowRatio,
 		"ShowStatus": class.ShowStatus,
 		"NumEqual":   class.NumEqual,
+		"ShowTime":   class.ShowTime,
 		"NumAdd":     class.NumAdd,
 		"NumSub":     class.NumSub,
 	}
