@@ -6,7 +6,7 @@
       <th class="header">Rank</th>
       <th class="header">Team</th>
       <th class="header">Solved</th>
-      <th class="header">Plenty Time</th>
+      <th class="header">Penalty</th>
       {{with .ProblemList}}
       {{range .}}
       <th class="header"><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.}}">{{.}}</a></th>
@@ -24,7 +24,7 @@
             <td>{{$v.Time}}</td>
             {{with $v.ProblemList}}
             {{range .}}
-            <td>{{if .}}{{.Time}}({{.Count}}){{else}}0/(0){{end}}</td>
+            <td>{{if .}}{{.Time}}/({{.Count}}){{else}}0/(0){{end}}</td>
             {{end}}
             {{end}}
           </tr>

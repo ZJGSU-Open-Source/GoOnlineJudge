@@ -18,21 +18,12 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 	class.Logger.Debug("Contest User")
 	this.InitContest(w, r)
 
-	if this.ContestDetail.Encrypt == config.EncryptPW {
-		if reflect.ValueOf(this.ContestDetail.Argument) != this.Data[strconv.Itoa(this.ContestDetail.Cid)] {
-			this.Data["Title"] = "Warning"
-			this.Data["Info"] = "You don't have permission to participate in!"
-			t := template.New("layout.tpl")
-			t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-			if err != nil {
-				http.Error(w, "tpl error", 500)
-				return
-			}
-			err = t.Execute(w, this.Data)
-			if err != nil {
-				http.Error(w, "tpl error", 500)
-				return
-			}
+	if this.ContestDetail.Encrypt == config.EncryptPW && this.Privilege <= config.PrivilegePU {
+		if this.Uid == "" {
+			http.Redirect(w, r, "/user?signin", http.StatusFound)
+		}
+		if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
+			this.Password(w, r)
 			return
 		}
 	}
@@ -59,6 +50,30 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 	callMethod(c, m, rv)
 }
 
+func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		t := template.New("layout.tpl")
+		t, err := t.ParseFiles("view/layout.tpl", "view/contest/passwd.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	} else if r.Method == "POST" {
+		passwd := r.FormValue("password")
+		if passwd == this.ContestDetail.Argument.(string) {
+			this.SetSession(w, r, strconv.Itoa(this.Cid), passwd)
+			http.Redirect(w, r, "/contest/problem?list/cid?"+strconv.Itoa(this.Cid), http.StatusFound)
+		} else {
+			http.Error(w, "incorrect password", 400)
+		}
+	}
+}
 func callMethod(c interface{}, m string, rv []reflect.Value) {
 	rc := reflect.ValueOf(c)
 	rm := rc.MethodByName(m)

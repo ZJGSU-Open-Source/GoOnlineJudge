@@ -132,20 +132,25 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["end"] = end.Unix()
 
+	if start.After(end) {
+		http.Error(w, "args error", 400)
+		return
+	}
+
 	switch r.FormValue("type") {
 	case "public":
 		one["encrypt"] = config.EncryptPB
 	case "private":
 		one["encrypt"] = config.EncryptPT
+		one["argument"] = r.FormValue("userlist")
 	case "password":
 		one["encrypt"] = config.EncryptPW
+		one["argument"] = r.FormValue("password")
 	default:
 		http.Error(w, "args error", 400)
 		return
 	}
-	/////
-	one["argument"] = r.FormValue("argument")
-	/////
+
 	problemString := r.FormValue("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
@@ -283,13 +288,11 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		StartTimeDay    int
 		StartTimeHour   int
 		StartTimeMinute int
-		StartTimeSecond int
 		EndTimeYear     int
 		EndTimeMonth    int
 		EndTimeDay      int
 		EndTimeHour     int
 		EndTimeMinute   int
-		EndTimeSecond   int
 		ProblemList     string
 		IsPublic        bool
 		IsPrivate       bool
@@ -387,20 +390,26 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one["end"] = end.Unix()
 
+	if start.After(end) {
+		http.Error(w, "this.Query error", 400)
+		return
+	}
+
 	switch r.FormValue("type") {
 	case "public":
 		one["encrypt"] = config.EncryptPB
+		one["argument"] = ""
 	case "private":
 		one["encrypt"] = config.EncryptPT
+		one["argument"] = r.FormValue("userlist")
 	case "password":
 		one["encrypt"] = config.EncryptPW
+		one["argument"] = r.FormValue("password")
 	default:
 		http.Error(w, "args error", 400)
 		return
 	}
-	/////
-	one["argument"] = r.FormValue("argument")
-	/////
+
 	problemString := r.FormValue("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
