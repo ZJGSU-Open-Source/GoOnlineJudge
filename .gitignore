@@ -5,6 +5,7 @@ compiler
 runner
 # log file
 log
+ce.txt
 #################
 ## Eclipse
 #################

@@ -219,7 +219,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Submit")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.Path)
+	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
 		http.Error(w, "args error", 400)
@@ -254,6 +254,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	code := r.FormValue("code")
+
 	one["code"] = code
 	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
 	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
