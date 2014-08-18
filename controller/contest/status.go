@@ -24,8 +24,8 @@ type solution struct {
 
 	Code string `json:"code"bson:"code"`
 
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:"create"`
+	Status int   `json:"status"bson:"status"`
+	Create int64 `json:"create"bson:"create"`
 }
 
 type StatusController struct {
@@ -59,6 +59,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"ShowStatus":   class.ShowStatus,
 		"ShowJudge":    class.ShowJudge,
+		"ShowTime":     class.ShowTime,
 		"ShowLanguage": class.ShowLanguage,
 		"LargePU":      class.LargePU,
 		"SameID":       class.SameID})
@@ -82,7 +83,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	this.InitContest(w, r)
 
-	args := this.ParseURL(r.URL.Path[8:])
+	args := this.ParseURL(r.URL.String())
 	sid, err := strconv.Atoi(args["sid"])
 	if err != nil {
 		http.Error(w, "args error", 400)

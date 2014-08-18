@@ -107,7 +107,7 @@ Language: <select id="search_language" name="search_language">
             <td>{{.Memory}}KB</td>
             <td>{{ShowLanguage .Language}}<a href="/status?code/sid?{{.Sid}}">[view]</a></td>
             <td>{{.Length}}B</td>
-            <td>{{.Create}}</td>
+            <td>{{ShowTime .Create}}</td>
           </tr>
         {{end}}
       {{end}}  

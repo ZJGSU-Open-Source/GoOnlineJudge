@@ -100,7 +100,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["Problem"] = list
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio": class.ShowRatio})
+		"ShowRatio": class.ShowRatio,
+		"ShowTime":  class.ShowTime})
 	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
@@ -109,6 +110,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["IsContestProblem"] = true
+	this.Data["Start"] = this.ContestDetail.Start
+	this.Data["End"] = this.ContestDetail.End
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		class.Logger.Debug(err)
@@ -192,7 +195,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Submit")
 	this.InitContest(w, r)
 
-	args := this.ParseURL(r.URL.Path[8:])
+	args := this.ParseURL(r.URL.String())
 
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
@@ -281,7 +284,9 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	}
 	w.WriteHeader(200)
+	class.Logger.Debug("Here")
 	go func() {
+		class.Logger.Debug(sl["sid"])
 		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 		err = cmd.Run()
 		if err != nil {

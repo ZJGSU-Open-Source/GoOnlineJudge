@@ -1,5 +1,6 @@
 {{define "content"}}
 <h1>{{.Contest}}</h1>
+<div class="flash notice">Start@{{ShowTime .Start}} End@{{ShowTime .End}}</div>
 <table id="contest_list">
   <thead>
     <tr>

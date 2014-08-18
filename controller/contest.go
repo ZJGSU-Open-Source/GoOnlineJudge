@@ -55,7 +55,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"ShowStatus":  class.ShowStatus,
-		"ShowExpire":  class.ShowExpire,
+		"ShowTime":    class.ShowTime,
 		"ShowEncrypt": class.ShowEncrypt,
 		"LargePU":     class.LargePU})
 	t, err = t.ParseFiles("view/layout.tpl", "view/contest_list.tpl")

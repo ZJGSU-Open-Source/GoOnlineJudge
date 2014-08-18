@@ -49,7 +49,7 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 		m = strings.Title(args["status"])
 	} else if args["ranklist"] != "" {
 		c = &RanklistController{}
-		m = "Index"
+		m = "List"
 	} else {
 		class.Logger.Debug("args err")
 		return

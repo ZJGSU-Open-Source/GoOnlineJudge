@@ -124,11 +124,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	funcMap := map[string]interface{}{
 		"ShowRatio":  class.ShowRatio,
 		"ShowStatus": class.ShowStatus,
-		"ShowExpire": class.ShowExpire,
-		"NumEqual":   class.NumEqual,
-		"NumAdd":     class.NumAdd,
-		"NumSub":     class.NumSub,
-		"LargePU":    class.LargePU,
+		//"ShowExpire": class.ShowExpire,
+		"NumEqual": class.NumEqual,
+		"NumAdd":   class.NumAdd,
+		"NumSub":   class.NumSub,
+		"LargePU":  class.LargePU,
 	}
 	t := template.New("layout.tpl").Funcs(funcMap)
 	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")

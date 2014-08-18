@@ -1,4 +1,4 @@
-{{define content}}
+{{define "content"}}
 {{$cid := .Cid}}
 <table id="contest_list">
   <thead>
@@ -8,23 +8,21 @@
       <th class="header">Solved</th>
       {{with .ProblemList}}
       {{range .}}
-      <th class="header"><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.Pid}}">{{.}}</a></th>
+      <th class="header"><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.}}">{{.}}</a></th>
       {{end}}
       {{end}}
     </tr>
   </thead>
   <tbody>
     {{with .UserList}}
-    {{$rank := 1}}  
-      {{range .}} 
+      {{range $idx,$v := .}} 
           <tr>
-            <td>{{$rank}}</td>
-            <td><a href="/user?detail/uid?{{.Uid}}">{{.Uid}}</a></td>
-            <td><a href="/contest/status?list/uid?{{.Uid}}/solved?3">{{.Solved}}</a></td>
-            {{with .ProblemList}}
+            <td>{{NumAdd $idx 1}}</td>
+            <td><a href="/user?detail/uid?{{$v.Uid}}">{{$v.Uid}}</a></td>
+            <td><a href="/contest/status?list/cid?{{$cid}}/uid?{{$v.Uid}}/solved?3">{{$v.Solved}}</a></td>
+            {{with $v.ProblemList}}
             {{range .}}
             <td>{{.Time}}({{.Count}})</td>
-            {{$rank = NumAdd $rank 1}}
             {{end}}
             {{end}}
           </tr>
