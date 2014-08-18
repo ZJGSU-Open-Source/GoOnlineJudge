@@ -107,8 +107,6 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one
 	}
 
-	this.Data["Privilege"] = this.Privilege
-
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"LargePU": class.LargePU,
 		"SameID":  class.SameID})
@@ -118,6 +116,9 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	this.Data["Privilege"] = this.Privilege
+	this.Data["Title"] = "View Code"
+	this.Data["IsCode"] = true
 	err = t.Execute(w, this.Data)
 	if err != nil {
 		class.Logger.Debug(err)

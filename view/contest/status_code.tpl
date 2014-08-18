@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>{{.Contest}}</h1>
+<h1>{{.Title}}</h1>
   {{if or (SameID .CurrentUser .Solution.Uid) (LargePU .Privilege)}}
   {{with .Solution}}
     <textarea id="sourceCode" name="sourceCode" readonly="readonly" style="display: none;">{{.Code}}</textarea>

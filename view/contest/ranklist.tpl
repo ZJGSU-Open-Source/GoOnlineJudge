@@ -6,6 +6,7 @@
       <th class="header">Rank</th>
       <th class="header">Team</th>
       <th class="header">Solved</th>
+      <th class="header">Plenty Time</th>
       {{with .ProblemList}}
       {{range .}}
       <th class="header"><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.}}">{{.}}</a></th>
@@ -20,9 +21,10 @@
             <td>{{NumAdd $idx 1}}</td>
             <td><a href="/user?detail/uid?{{$v.Uid}}">{{$v.Uid}}</a></td>
             <td><a href="/contest/status?list/cid?{{$cid}}/uid?{{$v.Uid}}/solved?3">{{$v.Solved}}</a></td>
+            <td>{{$v.Time}}</td>
             {{with $v.ProblemList}}
             {{range .}}
-            <td>{{.Time}}({{.Count}})</td>
+            <td>{{if .}}{{.Time}}({{.Count}}){{else}}0/(0){{end}}</td>
             {{end}}
             {{end}}
           </tr>
