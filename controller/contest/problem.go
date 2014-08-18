@@ -203,7 +203,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pid = this.ContestDetail.List[pid]
+	pid = this.ContestDetail.List[pid] //get real pid
 	uid := this.Uid
 	if uid == "" {
 		w.WriteHeader(401)
