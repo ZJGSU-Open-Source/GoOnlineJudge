@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"html/template"
-	"log"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -255,8 +254,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	code := r.FormValue("code")
-
-	log.Println(code)
 
 	one["code"] = code
 	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
