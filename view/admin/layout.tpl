@@ -49,6 +49,10 @@
               <ul>
                 <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problem?list">List</a>{{end}}</li>
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem?add">Add</a>{{end}}</li>
+
+                {{if .IsAdmin}}
+                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem?rejudgepage">Rejudge</a>{{end}}</li>
+                {{end}}
               </ul>
             </div>
           {{end}}
