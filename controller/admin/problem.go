@@ -3,6 +3,7 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"encoding/json"
 	"html/template"
 	"net/http"
 	"os"
@@ -439,4 +440,69 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	if response.StatusCode == 200 {
 		http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
 	}
+}
+
+func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
+	class.Logger.Debug("Admin Rejudge Page")
+	this.Init(w, r)
+
+	var err error
+	t := template.New("layout.tpl")
+	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+
+	this.Data["Title"] = "Admin - Problem Rejudge"
+	this.Data["IsAdmin"] = true
+	this.Data["IsProblem"] = true
+	this.Data["IsRejudge"] = true
+
+	err = t.Execute(w, this.Data)
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
+	class.Logger.Debug("Admin Rejudge")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.String())
+	id, err := strconv.Atoi(args["id"])
+	types := args["type"]
+
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	ok := 1
+	hint := make(map[string]string)
+
+	if types == "Pid" {
+		response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(id), "application/json", nil)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+	} else if types == "Sid" {
+
+	}
+
+	if ok == 1 {
+		w.WriteHeader(200)
+	} else {
+		w.WriteHeader(400)
+	}
+
+	b, err := json.Marshal(&hint)
+	if err != nil {
+		http.Error(w, "json error", 500)
+		return
+	}
+	w.Write(b)
 }
