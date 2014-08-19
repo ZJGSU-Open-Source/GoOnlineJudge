@@ -38,7 +38,7 @@ Language: <select id="search_language" name="search_language">
   {{if .IsPageHead}}
     {{with .PageHeadList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>
@@ -51,7 +51,7 @@ Language: <select id="search_language" name="search_language">
   ...
     {{with .PageMidList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>
@@ -64,7 +64,7 @@ Language: <select id="search_language" name="search_language">
   ...
     {{with .PageTailList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>

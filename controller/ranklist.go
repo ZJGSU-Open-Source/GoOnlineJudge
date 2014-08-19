@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -97,24 +96,9 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		this.Data["User"] = one["list"]
 	}
 
-	funcMap := map[string]interface{}{
-		"ShowRatio":  class.ShowRatio,
-		"ShowStatus": class.ShowStatus,
-		"NumEqual":   class.NumEqual,
-		"ShowTime":   class.ShowTime,
-		"NumAdd":     class.NumAdd,
-		"NumSub":     class.NumSub,
-	}
-	t := template.New("layout.tpl").Funcs(funcMap)
-	t, err = t.ParseFiles("view/layout.tpl", "view/ranklist.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Ranklist"
 	this.Data["IsRanklist"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return

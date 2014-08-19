@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>{{.Title}}</h1>
-  {{if or (SameID .CurrentUser .Solution.Uid) (LargePU .Privilege)}}
+  {{if or (eq.CurrentUser .Solution.Uid) (LargePU .Privilege)}}
   {{with .Solution}}
     <textarea id="sourceCode" name="sourceCode" readonly="readonly" style="display: none;">{{.Code}}</textarea>
     <table class="CodeRay">

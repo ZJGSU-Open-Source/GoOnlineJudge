@@ -3,9 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -116,35 +114,10 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one["list"]
 	}
 
-	funcMap := map[string]interface{}{
-		"ShowStatus":   class.ShowStatus,
-		"ShowJudge":    class.ShowJudge,
-		"ShowTime":     class.ShowTime,
-		"ShowLanguage": class.ShowLanguage,
-		"NumEqual":     class.NumEqual,
-		"NumAdd":       class.NumAdd,
-		"NumSub":       class.NumSub,
-	}
-	t := template.New("layout.tpl").Funcs(funcMap)
-	t, err = t.ParseFiles("view/layout.tpl", "view/status_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Status List"
 	this.Data["IsStatus"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
 	if err != nil {
-		class.Logger.Debug(err.Error())
-		e := err.Error()
-		codefile, err := os.OpenFile("log.txt", os.O_APPEND|os.O_CREATE, 0644)
-		if err != nil {
-			class.Logger.Debug(err)
-			return
-		}
-		defer codefile.Close()
-		_, err = codefile.WriteString(e)
 		http.Error(w, "tpl error", 500)
 		return
 	}
@@ -178,17 +151,9 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Solution"] = one
 	}
-
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/status_code.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "View Code"
 	this.Data["IsCode"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return

@@ -71,23 +71,11 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio":   class.ShowRatio,
-		"ShowSpecial": class.ShowSpecial,
-		"ShowStatus":  class.ShowStatus,
-		"LargePU":     class.LargePU})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/problem_detail.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - Problem Detail"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -115,17 +103,10 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Problem"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - Problem List"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -136,19 +117,12 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Add")
 	this.Init(w, r)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - Problem Add"
 	this.Data["IsProblem"] = true
 	this.Data["IsAdd"] = true
 	this.Data["IsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -180,8 +154,6 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		one["special"] = 1
 	}
 
-	var cr rune = 13
-	crStr := string(cr)
 	in := r.FormValue("in")
 	out := r.FormValue("out")
 
@@ -225,6 +197,8 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 			class.Logger.Debug(err)
 		}
 		defer infile.Close()
+		var cr rune = 13
+		crStr := string(cr)
 		in = strings.Replace(in, "\r\n", "\n", -1)
 		in = strings.Replace(in, crStr, "\n", -1)
 		infile.WriteString(in)
@@ -343,19 +317,12 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio, "ShowSpecial": class.ShowSpecial})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - Problem Edit"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
 	this.Data["IsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -446,20 +413,12 @@ func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Reques
 	class.Logger.Debug("Admin Rejudge Page")
 	this.Init(w, r)
 
-	var err error
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - Problem Rejudge"
 	this.Data["IsAdmin"] = true
 	this.Data["IsProblem"] = true
 	this.Data["IsRejudge"] = true
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
