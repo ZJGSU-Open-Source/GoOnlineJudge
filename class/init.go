@@ -13,4 +13,5 @@ func init() {
 	SessionManager = NewManager()
 	Logger.Debug("Start new session manager")
 	go SessionManager.GC()
+	initFuncMap()
 }

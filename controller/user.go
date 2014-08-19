@@ -98,16 +98,9 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Sign Up")
 	this.Init(w, r)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/layout.tpl", "view/user_signup.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "User Sign Up"
 	this.Data["IsUserSignUp"] = true
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
