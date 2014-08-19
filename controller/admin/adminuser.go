@@ -3,7 +3,6 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"reflect"
 	"strings"
@@ -20,13 +19,7 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You are not admin!"
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return

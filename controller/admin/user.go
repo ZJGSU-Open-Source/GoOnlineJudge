@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"encoding/json"
-	"html/template"
 	"net/http"
 )
 
@@ -56,20 +55,11 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["User"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"LargePU":     class.LargePU,
-		"PriToString": class.PriToString})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/user_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Privilege User List"
 	this.Data["IsUser"] = true
 	this.Data["IsList"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -80,21 +70,13 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	class.Logger.Debug("Admin Password Page")
 	this.Init(w, r)
 
-	var err error
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/admin_password.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin Password"
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsPassword"] = true
 	this.Data["IsUser"] = true
 	this.Data["IsPwd"] = true
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/admin_password.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 400)
 		return
@@ -155,9 +137,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "read error", 500)
 			return
 		}
-
 		response, err := http.Post(config.PostHost+"/user?password/uid?"+uid, "application/json", reader)
-
 		if err != nil {
 			http.Error(w, "post error", 400)
 			return

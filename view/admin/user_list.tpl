@@ -14,7 +14,7 @@
 				{{if LargePU .Privilege}}
 					<tr>
 						<td><a href="/user?detail/uid?{{.Uid}}" target="_new">{{.Uid}}</a></td>
-						<td>{{PriToString .Privilege}}</td>
+						<td>{{ShowPrivilege .Privilege}}</td>
 						<td><a class="admin_user_delete" href="#" data-id="{{.Uid}}">[Delete]</a></td>
 					</tr>
 				{{end}}
@@ -42,9 +42,6 @@ $('#search_form').submit( function(e) {
 		url:'/admin/user?privilege/type?'+type+'/uid?'+user,
 		data:$(this).serialize(),
 		error:function(response){
-			if (user == ""){
-				alert("Handle must not be empty!")
-			}
 			var json = eval('('+response.responseText+')');
 			if(json.uid != null) {
 				alert(json.uid);

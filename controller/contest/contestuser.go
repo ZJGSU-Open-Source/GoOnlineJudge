@@ -3,7 +3,6 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -52,13 +51,7 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 
 func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/contest/passwd.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
@@ -68,7 +61,7 @@ func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Reque
 		passwd := r.FormValue("password")
 		if passwd == this.ContestDetail.Argument.(string) {
 			this.SetSession(w, r, strconv.Itoa(this.Cid), passwd)
-			http.Redirect(w, r, "/contest/problem?list/cid?"+strconv.Itoa(this.Cid), http.StatusFound)
+			w.WriteHeader(200)
 		} else {
 			http.Error(w, "incorrect password", 400)
 		}

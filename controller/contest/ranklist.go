@@ -3,7 +3,6 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"sort"
 	"strconv"
@@ -68,18 +67,11 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	UserList := newSorter(UserMap)
 	sort.Sort(UserList)
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"NumAdd": class.NumAdd})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/ranklist.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
 	this.Data["UserList"] = UserList
 	this.Data["IsContestRanklist"] = true
 	this.Data["Cid"] = this.Cid
 	this.Data["ProblemList"] = this.Index
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return

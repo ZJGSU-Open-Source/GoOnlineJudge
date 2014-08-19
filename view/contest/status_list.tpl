@@ -28,7 +28,7 @@
             <td><span  class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
-            <td>{{ShowLanguage .Language}}{{if or (SameID .Uid $uid) (LargePU $privilege)}}<a href="/contest/status?code/cid?{{$cid}}/sid?{{.Sid}}">[view]</a>{{end}}</td>
+            <td>{{ShowLanguage .Language}}{{if or (eq .Uid $uid) (LargePU $privilege)}}<a href="/contest/status?code/cid?{{$cid}}/sid?{{.Sid}}">[view]</a>{{end}}</td>
             <td>{{.Length}}B</td>
             <td>{{ShowTime .Create}}</td>
           </tr>

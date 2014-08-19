@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	// "strconv"
 	"strings"
@@ -53,24 +52,13 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Contest"] = one["list"]
 	}
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowStatus":  class.ShowStatus,
-		"ShowTime":    class.ShowTime,
-		"ShowEncrypt": class.ShowEncrypt,
-		"LargePU":     class.LargePU})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-	}
 
 	this.Data["Time"] = this.GetTime()
 	this.Data["Type"] = Type
 	this.Data["Title"] = strings.Title(Type) + " List"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["Privilege"] = this.Privilege
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)

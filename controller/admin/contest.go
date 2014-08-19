@@ -3,7 +3,6 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -58,17 +57,10 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Contest"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsList"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -85,19 +77,12 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	Type := args["type"]
 	//class.Logger.Debug(Type)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsAdd"] = true
 	this.Data["Type"] = Type
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -338,19 +323,12 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowRatio": class.ShowRatio})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/contest_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	Type := one.Type
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Edit"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return

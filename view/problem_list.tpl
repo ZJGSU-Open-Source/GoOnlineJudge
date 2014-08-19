@@ -23,7 +23,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   {{if .IsPageHead}}
     {{with .PageHeadList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page/{{.}}">{{.}}</a>
@@ -36,7 +36,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   ...
     {{with .PageMidList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page/{{.}}">{{.}}</a>
@@ -49,7 +49,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   ...
     {{with .PageTailList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page/{{.}}">{{.}}</a>

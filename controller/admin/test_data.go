@@ -3,7 +3,6 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"io"
 	"net/http"
 	"os"
@@ -41,19 +40,10 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 
 		this.Data["Files"] = file
 		this.Data["Pid"] = args["pid"]
-
-		t := template.New("layout.tpl")
-		t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/test_data.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-
 		this.Data["Title"] = "Problem" + args["pid"] + " - Test data"
 		this.Data["IsProblem"] = true
 
-		err = t.Execute(w, this.Data)
+		err = this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return

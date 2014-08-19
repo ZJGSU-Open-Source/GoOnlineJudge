@@ -44,19 +44,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
 
 	if (time.Now().Unix() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-
 		this.Data["Info"] = "The contest has not started yet"
 		if this.ContestDetail.Status == config.StatusReverse {
 			this.Data["Info"] = "No such contest"
 		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
@@ -99,20 +91,11 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	this.Data["Problem"] = list
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio": class.ShowRatio,
-		"ShowTime":  class.ShowTime})
-	t, err := t.ParseFiles("view/layout.tpl", "view/contest/problem_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-	}
 
 	this.Data["IsContestProblem"] = true
 	this.Data["Start"] = this.ContestDetail.Start
 	this.Data["End"] = this.ContestDetail.End
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
@@ -125,19 +108,11 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
 
 	if (this.ContestDetail.Status == config.StatusReverse || time.Now().Unix() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-
 		this.Data["Info"] = "The contest has not started yet"
 		if this.ContestDetail.Status == config.StatusReverse {
 			this.Data["Info"] = "No such contest"
 		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
@@ -172,24 +147,12 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.Data["Pid"] = pid
 	this.Data["Status"] = this.ContestDetail.Status
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio":   class.ShowRatio,
-		"ShowStatus":  class.ShowStatus,
-		"ShowSpecial": class.ShowSpecial})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/problem_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
 	}
 }
-
-/////////Todo submit ,need to updata------
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Submit")
@@ -245,13 +208,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
 
-		t := template.New("layout.tpl")
-		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err = this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
