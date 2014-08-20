@@ -20,10 +20,34 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 	if this.ContestDetail.Encrypt == config.EncryptPW && this.Privilege <= config.PrivilegePU {
 		if this.Uid == "" {
 			http.Redirect(w, r, "/user?signin", http.StatusFound)
-		}
-		if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
+			return
+		} else if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
 			this.Password(w, r)
 			return
+		}
+	} else if this.ContestDetail.Encrypt == config.EncryptPT && this.Privilege <= config.PrivilegePU {
+		if this.Uid == "" {
+			http.Redirect(w, r, "/user?signin", http.StatusFound)
+		} else {
+			userlist := strings.Split(this.ContestDetail.Argument.(string), "\n")
+			flag := false
+			for _, user := range userlist {
+				class.Logger.Debug(user)
+				if user == this.Uid {
+					flag = true
+					break
+				}
+			}
+			if flag == false {
+				this.Data["Title"] = this.ContestDetail.Title
+				this.Data["Info"] = "Sorry, the contest is private and you are not granted to participate in the contest."
+				err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
+				if err != nil {
+					http.Error(w, "tpl error", 500)
+					return
+				}
+				return
+			}
 		}
 	}
 	var c interface{}

@@ -34,7 +34,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	//class.Logger.Debug(args)
+
 	Type := args["type"]
 	response, err := http.Post(config.PostHost+"/contest?list/type?"+Type, "application", nil)
 	if err != nil {

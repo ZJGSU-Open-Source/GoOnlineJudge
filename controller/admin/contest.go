@@ -127,7 +127,14 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		one["encrypt"] = config.EncryptPB
 	case "private":
 		one["encrypt"] = config.EncryptPT
-		one["argument"] = r.FormValue("userlist")
+		argument := r.FormValue("userlist")
+		var cr rune = 13
+		crStr := string(cr)
+		argument = strings.Trim(argument, crStr)
+		argument = strings.Trim(argument, "/r/n")
+		argument = strings.Replace(argument, "/r/n", "", -1)
+		argument = strings.Replace(argument, crStr, "/n", -1)
+		one["argument"] = argument
 	case "password":
 		one["encrypt"] = config.EncryptPW
 		one["argument"] = r.FormValue("password")
@@ -379,7 +386,16 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		one["argument"] = ""
 	case "private":
 		one["encrypt"] = config.EncryptPT
-		one["argument"] = r.FormValue("userlist")
+		argument := r.FormValue("userlist")
+		var cr rune = 13
+		crStr := string(cr)
+		argument = strings.Trim(argument, crStr)
+		argument = strings.Trim(argument, "\r\n")
+		argument = strings.Replace(argument, "\r\n", "\n", -1)
+		//argument = strings.Replace(argument, "\n", "", -1)
+		argument = strings.Replace(argument, crStr, "\n", -1)
+		one["argument"] = argument
+
 	case "password":
 		one["encrypt"] = config.EncryptPW
 		one["argument"] = r.FormValue("password")
@@ -387,7 +403,7 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-
+	class.Logger.Debug(one["argument"])
 	problemString := r.FormValue("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
