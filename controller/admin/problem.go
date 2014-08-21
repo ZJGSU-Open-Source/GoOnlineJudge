@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -34,6 +35,26 @@ type problem struct {
 
 	Status int    `json:"status"bson:"status"`
 	Create string `json:"create"bson:"create"`
+}
+
+type solution struct {
+	Sid int `json:"sid"bson:"sid"`
+
+	Pid      int    `json:"pid"bson:"pid"`
+	Uid      string `json:"uid"bson:"uid"`
+	Judge    int    `json:"judge"bson:"judge"`
+	Time     int    `json:"time"bson:"time"`
+	Memory   int    `json:"memory"bson:"memory"`
+	Length   int    `json:"length"bson:"length"`
+	Language int    `json:"language"bson:"language"`
+
+	Module int `json:"module"bson:"module"`
+	Mid    int `json:"mid"bson:"mid"`
+
+	Code string `json:"code"bson:"code"`
+
+	Status int   `json:"status"bson:"status"`
+	Create int64 `json:"create"bson:"create"`
 }
 
 type ProblemController struct {
@@ -449,7 +470,83 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		}
 		defer response.Body.Close()
 	} else if types == "Sid" {
+		sid := id
+		response, err := http.Post(config.PostHost+"/solution?detail/sid?"+strconv.Itoa(sid), "application/json", nil)
+		if err != nil {
+			class.Logger.Debug(err)
+			return
+		}
+		defer response.Body.Close()
 
+		var sol solution
+		if response.StatusCode == 200 {
+			err = this.LoadJson(response.Body, &sol)
+			if err != nil {
+				class.Logger.Debug(err)
+				return
+			}
+		}
+
+		one := make(map[string]interface{})
+
+		one["pid"] = sol.Pid
+		one["uid"] = sol.Uid
+		one["module"] = config.ModuleP
+		one["mid"] = config.ModuleP
+		one["code"] = sol.Code
+		one["length"] = sol.Length
+		one["language"] = sol.Language
+		one["status"] = config.StatusAvailable
+		one["judge"] = config.JudgeRPD
+		//one["judge"] = config.JudgeRPD
+
+		response, err = http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(sol.Pid), "application/json", nil)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+
+		var pro problem
+		if response.StatusCode == 200 {
+			err = this.LoadJson(response.Body, &pro)
+			if err != nil {
+				http.Error(w, "load error", 400)
+				return
+			}
+		}
+
+		reader, err := this.PostReader(&one)
+		if err != nil {
+			http.Error(w, "read error", 500)
+			return
+		}
+
+		response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
+		if err != nil {
+			http.Error(w, "post error", 500)
+			return
+		}
+		defer response.Body.Close()
+
+		sl := make(map[string]int)
+		if response.StatusCode == 200 {
+			err = this.LoadJson(response.Body, &sl)
+			if err != nil {
+				http.Error(w, "load error", 400)
+				return
+			}
+
+		}
+		w.WriteHeader(200)
+
+		go func() {
+			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+			err = cmd.Run()
+			if err != nil {
+				class.Logger.Debug(err)
+			}
+		}()
 	}
 
 	if ok == 1 {
