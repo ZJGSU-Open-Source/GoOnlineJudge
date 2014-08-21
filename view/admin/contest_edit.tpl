@@ -7,7 +7,7 @@
     </div>
     <div class="field">
     	<label for="content_title">Title</label><br>
-    	<input id="content_title" name="title" size="60" type="text" value="{{.Title}}">
+    	<input id="content_title" name="title" size="60" style="width:640px" type="text" value="{{.Title}}">
     </div>
     <div class="field">
     	<label for="content_type" value="Public">Contest Type</label><br>
@@ -39,7 +39,7 @@
     </div>
     <div class="field">
     	<label for="content_problemList">Problem List[Please using ";" split each problem.]</label><br>
-    	<input id="content_problemList" name="problemList" size="100" type="text" value="{{.ProblemList}}">
+    	<input id="content_problemList" name="problemList" size="100" type="text" style="width:640px" value="{{.ProblemList}}">
     </div>
     <div class="field" id="userlist_field" {{if not .IsPrivate}}style="display: none;"{{end}}>
       <label for="userlist">User List</label><br>
