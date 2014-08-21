@@ -26,6 +26,7 @@ const (
 	JudgeOLE = 8  //Output Limit Exceeded
 	JudgePE  = 9  //Presentation Error
 	JudgeNA  = 10 //None
+	JudgeRPD = 11 //Rejudge Pending
 )
 
 const (

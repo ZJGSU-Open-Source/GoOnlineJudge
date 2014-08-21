@@ -6,8 +6,11 @@
 <option value="Pid">Problem ID</option>
 <option value="Sid">Solution ID</option>
 </select>
+<br>
 <input id="id" name="id" size="20" type="text">
-<input name="commit" type="submit" value="Rejudge">
+<div class="actions">
+	<input name="user_password" type="submit" value="Rejudge">
+</div>
 </form>
 
 <script type="text/javascript">
