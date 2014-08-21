@@ -392,10 +392,8 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		argument = strings.Trim(argument, crStr)
 		argument = strings.Trim(argument, "\r\n")
 		argument = strings.Replace(argument, "\r\n", "\n", -1)
-		//argument = strings.Replace(argument, "\n", "", -1)
 		argument = strings.Replace(argument, crStr, "\n", -1)
 		one["argument"] = argument
-
 	case "password":
 		one["encrypt"] = config.EncryptPW
 		one["argument"] = r.FormValue("password")
