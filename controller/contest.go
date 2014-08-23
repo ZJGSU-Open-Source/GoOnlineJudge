@@ -2,10 +2,9 @@ package controller
 
 import (
 	"GoOnlineJudge/class"
-	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"html/template"
 	"net/http"
-	// "strconv"
 	"strings"
 )
 
@@ -37,22 +36,14 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	args := this.ParseURL(r.URL.String())
 	//class.Logger.Debug(args)
 	Type := args["type"]
-	response, err := http.Post(config.PostHost+"/contest?list/type?"+Type, "application", nil)
+	CModel := model.ContestModel{}
+	conetestList, err := CModel.List(args)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, "Read DB error", 500)
 		return
 	}
-	defer response.Body.Close()
 
-	one := make(map[string][]*contest)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Contest"] = one["list"]
-	}
+	this.Data["Contest"] = conetestList
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"ShowStatus":  class.ShowStatus,
 		"ShowTime":    class.ShowTime,

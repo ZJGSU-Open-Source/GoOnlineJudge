@@ -3,6 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -30,28 +31,19 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/user?list", "application/json", nil)
+	userModel := model.UserModel{}
+	userList, err := userModel.List(nil)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
 
 	var count int
 	ret := make(map[string][]rank)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &ret)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		count = 1
-		var len = len(ret["list"])
-		for i := 0; i < len; i++ {
-			if ret["list"][i].Status == config.StatusAvailable {
-				ret["list"][i].Index = count
-				count += 1
-			}
+	count = 1
+	for _, one := range userList {
+		if one.Status == config.StatusAvailable {
+			count += 1
 		}
 	}
 
@@ -65,37 +57,31 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	url += "/offset?" + strconv.Itoa((page-1)*config.UserPerPage) + "/limit?" + strconv.Itoa(config.UserPerPage)
+
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
 	}
 
-	//
-	response, err = http.Post(config.PostHost+"/user?list"+url, "application/json", nil)
+	qry := make(map[string]string)
+	qry["offset"] = strconv.Itoa((page - 1) * config.UserPerPage)
+	qry["limit"] = strconv.Itoa(config.UserPerPage)
+	userList, err = userModel.List(qry)
 	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
 
-	one := make(map[string][]rank)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		var count = 1
-		var len = len(one["list"])
-		for i := 0; i < len; i++ {
-			if one["list"][i].Status == config.StatusAvailable {
-				one["list"][i].Index = count
-				count += 1
-			}
-		}
-		this.Data["User"] = one["list"]
 	}
+
+	list := make([]rank, len(userList), len(userList))
+	count = 1
+	var len = len(one["list"])
+	for _, one := range userList {
+		if one.Status == config.StatusAvailable {
+			list[count-1].user = *one
+			list[count-1].Index = count
+			count += 1
+		}
+	}
+	this.Data["User"] = list
 
 	funcMap := map[string]interface{}{
 		"ShowRatio":  class.ShowRatio,
@@ -106,7 +92,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		"NumSub":     class.NumSub,
 	}
 	t := template.New("layout.tpl").Funcs(funcMap)
-	t, err = t.ParseFiles("view/layout.tpl", "view/ranklist.tpl")
+	t, err = t.ParseFiles()
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -115,6 +101,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Ranklist"
 	this.Data["IsRanklist"] = true
 	err = t.Execute(w, this.Data)
+	err = this.Excute("view/layout.tpl", "view/ranklist.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return

@@ -3,6 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"encoding/json"
 	"html/template"
 	"net/http"
@@ -55,43 +56,25 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
 	this.Init(w, r)
 
-	one := make(map[string]string)
-	one["uid"] = r.FormValue("user[handle]")
-	one["pwd"] = r.FormValue("user[password]")
+	uid := r.FormValue("user[handle]")
+	pwd := r.FormValue("user[password]")
 
-	reader, err := this.PostReader(&one)
+	userModel := model.UserModel{}
+	ret, err := userModel.Login(uid, pwd)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		class.Logger.Debug(err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/user?login", "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	var ret user
-	err = this.LoadJson(response.Body, &ret)
-	if err != nil {
-		http.Error(w, "load error", 400)
-		return
-	}
-
-	if response.StatusCode == 200 {
-		if ret.Uid == "" {
-			w.WriteHeader(400)
-		} else {
-			this.SetSession(w, r, "Uid", one["uid"])
-			this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
-			w.WriteHeader(200)
-		}
-		return
+	if ret.Uid == "" {
+		w.WriteHeader(400)
 	} else {
-		w.WriteHeader(response.StatusCode)
-		return
+		this.SetSession(w, r, "Uid", uid)
+		this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
+		w.WriteHeader(200)
 	}
+	return
 }
 
 func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
@@ -118,39 +101,30 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Register")
 	this.Init(w, r)
 
-	one := make(map[string]interface{})
+	var one model.User
+	userModel := model.UserModel{}
 
 	uid := r.FormValue("user[handle]")
 	nick := r.FormValue("user[nick]")
 	pwd := r.FormValue("user[password]")
 	pwdConfirm := r.FormValue("user[confirmPassword]")
-	one["mail"] = r.FormValue("user[mail]")
-	one["school"] = r.FormValue("user[school]")
-	one["motto"] = r.FormValue("user[motto]")
+	one.Mail = r.FormValue("user[mail]")
+	one.School = r.FormValue("user[school]")
+	one.Motto = r.FormValue("user[motto]")
 
 	ok := 1
 	hint := make(map[string]string)
-	response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
 
 	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty."
 	} else {
-		ret := make(map[string][]*user)
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &ret)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-
-			if len(ret["list"]) > 0 {
-				ok, hint["uid"] = 0, "This handle is currently in use."
-			}
+		qry := make(map[string]string)
+		qry["uid"] = uid
+		ret, err := userModel.List(qry)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		} else if len(ret) > 0 {
+			ok, hint["uid"] = 0, "This handle is currently in use."
 		}
 	}
 	if nick == "" {
@@ -163,24 +137,17 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		ok, hint["pwdConfirm"] = 0, "Confirmation mismatched."
 	}
 	if ok == 1 {
-		one["uid"] = uid
-		one["nick"] = nick
-		one["pwd"] = pwd
-		one["pwdConfirm"] = pwdConfirm
-		one["privilege"] = config.PrivilegePU
-		//one["privilege"] = config.PrivilegeAD
-		reader, err := this.PostReader(&one)
-		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
+		one.Uid = uid
+		one.Nick = nick
+		one.Pwd = pwd
+		//one["privilege"] = config.PrivilegePU
+		one.Privilege = config.PrivilegeAD
 
-		response, err = http.Post(config.PostHost+"/user?insert", "application/json", reader)
+		err := userModel.Insert(one)
 		if err != nil {
-			http.Error(w, "post error", 400)
+			http.Error(w, err.Error(), 500)
 			return
 		}
-		defer response.Body.Close()
 
 		this.SetSession(w, r, "Uid", uid)
 		this.SetSession(w, r, "Privilege", "1")
@@ -211,40 +178,22 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
-	response, err := http.Post(config.PostHost+"/user?detail/uid?"+uid, "application/json", nil)
+	userModel := model.UserModel{}
+	one, err := userModel.Detail(uid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
+	this.Data["Detail"] = one
 
-	var one user
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	}
-
-	response, err = http.Post(config.PostHost+"/solution?achieve/uid?"+uid, "application/json", nil)
+	solutionModle := model.SolutionModel{}
+	solvedList, err := solutionModle.Achieve(uid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
-
-	solvedList := make(map[string][]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &solvedList)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["List"] = solvedList["list"]
-	}
-	//class.Logger.Debug(solvedList["list"])
+	this.Data["List"] = solvedList
+	//class.Logger.Debug(solvedList)
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
@@ -286,39 +235,22 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/user?detail/uid?"+this.Uid, "application/json", nil)
+	userModel := model.UserModel{}
+
+	one, err := userModel.Detail(this.Uid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
+	this.Data["Detail"] = one
 
-	var one user
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	}
-
-	response, err = http.Post(config.PostHost+"/solution?achieve/uid?"+this.Uid, "application/json", nil)
+	solutionModel := model.SolutionModel{}
+	solvedList, err := solutionModel.Achieve(this.Uid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
-
-	solvedList := make(map[string][]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &solvedList)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["List"] = solvedList["list"]
-	}
+	this.Data["List"] = solvedList
 
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
@@ -360,22 +292,13 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	uid := this.Uid
-	response, err := http.Post(config.PostHost+"/user?detail/uid?"+uid, "application/json", nil)
+	userModel := model.UserModel{}
+	one, err := userModel.Detail(uid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
-
-	var one user
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	}
+	this.Data["Detail"] = one
 
 	t := template.New("layout.tpl")
 	t, err = t.ParseFiles("view/layout.tpl", "view/user_edit.tpl")
@@ -403,30 +326,23 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	hint := make(map[string]string)
 	hint["uid"] = this.Uid
 
-	one := make(map[string]interface{})
-	one["nick"] = r.FormValue("user[nick]")
-	one["mail"] = r.FormValue("user[mail]")
-	one["school"] = r.FormValue("user[school]")
-	one["motto"] = r.FormValue("user[motto]")
+	var one model.User
+	one.Nick = r.FormValue("user[nick]")
+	one.Mail = r.FormValue("user[mail]")
+	one.School = r.FormValue("user[school]")
+	one.Motto = r.FormValue("user[motto]")
 
-	if one["nick"] == "" {
+	if one.Nick == "" {
 		ok, hint["nick"] = 0, "Nick should not be empty."
 	}
 
 	if ok == 1 {
-		reader, err := this.PostReader(&one)
+		userModel := model.UserModel{}
+		err := userModel.Update(this.Uid, one)
 		if err != nil {
-			http.Error(w, "read error", 500)
+			http.Error(w, err.Error(), 500)
 			return
 		}
-
-		response, err := http.Post(config.PostHost+"/user?update/uid?"+this.Uid, "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
-		defer response.Body.Close()
-
 		w.WriteHeader(200)
 	} else {
 		w.WriteHeader(400)
@@ -493,30 +409,14 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	data["newPassword"] = r.FormValue("user[newPassword]")
 	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
-	one := make(map[string]interface{})
-	one["uid"] = this.Uid
-	one["pwd"] = data["oldPassword"]
+	uid := this.Uid
+	pwd := data["oldPassword"]
 
-	reader, err := this.PostReader(&one)
+	userModel := model.UserModel{}
+	ret, err := userModel.Login(uid, pwd)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		http.Error(w, err.Error(), 500)
 		return
-	}
-
-	response, err := http.Post(config.PostHost+"/user?login", "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	var ret user
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &ret)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
 	}
 
 	if ret.Uid == "" {
@@ -530,19 +430,12 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if ok == 1 {
-		one["pwd"] = data["newPassword"]
-		reader, err = this.PostReader(&one)
+		pwd = data["newPassword"]
+		err := userModel.Password(uid, pwd)
 		if err != nil {
-			http.Error(w, "read error", 500)
+			http.Error(w, err.Error(), 400)
 			return
 		}
-
-		response, err = http.Post(config.PostHost+"/user?password/uid?"+this.Uid, "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 400)
-			return
-		}
-		defer response.Body.Close()
 
 		w.WriteHeader(200)
 	} else {
