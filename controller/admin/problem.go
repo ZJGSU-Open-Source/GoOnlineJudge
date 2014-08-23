@@ -487,17 +487,17 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		one := make(map[string]interface{})
+		//one := make(map[string]interface{})
 
-		one["pid"] = sol.Pid
-		one["uid"] = sol.Uid
-		one["module"] = config.ModuleP
-		one["mid"] = config.ModuleP
-		one["code"] = sol.Code
-		one["length"] = sol.Length
-		one["language"] = sol.Language
-		one["status"] = config.StatusAvailable
-		one["judge"] = config.JudgeRPD
+		//one["pid"] = sol.Pid
+		//one["uid"] = sol.Uid
+		//one["module"] = config.ModuleP
+		//one["mid"] = config.ModuleP
+		//one["code"] = sol.Code
+		//one["length"] = sol.Length
+		//one["language"] = sol.Language
+		//one["status"] = config.StatusAvailable
+		//one["judge"] = config.JudgePD
 		//one["judge"] = config.JudgeRPD
 
 		response, err = http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(sol.Pid), "application/json", nil)
@@ -515,33 +515,36 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-
-		reader, err := this.PostReader(&one)
-		if err != nil {
-			http.Error(w, "read error", 500)
-			return
-		}
-
-		response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 500)
-			return
-		}
-		defer response.Body.Close()
-
-		sl := make(map[string]int)
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &sl)
+		/*
+			reader, err := this.PostReader(&one)
 			if err != nil {
-				http.Error(w, "load error", 400)
+				http.Error(w, "read error", 500)
 				return
 			}
 
-		}
-		w.WriteHeader(200)
+
+					response, err = http.Post(config.PostHost+"/solution?rejudge/sid?"+strconv.Itoa(sid), "application/json", reader)
+					if err != nil {
+						http.Error(w, "post error", 500)
+						return
+					}
+					defer response.Body.Close()
+
+
+				sl := make(map[string]int)
+				if response.StatusCode == 200 {
+					err = this.LoadJson(response.Body, &sl)
+					if err != nil {
+						http.Error(w, "load error", 400)
+						return
+					}
+
+				}
+				w.WriteHeader(200)
+		*/
 
 		go func() {
-			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 			err = cmd.Run()
 			if err != nil {
 				class.Logger.Debug(err)

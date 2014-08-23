@@ -35,7 +35,8 @@ $('#search_form').submit( function(e) {
 		},
 		success:function(response){
 			alert("Rejudge Complete")
-			window.location.reload();
+			//window.location.reload();
+			window.location.href = '/status?list'
 		}
 	});
 });
