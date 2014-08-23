@@ -52,7 +52,7 @@ const (
 const (
 	PrivilegeNA = 0 //None
 	PrivilegePU = 1 //Primary User
-	PrivilegeSB = 2 //Source Broswer
+	PrivilegeTC = 2 //Teacher
 	PrivilegeAD = 3 //Admin
 )
 

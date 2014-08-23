@@ -3,37 +3,12 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
+	"GoOnlineJudge/model"
 	"net/http"
 	"os/exec"
 	"strconv"
 	"time"
 )
-
-type problem struct {
-	Pid int `json:"pid"bson:"pid"`
-
-	Time    int    `json:"time"bson:"time"`
-	Memory  int    `json:"memory"bson:"memory"`
-	Special int    `json:"special"bson:"special"`
-	Expire  string `json:"expire"bson:"expire"`
-
-	Title       string        `json:"title"bson:"title"`
-	Description template.HTML `json:"description"bson:"description"`
-	Input       template.HTML `json:"input"bson:"input"`
-	Output      template.HTML `json:"output"bson:"output"`
-	Source      string        `json:"source"bson:"source"`
-	Hint        string        `json:"hint"bson:"hint"`
-
-	In  string `json:"in"bson:"in"`
-	Out string `json:"out"bson:"out"`
-
-	Solve  int `json:"solve"bson:"solve"`
-	Submit int `json:"submit"bson:"submit"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:"create"`
-}
 
 type ProblemController struct {
 	Contest
@@ -57,44 +32,38 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list := make([]problem, len(this.ContestDetail.List))
+	list := make([]*model.Problem, len(this.ContestDetail.List))
 	for k, v := range this.ContestDetail.List {
-		response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(v), "application/json", nil)
+		problemModel := model.ProblemModel{}
+		one, err := problemModel.Detail(v)
 		if err != nil {
-			http.Error(w, "post error", 500)
+			http.Error(w, err.Error(), 400)
 			return
 		}
-		defer response.Body.Close()
-
-		var one problem
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &one)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-			one.Pid = k
-			query := "/pid?" + strconv.Itoa(v) + "/action?accept"
-			one.Solve, err = this.GetCount(query)
-			if err != nil {
-				http.Error(w, "count error", 500)
-				return
-			}
-			query = "/pid?" + strconv.Itoa(v) + "/action?submit"
-			one.Submit, err = this.GetCount(query)
-			if err != nil {
-				http.Error(w, "count error", 500)
-				return
-			}
-
-			list[k] = one
+		one.Pid = k
+		qry := make(map[string]string)
+		qry["pid"] = strconv.Itoa(v)
+		qry["action"] = "accept"
+		one.Solve, err = this.GetCount(qry)
+		if err != nil {
+			http.Error(w, "count error", 500)
+			return
 		}
-	}
-	this.Data["Problem"] = list
+		qry["action"] = "submit"
+		one.Submit, err = this.GetCount(qry)
+		if err != nil {
+			http.Error(w, "count error", 500)
+			return
+		}
 
+		list[k] = one
+	}
+
+	this.Data["Problem"] = list
 	this.Data["IsContestProblem"] = true
 	this.Data["Start"] = this.ContestDetail.Start
 	this.Data["End"] = this.ContestDetail.End
+
 	err := this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
@@ -127,23 +96,14 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(this.ContestDetail.List[pid]), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	one, err := problemModel.Detail(this.ContestDetail.List[pid])
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	var one problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	}
+	this.Data["Detail"] = one
 	this.Data["Pid"] = pid
 	this.Data["Status"] = this.ContestDetail.Status
 
@@ -173,31 +133,23 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string]interface{})
-	one["pid"] = pid
-	one["uid"] = uid
-	one["mid"] = this.ContestDetail.Cid
-	one["module"] = config.ModuleC
+	one := model.Solution{}
+	one.Pid = pid
+	one.Uid = uid
+	one.Mid = this.ContestDetail.Cid
+	one.Module = config.ModuleC
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	pro, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	var pro problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &pro)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-	}
 	code := r.FormValue("code")
-	one["code"] = code
-	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
-	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+	one.Code = code
+	one.Length = this.GetCodeLen(len(r.FormValue("code")))
+	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
 		switch {
@@ -215,36 +167,20 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	one["status"] = config.StatusAvailable
-	one["judge"] = config.JudgePD
+	one.Status = config.StatusAvailable
+	one.Judge = config.JudgePD
 
-	reader, err := this.PostReader(&one)
+	solutionModle := model.SolutionModel{}
+	sid, err := solutionModle.Insert(one)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	sl := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &sl)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-
-	}
 	w.WriteHeader(200)
-	class.Logger.Debug("Here")
 	go func() {
-		class.Logger.Debug(sl["sid"])
-		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+		class.Logger.Debug(sid)
+		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 		err = cmd.Run()
 		if err != nil {
 			class.Logger.Debug(err)

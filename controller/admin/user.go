@@ -3,30 +3,13 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"encoding/json"
 	"net/http"
 )
 
-type user struct {
-	Uid string `json:"uid"bson:"uid"`
-	Pwd string `json:"pwd"bson:"pwd"`
-
-	Nick   string `json:"nick"bson:"nick"`
-	Mail   string `json:"mail"bson:"mail"`
-	School string `json:"school"bson:"school"`
-	Motto  string `json:"motto"bson:"motto"`
-
-	Privilege int `json:"privilege"bson:"privilege"`
-
-	Solve  int `json:"solve"bson:"solve"`
-	Submit int `json:"submit"bson:"submit"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
-}
-
 type privilegeUser struct {
-	user
+	model.User
 	Index int `json:"index"bson:"index"`
 }
 
@@ -38,23 +21,14 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/user?list", "application/json", nil)
+	userModel := model.UserModel{}
+	userlist, err := userModel.List(nil)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	one := make(map[string][]privilegeUser)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["User"] = one["list"]
-	}
-
+	this.Data["User"] = userlist
 	this.Data["Title"] = "Privilege User List"
 	this.Data["IsUser"] = true
 	this.Data["IsList"] = true
@@ -95,32 +69,20 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	data["newPassword"] = r.FormValue("user[newPassword]")
 	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
-	one := make(map[string]interface{})
-
 	uid := r.FormValue("user[Handle]")
-
-	response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
 
 	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty"
 	} else {
-		ret := make(map[string][]*user)
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &ret)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-
-			if len(ret["list"]) == 0 {
-				ok, hint["uid"] = 0, "This handle does not exist!"
-			}
+		userModel := model.UserModel{}
+		_, err := userModel.Detail(uid)
+		if err == model.NotFoundErr {
+			ok, hint["uid"] = 0, "This handle does not exist!"
+		} else if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
 		}
+
 	}
 
 	if len(data["newPassword"]) < 6 {
@@ -131,18 +93,13 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if ok == 1 {
-		one["pwd"] = data["newPassword"]
-		reader, err := this.PostReader(&one)
+		pwd := data["newPassword"]
+		userModel := model.UserModel{}
+		err := userModel.Password(uid, pwd)
 		if err != nil {
-			http.Error(w, "read error", 500)
+			http.Error(w, err.Error(), 400)
 			return
 		}
-		response, err := http.Post(config.PostHost+"/user?password/uid?"+uid, "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 400)
-			return
-		}
-		defer response.Body.Close()
 
 		w.WriteHeader(200)
 	} else {
@@ -161,16 +118,18 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Privilege")
 	this.Init(w, r)
 
-	one := make(map[string]interface{})
 	args := this.ParseURL(r.URL.String())
 	uid := args["uid"]
-	privilege := args["type"]
+	privilegeStr := args["type"]
 
-	if privilege == "Admin" {
-		one["privilege"] = config.PrivilegeAD
-
-	} else if privilege == "SB" {
-		one["privilege"] = config.PrivilegeSB
+	privilege := config.PrivilegeNA
+	switch privilegeStr {
+	case "Admin":
+		privilege = config.PrivilegeAD
+	case "TC":
+		privilege = config.PrivilegeTC
+	default:
+		http.Error(w, "args error", 400)
 	}
 
 	ok := 1
@@ -181,39 +140,23 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 	} else if uid == this.Uid {
 		ok, hint["uid"] = 0, "You cannot delete yourself"
 	} else {
-		response, err := http.Post(config.PostHost+"/user?list/uid?"+uid, "application/json", nil)
-		if err != nil {
-			http.Error(w, "post error", 500)
+		userModel := model.UserModel{}
+		_, err := userModel.Detail(uid)
+		if err == model.NotFoundErr {
+			ok, hint["uid"] = 0, "This handle does not exist!"
+		} else if err != nil {
+			http.Error(w, err.Error(), 400)
 			return
-		}
-		defer response.Body.Close()
-		ret := make(map[string][]*user)
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &ret)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-
-			if len(ret["list"]) == 0 {
-				ok, hint["uid"] = 0, "This handle does not exist!"
-			}
 		}
 	}
 
 	if ok == 1 {
-		one["uid"] = uid
-		reader, err := this.PostReader(&one)
+		userModel := model.UserModel{}
+		err := userModel.Privilege(uid, privilege)
 		if err != nil {
-			http.Error(w, "read error", 500)
+			http.Error(w, err.Error(), 400)
 			return
 		}
-		response, err := http.Post(config.PostHost+"/user?privilege/uid?"+uid, "application/json", reader)
-		if err != nil {
-			http.Error(w, "post error", 400)
-			return
-		}
-		defer response.Body.Close()
 
 		w.WriteHeader(200)
 	} else {

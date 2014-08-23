@@ -3,6 +3,7 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"encoding/json"
 	"html/template"
 	"net/http"
@@ -11,51 +12,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-type problem struct {
-	Pid int `json:"pid"bson:"pid"`
-
-	Time    int    `json:"time"bson:"time"`
-	Memory  int    `json:"memory"bson:"memory"`
-	Special int    `json:"special"bson:"special"`
-	Expire  string `json:"expire"bson:"expire"`
-
-	Title       string        `json:"title"bson:"title"`
-	Description template.HTML `json:"description"bson:"description"`
-	Input       template.HTML `json:"input"bson:"input"`
-	Output      template.HTML `json:"output"bson:"output"`
-	Source      string        `json:"source"bson:"source"`
-	Hint        string        `json:"hint"bson:"hint"`
-
-	In  string `json:"in"bson:"in"`
-	Out string `json:"out"bson:"out"`
-
-	Solve  int `json:"solve"bson:"solve"`
-	Submit int `json:"submit"bson:"submit"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:"create"`
-}
-
-type solution struct {
-	Sid int `json:"sid"bson:"sid"`
-
-	Pid      int    `json:"pid"bson:"pid"`
-	Uid      string `json:"uid"bson:"uid"`
-	Judge    int    `json:"judge"bson:"judge"`
-	Time     int    `json:"time"bson:"time"`
-	Memory   int    `json:"memory"bson:"memory"`
-	Length   int    `json:"length"bson:"length"`
-	Language int    `json:"language"bson:"language"`
-
-	Module int `json:"module"bson:"module"`
-	Mid    int `json:"mid"bson:"mid"`
-
-	Code string `json:"code"bson:"code"`
-
-	Status int   `json:"status"bson:"status"`
-	Create int64 `json:"create"bson:"create"`
-}
 
 type ProblemController struct {
 	class.Controller
@@ -72,26 +28,13 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	one, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
-
-	var one problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	} else {
-		http.Error(w, "resp error", 500)
-		return
-	}
-
+	this.Data["Detail"] = one
 	this.Data["Title"] = "Admin - Problem Detail"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
@@ -107,26 +50,19 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/problem?list", "application/json", nil)
+	problemModel := model.ProblemModel{}
+	qry := make(map[string]string)
+	proList, err := problemModel.List(qry)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
 
-	one := make(map[string][]problem)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Problem"] = one["list"]
-	}
-
+	this.Data["Problem"] = proList
 	this.Data["Title"] = "Admin - Problem List"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = true
+
 	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
@@ -155,85 +91,69 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	//TODO r.body to json
-	one := make(map[string]interface{})
-	one["title"] = r.FormValue("title")
+	one := model.Problem{}
+	one.Title = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
 	if err != nil {
 		http.Error(w, "conv error", 400)
 		return
 	}
-	one["time"] = time
+	one.Time = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
 		http.Error(w, "conv error", 400)
 		return
 	}
-	one["memory"] = memory
+	one.Memory = memory
 	if special := r.FormValue("special"); special == "" {
-		one["special"] = 0
+		one.Special = 0
 	} else {
-		one["special"] = 1
+		one.Special = 1
 	}
 
 	in := r.FormValue("in")
 	out := r.FormValue("out")
+	one.Description = template.HTML(r.FormValue("description"))
+	one.Input = template.HTML(r.FormValue("input"))
+	one.Output = template.HTML(r.FormValue("output"))
+	one.In = in
+	one.Out = out
+	one.Source = r.FormValue("source")
+	one.Hint = r.FormValue("hint")
 
-	one["description"] = r.FormValue("description")
-	one["input"] = r.FormValue("input")
-	one["output"] = r.FormValue("output")
-	one["in"] = in
-	one["out"] = out
-	one["source"] = r.FormValue("source")
-	one["hint"] = r.FormValue("hint")
-
-	reader, err := this.PostReader(&one)
+	problemModel := model.ProblemModel{}
+	pid, err := problemModel.Insert(one)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?insert", "application/json", reader)
+	err = os.Mkdir(config.Datapath+strconv.Itoa(pid), os.ModePerm)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		class.Logger.Debug("create dir error")
 		return
 	}
-	defer response.Body.Close()
 
-	ret := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &ret)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-
-		err = os.Mkdir(config.Datapath+strconv.Itoa(ret["pid"]), os.ModePerm)
-		if err != nil {
-			class.Logger.Debug("create dir error")
-			return
-		}
-
-		infile, err := os.Create(config.Datapath + strconv.Itoa(ret["pid"]) + "/sample.in")
-		if err != nil {
-			class.Logger.Debug(err)
-		}
-		defer infile.Close()
-		var cr rune = 13
-		crStr := string(cr)
-		in = strings.Replace(in, "\r\n", "\n", -1)
-		in = strings.Replace(in, crStr, "\n", -1)
-		infile.WriteString(in)
-		outfile, err := os.Create(config.Datapath + strconv.Itoa(ret["pid"]) + "/sample.out")
-		if err != nil {
-			class.Logger.Debug(err)
-		}
-		defer outfile.Close()
-		out = strings.Replace(out, "\r\n", "\n", -1)
-		out = strings.Replace(out, crStr, "\n", -1)
-		outfile.WriteString(out)
-
-		http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
+	infile, err := os.Create(config.Datapath + strconv.Itoa(pid) + "/sample.in")
+	if err != nil {
+		class.Logger.Debug(err)
 	}
+	defer infile.Close()
+	var cr rune = 13
+	crStr := string(cr)
+	in = strings.Replace(in, "\r\n", "\n", -1)
+	in = strings.Replace(in, crStr, "\n", -1)
+	infile.WriteString(in)
+	outfile, err := os.Create(config.Datapath + strconv.Itoa(pid) + "/sample.out")
+	if err != nil {
+		class.Logger.Debug(err)
+	}
+	defer outfile.Close()
+	out = strings.Replace(out, "\r\n", "\n", -1)
+	out = strings.Replace(out, crStr, "\n", -1)
+	outfile.WriteString(out)
+
+	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
 }
 
 func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
@@ -248,42 +168,27 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	one, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 400)
 		return
 	}
-	defer response.Body.Close()
-
-	var one problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	} else {
-		http.Error(w, "resp error", 500)
-		return
-	}
-	var action int
+	this.Data["Detail"] = one
+	var status int
 	switch one.Status {
 	case config.StatusAvailable:
-		action = config.StatusReverse
+		status = config.StatusReverse
 	case config.StatusReverse:
-		action = config.StatusAvailable
+		status = config.StatusAvailable
 	}
-	response, err = http.Post(config.PostHost+"/problem?status/pid?"+strconv.Itoa(pid)+"/action?"+strconv.Itoa(action), "application/json", nil)
+	err = problemModel.Status(pid, status)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
-	}
+	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
 }
 
 func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
@@ -297,14 +202,10 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?delete/pid?"+strconv.Itoa(pid), "application/json", nil)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
+	problemModel := model.ProblemModel{}
+	problemModel.Delete(pid)
 
-	w.WriteHeader(response.StatusCode)
+	w.WriteHeader(200)
 }
 
 func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
@@ -318,26 +219,14 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	one, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	var one problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	} else {
-		http.Error(w, "resp error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
+	this.Data["Detail"] = one
 	this.Data["Title"] = "Admin - Problem Edit"
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
@@ -361,24 +250,24 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string]interface{})
-	one["title"] = r.FormValue("title")
+	one := model.Problem{}
+	one.Title = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
 	if err != nil {
 		http.Error(w, "conv error", 500)
 		return
 	}
-	one["time"] = time
+	one.Time = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
 		http.Error(w, "conv error", 500)
 		return
 	}
-	one["memory"] = memory
+	one.Memory = memory
 	if special := r.FormValue("special"); special == "" {
-		one["special"] = 0
+		one.Special = 0
 	} else {
-		one["special"] = 1
+		one.Special = 1
 	}
 
 	var cr rune = 13
@@ -386,13 +275,13 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	in := r.FormValue("in")
 	out := r.FormValue("out")
 
-	one["description"] = r.FormValue("description")
-	one["input"] = r.FormValue("input")
-	one["output"] = r.FormValue("output")
-	one["in"] = in
-	one["out"] = out
-	one["source"] = r.FormValue("source")
-	one["hint"] = r.FormValue("hint")
+	one.Description = template.HTML(r.FormValue("description"))
+	one.Input = template.HTML(r.FormValue("input"))
+	one.Output = template.HTML(r.FormValue("output"))
+	one.In = in
+	one.Out = out
+	one.Source = r.FormValue("source")
+	one.Hint = r.FormValue("hint")
 
 	infile, err := os.Create(config.Datapath + args["pid"] + "/sample.in")
 	if err != nil {
@@ -412,22 +301,14 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	out = strings.Replace(out, crStr, "\n", -1)
 	outfile.WriteString(out)
 
-	reader, err := this.PostReader(&one)
+	problemModel := model.ProblemModel{}
+	err = problemModel.Update(pid, one)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?update/pid?"+strconv.Itoa(pid), "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode == 200 {
-		http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
-	}
+	http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
 }
 
 func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
@@ -471,22 +352,14 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		defer response.Body.Close()
 	} else if types == "Sid" {
 		sid := id
-		response, err := http.Post(config.PostHost+"/solution?detail/sid?"+strconv.Itoa(sid), "application/json", nil)
+
+		solutionModel := model.SolutionModel{}
+		sol, err := solutionModel.Detail(sid)
 		if err != nil {
 			class.Logger.Debug(err)
+			http.Error(w, err.Error(), 400)
 			return
 		}
-		defer response.Body.Close()
-
-		var sol solution
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &sol)
-			if err != nil {
-				class.Logger.Debug(err)
-				return
-			}
-		}
-
 		//one := make(map[string]interface{})
 
 		//one["pid"] = sol.Pid
@@ -500,21 +373,13 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		//one["judge"] = config.JudgePD
 		//one["judge"] = config.JudgeRPD
 
-		response, err = http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(sol.Pid), "application/json", nil)
+		problemModel := model.ProblemModel{}
+		pro, err := problemModel.Detail(sol.Pid)
 		if err != nil {
-			http.Error(w, "post error", 500)
+			http.Error(w, err.Error(), 500)
 			return
 		}
-		defer response.Body.Close()
 
-		var pro problem
-		if response.StatusCode == 200 {
-			err = this.LoadJson(response.Body, &pro)
-			if err != nil {
-				http.Error(w, "load error", 400)
-				return
-			}
-		}
 		/*
 			reader, err := this.PostReader(&one)
 			if err != nil {

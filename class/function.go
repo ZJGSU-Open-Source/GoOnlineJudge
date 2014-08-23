@@ -11,7 +11,7 @@ var judgeArr = []string{"Pengding", "Running & Judging", "Compile Error", "Accep
 	"Wrong Answer", "Time Limit Exceeded", "Memory Limit Exceeded", "Output Limit Exceeded", "Presentation Error", "None"}
 var languageArr = []string{"None", "C", "C++", "Java"}
 var encryptArr = []string{"None", "Public", "Private", "Password"}
-var privilegeArr = []string{"None", "Primary User", "Source Broswer", "Admin"}
+var privilegeArr = []string{"None", "Primary User", "Teacher", "Admin"}
 
 func ShowNext(num int) (next int) {
 	next = num + 1

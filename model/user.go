@@ -41,21 +41,21 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	var err error
 	pwd, err = this.EncryptPassword(pwd)
 	if err != nil {
-		return nil, class.EncryptErr
+		return nil, EncryptErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
 	var alt User
 	err = this.DB.C("User").Find(bson.M{"uid": uid}).Select(uDetailSelector).One(&alt)
 	if err == mgo.ErrNotFound {
-		return nil, class.NotFoundErr
+		return nil, NotFoundErr
 	} else if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	if pwd == alt.Pwd {
@@ -97,7 +97,7 @@ func (this *UserModel) Password(uid, pwd string) error {
 
 	pwd, err := this.EncryptPassword(pwd)
 	if err != nil {
-		return class.EncryptErr
+		return EncryptErr
 	}
 
 	alt := make(map[string]interface{})
@@ -105,22 +105,22 @@ func (this *UserModel) Password(uid, pwd string) error {
 
 	err = this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
 }
 
 // POST /User?privilege/uid?<uid>
-func (this *UserModel) Privilege(uid, privilege string) error {
+func (this *UserModel) Privilege(uid string, privilege int) error {
 	log.Println("Server UserModel Privilege")
 
 	alt := make(map[string]interface{})
@@ -128,15 +128,15 @@ func (this *UserModel) Privilege(uid, privilege string) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -148,16 +148,16 @@ func (this *UserModel) Detail(uid string) (*User, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
 	var one User
 	err = this.DB.C("User").Find(bson.M{"uid": uid}).Select(uDetailSelector).One(&one)
 	if err == mgo.ErrNotFound {
-		return nil, class.NotFoundErr
+		return nil, NotFoundErr
 	} else if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	return &one, nil
@@ -169,15 +169,15 @@ func (this *UserModel) Delete(uid string) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Remove(bson.M{"uid": uid})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -190,12 +190,12 @@ func (this *UserModel) Insert(one User) error {
 	var err error
 	one.Pwd, err = this.EncryptPassword(one.Pwd)
 	if err != nil {
-		return class.EncryptErr
+		return EncryptErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -207,7 +207,7 @@ func (this *UserModel) Insert(one User) error {
 
 	err = this.DB.C("User").Insert(&one)
 	if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	// b, err := json.Marshal(map[string]interface{}{
@@ -231,15 +231,15 @@ func (this *UserModel) Update(uid string, ori User) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -251,15 +251,15 @@ func (this *UserModel) Status(uid string) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"status": 1}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -276,20 +276,20 @@ func (this *UserModel) Record(uid, action string) error {
 	case "submit":
 		inc = 0
 	default:
-		return class.ArgsErr
+		return ArgsErr
 	}
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -301,12 +301,12 @@ func (this *UserModel) List(args map[string]string) ([]*User, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return nil, class.ArgsErr
+		return nil, ArgsErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
@@ -315,7 +315,7 @@ func (this *UserModel) List(args map[string]string) ([]*User, error) {
 	if v, ok := args["offset"]; ok {
 		offset, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Skip(offset)
 	}
@@ -323,7 +323,7 @@ func (this *UserModel) List(args map[string]string) ([]*User, error) {
 	if v, ok := args["limit"]; ok {
 		limit, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Limit(limit)
 	}
@@ -331,7 +331,7 @@ func (this *UserModel) List(args map[string]string) ([]*User, error) {
 	var list []*User
 	err = q.All(&list)
 	if err != nil {
-		return nil, class.QueryErr
+		return nil, QueryErr
 	}
 
 	return list, nil

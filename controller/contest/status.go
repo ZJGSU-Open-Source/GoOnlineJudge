@@ -3,6 +3,7 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"net/http"
 	"strconv"
 )
@@ -35,26 +36,21 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
 	this.InitContest(w, r)
 
-	response, err := http.Post(config.PostHost+"/solution?list/module?"+strconv.Itoa(config.ModuleC)+"/mid?"+strconv.Itoa(this.Cid), "application/json", nil)
+	solutionModel := model.SolutionModel{}
+	qry := make(map[string]string)
+
+	qry["module"] = strconv.Itoa(config.ModuleC)
+	qry["mid"] = strconv.Itoa(this.Cid)
+	solutionList, err := solutionModel.List(qry)
+
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, "load error", 400)
 		return
 	}
-	defer response.Body.Close()
-
-	one := make(map[string][]solution)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		for i, v := range one["list"] {
-			one["list"][i].Pid = this.Index[v.Pid]
-		}
-		this.Data["Solution"] = one["list"]
+	for i, v := range solutionList {
+		solutionList[i].Pid = this.Index[v.Pid]
 	}
-
+	this.Data["Solution"] = solutionList
 	this.Data["Privilege"] = this.Privilege
 	this.Data["IsContestStatus"] = true
 	err = this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
@@ -76,23 +72,14 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/solution?detail/sid?"+strconv.Itoa(sid), "application/json", nil)
+	solutionModel := model.SolutionModel{}
+	one, err := solutionModel.Detail(sid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	var one solution
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Solution"] = one
-	}
-
+	this.Data["Solution"] = one
 	this.Data["Privilege"] = this.Privilege
 	this.Data["Title"] = "View Code"
 	this.Data["IsCode"] = true
