@@ -3,26 +3,9 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
-	"GoOnlineJudge/config"
 	"net/http"
 	"strings"
 )
-
-type contest struct {
-	Cid      int         `json:"cid"bson:"cid"`
-	Title    string      `json:"title"bson:"title"`
-	Encrypt  int         `json:"encrypt"bson:"encrypt"`
-	Argument interface{} `json:"argument"bson:"argument"`
-	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
-
-	Start int64 `json:"start"bson:"start"`
-	End   int64 `json:"end"bson:"end"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `'json:"create"bson:"create"`
-
-	List []int `json:"list"bson:"list"`
-}
 
 type ContestController struct {
 	class.Controller
@@ -39,34 +22,11 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	CModel := model.ContestModel{}
 	conetestList, err := CModel.List(args)
 	if err != nil {
-		http.Error(w, "Read DB error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
-<<<<<<< HEAD
 	this.Data["Contest"] = conetestList
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowStatus":  class.ShowStatus,
-		"ShowTime":    class.ShowTime,
-		"ShowEncrypt": class.ShowEncrypt,
-		"LargePU":     class.LargePU})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-=======
-	one := make(map[string][]*contest)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Contest"] = one["list"]
->>>>>>> 3416297910bd7213bf9cc0f94edc094418e5ce76
-	}
-
 	this.Data["Time"] = this.GetTime()
 	this.Data["Type"] = Type
 	this.Data["Title"] = strings.Title(Type) + " List"

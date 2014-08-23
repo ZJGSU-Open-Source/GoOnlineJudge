@@ -9,7 +9,7 @@ import (
 )
 
 type rank struct {
-	user
+	model.User
 	Index int `json:"index"bson:"index"`
 }
 
@@ -22,7 +22,6 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	url := ""
 	this.Data["URL"] = "/ranklist"
 
 	// Page
@@ -38,7 +37,6 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var count int
-	ret := make(map[string][]rank)
 	count = 1
 	for _, one := range userList {
 		if one.Status == config.StatusAvailable {
@@ -72,9 +70,8 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 
 	list := make([]rank, len(userList), len(userList))
 	count = 1
-	var len = len(one["list"])
 	for i, one := range userList {
-		list[i].user = *one
+		list[i].User = *one
 		if one.Status == config.StatusAvailable {
 			list[count-1].Index = count
 			count += 1
