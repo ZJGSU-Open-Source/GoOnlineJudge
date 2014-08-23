@@ -92,7 +92,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 	one.Create = time.Now().Unix()
 	one.Sid, err = this.GetID("Solution")
 	if err != nil {
-		return 0, class.IDErr
+		return 0, IDErr
 	}
 
 	err = this.DB.C("Solution").Insert(&one)
