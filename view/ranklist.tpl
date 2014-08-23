@@ -13,7 +13,7 @@
   {{if .IsPageHead}}
     {{with .PageHeadList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>
@@ -26,7 +26,7 @@
   ...
     {{with .PageMidList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>
@@ -39,7 +39,7 @@
   ...
     {{with .PageTailList}}
       {{range .}}
-        {{if NumEqual . $current}}
+        {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
           <a href="{{$url}}/page?{{.}}">{{.}}</a>

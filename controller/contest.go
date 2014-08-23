@@ -3,7 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
-	"html/template"
+	"GoOnlineJudge/config"
 	"net/http"
 	"strings"
 )
@@ -34,7 +34,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	//class.Logger.Debug(args)
+
 	Type := args["type"]
 	CModel := model.ContestModel{}
 	conetestList, err := CModel.List(args)
@@ -43,6 +43,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+<<<<<<< HEAD
 	this.Data["Contest"] = conetestList
 	t := template.New("layout.tpl").Funcs(template.FuncMap{
 		"ShowStatus":  class.ShowStatus,
@@ -54,6 +55,16 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
 		return
+=======
+	one := make(map[string][]*contest)
+	if response.StatusCode == 200 {
+		err = this.LoadJson(response.Body, &one)
+		if err != nil {
+			http.Error(w, "load error", 400)
+			return
+		}
+		this.Data["Contest"] = one["list"]
+>>>>>>> 3416297910bd7213bf9cc0f94edc094418e5ce76
 	}
 
 	this.Data["Time"] = this.GetTime()
@@ -61,7 +72,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = strings.Title(Type) + " List"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["Privilege"] = this.Privilege
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)

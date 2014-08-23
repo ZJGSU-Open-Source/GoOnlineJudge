@@ -16,12 +16,14 @@ type Session struct {
 func (this *Session) Set(Key, Value string) {
 	this.Lock()
 	defer this.Unlock()
+	this.Update()
 	this.data[Key] = Value
 }
 
 func (this *Session) Get(Key string) string {
 	this.Lock()
 	defer this.Unlock()
+	this.Update()
 	return this.data[Key]
 }
 

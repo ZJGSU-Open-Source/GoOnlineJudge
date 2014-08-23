@@ -3,7 +3,6 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -21,10 +20,34 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 	if this.ContestDetail.Encrypt == config.EncryptPW && this.Privilege <= config.PrivilegePU {
 		if this.Uid == "" {
 			http.Redirect(w, r, "/user?signin", http.StatusFound)
-		}
-		if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
+			return
+		} else if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
 			this.Password(w, r)
 			return
+		}
+	} else if this.ContestDetail.Encrypt == config.EncryptPT && this.Privilege <= config.PrivilegePU {
+		if this.Uid == "" {
+			http.Redirect(w, r, "/user?signin", http.StatusFound)
+		} else {
+			userlist := strings.Split(this.ContestDetail.Argument.(string), "\n")
+			flag := false
+			for _, user := range userlist {
+				class.Logger.Debug(user)
+				if user == this.Uid {
+					flag = true
+					break
+				}
+			}
+			if flag == false {
+				this.Data["Title"] = this.ContestDetail.Title
+				this.Data["Info"] = "Sorry, the contest is private and you are not granted to participate in the contest."
+				err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
+				if err != nil {
+					http.Error(w, "tpl error", 500)
+					return
+				}
+				return
+			}
 		}
 	}
 	var c interface{}
@@ -52,13 +75,7 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 
 func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/contest/passwd.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
@@ -68,7 +85,7 @@ func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Reque
 		passwd := r.FormValue("password")
 		if passwd == this.ContestDetail.Argument.(string) {
 			this.SetSession(w, r, strconv.Itoa(this.Cid), passwd)
-			http.Redirect(w, r, "/contest/problem?list/cid?"+strconv.Itoa(this.Cid), http.StatusFound)
+			w.WriteHeader(200)
 		} else {
 			http.Error(w, "incorrect password", 400)
 		}

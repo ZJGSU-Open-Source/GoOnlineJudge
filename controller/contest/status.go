@@ -3,7 +3,6 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -56,22 +55,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one["list"]
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowStatus":   class.ShowStatus,
-		"ShowJudge":    class.ShowJudge,
-		"ShowTime":     class.ShowTime,
-		"ShowLanguage": class.ShowLanguage,
-		"LargePU":      class.LargePU,
-		"SameID":       class.SameID})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-	}
 	this.Data["Privilege"] = this.Privilege
 	this.Data["IsContestStatus"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -107,19 +93,10 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		this.Data["Solution"] = one
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"LargePU": class.LargePU,
-		"SameID":  class.SameID})
-	t, err = t.ParseFiles("view/layout.tpl", "view/contest/status_code.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Privilege"] = this.Privilege
 	this.Data["Title"] = "View Code"
 	this.Data["IsCode"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)

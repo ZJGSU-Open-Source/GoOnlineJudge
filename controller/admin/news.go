@@ -42,18 +42,11 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["Detail"] = one
 
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/news_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - News Detail"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = false
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/news_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -72,17 +65,10 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["News"] = newlist
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/news_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - News List"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/news_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -93,19 +79,12 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Add")
 	this.Init(w, r)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/admin/layout.tpl", "view/admin/news_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - News Add"
 	this.Data["IsNews"] = true
 	this.Data["IsAdd"] = true
 	this.Data["IsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/news_add.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -203,19 +182,12 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/admin/layout.tpl", "view/admin/news_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "Admin - News Edit"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = false
 	this.Data["IsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/news_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
