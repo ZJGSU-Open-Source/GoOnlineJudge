@@ -44,16 +44,16 @@ func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
 	var one Solution
 	err = this.DB.C("Solution").Find(bson.M{"sid": sid}).Select(sDetailSelector).One(&one)
 	if err == mgo.ErrNotFound {
-		return nil, class.NotFoundErr
+		return nil, NotFoundErr
 	} else if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	return &one, nil
@@ -65,15 +65,15 @@ func (this *SolutionModel) Delete(sid int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Solution").Remove(bson.M{"sid": sid})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -85,7 +85,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return 0, class.DBErr
+		return 0, DBErr
 	}
 	defer this.CloseDB()
 
@@ -97,7 +97,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 
 	err = this.DB.C("Solution").Insert(&one)
 	if err != nil {
-		return 0, class.OpErr
+		return 0, OpErr
 	}
 
 	// b, err := json.Marshal(map[string]interface{}{
@@ -119,15 +119,15 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Solution").Update(bson.M{"sid": sid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -139,15 +139,15 @@ func (this *SolutionModel) Status(sid, status int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Solution").Update(bson.M{"sid": sid}, bson.M{"$inc": bson.M{"status": status}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -159,12 +159,12 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return 0, class.ArgsErr
+		return 0, ArgsErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return 0, class.DBErr
+		return 0, DBErr
 	}
 	defer this.CloseDB()
 
@@ -174,24 +174,24 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 	case "submit":
 		count, err = c.Find(query).Count()
 		if err != nil {
-			return 0, class.QueryErr
+			return 0, QueryErr
 		}
 	case "accept":
 		query["judge"] = config.JudgeAC
 		count, err = c.Find(query).Count()
 		if err != nil {
-			return 0, class.QueryErr
+			return 0, QueryErr
 		}
 	case "solve":
 		var list []string
 		query["judge"] = config.JudgeAC
 		err = c.Find(query).Distinct("uid", &list)
 		if err != nil {
-			return 0, class.QueryErr
+			return 0, QueryErr
 		}
 		count = len(list)
 	default:
-		return 0, class.ArgsErr
+		return 0, ArgsErr
 	}
 
 	return count, nil
@@ -203,14 +203,14 @@ func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
 	var list []int
 	err = this.DB.C("Solution").Find(bson.M{"uid": uid, "judge": config.JudgeAC}).Sort("pid").Distinct("pid", &list)
 	if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	return list, nil
@@ -223,12 +223,12 @@ func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return nil, class.ArgsErr
+		return nil, ArgsErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
@@ -241,7 +241,7 @@ func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
 	if v, ok := args["offset"]; ok {
 		offset, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Skip(offset)
 	}
@@ -249,7 +249,7 @@ func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
 	if v, ok := args["limit"]; ok {
 		limit, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Limit(limit)
 	}
@@ -257,7 +257,7 @@ func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
 	var list []*Solution
 	err = q.All(&list)
 	if err != nil {
-		return nil, class.QueryErr
+		return nil, QueryErr
 	}
 
 	return list, nil

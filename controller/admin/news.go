@@ -9,16 +9,6 @@ import (
 	"strconv"
 )
 
-type news struct {
-	Nid int `json:"nid"bson:"nid"`
-
-	Title   string        `json:"title"bson:"title"`
-	Content template.HTML `json:"content"bson:"content"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
-}
-
 type NewsController struct {
 	class.Controller
 }
@@ -97,7 +87,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 
 	one := model.News{}
 	one.Title = r.FormValue("title")
-	one.Content = r.FormValue("content")
+	one.Content = template.HTML(r.FormValue("content"))
 
 	newsModel := model.NewsModel{}
 	err := newsModel.Insert(one)
@@ -208,7 +198,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	one := model.News{}
 	newsModel := model.NewsModel{}
 	one.Title = r.FormValue("title")
-	one.Content = r.FormValue("content")
+	one.Content = template.HTML(r.FormValue("content"))
 
 	err = newsModel.Update(nid, one)
 	if err != nil {

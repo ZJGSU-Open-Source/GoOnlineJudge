@@ -3,6 +3,7 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"net/http"
 	"sort"
 	"strconv"
@@ -15,28 +16,22 @@ type RanklistController struct {
 func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
-	response, err := http.Post(config.PostHost+"/solution?list/module?"+strconv.Itoa(config.ModuleC)+"/mid?"+strconv.Itoa(this.Cid)+"/sort?resort/", "application/json", nil)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
+	qry := make(map[string]string)
+	qry["module"] = strconv.Itoa(config.ModuleC)
+	qry["mid"] = strconv.Itoa(this.Cid)
+	qry["/sort"] = "resort"
 
-	if response.StatusCode != 200 {
-		return
-	}
-
-	one := make(map[string][]solution)
-	err = this.LoadJson(response.Body, &one)
+	solutionModel := model.SolutionModel{}
+	solutionList, err := solutionModel.List(qry)
 	if err != nil {
-		http.Error(w, "load error", 400)
+		http.Error(w, err.Error(), 400)
 		return
 	}
 
 	UserMap := make(map[string]*userRank)
 	var pro *probleminfo
 	var user *userRank
-	for _, v := range one["list"] {
+	for _, v := range solutionList {
 		user = UserMap[v.Uid]
 		if user == nil {
 			user = &userRank{}

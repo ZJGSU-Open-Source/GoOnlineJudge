@@ -3,29 +3,14 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"net/http"
 	"strconv"
 )
 
-type contest struct {
-	Cid      int         `json:"cid"bson:"cid"`
-	Title    string      `json:"title"bson:"title"`
-	Encrypt  int         `json:"encrypt"bson:"encrypt"`
-	Argument interface{} `json:"argument"bson:"argument"`
-	Type     string      `json:"type"bson:"type"` //the type of contest,acm contest or normal exercise
-
-	Start int64 `json:"start"bson:"start"`
-	End   int64 `json:"end"bson:"end"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `'json:"create"bson:"create"`
-
-	List []int `json:"list"bson:"list"`
-}
-
 type Contest struct {
 	Cid           int
-	ContestDetail *contest
+	ContestDetail *model.Contest
 	Index         map[int]int
 	class.Controller
 }
@@ -41,19 +26,11 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Cid = cid
 
-	response, err := http.Post(config.PostHost+"/contest?detail/cid?"+strconv.Itoa(cid), "application/json", nil)
+	contestModel := model.ContestModel{}
+	this.ContestDetail, err = contestModel.Detail(cid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &this.ContestDetail)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
 	}
 
 	this.Index = make(map[int]int)
@@ -66,20 +43,16 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestDetail"] = true
 }
 
-func (this *Contest) GetCount(query string) (count int, err error) {
-	response, err := http.Post(config.PostHost+"/solution?count/module?"+strconv.Itoa(config.ModuleC)+"/mid?"+strconv.Itoa(this.Cid)+query, "application/json", nil)
+func (this *Contest) GetCount(qry map[string]string) (int, error) {
+	if qry == nil {
+		qry = make(map[string]string)
+	}
+	qry["module"] = strconv.Itoa(config.ModuleC)
+	qry["mid"] = strconv.Itoa(this.Cid)
+	solutionModel := model.SolutionModel{}
+	count, err := solutionModel.Count(qry)
 	if err != nil {
-		return
+		return 0, err
 	}
-	defer response.Body.Close()
-
-	one := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			return
-		}
-		count = one["count"]
-	}
-	return
+	return count, nil
 }

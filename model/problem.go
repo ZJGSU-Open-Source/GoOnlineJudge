@@ -5,6 +5,7 @@ import (
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"html/template"
 	"log"
 	"strconv"
 )
@@ -17,12 +18,12 @@ type Problem struct {
 	Special int    `json:"special"bson:"special"`
 	Expire  string `json:"expire"bson:"expire"`
 
-	Title       string `json:"title"bson:"title"`
-	Description string `json:"description"bson:"description"`
-	Input       string `json:"input"bson:"input"`
-	Output      string `json:"output"bson:"output"`
-	Source      string `json:"source"bson:"source"`
-	Hint        string `json:"hint"bson:"hint"`
+	Title       string        `json:"title"bson:"title"`
+	Description template.HTML `json:"description"bson:"description"`
+	Input       template.HTML `json:"input"bson:"input"`
+	Output      template.HTML `json:"output"bson:"output"`
+	Source      string        `json:"source"bson:"source"`
+	Hint        string        `json:"hint"bson:"hint"`
 
 	In  string `json:"in"bson:"in"`
 	Out string `json:"out"bson:"out"`
@@ -50,15 +51,15 @@ func (this *ProblemModel) Expire(pid int, expire string) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Problem").Update(bson.M{"pid": pid, "expire": bson.M{"$lt": expire}}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -70,16 +71,16 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
 	var one Problem
 	err = this.DB.C("Problem").Find(bson.M{"pid": pid}).Select(pDetailSelector).One(&one)
 	if err == mgo.ErrNotFound {
-		return nil, class.NotFoundErr
+		return nil, NotFoundErr
 	} else if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	return &one, nil
@@ -91,27 +92,27 @@ func (this *ProblemModel) Delete(pid int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Problem").Remove(bson.M{"pid": pid})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
 }
 
 // POST /Problem?insert
-func (this *ProblemModel) Insert(one Problem) error {
+func (this *ProblemModel) Insert(one Problem) (int, error) {
 	log.Println("Server ProblemModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return 0, DBErr
 	}
 	defer this.CloseDB()
 
@@ -122,12 +123,12 @@ func (this *ProblemModel) Insert(one Problem) error {
 	one.Expire = one.Create
 	one.Pid, err = this.GetID("Problem")
 	if err != nil {
-		return class.IDErr
+		return 0, IDErr
 	}
 
 	err = this.DB.C("Problem").Insert(&one)
 	if err != nil {
-		return class.OpErr
+		return 0, OpErr
 	}
 
 	// b, err := json.Marshal(map[string]int{
@@ -139,7 +140,7 @@ func (this *ProblemModel) Insert(one Problem) error {
 	// 	return
 	// }
 
-	return nil
+	return one.Pid, nil
 }
 
 // POST /Problem?update/pid?<pid>
@@ -161,15 +162,15 @@ func (this *ProblemModel) Update(pid int, ori Problem) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -181,7 +182,7 @@ func (this *ProblemModel) Status(pid, status int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -189,9 +190,9 @@ func (this *ProblemModel) Status(pid, status int) error {
 	set["status"] = status
 	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$set": set})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -208,20 +209,20 @@ func (this *ProblemModel) Record(pid int, action string) error {
 	case "submit":
 		inc = 0
 	default:
-		return class.ArgsErr
+		return ArgsErr
 	}
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
 	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -233,12 +234,12 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return nil, class.ArgsErr
+		return nil, ArgsErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
@@ -247,7 +248,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	if v, ok := args["offset"]; ok {
 		offset, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Skip(offset)
 	}
@@ -255,7 +256,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	if v, ok := args["limit"]; ok {
 		limit, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Limit(limit)
 	}
@@ -263,7 +264,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	var list []*Problem
 	err = q.All(&list)
 	if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 
 	return list, nil
@@ -275,18 +276,18 @@ func (this *ProblemModel) Count(args map[string]string) (int, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return 0, class.ArgsErr
+		return 0, ArgsErr
 	}
 
 	err = this.OpenDB()
 	if err != nil {
-		return 0, class.DBErr
+		return 0, DBErr
 	}
 	defer this.CloseDB()
 
 	count, err := this.DB.C("Problem").Find(query).Count()
 	if err != nil {
-		return 0, class.QueryErr
+		return 0, QueryErr
 	}
 
 	return count, nil

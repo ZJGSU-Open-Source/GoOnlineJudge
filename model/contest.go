@@ -44,9 +44,9 @@ func (this *ContestModel) Detail(cid int) (*Contest, error) {
 	one := &Contest{}
 	err = this.DB.C("Contest").Find(bson.M{"cid": cid}).Select(cDetailSelector).One(one)
 	if err == mgo.ErrNotFound {
-		return nil, class.NotFoundErr
+		return nil, NotFoundErr
 	} else if err != nil {
-		return nil, class.OpErr
+		return nil, OpErr
 	}
 	return one, nil
 }
@@ -63,9 +63,9 @@ func (this *ContestModel) Delete(cid int) error {
 
 	err = this.DB.C("Contest").Remove(bson.M{"cid": cid})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -90,7 +90,7 @@ func (this *ContestModel) Insert(one Contest) error {
 
 	err = this.DB.C("Contest").Insert(&one)
 	if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	// b, err := json.Marshal(map[string]interface{}{
@@ -101,7 +101,7 @@ func (this *ContestModel) Insert(one Contest) error {
 }
 
 // POST /Contest?update/cid?<cid>
-func (this *ContestModel) Updatew(cid int, ori Contest) error {
+func (this *ContestModel) Update(cid int, ori Contest) error {
 	log.Println("Server ContestModel Update")
 
 	alt := make(map[string]interface{})
@@ -121,9 +121,9 @@ func (this *ContestModel) Updatew(cid int, ori Contest) error {
 
 	err = this.DB.C("Contest").Update(bson.M{"cid": cid}, bson.M{"$set": alt})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -141,9 +141,9 @@ func (this *ContestModel) Status(cid, status int) error {
 
 	err = this.DB.C("Contest").Update(bson.M{"cid": cid}, bson.M{"$set": bson.M{"status": status}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -161,9 +161,9 @@ func (this *ContestModel) Push(cid int, list []int) error {
 
 	err = this.DB.C("Contest").Update(bson.M{"cid": cid}, bson.M{"$addToSet": bson.M{"list": bson.M{"$each": list}}})
 	if err == mgo.ErrNotFound {
-		return class.NotFoundErr
+		return NotFoundErr
 	} else if err != nil {
-		return class.OpErr
+		return OpErr
 	}
 
 	return nil
@@ -175,7 +175,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
-		return nil, class.ArgsErr
+		return nil, ArgsErr
 	}
 
 	err = this.OpenDB()
@@ -189,7 +189,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	if v, ok := args["offset"]; ok {
 		offset, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Skip(offset)
 	}
@@ -197,7 +197,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	if v, ok := args["limit"]; ok {
 		limit, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, class.ArgsErr
+			return nil, ArgsErr
 		}
 		q = q.Limit(limit)
 	}
@@ -205,7 +205,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	var list []*Contest
 	err = q.All(&list)
 	if err != nil {
-		return nil, class.QueryErr
+		return nil, QueryErr
 	}
 
 	return list, nil
