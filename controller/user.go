@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 	"encoding/json"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -36,16 +35,9 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
 	this.Init(w, r)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/layout.tpl", "view/user_signin.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "User Sign In"
 	this.Data["IsUserSignIn"] = true
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -81,16 +73,9 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Sign Up")
 	this.Init(w, r)
 
-	t := template.New("layout.tpl")
-	t, err := t.ParseFiles("view/layout.tpl", "view/user_signup.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "User Sign Up"
 	this.Data["IsUserSignUp"] = true
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -192,22 +177,16 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+
 	this.Data["List"] = solvedList
 	//class.Logger.Debug(solvedList)
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
 	this.Data["Title"] = "User Detail"
 	if uid != "" && uid == this.Uid {
 		this.Data["IsSettings"] = true
 		this.Data["IsSettingsDetail"] = true
 	}
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -221,13 +200,7 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You must login!"
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
@@ -252,18 +225,11 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["List"] = solvedList
 
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/user_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "User Settings"
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsDetail"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -277,13 +243,7 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You must login!"
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
@@ -300,18 +260,11 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["Detail"] = one
 
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/user_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Title"] = "User Edit"
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsEdit"] = true
 
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -363,25 +316,11 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You must login!"
-		t := template.New("layout.tpl")
-		t, err := t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
 		}
-		err = t.Execute(w, this.Data)
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		return
-	}
-
-	var err error
-	t := template.New("layout.tpl")
-	t, err = t.ParseFiles("view/layout.tpl", "view/user_password.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
 		return
 	}
 
@@ -389,7 +328,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsPassword"] = true
 
-	err = t.Execute(w, this.Data)
+	err := this.Execute(w, "view/layout.tpl", "view/user_password.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 400)
 		return

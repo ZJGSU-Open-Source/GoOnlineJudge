@@ -167,3 +167,10 @@ func (this *Controller) GetCodeLen(strLen int) (codeLen int) {
 	codeLen = strLen
 	return
 }
+func (c *Controller) Execute(w io.Writer, tplfiles ...string) error {
+	t, err := ParseFiles(tplfiles...)
+	if err == nil {
+		err = t.Execute(w, c.Data)
+	}
+	return err
+}

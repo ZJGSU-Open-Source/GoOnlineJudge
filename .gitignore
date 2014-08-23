@@ -6,6 +6,7 @@ runner
 # log file
 log
 ce.txt
+log.txt
 #################
 ## Eclipse
 #################

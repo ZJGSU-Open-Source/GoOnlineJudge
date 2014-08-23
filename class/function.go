@@ -55,10 +55,6 @@ func ShowEncrypt(num int) (encrypt string) {
 	return
 }
 
-func NumEqual(a int, b int) (ret bool) {
-	return a == b
-}
-
 func NumAdd(a int, b int) (ret int) {
 	ret = a + b
 	return
@@ -73,7 +69,7 @@ func LargePU(privilege int) bool {
 	return privilege > config.PrivilegePU
 }
 
-func PriToString(privilege int) string {
+func ShowPrivilege(privilege int) string {
 	return privilegeArr[privilege]
 }
 

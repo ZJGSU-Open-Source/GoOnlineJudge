@@ -99,28 +99,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post error", 500)
 		return
 	}
-	this.Data["Problem"] = problemList
 
-	funcMap := map[string]interface{}{
-		"ShowRatio":  class.ShowRatio,
-		"ShowStatus": class.ShowStatus,
-		//"ShowExpire": class.ShowExpire,
-		"NumEqual": class.NumEqual,
-		"NumAdd":   class.NumAdd,
-		"NumSub":   class.NumSub,
-		"LargePU":  class.LargePU,
-	}
-	t := template.New("layout.tpl").Funcs(funcMap)
-	t, err = t.ParseFiles("view/layout.tpl", "view/problem_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Data["Problem"] = problemList
 	this.Data["Privilege"] = this.Privilege
 	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Problem List"
 	this.Data["IsProblem"] = true
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -164,21 +149,9 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.New("layout.tpl").Funcs(template.FuncMap{
-		"ShowRatio":   class.ShowRatio,
-		"ShowSpecial": class.ShowSpecial,
-		"ShowStatus":  class.ShowStatus,
-		"LargePU":     class.LargePU})
-	t, err = t.ParseFiles("view/layout.tpl", "view/problem_detail.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
 	this.Data["Privilege"] = this.Privilege
 	this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-	err = t.Execute(w, this.Data)
+	err = this.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
 		return
@@ -229,14 +202,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 			this.Data["Info"] = "Your source code is too short"
 		}
 		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-
-		t := template.New("layout.tpl")
-		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		err = t.Execute(w, this.Data)
+		err = this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
 			return
