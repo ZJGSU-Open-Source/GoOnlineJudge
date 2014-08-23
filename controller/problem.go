@@ -3,6 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"html/template"
 	"net/http"
 	"os/exec"
@@ -44,25 +45,23 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	args := this.ParseURL(r.URL.String())
 	url := "/problem?list"
-	searchUrl := ""
 
 	// Search
 	if v, ok := args["pid"]; ok {
-		searchUrl += "/pid?" + v
+		url += "/pid?" + v
 		this.Data["SearchPid"] = true
 		this.Data["SearchValue"] = v
 	}
 	if v, ok := args["title"]; ok {
-		searchUrl += "/title?" + v
+		url += "/title?" + v
 		this.Data["SearchTitle"] = true
 		this.Data["SearchValue"] = v
 	}
 	if v, ok := args["source"]; ok {
-		searchUrl += "/source?" + v
+		url += "/source?" + v
 		this.Data["SearchSource"] = true
 		this.Data["SearchValue"] = v
 	}
-	url += searchUrl
 	this.Data["URL"] = url
 
 	// Page
@@ -70,23 +69,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		args["page"] = "1"
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?count"+searchUrl, "application/json", nil)
+	problemModel := model.ProblemModel{}
+	count, err := problemModel.Count(args)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
-	defer response.Body.Close()
 
-	c := make(map[string]int)
-	var count int
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &c)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		count = c["count"]
-	}
 	var pageCount = (count-1)/config.ProblemPerPage + 1
 	page, err := strconv.Atoi(args["page"])
 	if err != nil {
@@ -97,29 +86,20 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	url += "/offset?" + strconv.Itoa((page-1)*config.ProblemPerPage) + "/limit?" + strconv.Itoa(config.ProblemPerPage)
+
+	args["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage)
+	args["limit"] = strconv.Itoa(config.ProblemPerPage)
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
 	}
 
-	//
-	response, err = http.Post(config.PostHost+url, "application/json", nil)
+	problemList, err := problemModel.List(args)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
-	defer response.Body.Close()
-
-	one := make(map[string][]problem)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Problem"] = one["list"]
-	}
+	this.Data["Problem"] = problemList
 
 	funcMap := map[string]interface{}{
 		"ShowRatio":  class.ShowRatio,
@@ -158,22 +138,13 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	one, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
-		return
+		http.Error(w, err.Error(), 500)
 	}
-	defer response.Body.Close()
+	this.Data["Detail"] = one
 
-	var one problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
-	}
 	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse {
 		t := template.New("layout.tpl")
 		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
@@ -232,32 +203,23 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := make(map[string]interface{})
-	one["pid"] = pid
-	one["uid"] = uid
-	one["module"] = config.ModuleP
-	one["mid"] = config.ModuleP
+	var one model.Solution
+	one.Pid = pid
+	one.Uid = uid
+	one.Module = config.ModuleP
+	one.Mid = config.ModuleP
 
-	response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(pid), "application/json", nil)
+	problemModel := model.ProblemModel{}
+	pro, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(w, err.Error(), 500)
 		return
-	}
-	defer response.Body.Close()
-
-	var pro problem
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &pro)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
 	}
 	code := r.FormValue("code")
 
-	one["code"] = code
-	one["length"] = this.GetCodeLen(len(r.FormValue("code")))
-	one["language"], _ = strconv.Atoi(r.FormValue("compiler_id"))
+	one.Code = code
+	one.Length = this.GetCodeLen(len(r.FormValue("code")))
+	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
 		switch {
@@ -281,35 +243,19 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	one["status"] = config.StatusAvailable
-	one["judge"] = config.JudgePD
+	one.Status = config.StatusAvailable
+	one.Judge = config.JudgePD
 
-	reader, err := this.PostReader(&one)
+	solutionModel := model.SolutionModel{}
+	sid, err := solutionModel.Insert(one)
 	if err != nil {
-		http.Error(w, "read error", 500)
+		http.Error(w, err.Error(), 500)
 		return
-	}
-
-	response, err = http.Post(config.PostHost+"/solution?insert", "application/json", reader)
-	if err != nil {
-		http.Error(w, "post error", 500)
-		return
-	}
-	defer response.Body.Close()
-
-	sl := make(map[string]int)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &sl)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-
 	}
 	w.WriteHeader(200)
 
 	go func() {
-		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sl["sid"]), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
 		err = cmd.Run()
 		if err != nil {
 			class.Logger.Debug(err)

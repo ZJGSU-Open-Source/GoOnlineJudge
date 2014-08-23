@@ -3,20 +3,11 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/model"
 	"html/template"
 	"net/http"
 	"strconv"
 )
-
-type news struct {
-	Nid int `json:"nid"bson:"nid"`
-
-	Title   string        `json:"title"bson:"title"`
-	Content template.HTML `json:"content"bson:"content"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
-}
 
 type NewsController struct {
 	class.Controller
@@ -26,23 +17,12 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("News List")
 	this.Init(w, r)
 
-	response, err := http.Post(config.PostHost+"/news?list", "application/json", nil)
+	newsModel := model.NewsModel{}
+	newsList, err := newsModel.List(-1, -1)
 	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "post error", 500)
-		return
+		http.Error(w, err.Error(), 500)
 	}
-	defer response.Body.Close()
-
-	one := make(map[string][]news)
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["News"] = one["list"]
-	}
+	this.Data["News"] = newsList
 
 	t := template.New("layout.tpl").Funcs(template.FuncMap{"ShowStatus": class.ShowStatus})
 	t, err = t.ParseFiles("view/layout.tpl", "view/news_list.tpl")
@@ -72,18 +52,12 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, err := http.Post(config.PostHost+"/news?detail/nid?"+strconv.Itoa(nid), "application/json", nil)
-	defer response.Body.Close()
-
-	var one news
-	if response.StatusCode == 200 {
-		err = this.LoadJson(response.Body, &one)
-		if err != nil {
-			http.Error(w, "load error", 400)
-			return
-		}
-		this.Data["Detail"] = one
+	newsModel := model.NewsModel{}
+	one, err := newsModel.Detail(nid)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
 	}
+	this.Data["Detail"] = one
 
 	if one.Status == config.StatusReverse && this.Privilege != config.PrivilegeAD {
 		t := template.New("layout.tpl")
