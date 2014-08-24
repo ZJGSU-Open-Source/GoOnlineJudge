@@ -38,7 +38,7 @@ func (this *ContestModel) Detail(cid int) (*Contest, error) {
 
 	err := this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 	one := &Contest{}
@@ -57,7 +57,7 @@ func (this *ContestModel) Delete(cid int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -76,7 +76,7 @@ func (this *ContestModel) Insert(one Contest) error {
 	log.Println("Server ContestModel Insert")
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -85,7 +85,7 @@ func (this *ContestModel) Insert(one Contest) error {
 	one.Create = this.GetTime()
 	one.Cid, err = this.GetID("Contest")
 	if err != nil {
-		return class.IDErr
+		return IDErr
 	}
 
 	err = this.DB.C("Contest").Insert(&one)
@@ -115,7 +115,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -135,7 +135,7 @@ func (this *ContestModel) Status(cid, status int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -155,7 +155,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 
 	err := this.OpenDB()
 	if err != nil {
-		return class.DBErr
+		return DBErr
 	}
 	defer this.CloseDB()
 
@@ -180,7 +180,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 
 	err = this.OpenDB()
 	if err != nil {
-		return nil, class.DBErr
+		return nil, DBErr
 	}
 	defer this.CloseDB()
 
