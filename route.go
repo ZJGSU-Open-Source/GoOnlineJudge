@@ -13,9 +13,7 @@ import (
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		c := &controller.NewsController{}
-		m := "List"
-		rv := getReflectValue(w, r)
-		callMethod(c, m, rv)
+		c.List(w, r)
 	}
 }
 
@@ -51,16 +49,12 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 
 func ranklistHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controller.RanklistController{}
-	m := "Index"
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	c.Index(w, r)
 }
 
 func contestlistHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controller.ContestController{}
-	m := "List"
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	c.List(w, r)
 }
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,9 +70,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 //FAQ
 func FAQHandler(w http.ResponseWriter, r *http.Request) {
 	c := &controller.FAQController{}
-	m := "FAQ"
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	c.FAQ(w, r)
 }
 
 //Register User Page,need some privilege.
@@ -86,17 +78,13 @@ func FAQHandler(w http.ResponseWriter, r *http.Request) {
 // Contest
 func contestHandler(w http.ResponseWriter, r *http.Request) {
 	c := &contest.ContestUserContorller{}
-	m := "Register"
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	c.Register(w, r)
 }
 
 // Admin
 func adminHandler(w http.ResponseWriter, r *http.Request) {
 	c := &admin.AdminUserController{}
-	m := "Register"
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
+	c.Register(w, r)
 }
 
 // Common

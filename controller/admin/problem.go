@@ -90,7 +90,6 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Insert")
 	this.Init(w, r)
 
-	//TODO r.body to json
 	one := model.Problem{}
 	one.Title = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
