@@ -33,7 +33,6 @@ Then you can download our source code.
 #Get our code from Github
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git
-git clone https://github.com/ZJGSU-Open-Source/GoServer.git
 ```
 Those source codes file will be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
 ```bash
@@ -45,7 +44,6 @@ mkdir run
 Make sure you hava these directories in your $GOPATH/src:
 
 	GoOnlineJudge/
-	GoServer/
 	RunServer/
 	gopkg.in/
 	ProblemData/
@@ -56,9 +54,6 @@ Now, it's time for compilation.
 cd $GOPATH/src/
 #executabele file GoOnlineJudge
 cd GoOnlineJudge/	
-go build
-cd ../GoServer/
-#executabele file GoServer
 go build			
 cd ../RunServer/
 #executabele file RunServer
@@ -75,8 +70,6 @@ Then you should move 3 executable files runner, compiler and RunServer to GoOnli
 ```bash
 cd $GOPATH/src/GoOnlineJudge/
 ./GoOnlineJudge
-cd ../GoServer/
-./GoServer
 ```
 Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
