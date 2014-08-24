@@ -359,18 +359,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 400)
 			return
 		}
-		//one := make(map[string]interface{})
-
-		//one["pid"] = sol.Pid
-		//one["uid"] = sol.Uid
-		//one["module"] = config.ModuleP
-		//one["mid"] = config.ModuleP
-		//one["code"] = sol.Code
-		//one["length"] = sol.Length
-		//one["language"] = sol.Language
-		//one["status"] = config.StatusAvailable
-		//one["judge"] = config.JudgePD
-		//one["judge"] = config.JudgeRPD
 
 		problemModel := model.ProblemModel{}
 		pro, err := problemModel.Detail(sol.Pid)
@@ -378,34 +366,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 500)
 			return
 		}
-
-		/*
-			reader, err := this.PostReader(&one)
-			if err != nil {
-				http.Error(w, "read error", 500)
-				return
-			}
-
-
-					response, err = http.Post(config.PostHost+"/solution?rejudge/sid?"+strconv.Itoa(sid), "application/json", reader)
-					if err != nil {
-						http.Error(w, "post error", 500)
-						return
-					}
-					defer response.Body.Close()
-
-
-				sl := make(map[string]int)
-				if response.StatusCode == 200 {
-					err = this.LoadJson(response.Body, &sl)
-					if err != nil {
-						http.Error(w, "load error", 400)
-						return
-					}
-
-				}
-				w.WriteHeader(200)
-		*/
 
 		go func() {
 			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
