@@ -8,26 +8,6 @@ import (
 	"strconv"
 )
 
-type solution struct {
-	Sid int `json:"sid"bson:"sid"`
-
-	Pid      int    `json:"pid"bson:"pid"`
-	Uid      string `json:"uid"bson:"uid"`
-	Judge    int    `json:"judge"bson:"judge"`
-	Time     int    `json:"time"bson:"time"`
-	Memory   int    `json:"memory"bson:"memory"`
-	Length   int    `json:"length"bson:"length"`
-	Language int    `json:"language"bson:"language"`
-
-	Module int `json:"module"bson:"module"`
-	Mid    int `json:"mid"bson:"mid"`
-
-	Code string `json:"code"bson:"code"`
-
-	Status int   `json:"status"bson:"status"`
-	Create int64 `json:"create"bson:"create"`
-}
-
 type StatusController struct {
 	Contest
 }

@@ -8,32 +8,8 @@ import (
 	"net/http"
 	"os/exec"
 	"strconv"
+	"strings"
 )
-
-type problem struct {
-	Pid int `json:"pid"bson:"pid"`
-
-	Time    int    `json:"time"bson:"time"`
-	Memory  int    `json:"memory"bson:"memory"`
-	Special int    `json:"special"bson:"special"`
-	Expire  string `json:"expire"bson:"expire"`
-
-	Title       string        `json:"title"bson:"title"`
-	Description template.HTML `json:"description"bson:"description"`
-	Input       template.HTML `json:"input"bson:"input"`
-	Output      template.HTML `json:"output"bson:"output"`
-	Source      string        `json:"source"bson:"source"`
-	Hint        string        `json:"hint"bson:"hint"`
-
-	In  string `json:"in"bson:"in"`
-	Out string `json:"out"bson:"out"`
-
-	Solve  int `json:"solve"bson:"solve"`
-	Submit int `json:"submit"bson:"submit"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:"create"`
-}
 
 type ProblemController struct {
 	class.Controller
@@ -58,6 +34,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		this.Data["SearchValue"] = v
 	}
 	if v, ok := args["source"]; ok {
+		v = strings.Replace(v, "%20", " ", -1)
+		args["source"] = v
 		url += "/source?" + v
 		this.Data["SearchSource"] = true
 		this.Data["SearchValue"] = v

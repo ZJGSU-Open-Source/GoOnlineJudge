@@ -71,7 +71,7 @@ func (this *ContestModel) Delete(cid int) error {
 	return nil
 }
 
-// POST /Contest?insert
+// 插入新的contest，不能指定cid，statu，和create
 func (this *ContestModel) Insert(one Contest) error {
 	log.Logger.Debug("Server ContestModel Insert")
 
@@ -101,7 +101,7 @@ func (this *ContestModel) Insert(one Contest) error {
 	return nil
 }
 
-// POST /Contest?update/cid?<cid>
+// 更新指定cid的contest
 func (this *ContestModel) Update(cid int, ori Contest) error {
 	log.Logger.Debug("Server ContestModel Update")
 
@@ -130,7 +130,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 	return nil
 }
 
-// POST /Contest?status/cid?<cid>/action?<0/2>
+// 更新指定cid的contest的状态，更新状态由参数status指定
 func (this *ContestModel) Status(cid, status int) error {
 	log.Logger.Debug("Server ContestModel Status")
 
@@ -150,7 +150,7 @@ func (this *ContestModel) Status(cid, status int) error {
 	return nil
 }
 
-// POST /Contest?push/cid?<cid>
+// 更新指定cid的contest的问题列表
 func (this *ContestModel) Push(cid int, list []int) error {
 	log.Logger.Debug("Server ContestModel Push")
 
@@ -170,7 +170,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 	return nil
 }
 
-// POST /Contest?list/type?<type>/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/
+//列出由参数args指定所有问题，参数args应该包括type?<type>/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/之一
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	log.Logger.Debug("Server ContestModel List")
 
@@ -212,6 +212,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	return list, nil
 }
 
+//检查参数args，返回一个query和一个error
 func (this *ContestModel) CheckQuery(args map[string]string) (query bson.M, err error) {
 	query = make(bson.M)
 
