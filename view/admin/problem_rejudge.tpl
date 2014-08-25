@@ -19,8 +19,8 @@ $('#search_form').submit( function(e) {
 	var id = $('#id').val();
 	var type = $('#type').val();
 
-	if (id == ""){
-		alert("ID must not be empty!")
+	if (id == "") {
+		alert("id should not be empty!")
 	}
 	
 	$.ajax({
@@ -29,8 +29,8 @@ $('#search_form').submit( function(e) {
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
-			if(json.pid != null) {
-				alert(json.pid);
+			if(json.uid != null) {
+				alert(json.uid);
 			}
 		},
 		success:function(response){
