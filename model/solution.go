@@ -21,6 +21,7 @@ type Solution struct {
 	Length   int    `json:"length"bson:"length"`
 	Language int    `json:"language"bson:"language"`
 
+	//module指定solution提交类型，有problem,contest,exercise三种类型
 	Module int `json:"module"bson:"module"`
 	Mid    int `json:"mid"bson:"mid"`
 
@@ -38,7 +39,7 @@ type SolutionModel struct {
 	class.Model
 }
 
-// POST /Solution?detail/sid?<sid>
+// 查询指定sid的solution的所有详细信息
 func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 	log.Logger.Debug("Server SolutionModel Detail")
 
@@ -59,7 +60,7 @@ func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 	return &one, nil
 }
 
-// POST /Solution?delete/sid?<sid>
+// 删除指定sid的solution
 func (this *SolutionModel) Delete(sid int) error {
 	log.Logger.Debug("Server SolutionModel Delete")
 
@@ -79,7 +80,7 @@ func (this *SolutionModel) Delete(sid int) error {
 	return nil
 }
 
-// POST /Solution?insert
+// 插入一个新的solution，不能指定create和sid
 func (this *SolutionModel) Insert(one Solution) (int, error) {
 	log.Logger.Debug("Server SolutionModel Insert")
 
@@ -108,7 +109,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 	return one.Sid, nil
 }
 
-// POST /Solution?update/sid?<sid>
+// 更新指定sid的solution，可更新参数包括judge、time、memory三个
 func (this *SolutionModel) Update(sid int, ori Solution) error {
 	log.Logger.Debug("Server SolutionModel Update")
 
@@ -133,7 +134,7 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 	return nil
 }
 
-// POST /Solution?status/sid?<sid>/action?<0/1/2>
+// 更新指定sid的solution状态，状态值由status指定
 func (this *SolutionModel) Status(sid, status int) error {
 	log.Logger.Debug("Server SolutionModel Status")
 
@@ -153,7 +154,7 @@ func (this *SolutionModel) Status(sid, status int) error {
 	return nil
 }
 
-// POST /Solution?count/pid?<pid>/uid?<uid>/module?<module>/mid?<mid>/action?<accept/solve/submit>
+// 计数由参数args指定的solution个数，参数包括pid、uid、module、mid、action
 func (this *SolutionModel) Count(args map[string]string) (int, error) {
 	log.Logger.Debug("Server SolutionModel Count")
 
@@ -197,7 +198,7 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 	return count, nil
 }
 
-// POST /Solution?achieve/uid?<uid>
+// 获取指定uid，judge状态为AC的solutions的相异的pid
 func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 	log.Logger.Debug("Server SolutionModel Achieve")
 
@@ -216,8 +217,8 @@ func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 	return list, nil
 }
 
-// POST /Solution?list/offset?<offset>/limit?<limit>/sid?<sid>/pid?<pid>/uid?<uid>/language?<language>/judge?<judge>/module?<module>/mid?<mid>/from?<from>/sort?<resort/sort>
-//默认按sid从大到小排,resort可以设置为从小到大
+// 列出符合参数args的Solution，参数包括offset、limit、sid、pid、uid、language、judge、module、mid、from、sort
+//默认按sid从大到小排,sort参数设为resort可以设置为从小到大
 func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
 	log.Logger.Debug("Server SolutionModel List")
 
