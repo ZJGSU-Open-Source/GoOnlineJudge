@@ -134,7 +134,7 @@ func (this *NewsModel) Status(nid, status int) error {
 	return nil
 }
 
-// POST /News?list/offset?<offset>/limit?<limit>
+// 列出由offset，limit指定的news
 func (this *NewsModel) List(offset, limit int) ([]*News, error) {
 	log.Logger.Debug("Server NewsModel List")
 

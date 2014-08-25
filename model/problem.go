@@ -42,7 +42,7 @@ type ProblemModel struct {
 	class.Model
 }
 
-// POST /Problem?expire/pid?<pid>
+// 修改指定pid的problem的expire值
 func (this *ProblemModel) Expire(pid int, expire string) error {
 	log.Logger.Debug("Server ProblemModel Expire")
 
@@ -65,7 +65,7 @@ func (this *ProblemModel) Expire(pid int, expire string) error {
 	return nil
 }
 
-// POST /Problem?detail/pid?<pid>
+// 查询指定pid的problem的详细信息
 func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 	log.Logger.Debug("Server ProblemModel Detail")
 
@@ -86,7 +86,7 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 	return &one, nil
 }
 
-// POST /Problem?delete/pid?<pid>
+// 删除指定pid的problem
 func (this *ProblemModel) Delete(pid int) error {
 	log.Logger.Debug("Server ProblemModel Delete")
 
@@ -106,7 +106,8 @@ func (this *ProblemModel) Delete(pid int) error {
 	return nil
 }
 
-// POST /Problem?insert
+// 插入一个新的problem，不可指定solve,submit,status,create,exprie和pid参数，
+// 成功则返回新的pid
 func (this *ProblemModel) Insert(one Problem) (int, error) {
 	log.Logger.Debug("Server ProblemModel Insert")
 
@@ -143,7 +144,7 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 	return one.Pid, nil
 }
 
-// POST /Problem?update/pid?<pid>
+// 更新指定pid的problem
 func (this *ProblemModel) Update(pid int, ori Problem) error {
 	log.Logger.Debug("Server ProblemModel Update")
 
@@ -176,7 +177,7 @@ func (this *ProblemModel) Update(pid int, ori Problem) error {
 	return nil
 }
 
-// POST /Problem?status/pid?<pid>/action?<0/1/2>
+// 更新指定pid的problem的状态，状态值由status指定
 func (this *ProblemModel) Status(pid, status int) error {
 	log.Logger.Debug("Server ProblemModel Status")
 
@@ -198,7 +199,7 @@ func (this *ProblemModel) Status(pid, status int) error {
 	return nil
 }
 
-// POST /Problem?record/pid?<pid>/action?<solve/submit>
+// 记录problem的solve和submit，每次记录时submit值总会加1，而slolve则由action指定是否记录
 func (this *ProblemModel) Record(pid int, action string) error {
 	log.Logger.Debug("Server ProblemModel Record")
 
@@ -228,7 +229,7 @@ func (this *ProblemModel) Record(pid int, action string) error {
 	return nil
 }
 
-// POST /Problem?list/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/source?<source>
+// 列出符合参数args的所有problem，offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/source?<source>
 func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	log.Logger.Debug("Server ProblemModel List")
 
@@ -270,7 +271,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	return list, nil
 }
 
-// POST /Problem?count/title?<title>/source?<source>/status?<status>
+// 计数符合参数args的problem的个数，count/title?<title>/source?<source>/status?<status>
 func (this *ProblemModel) Count(args map[string]string) (int, error) {
 	log.Logger.Debug("ProblemModel Count")
 
@@ -293,6 +294,7 @@ func (this *ProblemModel) Count(args map[string]string) (int, error) {
 	return count, nil
 }
 
+//检查查询参数args，成功则返回一个query
 func (this *ProblemModel) CheckQuery(args map[string]string) (query bson.M, err error) {
 	query = make(bson.M)
 
