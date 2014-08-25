@@ -94,13 +94,13 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	one.Title = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
 	if err != nil {
-		http.Error(w, "conv error", 400)
+		http.Error(w, "The value 'Time' is neither too short nor too large", 400)
 		return
 	}
 	one.Time = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
-		http.Error(w, "conv error", 400)
+		http.Error(w, "The value 'Memory' is neither too short nor too large", 400)
 		return
 	}
 	one.Memory = memory
@@ -253,13 +253,13 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	one.Title = r.FormValue("title")
 	time, err := strconv.Atoi(r.FormValue("time"))
 	if err != nil {
-		http.Error(w, "conv error", 500)
+		http.Error(w, "The value 'Time' is neither too short nor too large", 500)
 		return
 	}
 	one.Time = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
-		http.Error(w, "conv error", 500)
+		http.Error(w, "The value 'memory' is neither too short nor too large", 500)
 		return
 	}
 	one.Memory = memory
@@ -357,6 +357,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			class.Logger.Debug(err)
 			http.Error(w, err.Error(), 400)
+			ok, hint["uid"] = 0, "Solution does not exist!"
 			return
 		}
 
@@ -372,6 +373,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			err = cmd.Run()
 			if err != nil {
 				class.Logger.Debug(err)
+				return
 			}
 		}()
 	}
