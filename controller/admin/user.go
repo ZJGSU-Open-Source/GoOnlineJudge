@@ -128,6 +128,8 @@ func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
 		privilege = config.PrivilegeAD
 	case "TC":
 		privilege = config.PrivilegeTC
+	case "PU":
+		privilege = config.PrivilegePU
 	default:
 		http.Error(w, "args error", 400)
 	}
