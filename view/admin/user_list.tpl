@@ -26,7 +26,7 @@
 <form accept-charset="UTF-8" id="search_form">
 Add Admin: <input id="user" name="user" size="20" type="text">
 <select id="type" name="type">
-<option value="SB">Source broswer</option>
+<option value="TC">Teacher</option>
 <option value="Admin">Admin</option>
 </select>
 <input name="commit" type="submit" value="Add">
@@ -61,10 +61,9 @@ $('.admin_user_delete').on('click', function() {
 	if (ret == true) {
 		$.ajax({
 			type: 'POST',
-			url: '/admin/user?privilege/pu/uid?' + uid,
+			url: '/admin/user?privilege/type?'+'PU'+'/uid?' + uid,
 			data:$(this).serialize(),
 			error: function(response) {
-				//alert('failed!');
 				var json = eval('('+response.responseText+')');
 				if (json.uid != null) {
 					alert(json.uid);
