@@ -4,12 +4,8 @@ import (
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	"GoOnlineJudge/controller/contest"
-	//"GoOnlineJudge/model"
-	//"encoding/json"
-	//"log"
 	"net/http"
 	"reflect"
-	//"strconv"
 	"strings"
 )
 
@@ -40,52 +36,6 @@ func problemHandler(w http.ResponseWriter, r *http.Request) {
 		callMethod(c, m, rv)
 	}
 }
-
-/*
-func solutionHandler(w http.ResponseWriter, r *http.Request) {
-	args := ParseURL(r.URL.String())
-
-	log.Println(r.URL.String())
-	log.Println(args["solution"])
-
-	solutionModel := model.SolutionModel{}
-	sid, err := strconv.Atoi(args["sid"])
-
-	switch args["solution"] {
-	case "detail":
-		solution, err := solutionModel.Detail(sid)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-
-		b, err := json.Marshal(&solution)
-		if err != nil {
-			http.Error(w, "json error", 500)
-			return
-		}
-
-		w.WriteHeader(200)
-		w.Write(b)
-
-	case "delete":
-		solution, err := solutionModel.Delete(sid)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		b, err := json.Marshal(&solution)
-		if err != nil {
-			http.Error(w, "json error", 500)
-			return
-		}
-
-		w.WriteHeader(200)
-		w.Write(b)
-
-	}
-}
-*/
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
 	args := ParseURL(r.URL.String())

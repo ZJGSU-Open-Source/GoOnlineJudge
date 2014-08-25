@@ -20,6 +20,5 @@ func main() {
 
 	http.HandleFunc("/admin/", adminHandler)
 
-	//http.HandleFunc("/solution", solutionHandler)
 	http.ListenAndServe(":8080", nil)
 }
