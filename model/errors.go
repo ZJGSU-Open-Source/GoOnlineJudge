@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-const (
+var (
 	//数据库打开错误
 	DBErr = errors.New("DB Open Error")
 
