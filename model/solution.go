@@ -40,7 +40,6 @@ type SolutionModel struct {
 
 // POST /Solution?detail/sid?<sid>
 func (this *SolutionModel) Detail(sid int) (*Solution, error) {
-	//class.Logger.Debug("Server SolutionModel Detail")
 	log.Logger.Debug("Server SolutionModel Detail")
 
 	err := this.OpenDB()
