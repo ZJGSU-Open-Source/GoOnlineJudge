@@ -9,24 +9,6 @@ import (
 	"strconv"
 )
 
-type user struct {
-	Uid string `json:"uid"bson:"uid"`
-	Pwd string `json:"pwd"bson:"pwd"`
-
-	Nick   string `json:"nick"bson:"nick"`
-	Mail   string `json:"mail"bson:"mail"`
-	School string `json:"school"bson:"school"`
-	Motto  string `json:"motto"bson:"motto"`
-
-	Privilege int `json:"privilege"bson:"privilege"`
-
-	Solve  int `json:"solve"bson:"solve"`
-	Submit int `json:"submit"bson:"submit"`
-
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
-}
-
 type UserController struct {
 	class.Controller
 }

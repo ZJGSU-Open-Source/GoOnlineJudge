@@ -4,10 +4,25 @@ import (
 	"errors"
 )
 
-var DBErr = errors.New("DB Open Error")
-var ArgsErr = errors.New("Args Error")
-var NotFoundErr = errors.New("Not Found")
-var OpErr = errors.New("Operat Error")
-var IDErr = errors.New("Get ID Error")
-var QueryErr = errors.New("Query Error")
-var EncryptErr = errors.New("Encrypt Error")
+const (
+	//数据库打开错误
+	DBErr = errors.New("DB Open Error")
+
+	//函数参数错误
+	ArgsErr = errors.New("Args Error")
+
+	//没有查询到指定数据
+	NotFoundErr = errors.New("Not Found")
+
+	//更新错误
+	OpErr = errors.New("Operat Error")
+
+	//ID生成错误
+	IDErr = errors.New("Get ID Error")
+
+	//查询或查询参数错误
+	QueryErr = errors.New("Query Error")
+
+	//密码加密错误
+	EncryptErr = errors.New("Encrypt Error")
+)

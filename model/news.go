@@ -25,7 +25,7 @@ type NewsModel struct {
 	class.Model
 }
 
-// POST /News?detail/nid?<nid>
+// 获取指定nid的news
 func (this *NewsModel) Detail(nid int) (*News, error) {
 	log.Logger.Debug("Server NewsModel Detail")
 
@@ -45,7 +45,7 @@ func (this *NewsModel) Detail(nid int) (*News, error) {
 	return one, nil
 }
 
-// POST /News?delete/nid?<nid>
+// 删除指定nid的news
 func (this *NewsModel) Delete(nid int) error {
 	log.Logger.Debug("Server NewsModel Delete")
 
@@ -65,7 +65,7 @@ func (this *NewsModel) Delete(nid int) error {
 	return nil
 }
 
-// POST /News?insert
+// 插入一个新的news，不能指定status和create
 func (this *NewsModel) Insert(one News) error {
 	log.Logger.Debug("Server NewsModel Insert")
 
@@ -90,7 +90,7 @@ func (this *NewsModel) Insert(one News) error {
 	return nil
 }
 
-// POST /News?update/nid?<nid>
+// 更新指定nid的news
 func (this *NewsModel) Update(nid int, ori News) error {
 	log.Logger.Debug("Server NewsModel Update")
 
@@ -114,7 +114,7 @@ func (this *NewsModel) Update(nid int, ori News) error {
 	return nil
 }
 
-// POST /News?status/nid?<nid>/action?<0/2>
+// 更新指定的news的status
 func (this *NewsModel) Status(nid, status int) error {
 	log.Logger.Debug("Server NewsModel Status")
 
@@ -134,7 +134,7 @@ func (this *NewsModel) Status(nid, status int) error {
 	return nil
 }
 
-// POST /News?list/offset?<offset>/limit?<limit>
+// 列出由offset，limit指定的news
 func (this *NewsModel) List(offset, limit int) ([]*News, error) {
 	log.Logger.Debug("Server NewsModel List")
 
