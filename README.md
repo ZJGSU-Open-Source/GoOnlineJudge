@@ -20,10 +20,6 @@ You can get an api documentation from [godoc](http://godoc.org/gopkg.in/mgo.v2)
 
 + Also you should have C/C++ compiler g++ installed to support cpp source code compilation.
 ```bash
-sudo apt-get install g++
-```
-Or
-```bash
 sudo apt-get install build-essential
 ```
 
@@ -31,15 +27,18 @@ sudo apt-get install build-essential
 Then you can download our source code.
 ```bash
 #Get our code from Github
-git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git
-git clone https://github.com/ZJGSU-Open-Source/RunServer.git
+git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
+git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
+git clone https://github.com/sakeven/golog.git $GOPATH/src/golog
 ```
-Those source codes file will be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
+Those source codes file should be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
 ```bash
 #directory for problem set
 mkdir ProblemData
 #directory for running user's code
-mkdir run	
+mkdir run
+#directory for log
+mkdir log
 ```
 Make sure you hava these directories in your $GOPATH/src:
 
@@ -48,23 +47,17 @@ Make sure you hava these directories in your $GOPATH/src:
 	gopkg.in/
 	ProblemData/
 	run/
+	log/
+	golog/
 
 Now, it's time for compilation.
 ```bash
 cd $GOPATH/src/
-#executabele file GoOnlineJudge
 cd GoOnlineJudge/	
 go build			
 cd ../RunServer/
-#executabele file RunServer
-go build			
-cd CJudger/
-#executabele file runner
-g++ runner.cc -o runner 
-#executabele file compiler
-g++ compiler.cc -o compiler 
+make
 ```
-Then you should move 3 executable files runner, compiler and RunServer to GoOnlineJudge/.
 
 ##Run
 ```bash
