@@ -1,11 +1,11 @@
 package model
 
 import (
+	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 	"strconv"
 )
 
@@ -36,7 +36,7 @@ type UserModel struct {
 
 // POST /User?login
 func (this *UserModel) Login(uid, pwd string) (*User, error) {
-	log.Println("Server UserModel Login")
+	log.Logger.Debug("Server UserModel Login")
 
 	var err error
 	pwd, err = this.EncryptPassword(pwd)
@@ -59,7 +59,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	}
 
 	if pwd == alt.Pwd {
-		log.Println("Server UserModel Login Successfully")
+		log.Logger.Debug("Server UserModel Login Successfully")
 		return &User{
 			Uid:       alt.Uid,
 			Nick:      alt.Nick,
@@ -67,7 +67,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 			Status:    alt.Status,
 		}, nil
 	}
-	log.Println("Server UserModel Login Failed")
+	log.Logger.Debug("Server UserModel Login Failed")
 	return &User{
 		Uid:       "",
 		Nick:      "",
@@ -79,7 +79,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 // POST /User?logout
 //这个函数貌似没干什么事啊==
 func (this *UserModel) Logout() {
-	log.Println("Server UserModel Logout")
+	log.Logger.Debug("Server UserModel Logout")
 
 	// var one User
 	// err := this.LoadJson(r.Body, &one)
@@ -93,7 +93,7 @@ func (this *UserModel) Logout() {
 
 // POST /User?password/uid?<uid>
 func (this *UserModel) Password(uid, pwd string) error {
-	log.Println("Server UserModel Password")
+	log.Logger.Debug("Server UserModel Password")
 
 	pwd, err := this.EncryptPassword(pwd)
 	if err != nil {
@@ -121,7 +121,7 @@ func (this *UserModel) Password(uid, pwd string) error {
 
 // POST /User?privilege/uid?<uid>
 func (this *UserModel) Privilege(uid string, privilege int) error {
-	log.Println("Server UserModel Privilege")
+	log.Logger.Debug("Server UserModel Privilege")
 
 	alt := make(map[string]interface{})
 	alt["privilege"] = privilege
@@ -144,7 +144,7 @@ func (this *UserModel) Privilege(uid string, privilege int) error {
 
 // POST /User?detail/uid?<uid>
 func (this *UserModel) Detail(uid string) (*User, error) {
-	log.Println("Server UserModel Detail")
+	log.Logger.Debug("Server UserModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -165,7 +165,7 @@ func (this *UserModel) Detail(uid string) (*User, error) {
 
 // POST /User?delete/uid?<uid>
 func (this *UserModel) Delete(uid string) error {
-	log.Println("Server UserModel Delete")
+	log.Logger.Debug("Server UserModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -185,7 +185,7 @@ func (this *UserModel) Delete(uid string) error {
 
 // POST /User?insert
 func (this *UserModel) Insert(one User) error {
-	log.Println("Server UserModel Insert")
+	log.Logger.Debug("Server UserModel Insert")
 
 	var err error
 	one.Pwd, err = this.EncryptPassword(one.Pwd)
@@ -221,7 +221,7 @@ func (this *UserModel) Insert(one User) error {
 
 // POST /User?update/uid?<uid>
 func (this *UserModel) Update(uid string, ori User) error {
-	log.Println("Server UserModel Update")
+	log.Logger.Debug("Server UserModel Update")
 
 	alt := make(map[string]interface{})
 	alt["nick"] = ori.Nick
@@ -247,7 +247,7 @@ func (this *UserModel) Update(uid string, ori User) error {
 
 // POST /User?status/uid?<uid>
 func (this *UserModel) Status(uid string) error {
-	log.Println("Server UserModel Status")
+	log.Logger.Debug("Server UserModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -267,7 +267,7 @@ func (this *UserModel) Status(uid string) error {
 
 // POST /User?record/uid?<uid>/action?<solve/submit>
 func (this *UserModel) Record(uid, action string) error {
-	log.Println("Server UserModel Submit")
+	log.Logger.Debug("Server UserModel Submit")
 
 	var inc int
 	switch action {
@@ -297,7 +297,7 @@ func (this *UserModel) Record(uid, action string) error {
 
 // POST /User?list/offset?<offset>/limit?<limit>/uid?<uid>/nick?<nick>
 func (this *UserModel) List(args map[string]string) ([]*User, error) {
-	log.Println("Server UserModel List")
+	log.Logger.Debug("Server UserModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

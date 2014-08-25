@@ -44,7 +44,7 @@ const (
 
 const (
 	ModuleNA = 0 //None
-	ModuleP  = 1 //None
+	ModuleP  = 1 //Problem
 	ModuleC  = 2 //Contest
 	ModuleE  = 3 //Exercise
 )

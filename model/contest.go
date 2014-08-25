@@ -1,11 +1,11 @@
 package model
 
 import (
+	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 	"strconv"
 )
 
@@ -34,7 +34,7 @@ type ContestModel struct {
 
 // 参数cid，返回指定cid的contest
 func (this *ContestModel) Detail(cid int) (*Contest, error) {
-	log.Println("Server ContestModel Detail")
+	log.Logger.Debug("Server ContestModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -53,7 +53,7 @@ func (this *ContestModel) Detail(cid int) (*Contest, error) {
 
 // 删除指定cid的contest
 func (this *ContestModel) Delete(cid int) error {
-	log.Println("Server ContestModel Delete")
+	log.Logger.Debug("Server ContestModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -73,7 +73,8 @@ func (this *ContestModel) Delete(cid int) error {
 
 // POST /Contest?insert
 func (this *ContestModel) Insert(one Contest) error {
-	log.Println("Server ContestModel Insert")
+	log.Logger.Debug("Server ContestModel Insert")
+
 	err := this.OpenDB()
 	if err != nil {
 		return DBErr
@@ -102,7 +103,7 @@ func (this *ContestModel) Insert(one Contest) error {
 
 // POST /Contest?update/cid?<cid>
 func (this *ContestModel) Update(cid int, ori Contest) error {
-	log.Println("Server ContestModel Update")
+	log.Logger.Debug("Server ContestModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -131,7 +132,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 
 // POST /Contest?status/cid?<cid>/action?<0/2>
 func (this *ContestModel) Status(cid, status int) error {
-	log.Println("Server ContestModel Status")
+	log.Logger.Debug("Server ContestModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -151,7 +152,7 @@ func (this *ContestModel) Status(cid, status int) error {
 
 // POST /Contest?push/cid?<cid>
 func (this *ContestModel) Push(cid int, list []int) error {
-	log.Println("Server ContestModel Push")
+	log.Logger.Debug("Server ContestModel Push")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -171,7 +172,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 
 // POST /Contest?list/type?<type>/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
-	log.Println("Server ContestModel List")
+	log.Logger.Debug("Server ContestModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

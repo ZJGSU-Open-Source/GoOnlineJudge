@@ -1,12 +1,12 @@
 package model
 
 import (
+	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"html/template"
-	"log"
 )
 
 type News struct {
@@ -27,7 +27,7 @@ type NewsModel struct {
 
 // POST /News?detail/nid?<nid>
 func (this *NewsModel) Detail(nid int) (*News, error) {
-	log.Println("Server NewsModel Detail")
+	log.Logger.Debug("Server NewsModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -47,7 +47,7 @@ func (this *NewsModel) Detail(nid int) (*News, error) {
 
 // POST /News?delete/nid?<nid>
 func (this *NewsModel) Delete(nid int) error {
-	log.Println("Server NewsModel Delete")
+	log.Logger.Debug("Server NewsModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -67,7 +67,7 @@ func (this *NewsModel) Delete(nid int) error {
 
 // POST /News?insert
 func (this *NewsModel) Insert(one News) error {
-	log.Println("Server NewsModel Insert")
+	log.Logger.Debug("Server NewsModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -92,7 +92,7 @@ func (this *NewsModel) Insert(one News) error {
 
 // POST /News?update/nid?<nid>
 func (this *NewsModel) Update(nid int, ori News) error {
-	log.Println("Server NewsModel Update")
+	log.Logger.Debug("Server NewsModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -116,7 +116,7 @@ func (this *NewsModel) Update(nid int, ori News) error {
 
 // POST /News?status/nid?<nid>/action?<0/2>
 func (this *NewsModel) Status(nid, status int) error {
-	log.Println("Server NewsModel Status")
+	log.Logger.Debug("Server NewsModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -136,7 +136,7 @@ func (this *NewsModel) Status(nid, status int) error {
 
 // POST /News?list/offset?<offset>/limit?<limit>
 func (this *NewsModel) List(offset, limit int) ([]*News, error) {
-	log.Println("Server NewsModel List")
+	log.Logger.Debug("Server NewsModel List")
 
 	err := this.OpenDB()
 	if err != nil {
