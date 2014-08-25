@@ -1,12 +1,12 @@
 package model
 
 import (
+	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"html/template"
-	"log"
 	"strconv"
 )
 
@@ -44,7 +44,7 @@ type ProblemModel struct {
 
 // POST /Problem?expire/pid?<pid>
 func (this *ProblemModel) Expire(pid int, expire string) error {
-	log.Println("Server ProblemModel Expire")
+	log.Logger.Debug("Server ProblemModel Expire")
 
 	alt := make(map[string]interface{})
 	alt["expire"] = expire
@@ -67,7 +67,7 @@ func (this *ProblemModel) Expire(pid int, expire string) error {
 
 // POST /Problem?detail/pid?<pid>
 func (this *ProblemModel) Detail(pid int) (*Problem, error) {
-	log.Println("Server ProblemModel Detail")
+	log.Logger.Debug("Server ProblemModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -88,7 +88,7 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 
 // POST /Problem?delete/pid?<pid>
 func (this *ProblemModel) Delete(pid int) error {
-	log.Println("Server ProblemModel Delete")
+	log.Logger.Debug("Server ProblemModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -108,7 +108,7 @@ func (this *ProblemModel) Delete(pid int) error {
 
 // POST /Problem?insert
 func (this *ProblemModel) Insert(one Problem) (int, error) {
-	log.Println("Server ProblemModel Insert")
+	log.Logger.Debug("Server ProblemModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -145,7 +145,7 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 
 // POST /Problem?update/pid?<pid>
 func (this *ProblemModel) Update(pid int, ori Problem) error {
-	log.Println("Server ProblemModel Update")
+	log.Logger.Debug("Server ProblemModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -178,7 +178,7 @@ func (this *ProblemModel) Update(pid int, ori Problem) error {
 
 // POST /Problem?status/pid?<pid>/action?<0/1/2>
 func (this *ProblemModel) Status(pid, status int) error {
-	log.Println("Server ProblemModel Status")
+	log.Logger.Debug("Server ProblemModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -200,7 +200,7 @@ func (this *ProblemModel) Status(pid, status int) error {
 
 // POST /Problem?record/pid?<pid>/action?<solve/submit>
 func (this *ProblemModel) Record(pid int, action string) error {
-	log.Println("Server ProblemModel Record")
+	log.Logger.Debug("Server ProblemModel Record")
 
 	var inc int
 	switch action {
@@ -230,7 +230,7 @@ func (this *ProblemModel) Record(pid int, action string) error {
 
 // POST /Problem?list/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/source?<source>
 func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
-	log.Println("Server ProblemModel List")
+	log.Logger.Debug("Server ProblemModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
@@ -272,7 +272,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 
 // POST /Problem?count/title?<title>/source?<source>/status?<status>
 func (this *ProblemModel) Count(args map[string]string) (int, error) {
-	log.Println("ProblemModel Count")
+	log.Logger.Debug("ProblemModel Count")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

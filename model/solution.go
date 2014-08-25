@@ -1,11 +1,11 @@
 package model
 
 import (
+	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 	"strconv"
 	"time"
 )
@@ -40,7 +40,8 @@ type SolutionModel struct {
 
 // POST /Solution?detail/sid?<sid>
 func (this *SolutionModel) Detail(sid int) (*Solution, error) {
-	log.Println("Server SolutionModel Detail")
+	//class.Logger.Debug("Server SolutionModel Detail")
+	log.Logger.Debug("Server SolutionModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -61,7 +62,7 @@ func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 
 // POST /Solution?delete/sid?<sid>
 func (this *SolutionModel) Delete(sid int) error {
-	log.Println("Server SolutionModel Delete")
+	log.Logger.Debug("Server SolutionModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -81,7 +82,7 @@ func (this *SolutionModel) Delete(sid int) error {
 
 // POST /Solution?insert
 func (this *SolutionModel) Insert(one Solution) (int, error) {
-	log.Println("Server SolutionModel Insert")
+	log.Logger.Debug("Server SolutionModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -110,7 +111,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 
 // POST /Solution?update/sid?<sid>
 func (this *SolutionModel) Update(sid int, ori Solution) error {
-	log.Println("Server SolutionModel Update")
+	log.Logger.Debug("Server SolutionModel Update")
 
 	alt := make(map[string]interface{})
 	alt["judge"] = ori.Judge
@@ -135,7 +136,7 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 
 // POST /Solution?status/sid?<sid>/action?<0/1/2>
 func (this *SolutionModel) Status(sid, status int) error {
-	log.Println("Server SolutionModel Status")
+	log.Logger.Debug("Server SolutionModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -155,7 +156,7 @@ func (this *SolutionModel) Status(sid, status int) error {
 
 // POST /Solution?count/pid?<pid>/uid?<uid>/module?<module>/mid?<mid>/action?<accept/solve/submit>
 func (this *SolutionModel) Count(args map[string]string) (int, error) {
-	log.Println("Server SolutionModel Count")
+	log.Logger.Debug("Server SolutionModel Count")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
@@ -199,7 +200,7 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 
 // POST /Solution?achieve/uid?<uid>
 func (this *SolutionModel) Achieve(uid string) ([]int, error) {
-	log.Println("Server SolutionModel Achieve")
+	log.Logger.Debug("Server SolutionModel Achieve")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -217,9 +218,9 @@ func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 }
 
 // POST /Solution?list/offset?<offset>/limit?<limit>/sid?<sid>/pid?<pid>/uid?<uid>/language?<language>/judge?<judge>/module?<module>/mid?<mid>/from?<from>/sort?<resort/sort>
-//默认按sid从大到小拍,resort可以设置为从小到大
+//默认按sid从大到小排,resort可以设置为从小到大
 func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
-	log.Println("Server SolutionModel List")
+	log.Logger.Debug("Server SolutionModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
