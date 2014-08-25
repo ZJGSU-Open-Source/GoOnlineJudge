@@ -1,7 +1,7 @@
 package config
 
 //server
-const PostHost = "http://127.0.0.1:8888"
+const PostHost = "http://127.0.0.1:8080"
 const CookieExpires = 1800
 const Datapath = "../ProblemData/"
 
