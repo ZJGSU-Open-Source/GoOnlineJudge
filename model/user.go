@@ -267,18 +267,8 @@ func (this *UserModel) Status(uid string) error {
 }
 
 // POST /User?record/uid?<uid>/action?<solve/submit>
-func (this *UserModel) Record(uid, action string) error {
+func (this *UserModel) Record(uid, action string, rejudge int) error {
 	log.Logger.Debug("Server UserModel Submit")
-
-	var inc int
-	switch action {
-	case "solve":
-		inc = 1
-	case "submit":
-		inc = 0
-	default:
-		return ArgsErr
-	}
 
 	err := this.OpenDB()
 	if err != nil {
@@ -286,13 +276,29 @@ func (this *UserModel) Record(uid, action string) error {
 	}
 	defer this.CloseDB()
 
-	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
+	var inc int
+	switch action {
+	case "solve":
+		inc = 1
+	case "submit":
+		inc = 0
+	case "del":
+		inc = -1
+	default:
+		return ArgsErr
+	}
+
+	if rejudge == 1 {
+		err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 0}})
+	} else if rejudge == 0 {
+		err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
+	}
+
 	if err == mgo.ErrNotFound {
 		return NotFoundErr
 	} else if err != nil {
 		return OpErr
 	}
-
 	return nil
 }
 

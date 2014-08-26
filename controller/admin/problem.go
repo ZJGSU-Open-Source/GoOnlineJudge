@@ -369,7 +369,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			sid := list[i].Sid
 
 			go func() {
-				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(1)) //Run Judge
 				err = cmd.Run()
 				if err != nil {
 					class.Logger.Debug(err)
@@ -405,7 +405,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		}
 
 		go func() {
-			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(1)) //Run Judge
 			err = cmd.Run()
 			if err != nil {
 				class.Logger.Debug(err)
