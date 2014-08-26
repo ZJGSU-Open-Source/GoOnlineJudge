@@ -17,7 +17,7 @@
 			<div class="field">
 				<label for="user_mail">Email</label>
 				<font id="user_warning_mail" color="red"></font><br>
-				<input id="user_mail" name="user[mail]" size="30" type="text" value="{{.Mail}}">	
+				<input id="user_mail" name="user[mail]" size="30" type="email" value="{{.Mail}}">	
 			</div>
 			<div class="field">
 				<label for="user_school">School</label>

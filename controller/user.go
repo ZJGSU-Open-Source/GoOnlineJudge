@@ -107,8 +107,8 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		one.Uid = uid
 		one.Nick = nick
 		one.Pwd = pwd
-		//one["privilege"] = config.PrivilegePU
-		one.Privilege = config.PrivilegeAD
+		one["privilege"] = config.PrivilegePU
+		//one.Privilege = config.PrivilegeAD
 
 		err := userModel.Insert(one)
 		if err != nil {

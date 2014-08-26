@@ -13,7 +13,7 @@
         </tr>
         <tr>
           <th>Email</th>
-          <td>{{.Mail}}</td>
+          <td><a href="mailto:{{.Mail}}">{{.Mail}}</a></td>
         </tr>
         <tr>
           <th>Motto</th>
