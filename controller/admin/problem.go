@@ -4,11 +4,11 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-	"encoding/json"
+	//"encoding/json"
 	"html/template"
 	"net/http"
 	"os"
-	"os/exec"
+	//"os/exec"
 	"strconv"
 	"strings"
 )
@@ -310,6 +310,7 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
 }
 
+/*
 func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Rejudge Page")
 	this.Init(w, r)
@@ -414,3 +415,4 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		}()
 	}
 }
+*/

@@ -34,11 +34,15 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "args error", 400)
 			return
 		}
-		if this.Privilege > config.PrivilegeTC {
-			this.Data["IsShowAdmin"] = true
-		}
 		if this.Privilege == config.PrivilegeAD {
+			this.Data["IsShowAdmin"] = true
 			this.Data["IsAdmin"] = true
+			this.Data["RejudgePrivilege"] = true
+		}
+		if this.Privilege == config.PrivilegeTC {
+			this.Data["IsShowTeacher"] = true
+			this.Data["IsTeacher"] = true
+			this.Data["RejudgePrivilege"] = true
 		}
 	}
 }

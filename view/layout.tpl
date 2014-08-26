@@ -25,6 +25,7 @@
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
             {{if .IsShowAdmin}}<a href="/admin/">[Admin]</a>{{end}}
+            {{if .IsShowTeacher}}<a href="/admin/">[Teacher]</a>{{end}}
             <a href="/user?settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{else}}
