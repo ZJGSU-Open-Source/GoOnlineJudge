@@ -25,7 +25,7 @@ $('#search_form').submit( function(e) {
 	
 	$.ajax({
 		type:'POST',
-		url:'/problem?rejudge/type?'+type+'/id?'+id,
+		url:'/admin/problem?rejudge/type?'+type+'/id?'+id,
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
