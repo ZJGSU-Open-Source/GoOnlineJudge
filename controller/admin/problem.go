@@ -339,7 +339,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ok := 1
 	hint := make(map[string]string)
 
 	if types == "Pid" {
@@ -348,8 +347,16 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		pro, err := proModel.Detail(pid)
 		if err != nil {
 			class.Logger.Debug(err)
-			http.Error(w, err.Error(), 400)
-			ok, hint["uid"] = 0, "Problem does not exist!"
+			hint["uid"] = "Problem does not exist!"
+
+			b, err := json.Marshal(&hint)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			w.WriteHeader(400)
+			w.Write(b)
+
 			return
 		}
 		qry := make(map[string]string)
@@ -377,8 +384,16 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		sol, err := solutionModel.Detail(sid)
 		if err != nil {
 			class.Logger.Debug(err)
-			http.Error(w, err.Error(), 400)
-			ok, hint["uid"] = 0, "Solution does not exist!"
+			hint["uid"] = "Solution does not exist!"
+
+			b, err := json.Marshal(&hint)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			w.WriteHeader(400)
+			w.Write(b)
+
 			return
 		}
 
@@ -398,17 +413,4 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			}
 		}()
 	}
-
-	if ok == 1 {
-		w.WriteHeader(200)
-	} else {
-		w.WriteHeader(400)
-	}
-
-	b, err := json.Marshal(&hint)
-	if err != nil {
-		http.Error(w, "json error", 500)
-		return
-	}
-	w.Write(b)
 }
