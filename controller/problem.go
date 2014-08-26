@@ -104,7 +104,23 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		//http.Error(w, err.Error(), 500)
+		t := template.New("layout.tpl")
+		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			class.Logger.Debug(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
+
+		this.Data["Info"] = "No such problem"
+		this.Data["Title"] = "No such problem"
+		err = t.Execute(w, this.Data)
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
 	}
 	this.Data["Detail"] = one
 
