@@ -34,7 +34,8 @@ type UserModel struct {
 	class.Model
 }
 
-// POST /User?login
+// 用户登入验证，需要提供uid和pwd两个参数，
+// 如果用户存在并且uid和pwd匹配，则返回一个user
 func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	log.Logger.Debug("Server UserModel Login")
 
@@ -76,7 +77,6 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	}, nil
 }
 
-// POST /User?logout
 //这个函数貌似没干什么事啊==
 func (this *UserModel) Logout() {
 	log.Logger.Debug("Server UserModel Logout")
@@ -91,7 +91,7 @@ func (this *UserModel) Logout() {
 	// w.WriteHeader(200)
 }
 
-// POST /User?password/uid?<uid>
+//设定用户密码，需提供uid和pwd
 func (this *UserModel) Password(uid, pwd string) error {
 	log.Logger.Debug("Server UserModel Password")
 
@@ -119,7 +119,7 @@ func (this *UserModel) Password(uid, pwd string) error {
 	return nil
 }
 
-// POST /User?privilege/uid?<uid>
+// 设定指定uid用户的权限
 func (this *UserModel) Privilege(uid string, privilege int) error {
 	log.Logger.Debug("Server UserModel Privilege")
 
@@ -142,7 +142,7 @@ func (this *UserModel) Privilege(uid string, privilege int) error {
 	return nil
 }
 
-// POST /User?detail/uid?<uid>
+// 获得指定uid用户的所有信息
 func (this *UserModel) Detail(uid string) (*User, error) {
 	log.Logger.Debug("Server UserModel Detail")
 
@@ -160,10 +160,11 @@ func (this *UserModel) Detail(uid string) (*User, error) {
 		return nil, OpErr
 	}
 
+	one.Pwd = "" //防止密码泄露
 	return &one, nil
 }
 
-// POST /User?delete/uid?<uid>
+// 删除指定uid用户
 func (this *UserModel) Delete(uid string) error {
 	log.Logger.Debug("Server UserModel Delete")
 
@@ -183,7 +184,7 @@ func (this *UserModel) Delete(uid string) error {
 	return nil
 }
 
-// POST /User?insert
+// 插入一个新的user
 func (this *UserModel) Insert(one User) error {
 	log.Logger.Debug("Server UserModel Insert")
 
@@ -199,7 +200,7 @@ func (this *UserModel) Insert(one User) error {
 	}
 	defer this.CloseDB()
 
-	//one.Privilege = config.PrivilegePU
+	one.Privilege = config.PrivilegePU
 	one.Solve = 0
 	one.Submit = 0
 	one.Status = config.StatusAvailable
@@ -219,7 +220,7 @@ func (this *UserModel) Insert(one User) error {
 	return nil
 }
 
-// POST /User?update/uid?<uid>
+// 更新用户信息（nick，mail，scholl，motto）
 func (this *UserModel) Update(uid string, ori User) error {
 	log.Logger.Debug("Server UserModel Update")
 

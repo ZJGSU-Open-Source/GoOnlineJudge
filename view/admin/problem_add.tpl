@@ -10,11 +10,11 @@
     </div>
     <div class="field">
       <label for="problem_time">Time Limit</label><br>
-      <input id="problem_time" name="time" size="30" type="text"> ms
+      <input id="problem_time" name="time" size="30" type="number"> ms
     </div>
     <div class="field">
       <label for="problem_memory">Memory Limit</label><br>
-      <input id="problem_memory" name="memory" size="30" type="text"> kB
+      <input id="problem_memory" name="memory" size="30" type="number"> kB
     </div>
     <div class="field">
       <label for="problem_source">Source</label><br>
