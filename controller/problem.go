@@ -199,7 +199,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	go func() {
-		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(0)) //Run Judge
 		err = cmd.Run()
 		if err != nil {
 			class.Logger.Debug(err)

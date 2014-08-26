@@ -199,8 +199,8 @@ func (this *ProblemModel) Status(pid, status int) error {
 	return nil
 }
 
-// 记录problem的solve和submit，每次记录时submit值总会加1，而slolve则由action指定是否记录
-func (this *ProblemModel) Record(pid int, action string) error {
+// 记录problem的solve和submit，每次记录时submit值总会加1，而solve则由action指定是否记录
+func (this *ProblemModel) Record(pid int, action string, rejudge int) error {
 	log.Logger.Debug("Server ProblemModel Record")
 
 	var inc int
@@ -209,6 +209,8 @@ func (this *ProblemModel) Record(pid int, action string) error {
 		inc = 1
 	case "submit":
 		inc = 0
+	case "del":
+		inc = -1
 	default:
 		return ArgsErr
 	}
@@ -219,7 +221,12 @@ func (this *ProblemModel) Record(pid int, action string) error {
 	}
 	defer this.CloseDB()
 
-	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
+	if rejudge == 1 {
+		err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 0}})
+	} else if rejudge == 0 {
+		err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$inc": bson.M{"solve": inc, "submit": 1}})
+	}
+
 	if err == mgo.ErrNotFound {
 		return NotFoundErr
 	} else if err != nil {
