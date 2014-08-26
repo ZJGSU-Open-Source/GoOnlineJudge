@@ -51,7 +51,7 @@
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem?add">Add</a>{{end}}</li>
 
                 {{if .RejudgePrivilege}}
-                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/problem?rejudgepage">Rejudge</a>{{end}}</li>
+                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem?rejudgepage">Rejudge</a>{{end}}</li>
                 {{end}}
               </ul>
             </div>

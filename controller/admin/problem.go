@@ -4,11 +4,11 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-	//"encoding/json"
+	"encoding/json"
 	"html/template"
 	"net/http"
 	"os"
-	//"os/exec"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -308,4 +308,109 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
+}
+
+func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
+	class.Logger.Debug("Rejudge Page")
+	this.Init(w, r)
+
+	this.Data["Title"] = "Problem Rejudge"
+	this.Data["RejudgePrivilege"] = true
+	this.Data["IsProblem"] = true
+	this.Data["IsRejudge"] = true
+
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
+	if err != nil {
+		http.Error(w, "tpl error", 500)
+		return
+	}
+}
+
+func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
+	class.Logger.Debug("Problem Rejudge")
+	this.Init(w, r)
+
+	args := this.ParseURL(r.URL.String())
+	id, err := strconv.Atoi(args["id"])
+	types := args["type"]
+
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	hint := make(map[string]string)
+
+	if types == "Pid" {
+		pid := id
+		proModel := model.ProblemModel{}
+		pro, err := proModel.Detail(pid)
+		if err != nil {
+			class.Logger.Debug(err)
+			hint["uid"] = "Problem does not exist!"
+
+			b, err := json.Marshal(&hint)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			w.WriteHeader(400)
+			w.Write(b)
+
+			return
+		}
+		qry := make(map[string]string)
+		qry["pid"] = strconv.Itoa(pro.Pid)
+
+		solutionModel := model.SolutionModel{}
+		list, err := solutionModel.List(qry)
+
+		for i := range list {
+			sid := list[i].Sid
+
+			go func() {
+				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+				err = cmd.Run()
+				if err != nil {
+					class.Logger.Debug(err)
+					return
+				}
+			}()
+		}
+	} else if types == "Sid" {
+		sid := id
+
+		solutionModel := model.SolutionModel{}
+		sol, err := solutionModel.Detail(sid)
+		if err != nil {
+			class.Logger.Debug(err)
+			hint["uid"] = "Solution does not exist!"
+
+			b, err := json.Marshal(&hint)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			w.WriteHeader(400)
+			w.Write(b)
+
+			return
+		}
+
+		problemModel := model.ProblemModel{}
+		pro, err := problemModel.Detail(sol.Pid)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+
+		go func() {
+			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+			err = cmd.Run()
+			if err != nil {
+				class.Logger.Debug(err)
+				return
+			}
+		}()
+	}
 }

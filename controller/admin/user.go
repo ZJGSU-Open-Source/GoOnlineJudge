@@ -21,6 +21,17 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
 	this.Init(w, r)
 
+	if this.Privilege != config.PrivilegeAD {
+		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
+		this.Data["Title"] = "Warning"
+		this.Data["Info"] = "You are not admin!"
+		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 500)
+			return
+		}
+		return
+	}
 	userModel := model.UserModel{}
 	userlist, err := userModel.List(nil)
 	if err != nil {
@@ -114,7 +125,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func (this *UserController) Privilege(w http.ResponseWriter, r *http.Request) {
+func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Privilege")
 	this.Init(w, r)
 
