@@ -343,12 +343,33 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	hint := make(map[string]string)
 
 	if types == "Pid" {
-		response, err := http.Post(config.PostHost+"/problem?detail/pid?"+strconv.Itoa(id), "application/json", nil)
+		pid := id
+		proModel := model.ProblemModel{}
+		pro, err := proModel.Detail(pid)
 		if err != nil {
-			http.Error(w, "post error", 500)
+			class.Logger.Debug(err)
+			http.Error(w, err.Error(), 400)
+			ok, hint["uid"] = 0, "Problem does not exist!"
 			return
 		}
-		defer response.Body.Close()
+		qry := make(map[string]string)
+		qry["pid"] = strconv.Itoa(pro.Pid)
+
+		solutionModel := model.SolutionModel{}
+		list, err := solutionModel.List(qry)
+
+		for i := range list {
+			sid := list[i].Sid
+
+			go func() {
+				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
+				err = cmd.Run()
+				if err != nil {
+					class.Logger.Debug(err)
+					return
+				}
+			}()
+		}
 	} else if types == "Sid" {
 		sid := id
 
