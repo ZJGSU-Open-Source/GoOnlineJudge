@@ -20,6 +20,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	newsList, err := newsModel.List(-1, -1)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
+		return
 	}
 	this.Data["News"] = newsList
 
