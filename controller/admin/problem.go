@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type ProblemController struct {
@@ -368,6 +369,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		for i := range list {
 			sid := list[i].Sid
 
+			time.Sleep(1 * time.Second)
 			go func() {
 				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(1)) //Run Judge
 				err = cmd.Run()
