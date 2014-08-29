@@ -42,7 +42,6 @@ type SolutionModel struct {
 // 查询指定sid的solution的所有详细信息
 func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 	log.Logger.Debug("Server SolutionModel Detail")
-
 	err := this.OpenDB()
 	if err != nil {
 		return nil, DBErr
