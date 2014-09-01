@@ -8,6 +8,7 @@
       {{if $isAdmin}}
       <th class="header">Delete</th>
       {{end}}
+      <th class="header">Delete</th>
       <th class="header">Download</th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
       {{if $isAdmin}}
       <td><a class="testdata_delete" href="#" data-type="{{.}}">[Delete]</a></td>
       {{end}}
+      <td><a class="testdata_delete" href="#" data-type="{{.}}">[Delete]</a></td>
       <td><a href="/admin/testdata?download/pid?{{$Pid}}/type?{{.}}">[Download] </a></td>
     </tr>
     {{end}}

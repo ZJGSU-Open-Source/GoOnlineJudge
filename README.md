@@ -3,7 +3,7 @@
 GoOnlineJudge is a web server for ZJGSU.  
 It requires Ubuntu 14.04, go1.3 and mongodb v2.4.9.
 ##Install
-In order to intall our online judge, you should install go1.3, mongodb, and mgo.
+In order to install our online judge, you should install go1.3, mongodb, and mgo.
 ###Dependences
 + go1.3 is a complier for go.You can get it from [golang.org](http://golang.org)
 
@@ -69,4 +69,8 @@ Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 #Notice
 If you want to visit it at 80 port, we suggest you install [nginx](http://nginx.org/) as a reverse proxy and run nginx at 80 port. 
 
+<<<<<<< HEAD
 Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
+=======
+Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
+>>>>>>> a4b9c1f56e1e406b2fb14deed5524be3d9418a37
