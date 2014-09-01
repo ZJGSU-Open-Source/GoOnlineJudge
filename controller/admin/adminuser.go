@@ -20,15 +20,18 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 	case config.PrivilegeAD:
 		this.Admin(w, r)
 	default:
-		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You are not admin!"
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
+
+		if this.Privilege <= config.PrivilegePU {
+			class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
+			this.Data["Title"] = "Warning"
+			this.Data["Info"] = "You are not admin!"
+			err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
+			if err != nil {
+				http.Error(w, "tpl error", 500)
+				return
+			}
 			return
 		}
-		return
 	}
 }
 
