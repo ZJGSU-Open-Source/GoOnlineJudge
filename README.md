@@ -69,8 +69,4 @@ Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 #Notice
 If you want to visit it at 80 port, we suggest you install [nginx](http://nginx.org/) as a reverse proxy and run nginx at 80 port. 
 
-<<<<<<< HEAD
 Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
-=======
-Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
->>>>>>> a4b9c1f56e1e406b2fb14deed5524be3d9418a37
