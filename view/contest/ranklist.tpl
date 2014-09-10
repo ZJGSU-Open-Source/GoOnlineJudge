@@ -1,5 +1,6 @@
 {{define "content"}}
 {{$cid := .Cid}}
+<h1>{{.Contest}}</h1>
 <table id="contest_list">
   <thead>
     <tr>

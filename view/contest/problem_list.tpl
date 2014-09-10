@@ -1,6 +1,8 @@
 {{define "content"}}
 <h1>{{.Contest}}</h1>
-<div class="flash notice">Start@{{ShowTime .Start}} End@{{ShowTime .End}}</div>
+<div id="contestinfo" style="color:blue">
+<p>Start Time : {{ShowTime .Start}} &nbsp;&nbsp;End Time : {{ShowTime .End}}</p>
+</div>
 <table id="contest_list">
   <thead>
     <tr>

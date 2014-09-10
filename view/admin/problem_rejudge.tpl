@@ -9,7 +9,7 @@
 <br>
 <input id="id" name="id" size="20" type="text">
 <div class="actions">
-	<input name="user_password" type="submit" value="Rejudge">
+	<input name="user_password" type="submit" value="Rejudge" required="required" />
 </div>
 </form>
 
