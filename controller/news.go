@@ -8,10 +8,12 @@ import (
 	"strconv"
 )
 
+//新闻控件
 type NewsController struct {
 	class.Controller
 }
 
+//列出所有新闻
 func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("News List")
 	this.Init(w, r)
@@ -33,12 +35,13 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//列出指定新闻的详细信息
 func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("News Detail")
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(args["nid"]) //获取nid
 	if err != nil {
 		class.Logger.Debug(args["nid"])
 		http.Error(w, "args error", 400)
@@ -52,7 +55,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["Detail"] = one
 
-	if one.Status == config.StatusReverse && this.Privilege != config.PrivilegeAD {
+	if one.Status == config.StatusReverse && this.Privilege != config.PrivilegeAD { //如果news的状态为普通用户不可见
 		this.Data["Title"] = "No such news"
 		this.Data["Info"] = "No such news"
 		err = this.Execute(w, "view/layout.tpl", "view/400.tpl")

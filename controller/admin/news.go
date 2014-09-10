@@ -9,10 +9,12 @@ import (
 	"strconv"
 )
 
+//news新闻控件
 type NewsController struct {
 	class.Controller
 }
 
+//新闻详细信息
 func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Detail")
 	this.Init(w, r)
@@ -43,6 +45,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 列出所有新闻
 func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News List")
 	this.Init(w, r)
@@ -54,7 +57,6 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	this.Data["News"] = newlist
-
 	this.Data["Title"] = "Admin - News List"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = true
@@ -83,7 +85,18 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 
 func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Insert")
+
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Insert news")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Insert news")
+		return
+	}
 
 	one := model.News{}
 	one.Title = r.FormValue("title")
@@ -101,7 +114,17 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 
 func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Status")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to change news status")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to change news status")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
@@ -132,9 +155,20 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/news?list", http.StatusFound)
 }
 
+// 删除指定新闻
 func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Delete")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Delete news")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Delete news")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])
@@ -186,7 +220,17 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 
 func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Update")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Update news")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Update news")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	nid, err := strconv.Atoi(args["nid"])

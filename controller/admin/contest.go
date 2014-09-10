@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//竞赛控件
 type ContestController struct {
 	Cid           int
 	ContestDetail *model.Contest
@@ -17,7 +18,7 @@ type ContestController struct {
 	class.Controller
 }
 
-// url:/admin/contest/list/type/<contest,exercise>
+//列出所有的比赛 url:/admin/contest/list/type/<contest,exercise>
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 	this.Init(w, r)
@@ -45,7 +46,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// url:/admin/contest/add/type/<contest,exercise>
+// 添加比赛页面 url:/admin/contest/add/type/<contest,exercise>
 func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Add")
 	this.Init(w, r)
@@ -66,9 +67,14 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// url:/admin/contest?insert/type?<contest,exercise>
+// 插入比赛 url:/admin/contest?insert/type?<contest,exercise>
 func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Insert")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Insert contest")
+		return
+	}
+
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -78,7 +84,6 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 
 	one.Title = r.FormValue("title")
 	one.Type = Type
-	//class.Logger.Debug(one["type"])
 	year, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	month, err := strconv.Atoi(r.FormValue("startTimeMonth"))
 	day, err := strconv.Atoi(r.FormValue("startTimeDay"))
@@ -143,12 +148,16 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound)
+	http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound) //重定向到竞赛列表页
 }
 
-// url:/admin/contest/status/
+//更改contest状态 url:/admin/contest/status/
 func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Status")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Change contest status")
+		return
+	}
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -177,12 +186,17 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest?list/type?"+strings.Title(Type), http.StatusFound)
+	http.Redirect(w, r, "/admin/contest?list/type?"+strings.Title(Type), http.StatusFound) //重定向到竞赛列表页
 }
 
-// url:/admin/contest/delete/
+//删除竞赛 url:/admin/contest/delete/，method:POST
 func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Delete")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Delete contest")
+		return
+	}
+
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())
@@ -201,7 +215,7 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-//// url:/admin/contest/edit/
+// 竞赛编辑页面，url:/admin/contest/edit/
 func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Edit")
 	this.Init(w, r)
@@ -279,9 +293,14 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// url:/admin/contest/update/
+// 更新竞赛，url:/admin/contest/update/，method:POST
 func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Update")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Update contest")
+		return
+	}
+
 	this.Init(w, r)
 
 	args := this.ParseURL(r.URL.String())

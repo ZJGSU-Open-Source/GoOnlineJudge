@@ -11,9 +11,6 @@
       <th class="header">Delete</th>
       <th class="header">Edit</th>
       {{end}}
-      <th class="header">Status</th>
-      <th class="header">Delete</th>
-      <th class="header">Edit</th>
       <th class="header">Data</th>
     </tr>
   </thead>
@@ -28,9 +25,6 @@
           <td><a class="problem_delete" href="#" data-id="{{.Pid}}">[Delete]</a></td>
           <td><a class="problem_edit" href="#" data-id="{{.Pid}}">[Edit]</a></td>
           {{end}}
-          <td><a class="problem_status" href="#" data-id="{{.Pid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
-          <td><a class="problem_delete" href="#" data-id="{{.Pid}}">[Delete]</a></td>
-          <td><a class="problem_edit" href="#" data-id="{{.Pid}}">[Edit]</a></td>
           <td><a class="test_data" href="/admin/testdata?list/pid?{{.Pid}}">[Test Data]</a></td>
         </tr>
       {{end}}  

@@ -246,7 +246,7 @@ func (this *UserModel) Update(uid string, ori User) error {
 	return nil
 }
 
-// POST /User?status/uid?<uid>
+// 更新用户状态
 func (this *UserModel) Status(uid string) error {
 	log.Logger.Debug("Server UserModel Status")
 
@@ -266,7 +266,7 @@ func (this *UserModel) Status(uid string) error {
 	return nil
 }
 
-// POST /User?record/uid?<uid>/action?<solve/submit>
+// 用户做题记录，uid?<uid>/action?<solve/submit>
 func (this *UserModel) Record(uid string, solve int, submit int) error {
 	log.Logger.Debug("Server UserModel Submit")
 
@@ -285,7 +285,7 @@ func (this *UserModel) Record(uid string, solve int, submit int) error {
 	return nil
 }
 
-// POST /User?list/offset?<offset>/limit?<limit>/uid?<uid>/nick?<nick>
+// 列出用户offset?<offset>/limit?<limit>/uid?<uid>/nick?<nick>
 func (this *UserModel) List(args map[string]string) ([]*User, error) {
 	log.Logger.Debug("Server UserModel List")
 

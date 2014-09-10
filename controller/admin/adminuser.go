@@ -14,24 +14,12 @@ type AdminUserController struct {
 
 func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
-	switch this.Privilege {
-	case config.PrivilegeTC:
-		this.Teacher(w, r)
-	case config.PrivilegeAD:
-		this.Admin(w, r)
-	default:
 
-		if this.Privilege <= config.PrivilegePU {
-			class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
-			this.Data["Title"] = "Warning"
-			this.Data["Info"] = "You are not admin!"
-			err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-			if err != nil {
-				http.Error(w, "tpl error", 500)
-				return
-			}
-			return
-		}
+	if this.Privilege <= config.PrivilegePU {
+		this.Err400(w, r, "Warning", "You are not admin!")
+		return
+	} else {
+		this.Admin(w, r)
 	}
 }
 
@@ -51,43 +39,20 @@ func (this *AdminUserController) Admin(w http.ResponseWriter, r *http.Request) {
 	} else if args["contest"] != "" {
 		c = &ContestController{}
 		m = args["contest"]
-	} else if args["user"] != "" {
-		c = &UserController{}
-		m = args["user"]
 	} else if args["testdata"] != "" {
 		c = &TestdataController{}
 		m = args["testdata"]
-	} else if args["image"] != "" {
-		c = &ImageController{}
-		m = args["image"]
+	} else if this.Privilege >= config.PrivilegeAD {
+		if args["user"] != "" {
+			c = &UserController{}
+			m = args["user"]
+		} else if args["image"] != "" {
+			c = &ImageController{}
+			m = args["image"]
+		}
 	} else {
 		class.Logger.Debug("args err")
 		return
-	}
-	m = strings.Title(m)
-	rv := getReflectValue(w, r)
-	callMethod(c, m, rv)
-}
-
-func (this *AdminUserController) Teacher(w http.ResponseWriter, r *http.Request) {
-	var c interface{}
-	var m string
-	args := this.ParseURL(r.URL.String())
-	if len(args) == 1 {
-		c = &HomeController{}
-		m = "Home"
-	} else if args["problem"] != "" {
-		c = &ProblemController{}
-		m = args["problem"]
-	} else if args["contest"] != "" {
-		c = &ContestController{}
-		m = args["contest"]
-	} else if args["user"] != "" {
-		c = &UserController{}
-		m = args["user"]
-	} else if args["testdata"] != "" {
-		c = &TestdataController{}
-		m = args["testdata"]
 	}
 	m = strings.Title(m)
 	rv := getReflectValue(w, r)

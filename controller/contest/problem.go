@@ -14,23 +14,31 @@ type ProblemController struct {
 	Contest
 }
 
-func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest Problem List")
+func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
-
 	if (time.Now().Unix() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
-		this.Data["Info"] = "The contest has not started yet"
+		info := "The contest has not started yet"
 		if this.ContestDetail.Status == config.StatusReverse {
-			this.Data["Info"] = "No such contest"
+			info = "No such contest"
 		}
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
+		this.Err400(w, r, "Contest Detail "+strconv.Itoa(this.Cid), info)
 		return
 	}
+
+	args := this.ParseURL(r.URL.String())
+	switch args["problem"] {
+	case "list":
+		this.List(w, r)
+	case "detail":
+		this.Detail(w, r)
+	case "submit":
+		this.Submit(w, r)
+	}
+
+}
+
+func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
+	class.Logger.Debug("Contest Problem List")
 
 	list := make([]*model.Problem, len(this.ContestDetail.List))
 	for k, v := range this.ContestDetail.List {
@@ -74,21 +82,6 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Detail")
-	this.InitContest(w, r)
-
-	if (this.ContestDetail.Status == config.StatusReverse || time.Now().Unix() < this.ContestDetail.Start) && this.Privilege <= config.PrivilegePU {
-		this.Data["Info"] = "The contest has not started yet"
-		if this.ContestDetail.Status == config.StatusReverse {
-			this.Data["Info"] = "No such contest"
-		}
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-		return
-	}
 
 	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
@@ -151,22 +144,23 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one.Length = this.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
-	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
-		switch {
-		case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
-			this.Data["Info"] = "No such problem"
-		case code == "":
-			this.Data["Info"] = "Your source code is too short"
-		}
-		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-
-		err = this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
+	info := ""
+	errflag := true
+	switch {
+	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
+		info = "No such problem"
+	case code == "":
+		info = "Your source code is too short"
+	case time.Now().Unix() > this.ContestDetail.End:
+		info = "The contest has ended"
+	default:
+		errflag = false
+	}
+	if errflag {
+		this.Err400(w, r, "Problem — "+strconv.Itoa(pid), info)
 		return
 	}
+
 	one.Status = config.StatusAvailable
 	one.Judge = config.JudgePD
 
