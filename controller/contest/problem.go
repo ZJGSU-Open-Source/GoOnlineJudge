@@ -71,6 +71,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestProblem"] = true
 	this.Data["Start"] = this.ContestDetail.Start
 	this.Data["End"] = this.ContestDetail.End
+	this.Data["Status"] = this.ContestDetail.Status
 
 	err := this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {

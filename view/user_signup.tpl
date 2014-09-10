@@ -7,7 +7,7 @@
 		<div class="field">
 		  	<label for="user_handle">Handle</label><font color="red">*</font>
 		  	<font  id="user_warning_handle" color="red"></font><br>
-		 	<input id="user_handle" name="user[handle]" size="30" type="text" autofocus>
+		 	<input id="user_handle" name="user[handle]" size="30" type="text" autofocus required="required" />
 		</div>
 		<div class="field">
 			<label for="user_nick">Nick</label><font color="red">*</font>
@@ -17,12 +17,12 @@
 		<div class="field">
 			<label for="user_password">Password</label><font color="red">*</font>
 			<font id="user_warning_password" color="red">Password should contain at least six characters.</font><br>
-			<input id="user_password" name="user[password]" size="30" type="password">
+			<input id="user_password" name="user[password]" size="30" type="password" required="required">
 		</div>	
 		<div class="field">
 			<label for="user_confirmPassword">Confirm Password</label><font color="red">*</font>
 			<font id="user_warning_confirmPassword" color="red"></font><br>
-			<input id="user_confirmPassword" name="user[confirmPassword]" size="30" type="password">	
+			<input id="user_confirmPassword" name="user[confirmPassword]" size="30" type="password" required="required">	
 		</div>
 		<div class="field">
 			<label for="user_mail">Email</label>
