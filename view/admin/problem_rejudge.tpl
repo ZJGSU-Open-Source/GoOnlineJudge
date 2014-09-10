@@ -29,8 +29,8 @@ $('#search_form').submit( function(e) {
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
-			if(json.uid != null) {
-				alert(json.uid);
+			if(json.info != null) {
+				alert(json.info);
 			}
 		},
 		success:function(response){

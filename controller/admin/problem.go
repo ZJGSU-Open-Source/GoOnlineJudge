@@ -74,7 +74,10 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Add")
 	this.Init(w, r)
-
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Add problem")
+		return
+	}
 	this.Data["Title"] = "Admin - Problem Add"
 	this.Data["IsProblem"] = true
 	this.Data["IsAdd"] = true
@@ -89,7 +92,17 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Insert")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Insert problem")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Insert problem")
+		return
+	}
 
 	one := model.Problem{}
 	one.Title = r.FormValue("title")
@@ -128,37 +141,45 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = os.Mkdir(config.Datapath+strconv.Itoa(pid), os.ModePerm)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
+
+	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
+}
+
+func createfile(path, filename string, context string) {
+	err := os.Mkdir(path, os.ModePerm)
 	if err != nil {
 		class.Logger.Debug("create dir error")
 		return
 	}
 
-	infile, err := os.Create(config.Datapath + strconv.Itoa(pid) + "/sample.in")
+	file, err := os.Create(path + "/" + filename)
 	if err != nil {
 		class.Logger.Debug(err)
 	}
-	defer infile.Close()
+	defer file.Close()
+
 	var cr rune = 13
 	crStr := string(cr)
-	in = strings.Replace(in, "\r\n", "\n", -1)
-	in = strings.Replace(in, crStr, "\n", -1)
-	infile.WriteString(in)
-	outfile, err := os.Create(config.Datapath + strconv.Itoa(pid) + "/sample.out")
-	if err != nil {
-		class.Logger.Debug(err)
-	}
-	defer outfile.Close()
-	out = strings.Replace(out, "\r\n", "\n", -1)
-	out = strings.Replace(out, crStr, "\n", -1)
-	outfile.WriteString(out)
-
-	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
+	context = strings.Replace(context, "\r\n", "\n", -1)
+	context = strings.Replace(context, crStr, "\n", -1)
+	file.WriteString(context)
 }
 
 func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Status")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Change problem status")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Change problem status")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	//class.Logger.Debug(args)
@@ -193,7 +214,17 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Delete")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Delete problem")
+		return
+	}
+
 	this.Init(w, r)
+
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Delete problem")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
@@ -212,6 +243,10 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Edit")
 	this.Init(w, r)
 
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Edit problem")
+		return
+	}
 	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
 	if err != nil {
@@ -241,7 +276,16 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Update")
+	if r.Method != "POST" {
+		this.Err400(w, r, "Error", "Error Method to Update problem")
+		return
+	}
+
 	this.Init(w, r)
+	if this.Privilege != config.PrivilegeAD {
+		this.Err400(w, r, "Warning", "Error Privilege to Update problem")
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
@@ -270,8 +314,6 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		one.Special = 1
 	}
 
-	var cr rune = 13
-	crStr := string(cr)
 	in := r.FormValue("in")
 	out := r.FormValue("out")
 
@@ -283,23 +325,8 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	one.Source = r.FormValue("source")
 	one.Hint = r.FormValue("hint")
 
-	infile, err := os.Create(config.Datapath + args["pid"] + "/sample.in")
-	if err != nil {
-		class.Logger.Debug(err)
-	}
-	defer infile.Close()
-	in = strings.Replace(in, "\r\n", "\n", -1)
-	in = strings.Replace(in, crStr, "\n", -1)
-	infile.WriteString(in)
-
-	outfile, err := os.Create(config.Datapath + args["pid"] + "/sample.out")
-	if err != nil {
-		class.Logger.Debug(err)
-	}
-	defer outfile.Close()
-	out = strings.Replace(out, "\r\n", "\n", -1)
-	out = strings.Replace(out, crStr, "\n", -1)
-	outfile.WriteString(out)
+	createfile(config.Datapath+args["pid"], "sample.in", in)
+	createfile(config.Datapath+args["pid"], "sample.out", out)
 
 	problemModel := model.ProblemModel{}
 	err = problemModel.Update(pid, one)
@@ -314,6 +341,11 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Rejudge Page")
 	this.Init(w, r)
+
+	if this.Privilege < config.PrivilegeTC {
+		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
+		return
+	}
 
 	this.Data["Title"] = "Problem Rejudge"
 	this.Data["RejudgePrivilege"] = true
@@ -331,10 +363,14 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Rejudge")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	id, err := strconv.Atoi(args["id"])
-	types := args["type"]
+	if this.Privilege < config.PrivilegeTC {
+		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
+		return
+	}
 
+	args := this.ParseURL(r.URL.String())
+	types := args["type"]
+	id, err := strconv.Atoi(args["id"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -348,13 +384,9 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		pro, err := proModel.Detail(pid)
 		if err != nil {
 			class.Logger.Debug(err)
-			hint["uid"] = "Problem does not exist!"
+			hint["info"] = "Problem does not exist!"
 
-			b, err := json.Marshal(&hint)
-			if err != nil {
-				http.Error(w, err.Error(), 500)
-				return
-			}
+			b, _ := json.Marshal(&hint)
 			w.WriteHeader(400)
 			w.Write(b)
 
@@ -375,7 +407,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 				err = cmd.Run()
 				if err != nil {
 					class.Logger.Debug(err)
-					return
 				}
 			}()
 		}
@@ -386,13 +417,9 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		sol, err := solutionModel.Detail(sid)
 		if err != nil {
 			class.Logger.Debug(err)
-			hint["uid"] = "Solution does not exist!"
 
-			b, err := json.Marshal(&hint)
-			if err != nil {
-				http.Error(w, err.Error(), 500)
-				return
-			}
+			hint["info"] = "Solution does not exist!"
+			b, _ := json.Marshal(&hint)
 			w.WriteHeader(400)
 			w.Write(b)
 
@@ -411,7 +438,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			err = cmd.Run()
 			if err != nil {
 				class.Logger.Debug(err)
-				return
 			}
 		}()
 	}

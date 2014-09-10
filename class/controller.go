@@ -47,6 +47,13 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (this *Controller) Err400(w http.ResponseWriter, r *http.Request, title string, info string) {
+	Logger.Info(r.RemoteAddr + " " + this.Uid)
+	this.Data["Title"] = title
+	this.Data["Info"] = info
+	this.Execute(w, "view/layout.tpl", "view/400.tpl")
+}
+
 func (this *Controller) ParseURL(url string) (args map[string]string) {
 	args = make(map[string]string)
 	path := strings.Trim(url, "/")

@@ -11,10 +11,12 @@ import (
 	"strings"
 )
 
+// 问题控件
 type ProblemController struct {
 	class.Controller
 }
 
+// 列出特定数量的问题,URL，/problem?list/pid?<pid>/titile?<titile>/source?<source>/page?<page>
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 	this.Init(w, r)
@@ -23,17 +25,17 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	url := "/problem?list"
 
 	// Search
-	if v, ok := args["pid"]; ok {
+	if v, ok := args["pid"]; ok { //按pid查找
 		url += "/pid?" + v
 		this.Data["SearchPid"] = true
 		this.Data["SearchValue"] = v
 	}
-	if v, ok := args["title"]; ok {
+	if v, ok := args["title"]; ok { //按问题标题查找
 		url += "/title?" + v
 		this.Data["SearchTitle"] = true
 		this.Data["SearchValue"] = v
 	}
-	if v, ok := args["source"]; ok {
+	if v, ok := args["source"]; ok { //按问题来源查找
 		v = strings.Replace(v, "%20", " ", -1)
 		args["source"] = v
 		url += "/source?" + v
@@ -43,7 +45,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["URL"] = url
 
 	// Page
-	if _, ok := args["page"]; !ok {
+	if _, ok := args["page"]; !ok { //指定页码
 		args["page"] = "1"
 	}
 
@@ -65,8 +67,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage)
-	args["limit"] = strconv.Itoa(config.ProblemPerPage)
+	args["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
+	args["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
@@ -90,6 +92,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//列出某问题的详细信息，URL，/probliem?detail/pid?<pid>
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Detail")
 	this.Init(w, r)
@@ -104,7 +107,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		//http.Error(w, err.Error(), 500)
 		t := template.New("layout.tpl")
 		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
@@ -124,7 +126,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 	this.Data["Detail"] = one
 
-	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse {
+	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
 		t := template.New("layout.tpl")
 		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
 		if err != nil {
@@ -152,10 +154,15 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// URL /problem?submit/pid?<pid>
+//提交某一问题的solution， URL /problem?submit/pid?<pid>，method POST
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Submit")
 	this.Init(w, r)
+
+	if r.Method != "POST" { // 要求请求方法为post
+		http.Error(w, "method error", 400)
+		return
+	}
 
 	args := this.ParseURL(r.URL.String())
 	pid, err := strconv.Atoi(args["pid"])
@@ -214,7 +221,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(200)
 
-	go func() {
+	go func() { //编译运行solution
 		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(0)) //Run Judge
 		err = cmd.Run()
 		if err != nil {

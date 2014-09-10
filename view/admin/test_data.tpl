@@ -8,7 +8,6 @@
       {{if $isAdmin}}
       <th class="header">Delete</th>
       {{end}}
-      <th class="header">Delete</th>
       <th class="header">Download</th>
     </tr>
   </thead>
@@ -21,20 +20,21 @@
       {{if $isAdmin}}
       <td><a class="testdata_delete" href="#" data-type="{{.}}">[Delete]</a></td>
       {{end}}
-      <td><a class="testdata_delete" href="#" data-type="{{.}}">[Delete]</a></td>
       <td><a href="/admin/testdata?download/pid?{{$Pid}}/type?{{.}}">[Download] </a></td>
     </tr>
     {{end}}
     {{end}}     
   </tbody>
 </table>
+{{if $isAdmin}}
 <form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata?upload/pid?{{.Pid}}">
 <div class="actions">
 <label><input type="file" multiple="" size="80" name="testfiles" style="background-color:white;color:black" />
 <input name="commit"type="submit" value="upload" /> </label>
 </div>
 </form>
-	<div class="flash notice">You can just add test.in and test.out</div>
+<div class="flash notice">You can just add test.in and test.out</div>
+{{end}}
 
 <script type="text/javascript">
 $('.testdata_delete').on('click', function() {

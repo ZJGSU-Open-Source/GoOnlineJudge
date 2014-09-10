@@ -12,6 +12,19 @@ type StatusController struct {
 	Contest
 }
 
+func (this *StatusController) Route(w http.ResponseWriter, r *http.Request) {
+	this.InitContest(w, r)
+
+	args := this.ParseURL(r.URL.String())
+	switch args["status"] {
+	case "list":
+		this.List(w, r)
+	case "code":
+		this.Code(w, r)
+	}
+
+}
+
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
 	this.InitContest(w, r)
@@ -59,14 +72,16 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Solution"] = one
-	this.Data["Privilege"] = this.Privilege
-	this.Data["Title"] = "View Code"
-	this.Data["IsCode"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-		return
+	if one.Uid == this.Uid || this.Privilege > config.PrivilegeTC {
+		this.Data["Solution"] = one
+		this.Data["Privilege"] = this.Privilege
+		this.Data["Title"] = "View Code"
+		this.Data["IsCode"] = true
+		err = this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
+		if err != nil {
+			class.Logger.Debug(err)
+			http.Error(w, "tpl error", 500)
+			return
+		}
 	}
 }

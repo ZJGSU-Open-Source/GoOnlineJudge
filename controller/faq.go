@@ -9,6 +9,7 @@ type FAQController struct {
 	class.Controller
 }
 
+//faq 页面
 func (this *FAQController) FAQ(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("FAQ Page")
 	this.Init(w, r)

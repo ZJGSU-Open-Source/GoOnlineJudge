@@ -8,11 +8,13 @@ import (
 	"strconv"
 )
 
+// 排名
 type rank struct {
 	model.User
 	Index int `json:"index"bson:"index"`
 }
 
+// 排名控件
 type RanklistController struct {
 	class.Controller
 }
