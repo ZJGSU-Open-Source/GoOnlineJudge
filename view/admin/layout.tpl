@@ -22,11 +22,11 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
-            <a href="/user?settings">[{{.CurrentUser}}]</a>
+            <a href="/user/settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{else}}
-            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user?signin">[Sign In]</a>{{end}}
-            {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user?signup">[Sign Up]</a>{{end}}
+            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
+            {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
           {{end}}
         </div>
         <hr> 
@@ -35,55 +35,55 @@
         <ul>
           <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
           {{if .IsAdmin}}
-          <li><a href="/admin/news?list">News</a></li>
+          <li><a href="/admin/news/list">News</a></li>
           {{if .IsNews}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news?list">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news?add">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news/list">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news/add">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
           {{end}}
-          <li><a href="/admin/problem?list">Problem</a></li>
+          <li><a href="/admin/problem/list">Problem</a></li>
           {{if .IsProblem}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problem?list">List</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problem/list">List</a>{{end}}</li>
                 {{if .IsAdmin}}
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem?add">Add</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem/add">Add</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}
-                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem?rejudgepage">Rejudge</a>{{end}}</li>
+                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem/rejudgepage">Rejudge</a>{{end}}</li>
                 {{end}}
               </ul>
             </div>
           {{end}}
-          <li><a href="/admin/contest?list/type?contest">Contest</a></li>
+          <li><a href="/admin/contest/list?type=contest">Contest</a></li>
           {{if .IsContest}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest?list/type?contest">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest?add/type?contest">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list?type=contest">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add?type=contest">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
-           <li><a href="/admin/contest?list/type?exercise">Exercise</a></li>
+           <li><a href="/admin/contest/list?type=exercise">Exercise</a></li>
           {{if .IsExercise}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest?list/type?exercise">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest?add/type?exercise">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list?type=exercise">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add?type=exercise">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
           {{if .IsAdmin }}
-          <li><a href="/admin/user?list">User</a></li>
+          <li><a href="/admin/user/list">User</a></li>
           {{if .IsUser}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user?list">Privilege</a>{{end}}</li>
-                <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/user?pagepassword">Password</a>{{end}}</li>
+                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/list">Privilege</a>{{end}}</li>
+                <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/user/pagepassword">Password</a>{{end}}</li>
               </ul>
             </div>
             {{end}}
@@ -106,13 +106,13 @@
       e.preventDefault();
       $.ajax({
         type:'POST',
-        url:'/user?logout',
+        url:'/user/logout',
         data:$(this).serialize(),
         error: function() {
           alert('Sign Out Failed.');
         },
         success: function() {
-          window.location.href = '/user?signin';
+          window.location.href = '/user/signin';
         }
       });
     });

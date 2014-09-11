@@ -49,7 +49,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user?register',
+			url:'/user/register',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');

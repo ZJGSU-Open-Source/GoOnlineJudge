@@ -13,9 +13,39 @@ type UserController struct {
 	class.Controller
 }
 
+func (this *UserController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 1)
+	switch action {
+	case "signin":
+		this.Signin(w, r)
+	case "login":
+		this.Login(w, r)
+	case "signup":
+		this.Signup(w, r)
+	case "register":
+		this.Register(w, r)
+	case "logout":
+		this.Logout(w, r)
+	case "detail":
+		this.Detail(w, r)
+	case "settings":
+		this.Settings(w, r)
+	case "edit":
+		this.Edit(w, r)
+	case "update":
+		this.Update(w, r)
+	case "pagepassword":
+		this.Pagepassword(w, r)
+	case "password":
+		this.Pagepassword(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+}
+
 func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
-	this.Init(w, r)
 
 	this.Data["Title"] = "User Sign In"
 	this.Data["IsUserSignIn"] = true
@@ -28,7 +58,6 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
-	this.Init(w, r)
 
 	uid := r.FormValue("user[handle]")
 	pwd := r.FormValue("user[password]")
@@ -53,7 +82,6 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Sign Up")
-	this.Init(w, r)
 
 	this.Data["Title"] = "User Sign Up"
 	this.Data["IsUserSignUp"] = true
@@ -66,7 +94,6 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Register")
-	this.Init(w, r)
 
 	var one model.User
 	userModel := model.UserModel{}
@@ -107,8 +134,8 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		one.Uid = uid
 		one.Nick = nick
 		one.Pwd = pwd
-		//one.Privilege = config.PrivilegePU
-		one.Privilege = config.PrivilegeAD
+		one.Privilege = config.PrivilegePU
+		//one.Privilege = config.PrivilegeAD
 
 		err := userModel.Insert(one)
 		if err != nil {
@@ -133,7 +160,6 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Logout")
-	this.Init(w, r)
 
 	this.DeleteSession(w, r)
 	w.WriteHeader(200)
@@ -141,10 +167,9 @@ func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Detail")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	uid := args["uid"]
+	args := r.URL.Query()
+	uid := args.Get("uid")
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uid)
 	if err != nil {
@@ -177,7 +202,6 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Settings")
-	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
@@ -220,7 +244,6 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Edit")
-	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
@@ -255,7 +278,6 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Update")
-	this.Init(w, r)
 
 	ok := 1
 	hint := make(map[string]string)
@@ -293,7 +315,6 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password Page")
-	this.Init(w, r)
 
 	if this.Privilege == config.PrivilegeNA {
 		this.Data["Title"] = "Warning"
@@ -319,7 +340,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password")
-	this.Init(w, r)
 
 	ok := 1
 	hint := make(map[string]string)

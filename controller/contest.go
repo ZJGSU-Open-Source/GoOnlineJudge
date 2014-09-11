@@ -16,11 +16,13 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
+	Type := r.URL.Query().Get("type")
+	class.Logger.Debug(Type)
+	qry := make(map[string]string)
+	qry["type"] = Type
 
-	Type := args["type"]
 	CModel := model.ContestModel{}
-	conetestList, err := CModel.List(args)
+	conetestList, err := CModel.List(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

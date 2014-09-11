@@ -36,6 +36,7 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 		} else if this.ContestDetail.Encrypt == config.EncryptPT {
 			if this.Uid == "" {
 				http.Redirect(w, r, "/user?signin", http.StatusFound)
+				return
 			} else {
 				userlist := strings.Split(this.ContestDetail.Argument.(string), "\n")
 				flag := false
@@ -54,21 +55,20 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 		}
 	}
 
-	args := this.ParseURL(r.URL.String())
-	class.Logger.Debug(args)
-	if args["problem"] != "" {
+	action := this.GetAction(r.URL.Path, 1)
+	class.Logger.Debug(action)
+	switch action {
+	case "problem":
 		c := &ProblemController{}
 		c.Route(w, r)
-	} else if args["status"] != "" {
+	case "status":
 		c := &StatusController{}
 		c.Route(w, r)
-	} else if args["ranklist"] != "" {
+	case "ranklist":
 		c := &RanklistController{}
 		c.List(w, r)
-	} else {
-		class.Logger.Debug("args err")
+	default:
 		http.Error(w, "args err", 500)
-		return
 	}
 }
 

@@ -18,12 +18,39 @@ type ProblemController struct {
 	class.Controller
 }
 
+func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
+	case "detail":
+		this.Detail(w, r)
+	case "list":
+		this.List(w, r)
+	case "edit":
+		this.Edit(w, r)
+	case "update":
+		this.Update(w, r)
+	case "delete":
+		this.Delete(w, r)
+	case "status":
+		this.Status(w, r)
+	case "add":
+		this.Add(w, r)
+	case "insert":
+		this.Insert(w, r)
+	case "rejudgepage":
+		this.Rejudgepage(w, r)
+	case "rejudge":
+		this.Rejudge(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+
+}
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Detail")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -49,7 +76,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem List")
-	this.Init(w, r)
 
 	problemModel := model.ProblemModel{}
 	qry := make(map[string]string)
@@ -73,7 +99,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Add")
-	this.Init(w, r)
+
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Add problem")
 		return
@@ -96,8 +122,6 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		this.Err400(w, r, "Error", "Error Method to Insert problem")
 		return
 	}
-
-	this.Init(w, r)
 
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Insert problem")
@@ -144,7 +168,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
 
-	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
+	http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 }
 
 func createfile(path, filename string, context string) {
@@ -174,16 +198,12 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
-
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Change problem status")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	//class.Logger.Debug(args)
-	pid, err := strconv.Atoi(args["pid"])
+	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -209,7 +229,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/problem?list", http.StatusFound)
+	http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 }
 
 func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
@@ -219,15 +239,12 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
-
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Delete problem")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -247,8 +264,8 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		this.Err400(w, r, "Warning", "Error Privilege to Edit problem")
 		return
 	}
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+
+	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -281,14 +298,12 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Update problem")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -325,8 +340,8 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	one.Source = r.FormValue("source")
 	one.Hint = r.FormValue("hint")
 
-	createfile(config.Datapath+args["pid"], "sample.in", in)
-	createfile(config.Datapath+args["pid"], "sample.out", out)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
 
 	problemModel := model.ProblemModel{}
 	err = problemModel.Update(pid, one)
@@ -335,12 +350,11 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/problem?detail/pid?"+strconv.Itoa(pid), http.StatusFound)
+	http.Redirect(w, r, "/admin/problem/detail?pid="+strconv.Itoa(pid), http.StatusFound)
 }
 
 func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Rejudge Page")
-	this.Init(w, r)
 
 	if this.Privilege < config.PrivilegeTC {
 		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
@@ -361,16 +375,15 @@ func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Reques
 
 func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Rejudge")
-	this.Init(w, r)
 
 	if this.Privilege < config.PrivilegeTC {
 		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	types := args["type"]
-	id, err := strconv.Atoi(args["id"])
+	args := r.URL.Query()
+	types := args.Get("type")
+	id, err := strconv.Atoi(args.Get("id"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return

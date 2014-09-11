@@ -19,16 +19,20 @@ type RanklistController struct {
 	class.Controller
 }
 
+func (this *RanklistController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	this.Index(w, r)
+}
+
 func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Ranklist")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	this.Data["URL"] = "/ranklist"
+	args := r.URL.Query()
 
 	// Page
-	if _, ok := args["page"]; !ok {
-		args["page"] = "1"
+
+	if v := args.Get("page"); v == "" {
+		args.Set("page", "1")
 	}
 
 	userModel := model.UserModel{}
@@ -47,7 +51,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var pageCount = (count-1)/config.UserPerPage + 1
-	page, err := strconv.Atoi(args["page"])
+	page, err := strconv.Atoi(args.Get("page"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -79,6 +83,7 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 			count += 1
 		}
 	}
+	this.Data["URL"] = "/ranklist?"
 	this.Data["User"] = list
 	this.Data["Title"] = "Ranklist"
 	this.Data["IsRanklist"] = true

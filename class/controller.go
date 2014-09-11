@@ -185,3 +185,12 @@ func (c *Controller) Execute(w io.Writer, tplfiles ...string) error {
 	}
 	return err
 }
+
+func (this *Controller) GetAction(path string, pos int) string {
+	path = strings.Trim(path, "/")
+	pathsplit := strings.Split(path, "/")
+	if pos >= 0 && pos < len(pathsplit) {
+		return pathsplit[pos]
+	}
+	return ""
+}

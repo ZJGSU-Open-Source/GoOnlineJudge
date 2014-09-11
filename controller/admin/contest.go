@@ -18,18 +18,39 @@ type ContestController struct {
 	class.Controller
 }
 
+func (this *ContestController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
+	case "list":
+		this.List(w, r)
+	case "edit":
+		this.Edit(w, r)
+	case "update":
+		this.Update(w, r)
+	case "delete":
+		this.Delete(w, r)
+	case "status":
+		this.Status(w, r)
+	case "add":
+		this.Add(w, r)
+	case "insert":
+		this.Insert(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+}
+
 //列出所有的比赛 url:/admin/contest/list/type/<contest,exercise>
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	Type := args["type"]
+	Type := r.URL.Query().Get("type")
 
 	qry := make(map[string]string)
 	qry["type"] = Type
 	contestModel := model.ContestModel{}
-	contestList, err := contestModel.List(args)
+	contestList, err := contestModel.List(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 	}
@@ -49,10 +70,8 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 // 添加比赛页面 url:/admin/contest/add/type/<contest,exercise>
 func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Add")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	Type := args["type"]
+	Type := r.URL.Query().Get("type")
 	//class.Logger.Debug(Type)
 
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
@@ -75,10 +94,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
-
-	args := this.ParseURL(r.URL.String())
-	Type := args["type"]
+	Type := r.URL.Query().Get("type")
 
 	one := model.Contest{}
 
@@ -158,10 +174,7 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		this.Err400(w, r, "Error", "Error Method to Change contest status")
 		return
 	}
-	this.Init(w, r)
-
-	args := this.ParseURL(r.URL.String())
-	cid, err := strconv.Atoi(args["cid"])
+	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -186,7 +199,7 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest?list/type?"+strings.Title(Type), http.StatusFound) //重定向到竞赛列表页
+	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound) //重定向到竞赛列表页
 }
 
 //删除竞赛 url:/admin/contest/delete/，method:POST
@@ -197,10 +210,7 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
-
-	args := this.ParseURL(r.URL.String())
-	cid, err := strconv.Atoi(args["cid"])
+	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -218,10 +228,8 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 // 竞赛编辑页面，url:/admin/contest/edit/
 func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Edit")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	cid, err := strconv.Atoi(args["cid"])
+	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -301,15 +309,12 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
-
-	args := this.ParseURL(r.URL.String())
-	cid, err := strconv.Atoi(args["cid"])
+	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
 	}
-	Type := args["type"]
+	Type := r.URL.Query().Get("type")
 
 	one := model.Contest{}
 	one.Title = r.FormValue("title")
@@ -319,7 +324,6 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	day, _ := strconv.Atoi(r.FormValue("startTimeDay"))
 	hour, _ := strconv.Atoi(r.FormValue("startTimeHour"))
 	min, _ := strconv.Atoi(r.FormValue("startTimeMinute"))
-
 	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one.Start = start.Unix()
 
@@ -379,5 +383,5 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound)
+	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound)
 }

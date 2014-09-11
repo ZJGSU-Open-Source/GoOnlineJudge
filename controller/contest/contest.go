@@ -18,8 +18,9 @@ type Contest struct {
 func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	cid, err := strconv.Atoi(args["cid"])
+	args := r.URL.Query()
+
+	cid, err := strconv.Atoi(args.Get("cid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return

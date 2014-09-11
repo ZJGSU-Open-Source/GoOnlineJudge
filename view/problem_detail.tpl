@@ -41,7 +41,7 @@
     {{end}}
     {{if .Source}}
       <p><b>Source:</b></p>
-      <p><a href="/problem?list/source?{{.Source}}">{{.Source}}</a></p>
+      <p><a href="/problem/list?source={{.Source}}">{{.Source}}</a></p>
     {{end}}
   </div>
   <hr>
@@ -78,7 +78,7 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/problem?submit/pid?{{.Pid}}',
+      url:'/problem/submit?pid={{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){

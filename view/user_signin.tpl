@@ -27,7 +27,7 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/user?login',
+      url:'/user/login',
       data:$(this).serialize(),
       error: function() {
         $('#signin_failed').css('display', 'block');

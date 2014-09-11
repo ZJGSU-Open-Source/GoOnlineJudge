@@ -14,15 +14,30 @@ type TestdataController struct {
 	class.Controller
 }
 
+func (this *TestdataController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
+	case "list":
+		this.List(w, r)
+	case "uplode":
+		this.Upload(w, r)
+	case "delete":
+		this.Delete(w, r)
+	case "download":
+		this.Download(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+}
+
 // List 列出对应题目的test data，method：GET
 func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin testdata list")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-
+	pid := r.URL.Query().Get("pid")
 	file := []string{}
-	dir, err := os.Open(config.Datapath + args["pid"])
+	dir, err := os.Open(config.Datapath + pid)
 	defer dir.Close()
 
 	files, err := dir.Readdir(-1)
@@ -39,8 +54,8 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Files"] = file
-	this.Data["Pid"] = args["pid"]
-	this.Data["Title"] = "Problem" + args["pid"] + " - Test data"
+	this.Data["Pid"] = pid
+	this.Data["Title"] = "Problem" + pid + " - Test data"
 	this.Data["IsProblem"] = true
 
 	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
@@ -58,17 +73,16 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Update testdate")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
+	pid := r.URL.Query().Get("pid")
 
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["testfiles"]
-	os.Mkdir(config.Datapath+args["pid"], os.ModePerm)
+	os.Mkdir(config.Datapath+pid, os.ModePerm)
 	for _, fheader := range fhs {
 		filename := fheader.Filename
 		file, err := fheader.Open()
@@ -78,7 +92,7 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 		//保存文件
-		f, err := os.Create(config.Datapath + args["pid"] + "/" + filename)
+		f, err := os.Create(config.Datapath + pid + "/" + filename)
 		if err != nil {
 			class.Logger.Debug(err)
 			return
@@ -86,7 +100,7 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 		defer f.Close()
 		io.Copy(f, file)
 	}
-	http.Redirect(w, r, "/admin/testdata?list/pid?"+args["pid"], http.StatusFound)
+	http.Redirect(w, r, "/admin/testdata/list?pid="+pid, http.StatusFound)
 }
 
 // Download 下载测试数据,URL:/admin/testdata?download/type?<type>，method:POST
@@ -94,9 +108,9 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	class.Logger.Debug("Admin Download files")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	filename := args["type"]
-	file, err := os.Open(config.Datapath + args["pid"] + "/" + filename)
+	args := r.URL.Query()
+	filename := args.Get("type")
+	file, err := os.Open(config.Datapath + args.Get("pid") + "/" + filename)
 	if err != nil {
 		class.Logger.Debug(err)
 		return
@@ -117,23 +131,19 @@ func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Init(w, r)
 	if this.Privilege != config.PrivilegeAD {
 		this.Err400(w, r, "Warning", "Error Privilege to Delete testdate")
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
-	filetype := args["type"]
-	if err != nil {
-		http.Error(w, "args error", 400)
-		return
-	}
-	cmd := exec.Command("rm", config.Datapath+strconv.Itoa(pid)+"/"+filetype)
-	err = cmd.Run()
+	args := r.URL.Query()
+	filetype := args.Get("type")
+	pid := args.Get("pid")
+
+	cmd := exec.Command("rm", config.Datapath+pid+"/"+filetype)
+	err := cmd.Run()
 	if err != nil {
 		class.Logger.Debug(err)
 	}
-	http.Redirect(w, r, "/admin/testdata?list/pid?"+args["pid"], http.StatusFound)
+	http.Redirect(w, r, "/admin/testdata/list?pid="+pid, http.StatusFound)
 }
