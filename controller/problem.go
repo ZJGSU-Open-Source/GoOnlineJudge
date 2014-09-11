@@ -4,7 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-	"html/template"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -16,48 +15,76 @@ type ProblemController struct {
 	class.Controller
 }
 
+func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	action := this.GetAction(r.URL.Path, 1)
+	class.Logger.Debug(action)
+	switch action {
+	case "list":
+		this.List(w, r)
+	case "detail":
+		this.Detail(w, r)
+	case "submit":
+		this.Submit(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+
+}
+
 // 列出特定数量的问题,URL，/problem?list/pid?<pid>/titile?<titile>/source?<source>/page?<page>
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	url := "/problem?list"
+	args := r.URL.Query()
+	//args := this.ParseURL(r.URL.String())
+	qry := make(map[string]string)
+	url := "/problem/list?"
 
+	class.Logger.Debug(r.URL.RequestURI())
 	// Search
-	if v, ok := args["pid"]; ok { //按pid查找
-		url += "/pid?" + v
+	if v := args.Get("pid"); v != "" { //按pid查找
+		qry["pid"] = v
+		url += "pid=" + v + "&"
 		this.Data["SearchPid"] = true
 		this.Data["SearchValue"] = v
-	}
-	if v, ok := args["title"]; ok { //按问题标题查找
-		url += "/title?" + v
+	} else if v := args.Get("title"); v != "" { //按问题标题查找
+		class.Logger.Debug(v)
+		url += "title=" + v + "&"
 		this.Data["SearchTitle"] = true
 		this.Data["SearchValue"] = v
-	}
-	if v, ok := args["source"]; ok { //按问题来源查找
-		v = strings.Replace(v, "%20", " ", -1)
-		args["source"] = v
-		url += "/source?" + v
+		for _, ep := range "+.?$|*^" {
+			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
+		}
+		qry["title"] = v
+	} else if v := args.Get("source"); v != "" { //按问题来源查找
+		class.Logger.Debug(v)
+		url += "source=" + v + "&"
 		this.Data["SearchSource"] = true
 		this.Data["SearchValue"] = v
+		for _, ep := range "+.?$|*^ " {
+			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
+		}
+		qry["source"] = v
 	}
 	this.Data["URL"] = url
 
 	// Page
-	if _, ok := args["page"]; !ok { //指定页码
-		args["page"] = "1"
+	qry["page"] = args.Get("page")
+	if v := qry["page"]; v == "" { //指定页码
+		qry["page"] = "1"
 	}
 
 	problemModel := model.ProblemModel{}
-	count, err := problemModel.Count(args)
+	count, err := problemModel.Count(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
+	class.Logger.Debug(count)
 	var pageCount = (count-1)/config.ProblemPerPage + 1
-	page, err := strconv.Atoi(args["page"])
+	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -67,18 +94,19 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
-	args["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
+	qry["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
+	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
 	pageData := this.GetPage(page, pageCount)
 	for k, v := range pageData {
 		this.Data[k] = v
 	}
 
-	problemList, err := problemModel.List(args)
+	problemList, err := problemModel.List(qry)
 	if err != nil {
 		http.Error(w, "post error", 500)
 		return
 	}
+	class.Logger.Debug(len(problemList))
 
 	this.Data["Problem"] = problemList
 	this.Data["Privilege"] = this.Privilege
@@ -92,13 +120,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//列出某问题的详细信息，URL，/probliem?detail/pid?<pid>
+//列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Detail")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	args := r.URL.Query()
+	pid, err := strconv.Atoi(args.Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -107,41 +135,13 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		t := template.New("layout.tpl")
-		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-
-		this.Data["Info"] = "No such problem"
-		this.Data["Title"] = "No such problem"
-		err = t.Execute(w, this.Data)
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
+		this.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
 		return
 	}
 	this.Data["Detail"] = one
 
 	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
-		t := template.New("layout.tpl")
-		t, err = t.ParseFiles("view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-			return
-		}
-
-		this.Data["Info"] = "No such problem"
-		this.Data["Title"] = "No such problem"
-		err = t.Execute(w, this.Data)
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
+		this.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
 		return
 	}
 
@@ -164,8 +164,8 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	args := r.URL.Query()
+	pid, err := strconv.Atoi(args.Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -195,21 +195,21 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one.Length = this.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
-	if code == "" || pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU) {
-		switch {
-		case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
-			this.Data["Info"] = "No such problem"
-		case code == "":
-			this.Data["Info"] = "Your source code is too short"
-		}
-		this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-		err = this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
+	info := ""
+	errflag := true
+	switch {
+	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
+		info = "No such problem"
+	case code == "":
+		info = "Your source code is too short"
+	default:
+		errflag = false
+	}
+	if errflag {
+		this.Err400(w, r, "Problem — "+strconv.Itoa(pid), info)
 		return
 	}
+
 	one.Status = config.StatusAvailable
 	one.Judge = config.JudgePD
 

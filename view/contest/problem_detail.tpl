@@ -72,16 +72,16 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/contest/problem?submit/cid?{{.Cid}}/pid?{{.Pid}}',
+      url:'/contest/problem/submit?cid={{.Cid}}&pid={{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
-          window.location.href = '/user?signin';
+          window.location.href = '/user/signin';
         }
       },
       success: function(result) {
-        window.location.href = '/contest/status?list/cid?{{.Cid}}';
+        window.location.href = '/contest/status/list?cid={{.Cid}}';
       }
     });
   });

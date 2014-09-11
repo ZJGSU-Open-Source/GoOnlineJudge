@@ -25,7 +25,7 @@ $('#search_form').submit( function(e) {
 	
 	$.ajax({
 		type:'POST',
-		url:'/admin/problem?rejudge/type?'+type+'/id?'+id,
+		url:'/admin/problem/rejudge?type='+type+'&id='+id,
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
@@ -36,7 +36,7 @@ $('#search_form').submit( function(e) {
 		success:function(response){
 			alert("Rejudge Complete")
 			//window.location.reload();
-			window.location.href = '/status?list'
+			window.location.href = '/status/list'
 		}
 	});
 });

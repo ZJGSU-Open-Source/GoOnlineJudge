@@ -14,13 +14,37 @@ type NewsController struct {
 	class.Controller
 }
 
+func (this *NewsController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
+	case "detail":
+		this.Detail(w, r)
+	case "list":
+		this.List(w, r)
+	case "edit":
+		this.Edit(w, r)
+	case "update":
+		this.Update(w, r)
+	case "delete":
+		this.Delete(w, r)
+	case "status":
+		this.Status(w, r)
+	case "add":
+		this.Add(w, r)
+	case "insert":
+		this.Insert(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+
+}
+
 //新闻详细信息
 func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Detail")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -109,7 +133,7 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/news?list", http.StatusFound)
+	http.Redirect(w, r, "/admin/news/list", http.StatusFound)
 }
 
 func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
@@ -126,8 +150,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -152,7 +175,7 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	http.Redirect(w, r, "/admin/news?list", http.StatusFound)
+	http.Redirect(w, r, "/admin/news/list", http.StatusFound)
 }
 
 // 删除指定新闻
@@ -170,8 +193,7 @@ func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -191,8 +213,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Edit")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -232,8 +253,7 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	args := this.ParseURL(r.URL.String())
-	nid, err := strconv.Atoi(args["nid"])
+	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -249,6 +269,6 @@ func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	} else {
-		http.Redirect(w, r, "/admin/news?detail/nid?"+strconv.Itoa(nid), http.StatusFound)
+		http.Redirect(w, r, "/admin/news/detail?nid="+strconv.Itoa(nid), http.StatusFound)
 	}
 }

@@ -12,40 +12,51 @@ type StatusController struct {
 	class.Controller
 }
 
+func (this *StatusController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 1)
+	switch action {
+	case "list":
+		this.List(w, r)
+	case "code":
+		this.Code(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+}
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status List")
 	this.Init(w, r)
-	args := this.ParseURL(r.URL.String())
-	url := "/solution?list"
+	args := r.URL.Query()
 	searchUrl := ""
 	qry := make(map[string]string)
 	// Search
-	if v, ok := args["uid"]; ok {
-		searchUrl += "/uid?" + v
+	if v := args.Get("uid"); v != "" {
+		searchUrl += "uid=" + v + "&"
 		this.Data["SearchUid"] = v
 		qry["uid"] = v
 	}
-	if v, ok := args["pid"]; ok {
-		searchUrl += "/pid?" + v
+	if v := args.Get("pid"); v != "" {
+		searchUrl += "pid=" + v + "&"
 		this.Data["SearchPid"] = v
 		qry["pid"] = v
 	}
-	if v, ok := args["judge"]; ok {
-		searchUrl += "/judge?" + v
+	if v := args.Get("judge"); v != "" {
+		searchUrl += "judge=" + v + "&"
 		this.Data["SearchJudge"+v] = v
 		qry["judge"] = v
 	}
-	if v, ok := args["language"]; ok {
-		searchUrl += "/language?" + v
+	if v := args.Get("language"); v != "" {
+		searchUrl += "language=" + v + "&"
 		this.Data["SearchLanguage"+v] = v
 		qry["language"] = v
 	}
-	url += searchUrl
-	this.Data["URL"] = "/status?list" + searchUrl
+	this.Data["URL"] = "/status/list?" + searchUrl
 
 	// Page
-	if _, ok := args["page"]; !ok {
-		args["page"] = "1"
+	qry["page"] = args.Get("page")
+	if qry["page"] == "" {
+		qry["page"] = "1"
 	}
 
 	solutionModel := model.SolutionModel{}
@@ -58,7 +69,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	var pageCount = (count-1)/config.SolutionPerPage + 1
 
-	page, err := strconv.Atoi(args["page"])
+	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -95,9 +106,9 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status Code")
 	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	class.Logger.Debug(args["sid"])
-	sid, err := strconv.Atoi(args["sid"])
+	args := r.URL.Query()
+	class.Logger.Debug(args.Get("sid"))
+	sid, err := strconv.Atoi(args.Get("sid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return

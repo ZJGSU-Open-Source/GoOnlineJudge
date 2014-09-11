@@ -10,7 +10,7 @@
       <th class="header">Penalty</th>
       {{with .ProblemList}}
       {{range .}}
-      <th class="header"><a href="/contest/problem?detail/cid?{{$cid}}/pid?{{.}}">{{.}}</a></th>
+      <th class="header"><a href="/contest/problem/detail?cid={{$cid}}&pid={{.}}">{{.}}</a></th>
       {{end}}
       {{end}}
     </tr>
@@ -20,8 +20,8 @@
       {{range $idx,$v := .}} 
           <tr>
             <td>{{NumAdd $idx 1}}</td>
-            <td><a href="/user?detail/uid?{{$v.Uid}}">{{$v.Uid}}</a></td>
-            <td><a href="/contest/status?list/cid?{{$cid}}/uid?{{$v.Uid}}/solved?3">{{$v.Solved}}</a></td>
+            <td><a href="/user/detail?uid={{$v.Uid}}">{{$v.Uid}}</a></td>
+            <td><a href="/contest/status/list?cid={{$cid}}&uid={{$v.Uid}}&solved=3">{{$v.Solved}}</a></td>
             <td>{{$v.Time}}</td>
             {{with $v.ProblemList}}
             {{range .}}

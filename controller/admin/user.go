@@ -17,9 +17,25 @@ type UserController struct {
 	class.Controller
 }
 
+func (this *UserController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
+	case "list":
+		this.List(w, r)
+	case "Privilegeset":
+		this.Privilegeset(w, r)
+	case "Pagepassword":
+		this.Pagepassword(w, r)
+	case "password":
+		this.Password(w, r)
+	default:
+		http.Error(w, "no such page", 404)
+	}
+}
+
 func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
-	this.Init(w, r)
 
 	if this.Privilege != config.PrivilegeAD {
 		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")

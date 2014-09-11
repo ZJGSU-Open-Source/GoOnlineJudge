@@ -14,20 +14,20 @@ type StatusController struct {
 
 func (this *StatusController) Route(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
-
-	args := this.ParseURL(r.URL.String())
-	switch args["status"] {
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
 	case "list":
 		this.List(w, r)
 	case "code":
 		this.Code(w, r)
+	default:
+		http.Error(w, "no such page", 404)
 	}
 
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
-	this.InitContest(w, r)
 
 	solutionModel := model.SolutionModel{}
 	qry := make(map[string]string)
@@ -55,11 +55,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status Code")
-	this.Init(w, r)
-	this.InitContest(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	sid, err := strconv.Atoi(args["sid"])
+	args := r.URL.Query()
+	sid, err := strconv.Atoi(args.Get("sid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return

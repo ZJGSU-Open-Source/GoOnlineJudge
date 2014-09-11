@@ -30,7 +30,7 @@ Language: <select id="search_language" name="search_language">
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}/page?{{NumSub .CurrentPage 1}}">Prev</a>
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}">Prev</a>
   {{else}}
   <span>Prev</span>
   {{end}}
@@ -41,7 +41,7 @@ Language: <select id="search_language" name="search_language">
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page?{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -54,7 +54,7 @@ Language: <select id="search_language" name="search_language">
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page?{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -67,14 +67,14 @@ Language: <select id="search_language" name="search_language">
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page?{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
   {{end}}
 
   {{if .IsNextPage}}
-  <a href="{{$url}}/page?{{NumAdd .CurrentPage 1}}">Next</a>
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}">Next</a>
   {{else}}
   <span>Next</span>
   {{end}}
@@ -100,12 +100,12 @@ Language: <select id="search_language" name="search_language">
         {{if ShowStatus .Status}} 
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user?detail/uid?{{.Uid}}">{{.Uid}}</a></td>
-            <td><a href="/problem?detail/pid?{{.Pid}}">{{.Pid}}</a></td>
+            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
+            <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
-            <td>{{ShowLanguage .Language}}<a href="/status?code/sid?{{.Sid}}">[view]</a></td>
+            <td>{{ShowLanguage .Language}}<a href="/status/code?sid={{.Sid}}">[view]</a></td>
             <td>{{.Length}}B</td>
             <td>{{ShowTime .Create}}</td>
           </tr>
@@ -121,15 +121,15 @@ Language: <select id="search_language" name="search_language">
     var pid = $('#search_pid').val();
     var judge = $('#search_judge').val();
     var language = $('#search_language').val();
-    var url = '/status?list';
+    var url = '/status/list?';
     if (uid != '')
-      url += '/uid?' + uid;
+      url += 'uid=' + uid + "&";
     if (pid != '')
-      url += '/pid?' + pid;
+      url += 'pid=' + pid + "&";
     if (judge > 0)
-      url += '/judge?' + judge;
+      url += 'judge=' + judge + "&";
     if (language > 0)
-      url += '/language?' + language;
+      url += 'language=' + language + "&";
     window.location.href = url;
   });
   </script>

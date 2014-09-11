@@ -16,23 +16,17 @@ type ProblemController struct {
 
 func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
-	if (time.Now().Unix() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse) && this.Privilege <= config.PrivilegePU {
-		info := "The contest has not started yet"
-		if this.ContestDetail.Status == config.StatusReverse {
-			info = "No such contest"
-		}
-		this.Err400(w, r, "Contest Detail "+strconv.Itoa(this.Cid), info)
-		return
-	}
 
-	args := this.ParseURL(r.URL.String())
-	switch args["problem"] {
+	action := this.GetAction(r.URL.Path, 2)
+	switch action {
 	case "list":
 		this.List(w, r)
 	case "detail":
 		this.Detail(w, r)
 	case "submit":
 		this.Submit(w, r)
+	default:
+		http.Error(w, "no such page", 404)
 	}
 
 }
@@ -71,7 +65,6 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestProblem"] = true
 	this.Data["Start"] = this.ContestDetail.Start
 	this.Data["End"] = this.ContestDetail.End
-	this.Data["Status"] = this.ContestDetail.Status
 
 	err := this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 	if err != nil {
@@ -84,8 +77,8 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Detail")
 
-	args := this.ParseURL(r.URL.String())
-	pid, err := strconv.Atoi(args["pid"])
+	args := r.URL.Query()
+	pid, err := strconv.Atoi(args.Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -110,11 +103,10 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Submit")
-	this.InitContest(w, r)
 
-	args := this.ParseURL(r.URL.String())
+	args := r.URL.Query()
 
-	pid, err := strconv.Atoi(args["pid"])
+	pid, err := strconv.Atoi(args.Get("pid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return

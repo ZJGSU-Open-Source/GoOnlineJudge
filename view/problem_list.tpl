@@ -1,7 +1,7 @@
 {{define "content"}}
 <h1>Problem List</h1>
 
-<form accept-charset="UTF-8" id="search_form">
+<form accept-charset="UTF-8" id="search_form" >
 Search: <input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
 <select id="option" name="option">
   <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
@@ -15,7 +15,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}/page/{{NumSub .CurrentPage 1}}">Prev</a>
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}">Prev</a>
   {{else}}
   <span>Prev</span>
   {{end}}
@@ -26,7 +26,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -39,7 +39,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
@@ -52,14 +52,14 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
         {{if eq . $current}}
           <span>{{.}}</span>
         {{else}}
-          <a href="{{$url}}/page/{{.}}">{{.}}</a>
+          <a href="{{$url}}page={{.}}">{{.}}</a>
         {{end}}
       {{end}}
     {{end}}
   {{end}}
 
   {{if .IsNextPage}}
-  <a href="{{$url}}/page/{{NumAdd .CurrentPage 1}}">Next</a>
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}">Next</a>
   {{else}}
   <span>Next</span>
   {{end}}
@@ -82,7 +82,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
           {{/*if ShowExpire .Expire $time*/}}
             <tr>
               <td>{{.Pid}}</td>
-              <td><a href="/problem?detail/pid?{{.Pid}}">{{.Title}}</a></td>
+              <td><a href="/problem/detail?pid={{.Pid}}">{{.Title}}</a></td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status?list/pid?{{.Pid}}/judge?3">{{.Solve}}</a>/<a href="/status?list/pid?{{.Pid}}">{{.Submit}}</a>)</td>
             </tr>
           {{/*end*/}}
@@ -97,7 +97,8 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
     e.preventDefault();
     var value = $('#search').val();
     var key = $('#option').val();
-    window.location.href = '/problem?list/'+key+'?'+value;
+    value = encodeURIComponent(value);
+    window.location.href = '/problem/list?'+key+'='+value;
   });
   </script>
 {{end}}

@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>Admin - News Add</h1>
-<form accept-charset="UTF-8" class="new_news" id="new_news" method="post" action="/admin/news?insert">
+<form accept-charset="UTF-8" class="new_news" id="new_news" method="post" action="/admin/news/insert">
     <div style="margin:0;padding:0;display:inline">
       <input name="utf8" type="hidden" value="✓">
     </div>

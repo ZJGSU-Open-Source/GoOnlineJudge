@@ -40,7 +40,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user?update',
+			url:'/user/update',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');	
@@ -53,7 +53,7 @@
 			},
 			success: function(result) {
 				var json = eval('('+result+')');
-				window.location.href = '/user?detail/uid?'+json.uid;
+				window.location.href = '/user/detail?uid='+json.uid;
 			}
 		});
 	});

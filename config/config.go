@@ -7,7 +7,7 @@ const Datapath = "../ProblemData/"
 
 //CONSTANT
 const (
-	ProblemPerPage  = 100
+	ProblemPerPage  = 2
 	ContestPerPage  = 100
 	ExercisePerPage = 100
 	SolutionPerPage = 50

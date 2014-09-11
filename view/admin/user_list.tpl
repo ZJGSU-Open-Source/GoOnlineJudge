@@ -13,7 +13,7 @@
 				{{range .}}
 				{{if LargePU .Privilege}}
 					<tr>
-						<td><a href="/user?detail/uid?{{.Uid}}" target="_new">{{.Uid}}</a></td>
+						<td><a href="/user/detail?uid={{.Uid}}" target="_new">{{.Uid}}</a></td>
 						<td>{{ShowPrivilege .Privilege}}</td>
 						<td><a class="admin_user_delete" href="#" data-id="{{.Uid}}">[Delete]</a></td>
 					</tr>
@@ -39,7 +39,7 @@ $('#search_form').submit( function(e) {
 	var type = $('#type').val();
 	$.ajax({
 		type:'POST',
-		url:'/admin/user?privilegeset/type?'+type+'/uid?'+user,
+		url:'/admin/user/privilegeset?type='+type+'&uid='+user,
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
@@ -61,7 +61,7 @@ $('.admin_user_delete').on('click', function() {
 	if (ret == true) {
 		$.ajax({
 			type: 'POST',
-			url: '/admin/user?privilegeset/type?'+'PU'+'/uid?' + uid,
+			url: '/admin/user/privilegeset?type='+'PU'+'&uid=' + uid,
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
