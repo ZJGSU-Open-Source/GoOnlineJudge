@@ -27,8 +27,9 @@ type Solution struct {
 
 	Code string `json:"code"bson:"code"`
 
-	Status int   `json:"status"bson:"status"`
-	Create int64 `json:"create"bson:"create"`
+	Status   int   `json:"status"bson:"status"`
+	Create   int64 `json:"create"bson:"create"`
+	Sim_s_id int   `json:"sim_s_id"bson:"sim_s_id"`
 }
 
 var sDetailSelector = bson.M{"_id": 0}
