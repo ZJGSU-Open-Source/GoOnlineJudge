@@ -13,7 +13,7 @@ type RanklistController struct {
 	Contest
 }
 
-func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
+func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
 	qry := make(map[string]string)

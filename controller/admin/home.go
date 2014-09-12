@@ -9,7 +9,7 @@ type HomeController struct {
 	class.Controller
 }
 
-func (this *HomeController) Home(w http.ResponseWriter, r *http.Request) {
+func (this HomeController) Home(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Admin Home")
 	this.Init(w, r)
 

@@ -16,21 +16,16 @@ type ProblemController struct {
 	class.Controller
 }
 
-func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 1)
-	class.Logger.Debug(action)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "detail":
-		this.Detail(w, r)
-	case "submit":
-		this.Submit(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
-
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 // 列出特定数量的问题,URL，/problem?list/pid?<pid>/titile?<titile>/source?<source>/page?<page>

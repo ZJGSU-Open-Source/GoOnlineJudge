@@ -13,7 +13,10 @@ type ContestUserContorller struct {
 	Contest
 }
 
-func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Request) {
+var RouterMap = map[string]class.Router{"problem": ProblemController{},
+	"status": StatusController{}, "ranklist": RanklistController{}}
+
+func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest User")
 	this.InitContest(w, r)
 
@@ -57,18 +60,10 @@ func (this *ContestUserContorller) Register(w http.ResponseWriter, r *http.Reque
 
 	action := this.GetAction(r.URL.Path, 1)
 	class.Logger.Debug(action)
-	switch action {
-	case "problem":
-		c := &ProblemController{}
-		c.Route(w, r)
-	case "status":
-		c := &StatusController{}
-		c.Route(w, r)
-	case "ranklist":
-		c := &RanklistController{}
-		c.List(w, r)
-	default:
-		http.Error(w, "args err", 500)
+	if v, ok := RouterMap[action]; ok {
+		v.Route(w, r)
+	} else {
+		http.Error(w, "no such page", 404)
 	}
 }
 

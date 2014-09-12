@@ -19,7 +19,7 @@ type RanklistController struct {
 	class.Controller
 }
 
-func (this *RanklistController) Route(w http.ResponseWriter, r *http.Request) {
+func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	this.Index(w, r)
 }
