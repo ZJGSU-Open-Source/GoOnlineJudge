@@ -1,66 +1,49 @@
 package main
 
 import (
+	"GoOnlineJudge/class"
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	"GoOnlineJudge/controller/contest"
 	"net/http"
+	"strings"
 )
 
-// normal Page
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		c := &controller.HomeController{}
-		c.Route(w, r)
+var RouterMap = map[string]class.Router{
+	"/":            controller.HomeController{},
+	"/news/":       controller.NewsController{},
+	"/problem/":    controller.ProblemController{},
+	"/status/":     controller.StatusController{},
+	"/ranklist/":   controller.RanklistController{},
+	"/contestlist": controller.ContestController{},
+	"/user/":       controller.UserController{},
+	"/contest/":    contest.ContestUserContorller{},
+	"/admin/":      admin.AdminUserController{},
+	"/FAQ/":        controller.FAQController{},
+}
+
+type Server struct {
+}
+
+func (this *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path + "/"
+
+	class.Logger.Debug(path)
+	if strings.HasPrefix(path, "/static/") {
+		http.FileServer(http.Dir(".")).ServeHTTP(w, r)
+		return
 	}
-}
-
-func newsHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.NewsController{}
-	c.Route(w, r)
-}
-
-func problemHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.ProblemController{}
-	c.Route(w, r)
-}
-
-func statusHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.StatusController{}
-	c.Route(w, r)
-}
-
-func ranklistHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.RanklistController{}
-	c.Route(w, r)
-}
-
-func contestlistHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.ContestController{}
-	c.List(w, r)
-}
-
-func userHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.UserController{}
-	c.Route(w, r)
-}
-
-//FAQ
-func FAQHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.FAQController{}
-	c.FAQ(w, r)
-}
-
-//Register User Page,need some privilege.
-
-// Contest
-func contestHandler(w http.ResponseWriter, r *http.Request) {
-	c := &contest.ContestUserContorller{}
-	c.Register(w, r)
-}
-
-// Admin
-func adminHandler(w http.ResponseWriter, r *http.Request) {
-	c := &admin.AdminUserController{}
-	c.Register(w, r)
+	maxlenth := 0
+	var realRouter class.Router
+	for pattern, router := range RouterMap {
+		if len(pattern) > maxlenth && strings.HasPrefix(path, pattern) {
+			maxlenth = len(pattern)
+			realRouter = router
+		}
+	}
+	if maxlenth > 0 {
+		realRouter.Route(w, r)
+	} else {
+		http.Error(w, "no such page", 404)
+	}
 }

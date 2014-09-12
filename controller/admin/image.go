@@ -19,7 +19,7 @@ type image struct {
 }
 
 //Upload support kindeditor upload images,the response must return json eg. like {"err":0,"url":"http:...."}
-func (this *ImageController) Upload(w http.ResponseWriter, r *http.Request) {
+func (this ImageController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("AdminUpload Image")
 	this.Init(w, r)
 

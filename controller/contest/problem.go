@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -15,20 +16,17 @@ type ProblemController struct {
 	Contest
 }
 
-func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 	this.InitContest(w, r)
 
 	action := this.GetAction(r.URL.Path, 2)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "detail":
-		this.Detail(w, r)
-	case "submit":
-		this.Submit(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 
 }
 

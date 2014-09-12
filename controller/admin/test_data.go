@@ -8,27 +8,23 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 type TestdataController struct {
 	class.Controller
 }
 
-func (this *TestdataController) Route(w http.ResponseWriter, r *http.Request) {
+func (this TestdataController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 2)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "uplode":
-		this.Upload(w, r)
-	case "delete":
-		this.Delete(w, r)
-	case "download":
-		this.Download(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 // List 列出对应题目的test data，method：GET
