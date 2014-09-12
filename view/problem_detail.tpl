@@ -47,7 +47,7 @@
   <hr>
 
   <a href="#" id="submission_link" onclick="show_submission(); return false;">Submit</a>
-
+  <script src="/static/js/codemirror.js" type="text/javascript"></script>
   <div id="submission" style="display: none;">
   <form accept-charset="UTF-8" method="post" id="problem_submit">
     <div style="margin:0;padding:0;display:inline">
@@ -59,20 +59,33 @@
         <option value="1" selected="selected">C</option>
         <option value="2">C++</option>
         <option value="3">Java</option>
+      </select>
     </div>
     <div class="field">
+     <div class="rfloat">
+        <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
+        使用高级编辑器
+    </div>
       <label for="code">Code</label><br>
-      <textarea id="code" name="code" style="" required="" autofocus=""></textarea>
+      <textarea id="code" name="code" style="display:none;" required="" autofocus=""></textarea>
     </div>
     <div class="actions">
       <input name="submit" type="submit" value="Submit">
     </div>
-  </form></div>
+  </form>
+  </div>
 
   <script type="text/javascript">
   function show_submission() {
     $('#submission').show();
     $('#submission_link').hide();
+    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+      lineNumbers: true,
+    }); 
+    $('#code').blur(function(){editor.setValue($('#code').val());});
+    $('#compiler_id').change(set_mode);
+    set_mode();
+    toggle_editor();
   };
   $('#problem_submit').submit(function(e) {
     e.preventDefault();
@@ -83,15 +96,43 @@
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
-          window.location.href = '/user?signin';
+          window.location.href = '/user/signin';
         }
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/status?list';
+        window.location.href = '/status/list';
       }
     });
   });
+  var editor;
+  function toggle_editor() {
+    var cm=$('.CodeMirror'), c=$('#code');
+    if($('#advanced_editor').prop('checked')) {
+      cm.show();
+      editor.setValue(c.val());
+      c.hide();
+    } else {
+      c.val(editor.getValue()).show();
+      cm.hide();
+    };
+    return true;
+  }
+  function set_mode() {
+    var compiler=$('#compiler_id option:selected').text();
+    var modes=[ 
+    'Javascript', 'Haskell', 'Lua', 'Pascal', 'Python', 'Ruby', 'Scheme', 'Smalltalk', 'Clojure',
+    ['PHP', 'text/x-php'],
+    ['C', 'text/x-csrc'],
+    ['C++', 'text/x-c++src'],
+    ['Java', 'text/x-java'],
+    ['', 'text/plain'] ];
+    for(var i=0;i!=modes.length;++i){
+      var n=modes[i], m=modes[i];
+      if($.isArray(n)) { m=n[1]; n=n[0]; }
+      if(compiler.indexOf(n)>=0){editor.setOption('mode',m.toLowerCase());break;}
+    }
+  };
   </script>
 {{end}}
 {{end}}

@@ -24,7 +24,7 @@
 </table>
 
 <form accept-charset="UTF-8" id="search_form">
-Add Admin: <input id="user" name="user" size="20" type="text">
+Add Admin: <input id="user" name="user" size="20" type="text" required>
 <select id="type" name="type">
 <option value="TC">Teacher</option>
 <option value="Admin">Admin</option>
