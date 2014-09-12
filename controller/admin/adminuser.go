@@ -10,7 +10,10 @@ type AdminUserController struct {
 	class.Controller
 }
 
-func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request) {
+var RouterMap = map[string]class.Router{"news": NewsController{}, "problem": ProblemController{},
+	"contest": ContestController{}, "testdata": TestdataController{}, "image": ImageController{}, "user": UserController{}}
+
+func (this AdminUserController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	if this.Privilege <= config.PrivilegePU {
@@ -21,30 +24,9 @@ func (this *AdminUserController) Register(w http.ResponseWriter, r *http.Request
 		c.Home(w, r)
 	} else {
 		action := this.GetAction(r.URL.Path, 1)
-		switch action {
-		case "news":
-			c := &NewsController{}
-			c.Route(w, r)
-		case "problem":
-			c := &ProblemController{}
-			c.Route(w, r)
-		case "contest":
-			c := &ContestController{}
-			c.Route(w, r)
-		case "testdata":
-			c := &TestdataController{}
-			c.Route(w, r)
-		case "image":
-			c := &ImageController{}
-			c.Upload(w, r)
-		case "user":
-			if this.Privilege < config.PrivilegeAD {
-				this.Err400(w, r, "Admin", "Privilege Error")
-				return
-			}
-			c := &UserController{}
-			c.Route(w, r)
-		default:
+		if v, ok := RouterMap[action]; ok {
+			v.Route(w, r)
+		} else {
 			http.Error(w, "no such page", 404)
 		}
 	}

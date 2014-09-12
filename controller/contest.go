@@ -12,7 +12,7 @@ type ContestController struct {
 	Type string
 }
 
-func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
+func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 	this.Init(w, r)
 

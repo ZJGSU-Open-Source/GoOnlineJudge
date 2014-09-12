@@ -5,10 +5,15 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
 )
+
+type Router interface {
+	Route(w http.ResponseWriter, r *http.Request)
+}
 
 type Controller struct {
 	Uid       string
@@ -193,4 +198,17 @@ func (this *Controller) GetAction(path string, pos int) string {
 		return pathsplit[pos]
 	}
 	return ""
+}
+
+func CallMethod(c interface{}, m string, rv []reflect.Value) {
+	rc := reflect.ValueOf(c)
+	rm := rc.MethodByName(m)
+	rm.Call(rv)
+}
+
+func GetReflectValue(w http.ResponseWriter, r *http.Request) (rv []reflect.Value) {
+	rw := reflect.ValueOf(w)
+	rr := reflect.ValueOf(r)
+	rv = []reflect.Value{rw, rr}
+	return
 }

@@ -10,7 +10,7 @@ type FAQController struct {
 }
 
 //faq 页面
-func (this *FAQController) FAQ(w http.ResponseWriter, r *http.Request) {
+func (this FAQController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("FAQ Page")
 	this.Init(w, r)
 

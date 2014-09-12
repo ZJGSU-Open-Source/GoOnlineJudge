@@ -7,41 +7,23 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type UserController struct {
 	class.Controller
 }
 
-func (this *UserController) Route(w http.ResponseWriter, r *http.Request) {
+func (this UserController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 1)
-	switch action {
-	case "signin":
-		this.Signin(w, r)
-	case "login":
-		this.Login(w, r)
-	case "signup":
-		this.Signup(w, r)
-	case "register":
-		this.Register(w, r)
-	case "logout":
-		this.Logout(w, r)
-	case "detail":
-		this.Detail(w, r)
-	case "settings":
-		this.Settings(w, r)
-	case "edit":
-		this.Edit(w, r)
-	case "update":
-		this.Update(w, r)
-	case "pagepassword":
-		this.Pagepassword(w, r)
-	case "password":
-		this.Pagepassword(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {

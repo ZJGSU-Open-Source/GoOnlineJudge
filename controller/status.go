@@ -6,23 +6,23 @@ import (
 	"GoOnlineJudge/model"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type StatusController struct {
 	class.Controller
 }
 
-func (this *StatusController) Route(w http.ResponseWriter, r *http.Request) {
+func (this StatusController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 1)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "code":
-		this.Code(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
