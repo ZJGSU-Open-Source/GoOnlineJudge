@@ -16,6 +16,7 @@ type ProblemController struct {
 }
 
 func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 1)
 	class.Logger.Debug(action)
 	switch action {
@@ -34,7 +35,6 @@ func (this *ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 // 列出特定数量的问题,URL，/problem?list/pid?<pid>/titile?<titile>/source?<source>/page?<page>
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
-	this.Init(w, r)
 
 	args := r.URL.Query()
 	//args := this.ParseURL(r.URL.String())
@@ -123,7 +123,6 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Detail")
-	this.Init(w, r)
 
 	args := r.URL.Query()
 	pid, err := strconv.Atoi(args.Get("pid"))
@@ -157,10 +156,14 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 //提交某一问题的solution， URL /problem?submit/pid?<pid>，method POST
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Submit")
-	this.Init(w, r)
 
 	if r.Method != "POST" { // 要求请求方法为post
 		http.Error(w, "method error", 400)
+		return
+	}
+
+	if this.Uid == "" { //要求用户登入
+		http.Redirect(w, r, "/user/signin", http.StatusFound)
 		return
 	}
 
@@ -171,15 +174,9 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uid := this.Uid
-	if uid == "" {
-		http.Error(w, "need sign in", 401)
-		return
-	}
-
 	var one model.Solution
 	one.Pid = pid
-	one.Uid = uid
+	one.Uid = this.Uid
 	one.Module = config.ModuleP
 	one.Mid = config.ModuleP
 

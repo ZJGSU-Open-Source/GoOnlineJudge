@@ -43,8 +43,8 @@ $('#search_form').submit( function(e) {
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
-			if(json.uid != null) {
-				alert(json.uid);
+			if(json.hint != null) {
+				alert(json.hint);
 			}
 		},
 		success:function(response){
@@ -65,8 +65,8 @@ $('.admin_user_delete').on('click', function() {
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
-				if (json.uid != null) {
-					alert(json.uid);
+				if (json.hint != null) {
+					alert(json.hint);
 				} else {
 					alert('failed!');
 				}

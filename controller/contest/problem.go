@@ -70,7 +70,6 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -97,7 +96,6 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 

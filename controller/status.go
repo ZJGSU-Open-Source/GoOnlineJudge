@@ -24,6 +24,7 @@ func (this *StatusController) Route(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "no such page", 404)
 	}
 }
+
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status List")
 	this.Init(w, r)
@@ -98,7 +99,6 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -126,6 +126,5 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }

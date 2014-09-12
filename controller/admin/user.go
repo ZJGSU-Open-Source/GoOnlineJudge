@@ -6,6 +6,7 @@ import (
 	"GoOnlineJudge/model"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 type privilegeUser struct {
@@ -23,12 +24,14 @@ func (this *UserController) Route(w http.ResponseWriter, r *http.Request) {
 	switch action {
 	case "list":
 		this.List(w, r)
-	case "Privilegeset":
+	case "privilegeset":
 		this.Privilegeset(w, r)
-	case "Pagepassword":
+	case "pagepassword":
 		this.Pagepassword(w, r)
 	case "password":
 		this.Password(w, r)
+	case "generate":
+		this.Generate(w, r)
 	default:
 		http.Error(w, "no such page", 404)
 	}
@@ -69,7 +72,6 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password Page")
-	this.Init(w, r)
 
 	this.Data["Title"] = "Admin Password"
 	this.Data["IsSettings"] = true
@@ -77,7 +79,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Data["IsUser"] = true
 	this.Data["IsPwd"] = true
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/admin_password.tpl")
+	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 400)
 		return
@@ -86,7 +88,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password")
-	this.Init(w, r)
 
 	ok := 1
 	hint := make(map[string]string)
@@ -143,11 +144,10 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 
 func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Privilege")
-	this.Init(w, r)
 
-	args := this.ParseURL(r.URL.String())
-	uid := args["uid"]
-	privilegeStr := args["type"]
+	args := r.URL.Query()
+	uid := args.Get("uid")
+	privilegeStr := args.Get("type")
 
 	privilege := config.PrivilegeNA
 	switch privilegeStr {
@@ -165,14 +165,14 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 	hint := make(map[string]string)
 
 	if uid == "" {
-		ok, hint["uid"] = 0, "Handle should not be empty."
+		ok, hint["hint"] = 0, "Handle should not be empty."
 	} else if uid == this.Uid {
-		ok, hint["uid"] = 0, "You cannot delete yourself"
+		ok, hint["hint"] = 0, "You cannot delete yourself!"
 	} else {
 		userModel := model.UserModel{}
 		_, err := userModel.Detail(uid)
 		if err == model.NotFoundErr {
-			ok, hint["uid"] = 0, "This handle does not exist!"
+			ok, hint["hint"] = 0, "This handle does not exist!"
 		} else if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
@@ -197,5 +197,30 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 
 		w.WriteHeader(400)
 		w.Write(b)
+	}
+}
+
+func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		this.Data["Title"] = "Admin User Generate"
+		this.Data["IsUser"] = true
+		this.Data["IsGenerate"] = true
+
+		err := this.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
+		if err != nil {
+			http.Error(w, "tpl error", 400)
+			return
+		}
+
+	} else if r.Method == "POST" {
+		prefix := r.FormValue("prefix")
+		amount, err := strconv.Atoi(r.FormValue("amount"))
+		if err != nil {
+			http.Error(w, "args error", 400)
+		}
+		for i := 0; i < amount; i++ {
+			uid := prefix + strconv.Itoa(i)
+			class.Logger.Debug(uid)
+		}
 	}
 }
