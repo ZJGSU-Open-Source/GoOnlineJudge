@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"encoding/json"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -96,6 +97,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
+		class.Logger.Debug(err)
 	}
 }
 
@@ -113,8 +115,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	pid = this.ContestDetail.List[pid] //get real pid
 	uid := this.Uid
 	if uid == "" {
-		w.WriteHeader(401)
-		return
+		http.Error(w, "user login required", 401)
 	}
 
 	one := model.Solution{}
@@ -135,20 +136,22 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one.Length = this.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
-	info := ""
+	hint := make(map[string]string)
 	errflag := true
 	switch {
 	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
-		info = "No such problem"
+		hint["info"] = "No such problem"
 	case code == "":
-		info = "Your source code is too short"
+		hint["info"] = "Your source code is too short"
 	case time.Now().Unix() > this.ContestDetail.End:
-		info = "The contest has ended"
+		hint["info"] = "The contest has ended"
 	default:
 		errflag = false
 	}
 	if errflag {
-		this.Err400(w, r, "Problem — "+strconv.Itoa(pid), info)
+		b, _ := json.Marshal(&hint)
+		w.WriteHeader(400)
+		w.Write(b)
 		return
 	}
 
@@ -163,6 +166,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(200)
+
 	go func() {
 		class.Logger.Debug(sid)
 		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge

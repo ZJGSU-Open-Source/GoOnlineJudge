@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"encoding/json"
 	"net/http"
 	"os/exec"
 	"strconv"
@@ -163,7 +164,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if this.Uid == "" { //要求用户登入
-		http.Redirect(w, r, "/user/signin", http.StatusFound)
+		http.Error(w, "user login required", 401)
 		return
 	}
 
@@ -188,22 +189,26 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 	code := r.FormValue("code")
 
+	class.Logger.Debug(code)
+
 	one.Code = code
 	one.Length = this.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
-	info := ""
+	hint := make(map[string]string)
 	errflag := true
 	switch {
 	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
-		info = "No such problem"
+		hint["info"] = "No such problem"
 	case code == "":
-		info = "Your source code is too short"
+		hint["info"] = "Your source code is too short"
 	default:
 		errflag = false
 	}
 	if errflag {
-		this.Err400(w, r, "Problem — "+strconv.Itoa(pid), info)
+		b, _ := json.Marshal(&hint)
+		w.WriteHeader(400)
+		w.Write(b)
 		return
 	}
 
@@ -216,6 +221,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
 	w.WriteHeader(200)
 
 	go func() { //编译运行solution
