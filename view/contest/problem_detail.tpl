@@ -39,6 +39,7 @@
       <p>{{.Hint}}</p>
     {{end}}
     </div>
+    {{end}}
     <hr>
   <a href="#" id="submission_link" onclick="show_submission(); return false;">Submit</a>
   <script src="/static/js/codemirror.js" type="text/javascript"></script>
@@ -54,21 +55,22 @@
         <option value="2">C++</option>
         <option value="3">Java</option>
       </select>
+      <font  id="warning" color="red"></font>
     </div>
     <div class="field">
       <div class="rfloat">
-        <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
-        使用高级编辑器
+       <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
+        use advanced editor
       </div>
       <label for="code">Code</label><br>
-      <textarea id="code" name="code" style="" required="" autofocus=""></textarea>
+      <textarea id="code" name="code"  autofocus=""></textarea>
     </div>
     <div class="actions">
       <input name="submit" type="submit" value="Submit">
     </div>
   </form></div>
-{{end}}
   <script type="text/javascript">
+  var editor;
   function show_submission() {
     $('#submission').show();
     $('#submission_link').hide();
@@ -81,24 +83,31 @@
     toggle_editor();
   };
   $('#problem_submit').submit(function(e) {
+    $('#code').val(editor.getValue());
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/problem/submit?pid={{.Pid}}',
+      url:'/contest/problem/submit?pid={{.Pid}}&cid={{.Cid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
           window.location.href = '/user/signin';
+        }else {
+          var json = eval('('+XMLHttpRequest.responseText+')');
+          if(json.info != null) {
+            $('#warning').text(json.info);
+          } else {
+            $('#warning').text('');
+          }
         }
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/status/list';
+        window.location.href = '/contest/status/list?cid={{.Cid}}';
       }
     });
   });
-  var editor;
   function toggle_editor() {
     var cm=$('.CodeMirror'), c=$('#code');
     if($('#advanced_editor').prop('checked')) {
@@ -115,7 +124,6 @@
     var compiler=$('#compiler_id option:selected').text();
     var modes=[ 
     'Javascript', 'Haskell', 'Lua', 'Pascal', 'Python', 'Ruby', 'Scheme', 'Smalltalk', 'Clojure',
-    ['PHP', 'text/x-php'],
     ['C', 'text/x-csrc'],
     ['C++', 'text/x-c++src'],
     ['Java', 'text/x-java'],

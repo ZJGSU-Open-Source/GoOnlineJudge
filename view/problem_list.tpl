@@ -83,7 +83,7 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
             <tr>
               <td>{{.Pid}}</td>
               <td><a href="/problem/detail?pid={{.Pid}}">{{.Title}}</a></td>
-              <td>{{ShowRatio .Solve .Submit}} (<a href="/status?list/pid?{{.Pid}}/judge?3">{{.Solve}}</a>/<a href="/status?list/pid?{{.Pid}}">{{.Submit}}</a>)</td>
+              <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?pid={{.Pid}}">{{.Submit}}</a>)</td>
             </tr>
           {{/*end*/}}
         {{end}}
