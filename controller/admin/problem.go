@@ -172,8 +172,9 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 func createfile(path, filename string, context string) {
+
 	err := os.Mkdir(path, os.ModePerm)
-	if err != nil {
+	if err != nil && !os.IsExist(err) {
 		class.Logger.Debug("create dir error")
 		return
 	}
