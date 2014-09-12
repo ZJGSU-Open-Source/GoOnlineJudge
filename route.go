@@ -9,8 +9,10 @@ import (
 
 // normal Page
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	c := &controller.HomeController{}
-	c.Route(w, r)
+	if r.URL.Path == "/" {
+		c := &controller.HomeController{}
+		c.Route(w, r)
+	}
 }
 
 func newsHandler(w http.ResponseWriter, r *http.Request) {

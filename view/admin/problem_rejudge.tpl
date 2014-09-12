@@ -7,9 +7,9 @@
 <option value="Sid">Solution ID</option>
 </select>
 <br>
-<input id="id" name="id" size="20" type="text">
+<input id="id" name="id" size="20" type="text" pattern="^[1-9]+" required>
 <div class="actions">
-	<input name="user_password" type="submit" value="Rejudge" required="required" />
+	<input name="rejudgebutton" type="submit" value="Rejudge" required="required" />
 </div>
 </form>
 
@@ -18,11 +18,6 @@ $('#search_form').submit( function(e) {
 	e.preventDefault();
 	var id = $('#id').val();
 	var type = $('#type').val();
-
-	if (id == "") {
-		alert("id should not be empty!")
-	}
-	
 	$.ajax({
 		type:'POST',
 		url:'/admin/problem/rejudge?type='+type+'&id='+id,
