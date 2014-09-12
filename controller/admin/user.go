@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type privilegeUser struct {
@@ -18,23 +19,20 @@ type UserController struct {
 	class.Controller
 }
 
-func (this *UserController) Route(w http.ResponseWriter, r *http.Request) {
+func (this UserController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 2)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "privilegeset":
-		this.Privilegeset(w, r)
-	case "pagepassword":
-		this.Pagepassword(w, r)
-	case "password":
-		this.Password(w, r)
-	case "generate":
-		this.Generate(w, r)
-	default:
-		http.Error(w, "no such page", 404)
+	if this.Privilege < config.PrivilegeAD {
+		this.Err400(w, r, "Admin", "Privilege Error")
+		return
 	}
+	action := this.GetAction(r.URL.Path, 2)
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 func (this *UserController) List(w http.ResponseWriter, r *http.Request) {

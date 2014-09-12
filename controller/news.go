@@ -6,6 +6,7 @@ import (
 	"GoOnlineJudge/model"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 //新闻控件
@@ -13,19 +14,17 @@ type NewsController struct {
 	class.Controller
 }
 
-func (this *NewsController) Route(w http.ResponseWriter, r *http.Request) {
+func (this NewsController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 1)
 	class.Logger.Debug(action)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "detail":
-		this.Detail(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
-
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 //列出所有新闻

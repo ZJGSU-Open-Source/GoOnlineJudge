@@ -18,27 +18,16 @@ type ContestController struct {
 	class.Controller
 }
 
-func (this *ContestController) Route(w http.ResponseWriter, r *http.Request) {
+func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 	action := this.GetAction(r.URL.Path, 2)
-	switch action {
-	case "list":
-		this.List(w, r)
-	case "edit":
-		this.Edit(w, r)
-	case "update":
-		this.Update(w, r)
-	case "delete":
-		this.Delete(w, r)
-	case "status":
-		this.Status(w, r)
-	case "add":
-		this.Add(w, r)
-	case "insert":
-		this.Insert(w, r)
-	default:
-		http.Error(w, "no such page", 404)
-	}
+	defer func() {
+		if e := recover(); e != nil {
+			http.Error(w, "no such page", 404)
+		}
+	}()
+	rv := class.GetReflectValue(w, r)
+	class.CallMethod(&this, strings.Title(action), rv)
 }
 
 //列出所有的比赛 url:/admin/contest/list/type/<contest,exercise>
