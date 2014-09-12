@@ -90,6 +90,5 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }

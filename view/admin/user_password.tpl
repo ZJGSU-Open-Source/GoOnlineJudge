@@ -11,8 +11,8 @@
 		</div>	
 		<div class="field">
 			<label for="user_newPassword">New Password</label><font color="red">*</font>
-			<font id="user_warning_newPassword" color="red">Password should contain at least six characters.</font><br>
-			<input id="user_newPassword" name="user[newPassword]" size="30" type="password">
+			<font id="user_warning_newPassword" color="red"></font><br>
+			<input id="user_newPassword" name="user[newPassword]" size="30" type="password" placeholder="at least six characters.">
 		</div>	
 		<div class="field">
 			<label for="user_confirmPassword">Confirm Password</label><font color="red">*</font>

@@ -84,6 +84,7 @@
               <ul>
                 <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/list">Privilege</a>{{end}}</li>
                 <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/user/pagepassword">Password</a>{{end}}</li>
+                <li>{{if .IsGenerate}}<span>Generate</sapn>{{else}}<a href="/admin/user/generate">Generate</a>{{end}}</li>
               </ul>
             </div>
             {{end}}

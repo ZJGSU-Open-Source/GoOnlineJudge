@@ -38,6 +38,5 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		class.Logger.Debug(err)
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }

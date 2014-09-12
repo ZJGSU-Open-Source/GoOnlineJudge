@@ -52,7 +52,6 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	err := this.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -77,7 +76,6 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 		w.WriteHeader(200)
 	}
-	return
 }
 
 func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +86,6 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	err := this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -196,7 +193,6 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-		return
 	}
 }
 
@@ -238,7 +234,6 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -272,7 +267,6 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -334,7 +328,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	err := this.Execute(w, "view/layout.tpl", "view/user_password.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 400)
-		return
 	}
 }
 

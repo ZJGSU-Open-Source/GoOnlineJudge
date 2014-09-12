@@ -19,7 +19,7 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	qry := make(map[string]string)
 	qry["module"] = strconv.Itoa(config.ModuleC)
 	qry["mid"] = strconv.Itoa(this.Cid)
-	qry["/sort"] = "resort"
+	qry["sort"] = "resort"
 
 	solutionModel := model.SolutionModel{}
 	solutionList, err := solutionModel.List(qry)
@@ -69,9 +69,7 @@ func (this *RanklistController) List(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
-	return
 }
 
 type userRank struct {

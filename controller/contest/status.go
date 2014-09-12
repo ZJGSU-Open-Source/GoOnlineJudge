@@ -49,7 +49,6 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -70,7 +69,7 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if one.Uid == this.Uid || this.Privilege > config.PrivilegeTC {
+	if one.Uid == this.Uid || this.Privilege >= config.PrivilegeTC {
 		this.Data["Solution"] = one
 		this.Data["Privilege"] = this.Privilege
 		this.Data["Title"] = "View Code"
@@ -79,7 +78,6 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			class.Logger.Debug(err)
 			http.Error(w, "tpl error", 500)
-			return
 		}
 	}
 }

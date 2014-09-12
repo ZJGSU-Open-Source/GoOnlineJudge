@@ -77,7 +77,6 @@ func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Reque
 		err := this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
-			return
 		}
 	} else if r.Method == "POST" {
 		passwd := r.FormValue("password")
