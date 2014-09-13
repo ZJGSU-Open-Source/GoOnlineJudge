@@ -13,8 +13,11 @@ type ContestUserContorller struct {
 	Contest
 }
 
-var RouterMap = map[string]class.Router{"problem": ProblemController{},
-	"status": StatusController{}, "ranklist": RanklistController{}}
+var RouterMap = map[string]class.Router{
+	"problem":  ProblemController{},
+	"status":   StatusController{},
+	"ranklist": RanklistController{},
+}
 
 func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest User")
@@ -30,7 +33,7 @@ func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) 
 			return
 		} else if this.ContestDetail.Encrypt == config.EncryptPW {
 			if this.Uid == "" {
-				http.Redirect(w, r, "/user?signin", http.StatusFound)
+				http.Redirect(w, r, "/user/signin", http.StatusFound)
 				return
 			} else if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
 				this.Password(w, r)
@@ -38,7 +41,7 @@ func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) 
 			}
 		} else if this.ContestDetail.Encrypt == config.EncryptPT {
 			if this.Uid == "" {
-				http.Redirect(w, r, "/user?signin", http.StatusFound)
+				http.Redirect(w, r, "/user/signin", http.StatusFound)
 				return
 			} else {
 				userlist := strings.Split(this.ContestDetail.Argument.(string), "\n")

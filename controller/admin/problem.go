@@ -95,7 +95,6 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -271,7 +270,6 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -353,7 +351,6 @@ func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Reques
 	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
