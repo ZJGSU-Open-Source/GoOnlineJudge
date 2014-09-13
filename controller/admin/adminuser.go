@@ -10,8 +10,14 @@ type AdminUserController struct {
 	class.Controller
 }
 
-var RouterMap = map[string]class.Router{"news": NewsController{}, "problem": ProblemController{},
-	"contest": ContestController{}, "testdata": TestdataController{}, "image": ImageController{}, "user": UserController{}}
+var RouterMap = map[string]class.Router{
+	"news":     NewsController{},
+	"problem":  ProblemController{},
+	"contest":  ContestController{},
+	"testdata": TestdataController{},
+	"image":    ImageController{},
+	"user":     UserController{},
+}
 
 func (this AdminUserController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)

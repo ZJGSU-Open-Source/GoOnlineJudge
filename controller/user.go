@@ -187,7 +187,6 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
-			return
 		}
 		return
 	}
@@ -228,7 +227,6 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
-			return
 		}
 		return
 	}
@@ -298,7 +296,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		if err != nil {
 			http.Error(w, "tpl error", 500)
-			return
 		}
 		return
 	}

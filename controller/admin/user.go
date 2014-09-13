@@ -64,7 +64,6 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 500)
-		return
 	}
 }
 
@@ -80,7 +79,6 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
 	if err != nil {
 		http.Error(w, "tpl error", 400)
-		return
 	}
 }
 
