@@ -45,6 +45,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Solution"] = solutionList
 	this.Data["Privilege"] = this.Privilege
 	this.Data["IsContestStatus"] = true
+	this.Data["Privilege"] = this.Privilege
+	this.Data["Uid"] = this.Uid
+
 	this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
 }
 
