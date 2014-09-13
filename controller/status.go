@@ -96,6 +96,13 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Solution"] = list
 	this.Data["Title"] = "Status List"
 	this.Data["IsStatus"] = true
+
+	if this.Privilege >= config.PrivilegeTC {
+		this.Data["IsViewSim"] = true
+	} else {
+		this.Data["IsViewSim"] = false
+	}
+
 	this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
 }
 
