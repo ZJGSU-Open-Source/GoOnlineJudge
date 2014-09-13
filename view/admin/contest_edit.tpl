@@ -11,7 +11,7 @@
     </div>
     <div class="field">
     	<label for="content_type" value="Public">Contest Type</label><br>
-    	<select id="content_type" name="type" onclick="show(); return false;">
+    	<select id="content_type" name="type" onchange="show(); return false;">
     		<option value="public" {{if .IsPublic}}selected{{end}}>Public</option>
     		<option value="private" {{if .IsPrivate}}selected{{end}}>Private</option>
     		<option value="password" {{if .IsPassword}}selected{{end}}>Password</option>

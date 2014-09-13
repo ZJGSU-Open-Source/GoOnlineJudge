@@ -10,7 +10,7 @@
     </div>
     <div class="field">
     	<label for="content_type">Contest Type</label><br>
-    	<select id="content_type" name="type" onclick="show(); return false;">
+    	<select id="content_type" name="type" onchange="show(); return false;">
     		<option value="public">Public</option>
     		<option value="private">Private</option>
     		<option value="password">Password</option>

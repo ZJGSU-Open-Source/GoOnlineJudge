@@ -27,7 +27,6 @@ func (this StatusController) Route(w http.ResponseWriter, r *http.Request) {
 
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status List")
-	this.Init(w, r)
 	args := r.URL.Query()
 	searchUrl := ""
 	qry := make(map[string]string)
@@ -108,7 +107,6 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status Code")
-	this.Init(w, r)
 
 	args := r.URL.Query()
 	class.Logger.Debug(args.Get("sid"))
