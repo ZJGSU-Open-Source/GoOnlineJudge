@@ -95,6 +95,8 @@ Language: <select id="search_language" name="search_language">
     </tr>
   </thead>
   <tbody>
+    {{$privilege := .Privilege}}
+    {{$uid := .Uid}}
     {{with .Solution}}  
       {{range .}} 
         {{if ShowStatus .Status}} 
@@ -102,8 +104,7 @@ Language: <select id="search_language" name="search_language">
             <td>{{.Sid}}</td>
             <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
-            <td><span class="submitRes-{{.Judge}}">{{if ShowSim .Sim}}*{{end}}{{ShowJudge .Judge}}</span>
-            <!-->{{if .IsViewSim}}{{if ShowSim .Sim}}[{{ .Sim}}]{{ .Sim_s_id}}{{end}}{{end}}<--></td>
+            <td><span class="submitRes-{{.Judge}}">{{if ShowSim .Sim}}*{{end}}{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
             <td>{{ShowLanguage .Language}}<a href="/status/code?sid={{.Sid}}">[view]</a></td>
