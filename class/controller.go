@@ -2,18 +2,12 @@ package class
 
 import (
 	"GoOnlineJudge/config"
-	"encoding/json"
 	"io"
 	"net/http"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
 )
-
-type Router interface {
-	Route(w http.ResponseWriter, r *http.Request)
-}
 
 type Controller struct {
 	Uid       string
@@ -59,38 +53,8 @@ func (this *Controller) Err400(w http.ResponseWriter, r *http.Request, title str
 	this.Execute(w, "view/layout.tpl", "view/400.tpl")
 }
 
-func (this *Controller) ParseURL(url string) (args map[string]string) {
-	args = make(map[string]string)
-	path := strings.Trim(url, "/")
-	list := strings.Split(path, "/")
-
-	for _, pair := range list {
-		k_v := strings.Split(pair, "?")
-		if len(k_v) <= 1 {
-			args[k_v[0]] = "Index"
-		} else {
-			args[k_v[0]] = k_v[1]
-		}
-	}
-	return
-}
-
 func (this *Controller) GetTime() (t int64) {
 	t = time.Now().Unix()
-	return
-}
-
-func (this *Controller) LoadJson(r io.Reader, i interface{}) (err error) {
-	err = json.NewDecoder(r).Decode(i)
-	return
-}
-
-func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
-	b, err := json.Marshal(i)
-	if err != nil {
-		return
-	}
-	r = strings.NewReader(string(b))
 	return
 }
 
@@ -198,17 +162,4 @@ func (this *Controller) GetAction(path string, pos int) string {
 		return pathsplit[pos]
 	}
 	return ""
-}
-
-func CallMethod(c interface{}, m string, rv []reflect.Value) {
-	rc := reflect.ValueOf(c)
-	rm := rc.MethodByName(m)
-	rm.Call(rv)
-}
-
-func GetReflectValue(w http.ResponseWriter, r *http.Request) (rv []reflect.Value) {
-	rw := reflect.ValueOf(w)
-	rr := reflect.ValueOf(r)
-	rv = []reflect.Value{rw, rr}
-	return
 }
