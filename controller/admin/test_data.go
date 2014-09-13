@@ -54,10 +54,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Problem" + pid + " - Test data"
 	this.Data["IsProblem"] = true
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
 
 // 上传测试数据,URL /admin/testdata?upload/pid?<pid>，method：POST

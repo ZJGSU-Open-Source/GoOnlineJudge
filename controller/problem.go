@@ -49,7 +49,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		url += "title=" + v + "&"
 		this.Data["SearchTitle"] = true
 		this.Data["SearchValue"] = v
-		for _, ep := range "+.?$|*^" {
+		for _, ep := range "+.?$|*^ " {
 			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
 		}
 		qry["title"] = v
@@ -109,11 +109,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Time"] = this.GetTime()
 	this.Data["Title"] = "Problem List"
 	this.Data["IsProblem"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
 }
 
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
@@ -142,11 +138,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Privilege"] = this.Privilege
 	this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-	err = this.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
 }
 
 //提交某一问题的solution， URL /problem?submit/pid?<pid>，method POST

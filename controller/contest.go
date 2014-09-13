@@ -17,7 +17,6 @@ func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	Type := r.URL.Query().Get("type")
-	class.Logger.Debug(Type)
 	qry := make(map[string]string)
 	qry["type"] = Type
 
@@ -34,9 +33,5 @@ func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = strings.Title(Type) + " List"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["Privilege"] = this.Privilege
-	err = this.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
 }

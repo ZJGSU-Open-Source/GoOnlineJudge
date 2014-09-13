@@ -37,8 +37,7 @@ func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
 			this.Data["IsShowAdmin"] = true
 			this.Data["IsAdmin"] = true
 			this.Data["RejudgePrivilege"] = true
-		}
-		if this.Privilege == config.PrivilegeTC {
+		} else if this.Privilege == config.PrivilegeTC {
 			this.Data["IsShowTeacher"] = true
 			this.Data["IsTeacher"] = true
 			this.Data["RejudgePrivilege"] = true
@@ -147,12 +146,16 @@ func (this *Controller) GetCodeLen(strLen int) (codeLen int) {
 	codeLen = strLen
 	return
 }
-func (c *Controller) Execute(w io.Writer, tplfiles ...string) error {
+
+func (c *Controller) Execute(w io.Writer, tplfiles ...string) {
 	t, err := ParseFiles(tplfiles...)
 	if err == nil {
 		err = t.Execute(w, c.Data)
 	}
-	return err
+	if err != nil {
+		//模板产生的错误应该属于debug错误，所以不对用户显示
+		Logger.Debug(err)
+	}
 }
 
 func (this *Controller) GetAction(path string, pos int) string {

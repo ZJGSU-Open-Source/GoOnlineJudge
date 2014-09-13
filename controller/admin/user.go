@@ -42,11 +42,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
 		this.Data["Title"] = "Warning"
 		this.Data["Info"] = "You are not admin!"
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-			return
-		}
+		this.Execute(w, "view/layout.tpl", "view/400.tpl")
 		return
 	}
 	userModel := model.UserModel{}
@@ -60,11 +56,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Privilege User List"
 	this.Data["IsUser"] = true
 	this.Data["IsList"] = true
-
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
@@ -76,10 +68,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Data["IsUser"] = true
 	this.Data["IsPwd"] = true
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 400)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
@@ -129,12 +118,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(400)
 	}
-	b, err := json.Marshal(&hint)
-	if err != nil {
-		http.Error(w, "json error", 400)
-		return
-	}
-
+	b, _ := json.Marshal(&hint)
 	w.Write(b)
 }
 
@@ -185,11 +169,7 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 
 		w.WriteHeader(200)
 	} else {
-		b, err := json.Marshal(&hint)
-		if err != nil {
-			http.Error(w, "json error", 500)
-			return
-		}
+		b, _ := json.Marshal(&hint)
 
 		w.WriteHeader(400)
 		w.Write(b)
@@ -202,12 +182,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 		this.Data["IsUser"] = true
 		this.Data["IsGenerate"] = true
 
-		err := this.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 400)
-			return
-		}
-
+		this.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
 	} else if r.Method == "POST" {
 		prefix := r.FormValue("prefix")
 		amount, err := strconv.Atoi(r.FormValue("amount"))

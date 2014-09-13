@@ -15,8 +15,5 @@ func (this RecruitController) Route(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "Recruit"
 	this.Data["IsRecruit"] = true
-	err := this.Execute(w, "view/layout.tpl", "view/recruit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/recruit.tpl")
 }

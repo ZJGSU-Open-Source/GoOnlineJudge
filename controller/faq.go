@@ -16,8 +16,5 @@ func (this FAQController) Route(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "FAQ"
 	this.Data["IsFAQ"] = true
-	err := this.Execute(w, "view/layout.tpl", "view/faq.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/faq.tpl")
 }

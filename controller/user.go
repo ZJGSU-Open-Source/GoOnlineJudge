@@ -31,10 +31,8 @@ func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "User Sign In"
 	this.Data["IsUserSignIn"] = true
-	err := this.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+
+	this.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
 }
 
 func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
@@ -65,10 +63,8 @@ func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "User Sign Up"
 	this.Data["IsUserSignUp"] = true
-	err := this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
+
 }
 
 func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
@@ -172,23 +168,14 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		this.Data["IsSettingsDetail"] = true
 	}
 
-	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 }
 
 func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Settings")
 
-	if this.Privilege == config.PrivilegeNA {
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You must login!"
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-		}
-		return
+	if this.Uid == "" {
+		http.Redirect(w, r, "/user/signin", http.StatusFound)
 	}
 
 	userModel := model.UserModel{}
@@ -212,22 +199,14 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsDetail"] = true
 
-	err = this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 }
 
 func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Edit")
 
-	if this.Privilege == config.PrivilegeNA {
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You must login!"
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-		}
+	if this.Uid == "" {
+		http.Redirect(w, r, "/user/signin", http.StatusFound)
 		return
 	}
 
@@ -244,10 +223,7 @@ func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsEdit"] = true
 
-	err = this.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
 }
 
 func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
@@ -290,13 +266,8 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password Page")
 
-	if this.Privilege == config.PrivilegeNA {
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You must login!"
-		err := this.Execute(w, "view/layout.tpl", "view/400.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-		}
+	if this.Uid == "" {
+		http.Redirect(w, r, "/user/signin", http.StatusFound)
 		return
 	}
 
@@ -304,10 +275,7 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsPassword"] = true
 
-	err := this.Execute(w, "view/layout.tpl", "view/user_password.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 400)
-	}
+	this.Execute(w, "view/layout.tpl", "view/user_password.tpl")
 }
 
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {

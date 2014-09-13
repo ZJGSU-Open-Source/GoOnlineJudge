@@ -50,11 +50,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = false
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/problem_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/problem_detail.tpl")
 }
 
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
@@ -73,11 +69,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsProblem"] = true
 	this.Data["IsList"] = true
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
 }
 
 func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
@@ -92,10 +84,7 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsAdd"] = true
 	this.Data["IsEdit"] = true
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
 }
 
 func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
@@ -267,10 +256,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsList"] = false
 	this.Data["IsEdit"] = true
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 }
 
 func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
@@ -348,10 +334,7 @@ func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Reques
 	this.Data["IsProblem"] = true
 	this.Data["IsRejudge"] = true
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
 }
 
 func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
