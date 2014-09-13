@@ -22,6 +22,9 @@ func ShowStatus(status int) bool {
 	return status == config.StatusAvailable
 }
 
+func ShowSim(sim int) bool {
+	return sim != 0
+}
 func ShowTime(unixtime int64) string {
 	return time.Unix(unixtime, 0).Local().Format("2006-01-02 15:04:05")
 }

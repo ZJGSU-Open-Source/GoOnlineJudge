@@ -29,12 +29,13 @@ type Solution struct {
 
 	Status   int   `json:"status"bson:"status"`
 	Create   int64 `json:"create"bson:"create"`
+	Sim      int   `json:"sim"bson:"sim"`
 	Sim_s_id int   `json:"sim_s_id"bson:"sim_s_id"`
 }
 
 var sDetailSelector = bson.M{"_id": 0}
 var sAchieveSelector = bson.M{"_id": 0, "pid": 1}
-var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1, "length": 1, "language": 1, "create": 1, "status": 1}
+var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1, "length": 1, "language": 1, "create": 1, "status": 1, "sim": 1, "sim_s_id": 1}
 
 type SolutionModel struct {
 	class.Model

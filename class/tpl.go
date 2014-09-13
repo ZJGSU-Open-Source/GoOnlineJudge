@@ -29,4 +29,5 @@ func initFuncMap() {
 	funcMap["LargePU"] = LargePU
 	funcMap["ShowTime"] = ShowTime
 	funcMap["ShowStatus"] = ShowStatus
+	funcMap["ShowSim"] = ShowSim
 }
