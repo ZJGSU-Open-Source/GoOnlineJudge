@@ -184,8 +184,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 	code := r.FormValue("code")
 
-	class.Logger.Debug(code)
-
 	one.Code = code
 	one.Length = this.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
