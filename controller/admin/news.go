@@ -49,11 +49,7 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = false
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/news_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/news_detail.tpl")
 }
 
 // 列出所有新闻
@@ -71,11 +67,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - News List"
 	this.Data["IsNews"] = true
 	this.Data["IsList"] = true
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/news_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_list.tpl")
 }
 
 func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
@@ -87,11 +79,8 @@ func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsAdd"] = true
 	this.Data["IsEdit"] = true
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/news_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_add.tpl")
+
 }
 
 func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
@@ -219,11 +208,7 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsList"] = false
 	this.Data["IsEdit"] = true
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/news_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_edit.tpl")
 }
 
 func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {

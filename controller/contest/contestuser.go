@@ -72,10 +72,7 @@ func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) 
 
 func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		err := this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
-		if err != nil {
-			http.Error(w, "tpl error", 500)
-		}
+		this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
 	} else if r.Method == "POST" {
 		passwd := r.FormValue("password")
 		if passwd == this.ContestDetail.Argument.(string) {

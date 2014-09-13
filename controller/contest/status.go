@@ -45,10 +45,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Solution"] = solutionList
 	this.Data["Privilege"] = this.Privilege
 	this.Data["IsContestStatus"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
 }
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
@@ -73,10 +70,6 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		this.Data["Privilege"] = this.Privilege
 		this.Data["Title"] = "View Code"
 		this.Data["IsCode"] = true
-		err = this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
-		if err != nil {
-			class.Logger.Debug(err)
-			http.Error(w, "tpl error", 500)
-		}
+		this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
 	}
 }

@@ -41,11 +41,7 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "Welcome to ZJGSU Online Judge"
 	this.Data["IsNews"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/news_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/layout.tpl", "view/news_list.tpl")
 }
 
 //列出指定新闻的详细信息
@@ -72,9 +68,5 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	this.Data["Title"] = "News Detail"
-	err = this.Execute(w, "view/layout.tpl", "view/news_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/layout.tpl", "view/news_detail.tpl")
 }

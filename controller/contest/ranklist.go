@@ -66,10 +66,7 @@ func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsContestRanklist"] = true
 	this.Data["Cid"] = this.Cid
 	this.Data["ProblemList"] = this.Index
-	err = this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 }
 
 type userRank struct {

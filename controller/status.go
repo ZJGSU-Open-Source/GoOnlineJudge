@@ -96,10 +96,7 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Solution"] = list
 	this.Data["Title"] = "Status List"
 	this.Data["IsStatus"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
 }
 
 func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
@@ -123,8 +120,5 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	this.Data["Solution"] = one
 	this.Data["Title"] = "View Code"
 	this.Data["IsCode"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
 }

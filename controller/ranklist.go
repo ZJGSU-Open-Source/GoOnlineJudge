@@ -87,8 +87,5 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	this.Data["User"] = list
 	this.Data["Title"] = "Ranklist"
 	this.Data["IsRanklist"] = true
-	err = this.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
 }

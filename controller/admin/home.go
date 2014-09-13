@@ -15,9 +15,5 @@ func (this HomeController) Home(w http.ResponseWriter, r *http.Request) {
 
 	this.Data["Title"] = "Admin - Home"
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
 }

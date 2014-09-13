@@ -65,11 +65,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Start"] = this.ContestDetail.Start
 	this.Data["End"] = this.ContestDetail.End
 
-	err := this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
-	if err != nil {
-		class.Logger.Debug(err)
-		http.Error(w, "tpl error", 500)
-	}
+	this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 }
 
 func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
@@ -92,11 +88,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.Data["Pid"] = pid
 	this.Data["Status"] = this.ContestDetail.Status
 
-	err = this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		class.Logger.Debug(err)
-	}
+	this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
 }
 
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {

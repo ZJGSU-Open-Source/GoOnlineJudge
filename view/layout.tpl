@@ -62,8 +62,8 @@
             </div>
           {{end}}
           {{if .IsCurrentUser}}
-            <li><a href="/user/settings">Settings</a></li>
             {{if .IsSettings}}
+            <li><a href="/user/settings">Settings</a></li>
             <div id="psnavi">
               <ul>
                 <li>{{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail?uid={{.CurrentUser}}">Detail</a>{{end}}</li>

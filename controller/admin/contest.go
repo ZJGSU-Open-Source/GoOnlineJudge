@@ -48,12 +48,7 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsList"] = true
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
-
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
 // 添加比赛页面 url:/admin/contest/add/type/<contest,exercise>
@@ -68,11 +63,7 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsAdd"] = true
 	this.Data["Type"] = Type
 
-	err := this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
 
 // 插入比赛 url:/admin/contest?insert/type?<contest,exercise>
@@ -283,11 +274,7 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	this.Data["Is"+strings.Title(Type)] = true
 	this.Data["IsEdit"] = true
 
-	err = this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
-	if err != nil {
-		http.Error(w, "tpl error", 500)
-		return
-	}
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 }
 
 // 更新竞赛，url:/admin/contest/update/，method:POST
