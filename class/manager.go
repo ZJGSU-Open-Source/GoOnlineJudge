@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Manager 是session控制器
 type Manager struct {
 	cookieName    string
 	sessions      map[string]*Session
@@ -17,6 +18,7 @@ type Manager struct {
 	cookieExpires int64
 }
 
+// sessionId() 随机生成一个session id
 func (m *Manager) sessionId() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
@@ -25,6 +27,7 @@ func (m *Manager) sessionId() string {
 	return base64.URLEncoding.EncodeToString(b)
 }
 
+// StartSession 建立session会话
 func (m *Manager) StartSession(w http.ResponseWriter, r *http.Request) (session *Session) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
@@ -52,6 +55,7 @@ func (m *Manager) StartSession(w http.ResponseWriter, r *http.Request) (session 
 	return
 }
 
+// DeleteSession 删除session并设置客户端cookie
 func (m *Manager) DeleteSession(w http.ResponseWriter, r *http.Request) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
@@ -74,6 +78,7 @@ func (m *Manager) DeleteSession(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &newcookie)
 }
 
+// DeleteSess 安全删除session
 func (m *Manager) DeleteSess(sid string) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
@@ -81,6 +86,7 @@ func (m *Manager) DeleteSess(sid string) {
 	delete(m.sessions, sid)
 }
 
+// GC 垃圾回收，释放过期session
 func (m *Manager) GC() {
 	for {
 		time.Sleep(time.Duration(m.cookieExpires) * time.Second)
@@ -92,6 +98,7 @@ func (m *Manager) GC() {
 	}
 }
 
+// NewManager 生成一个新的Manager
 func NewManager() *Manager {
 	return &Manager{cookieName: "sessionID",
 		cookieExpires: config.CookieExpires, sessions: make(map[string]*Session)}

@@ -74,6 +74,7 @@
             {{end}}
           {{end}}
           <li>{{if.IsFAQ}}<span>FAQ</span>{{else}}<a href="/FAQ">FAQ</a>{{end}}</li>
+          <li>{{if.IsRecruit}}<span>Recruit</span>{{else}}<a href="/recruit">Recruit</a>{{end}}</li>
         </ul>
       </div>
       <div id="body" class="span-22 last">

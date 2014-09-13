@@ -40,7 +40,7 @@ func AddFile(pattern string, fileHandler http.Handler) {
 type Server struct {
 }
 
-//路由，先处理静态文件，后处理控件
+//路由，先处理静态文件，后处理控件，按照最大匹配原则匹配路由
 func (this *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path + "/"
 
@@ -61,6 +61,7 @@ func (this *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			realRouter = router
 		}
 	}
+
 	if filemaxlenth > maxlenth {
 		realFileHandler.ServeHTTP(w, r)
 	} else if maxlenth > 0 {
