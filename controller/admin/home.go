@@ -14,6 +14,5 @@ func (this HomeController) Home(w http.ResponseWriter, r *http.Request) {
 	this.Init(w, r)
 
 	this.Data["Title"] = "Admin - Home"
-
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
 }

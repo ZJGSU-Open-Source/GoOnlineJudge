@@ -153,6 +153,7 @@ func createfile(path, filename string, context string) {
 	file, err := os.Create(path + "/" + filename)
 	if err != nil {
 		class.Logger.Debug(err)
+		return
 	}
 	defer file.Close()
 
