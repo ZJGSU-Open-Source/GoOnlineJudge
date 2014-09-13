@@ -27,15 +27,16 @@ type Solution struct {
 
 	Code string `json:"code"bson:"code"`
 
-	Status   int   `json:"status"bson:"status"`
-	Create   int64 `json:"create"bson:"create"`
-	Sim      int   `json:"sim"bson:"sim"`
-	Sim_s_id int   `json:"sim_s_id"bson:"sim_s_id"`
+	Status    int   `json:"status"bson:"status"`
+	Create    int64 `json:"create"bson:"create"`
+	Sim       int   `json:"sim"bson:"sim"`
+	Sim_s_id  int   `json:"sim_s_id"bson:"sim_s_id"`
+	IsViewSim bool  `json:"isviewsim"bson:"isviewsim"`
 }
 
 var sDetailSelector = bson.M{"_id": 0}
 var sAchieveSelector = bson.M{"_id": 0, "pid": 1}
-var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1, "length": 1, "language": 1, "create": 1, "status": 1, "sim": 1, "sim_s_id": 1}
+var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1, "length": 1, "language": 1, "create": 1, "status": 1, "sim": 1, "sim_s_id": 1, "isviewsim": 1}
 
 type SolutionModel struct {
 	class.Model
@@ -118,6 +119,8 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 	alt["judge"] = ori.Judge
 	alt["time"] = ori.Time
 	alt["memory"] = ori.Memory
+	alt["sim"] = ori.Sim
+	alt["sim_s_id"] = ori.Sim_s_id
 
 	err := this.OpenDB()
 	if err != nil {
