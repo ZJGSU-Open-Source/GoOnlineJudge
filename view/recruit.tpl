@@ -36,5 +36,5 @@
 <h3>截止日期</h3>
 <p>长期有效</p>
 <h3>联系方式</h3>
-<p>id: sake             email: <a href="http://mailto:jc5930@sina.cn" target="_blank">jc5930@sina.cn</a>                       github: <a href="https://github.com/sakeven" target="_blank">@sakeven</a><br>id: clarkzjw        email: <a href="http://mailto:clarkzjw@gmail.com" target="_blank">clarkzjw@gmail.com</a>                github: <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a><br>id: JeremylWu   email: <a href="http://mailto:wushuaiyi@outlook.com" target="_blank">wushuaiyi@outlook.com</a>          github: <a href="https://github.com/JeremylWu" target="_blank">@JeremylWu</a></p>
+<p>id: sake             email: <a href="mailto:jc5930@sina.cn" target="_blank">jc5930@sina.cn</a>                       github: <a href="https://github.com/sakeven" target="_blank">@sakeven</a><br>id: clarkzjw        email: <a href="mailto:clarkzjw@gmail.com" target="_blank">clarkzjw@gmail.com</a>                github: <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a><br>id: JeremylWu   email: <a href="mailto:wushuaiyi@outlook.com" target="_blank">wushuaiyi@outlook.com</a>          github: <a href="https://github.com/JeremylWu" target="_blank">@JeremylWu</a></p>
 {{end}}
