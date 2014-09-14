@@ -13,7 +13,7 @@
 <div class="field">
 	<label for="user_amount">Amount</label><font color="red">*</font>
 	<br/>
-	<input id="user_amount" name="amount" size="30" type="text" pattern="^[1-9]+" required>
+	<input id="user_amount" name="amount" size="30" type="text" pattern="^[0-9]+" required>
 </div>	
 <div class="actions">
 	<input name="user_password" type="submit" value="Submit" required="required" />

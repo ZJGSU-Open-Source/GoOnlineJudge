@@ -122,12 +122,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		this.SetSession(w, r, "Privilege", "1")
 		w.WriteHeader(200)
 	} else {
-		b, err := json.Marshal(&hint)
-		if err != nil {
-			http.Error(w, "json error", 500)
-			return
-		}
-
+		b, _ := json.Marshal(&hint)
 		w.WriteHeader(400)
 		w.Write(b)
 	}
@@ -255,11 +250,7 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 	}
 
-	b, err := json.Marshal(&hint)
-	if err != nil {
-		http.Error(w, "json error", 400)
-		return
-	}
+	b, _ := json.Marshal(&hint)
 	w.Write(b)
 }
 
@@ -322,11 +313,6 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(400)
 	}
-	b, err := json.Marshal(&hint)
-	if err != nil {
-		http.Error(w, "json error", 400)
-		return
-	}
-
+	b, _ := json.Marshal(&hint)
 	w.Write(b)
 }
