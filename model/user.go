@@ -19,6 +19,8 @@ type User struct {
 	Motto  string `json:"motto"bson:"motto"`
 
 	Privilege int `json:"privilege"bson:"privilege"`
+	//module指定user类型，有普通normal，比赛用team两种类型
+	Module int `json:"module"bson:"module"`
 
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
