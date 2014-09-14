@@ -210,6 +210,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 			one := model.User{}
 			one.Uid = uid
 			one.Pwd = password
+			one.Module, _ = strconv.Atoi(r.FormValue("module"))
 			if err := usermodel.Insert(one); err == nil {
 				accountlist += uid + " \t" + password + "\n"
 				i++
