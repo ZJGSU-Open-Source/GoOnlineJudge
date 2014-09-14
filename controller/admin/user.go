@@ -4,7 +4,11 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
@@ -189,9 +193,40 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "args error", 400)
 		}
-		for i := 0; i < amount; i++ {
-			uid := prefix + strconv.Itoa(i)
-			class.Logger.Debug(uid)
+		count := 0
+		tmp := amount
+		for tmp > 0 {
+			tmp /= 10
+			count++
 		}
+		format := "%0" + strconv.Itoa(count) + "d"
+		usermodel := &model.UserModel{}
+		accountlist := "Uid \tPassword\n"
+
+		for i, nxt := 0, 1; i < amount; {
+			uid := prefix + fmt.Sprintf(format, nxt)
+			password := RandPassword()
+			class.Logger.Debug(uid, password)
+			one := model.User{}
+			one.Uid = uid
+			one.Pwd = password
+			if err := usermodel.Insert(one); err == nil {
+				accountlist += uid + " \t" + password + "\n"
+				i++
+			}
+			nxt++
+		}
+		w.Header().Add("ContentType", "application/octet-stream")
+		w.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
+		w.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
+		w.Write([]byte(accountlist))
 	}
+}
+
+func RandPassword() string {
+	b := make([]byte, 8)
+	if _, err := io.ReadFull(rand.Reader, b); err != nil {
+		return ""
+	}
+	return base64.URLEncoding.EncodeToString(b)[:8]
 }

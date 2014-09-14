@@ -25,4 +25,6 @@ var (
 
 	//密码加密错误
 	EncryptErr = errors.New("Encrypt Error")
+
+	ExistErr = errors.New("Id has existed")
 )

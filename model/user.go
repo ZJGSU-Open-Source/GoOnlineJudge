@@ -188,6 +188,11 @@ func (this *UserModel) Delete(uid string) error {
 func (this *UserModel) Insert(one User) error {
 	log.Logger.Debug("Server UserModel Insert")
 
+	if _, err := this.Detail(one.Uid); err != NotFoundErr { //测试uid是否已经存在
+		log.Logger.Debug(err)
+		return ExistErr
+	}
+
 	var err error
 	one.Pwd, err = this.EncryptPassword(one.Pwd)
 	if err != nil {
