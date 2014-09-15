@@ -26,7 +26,7 @@
             <td>{{.Sid}}</td>
             <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/contest/problem/detail?cid={{$cid}}&pid={{.Pid}}">{{.Pid}}</a></td>
-            <td><span class="submitRes-{{.Judge}}">{{if ShowSim .Sim}}*{{end}}{{ShowJudge .Judge}}</span>
+            <td><span class="submitRes-{{.Judge}}">{{if or (eq .Uid $uid) (LargePU $privilege)}}*{{end}}{{ShowJudge .Judge}}</span>
             {{if or (eq .Uid $uid) (LargePU $privilege)}}[{{.Sim}}]{{.Sim_s_id}}{{end}}</td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
