@@ -144,7 +144,7 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest?list/type?"+Type, http.StatusFound) //重定向到竞赛列表页
+	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound) //重定向到竞赛列表页
 }
 
 //更改contest状态 url:/admin/contest/status/
