@@ -7,7 +7,7 @@
 <option value="Sid">Solution ID</option>
 </select>
 <br>
-<input id="id" name="id" size="20" type="text" pattern="^[1-9]+" required>
+<input id="id" name="id" size="20" type="text" pattern="^[0-9]+" required>
 <div class="actions">
 	<input name="rejudgebutton" type="submit" value="Rejudge" required="required" />
 </div>
