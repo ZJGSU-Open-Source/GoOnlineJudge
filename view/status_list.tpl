@@ -104,7 +104,7 @@ Language: <select id="search_language" name="search_language">
             <td>{{.Sid}}</td>
             <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
-            <td><span class="submitRes-{{.Judge}}">{{if ShowSim .Sim}}*{{end}}{{ShowJudge .Judge}}</span></td>
+            <td><span class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
             <td>{{ShowLanguage .Language}}<a href="/status/code?sid={{.Sid}}">[view]</a></td>
