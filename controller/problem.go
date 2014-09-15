@@ -210,7 +210,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	go func() { //编译运行solution
-		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", strconv.Itoa(false)) //Run Judge
+		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge", "false") //Run Judge
 		err = cmd.Run()
 		if err != nil {
 			class.Logger.Debug(err)
