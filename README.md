@@ -23,6 +23,11 @@ You can get an api documentation from [godoc](http://godoc.org/gopkg.in/mgo.v2)
 sudo apt-get install build-essential
 ```
 
++ flex is required for the code similarity test
+```bash
+sudo apt-get install flex
+```
+
 ###Compile
 Then you can download our source code.
 ```bash
@@ -31,7 +36,7 @@ git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoO
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
 git clone https://github.com/sakeven/golog.git $GOPATH/src/golog
 ```
-Those source codes file should be in your $GOPATH/src. Also you should create two directories in your $GOPATH/src.
+Those source codes file should be in your $GOPATH/src. 
 ```bash
 #directory for problem set
 mkdir ProblemData
@@ -39,8 +44,14 @@ mkdir ProblemData
 mkdir run
 #directory for log
 mkdir log
+#configure
+cd $GOPATH/src/RunServer
+vim Cjudger/config.h
 ```
-Make sure you hava these directories in your $GOPATH/src:
+
+Set variable `oj_home` equals to`$GOPATH/src`, make sure use absolute path to replace `$GOPATH`
+
+Make sure you have these directories in your $GOPATH/src:
 
 	GoOnlineJudge/
 	RunServer/
