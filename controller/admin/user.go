@@ -193,6 +193,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "args error", 400)
 		}
+		//TODO:account type
 		count := 0
 		tmp := amount
 		for tmp > 0 {
@@ -224,6 +225,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//RandPassword 生成随机8位密码
 func RandPassword() string {
 	b := make([]byte, 8)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {

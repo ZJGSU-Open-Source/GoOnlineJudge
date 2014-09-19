@@ -28,7 +28,7 @@ func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
 	class.CallMethod(&this, strings.Title(action), rv)
 }
 
-// 列出特定数量的问题,URL，/problem?list/pid?<pid>/titile?<titile>/source?<source>/page?<page>
+// 列出特定数量的问题,URL，/problem/list?pid=<pid>&titile=<titile>&source=<source>&page=<page>
 func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 
@@ -141,7 +141,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	this.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
 }
 
-//提交某一问题的solution， URL /problem?submit/pid?<pid>，method POST
+//提交某一问题的solution， URL /problem/submit?pid=<pid>，method POST
 func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Submit")
 

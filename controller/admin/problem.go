@@ -400,7 +400,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			b, _ := json.Marshal(&hint)
 			w.WriteHeader(400)
 			w.Write(b)
-
 			return
 		}
 
@@ -419,4 +418,5 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			}
 		}()
 	}
+	w.WriteHeader(200)
 }

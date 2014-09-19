@@ -118,8 +118,12 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Solution"] = one
-	this.Data["Title"] = "View Code"
-	this.Data["IsCode"] = true
-	this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
+	if one.Uid == this.Uid || this.Privilege > config.PrivilegePU {
+		this.Data["Solution"] = one
+		this.Data["Title"] = "View Code"
+		this.Data["IsCode"] = true
+		this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
+	} else {
+		this.Err400(w, r, "Warning", "You can't see it!")
+	}
 }
