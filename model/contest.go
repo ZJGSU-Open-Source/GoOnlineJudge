@@ -170,7 +170,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 	return nil
 }
 
-//列出由参数args指定所有问题，参数args应该包括type?<type>/offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/之一
+//列出由参数args指定所有问题，参数args应该包括type:<type>,offset:<offset>,limit:<limit>,pid:<pid>,title:<title>/之一
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	log.Logger.Debug("Server ContestModel List")
 

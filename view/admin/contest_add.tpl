@@ -23,19 +23,19 @@
      
     <div class="field">
       <label for="content_startTimeYear">Start Time[Year-Month-Day Hour:Minute]</label><br>
-      <input id="content_startTimeYear" name="startTimeYear" size="4" type="number" max="2100" min="2014">-
-      <input id="content_startTimeMonth" name="startTimeMonth" size="4" type="number" max="12" min="1">-
-      <input id="content_startTimeDay" name="startTimeDay" type="number" max="31" min="1">   
-      <input id="content_startTimeHour" name="startTimeHour" size="4" type="number" max="23" min="0">:
-      <input id="content_startTimeMinute" name="startTimeMinute" size="4" type="number" max="59" min="0">:
+      <input id="content_startTimeYear" name="startTimeYear" size="4" type="number" max="2100" min="2014" value="{{.StartYear}}">-
+      <input id="content_startTimeMonth" name="startTimeMonth" size="4" type="number" max="12" min="1" value="{{.StartMonth}}">-
+      <input id="content_startTimeDay" name="startTimeDay" type="number" max="31" min="1" value="{{.StartDay}}">
+      <input id="content_startTimeHour" name="startTimeHour" size="4" type="number" max="23" min="0" value="{{.StartHour}}">:
+      <input id="content_startTimeMinute" name="startTimeMinute" size="4" type="number" max="59" min="0" value="0">:
     </div>
     <div class="field">
       <label for="content_endTimeYear">End Time[Year-Month-Day Hour:Minute]</label><br>
-      <input id="content_endTimeYear" name="endTimeYear" size="4" type="number" max="2100" min="2014">-
-      <input id="content_endTimeMonth" name="endTimeMonth" size="4" type="number" max="12" min="1">-
-      <input id="content_endTimeDay" name="endTimeDay" type="number" max="31" min="1">   
-      <input id="content_endTimeHour" name="endTimeHour" size="4" type="number" max="23" min="0">:
-      <input id="content_endTimeMinute" name="endTimeMinute" size="4" size="4" type="number" max="59" min="0">:
+      <input id="content_endTimeYear" name="endTimeYear" size="4" type="number" max="2100" min="2014" value="{{.EndYear}}">-
+      <input id="content_endTimeMonth" name="endTimeMonth" size="4" type="number" max="12" min="1" value="{{.EndMonth}}">-
+      <input id="content_endTimeDay" name="endTimeDay" type="number" max="31" min="1" value="{{.EndDay}}">
+      <input id="content_endTimeHour" name="endTimeHour" size="4" type="number" max="23" min="0" value="{{.EndHour}}">:
+      <input id="content_endTimeMinute" name="endTimeMinute" size="4" size="4" type="number" max="59" min="0" value="0">:
     </div>
     <div class="field">
     	<label for="content_problemList">Problem List[Please using ";" split each problem.]</label><br>

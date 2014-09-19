@@ -261,7 +261,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 	return list, nil
 }
 
-// 计数符合参数args的problem的个数，count/title?<title>/source?<source>/status?<status>
+// 计数符合参数args的problem的个数，title:<title>,source:<source>,status:<status>
 func (this *ProblemModel) Count(args map[string]string) (int, error) {
 	log.Logger.Debug("ProblemModel Count")
 

@@ -30,7 +30,7 @@ func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	class.CallMethod(&this, strings.Title(action), rv)
 }
 
-//列出所有的比赛 url:/admin/contest/list/type/<contest,exercise>
+//列出所有的比赛 url:/admin/contest/list?type=<contest,exercise>
 func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 
@@ -51,12 +51,23 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
-// 添加比赛页面 url:/admin/contest/add/type/<contest,exercise>
+// 添加比赛页面 url:/admin/contest/add?type=<contest,exercise>
 func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Add")
 
 	Type := r.URL.Query().Get("type")
 	//class.Logger.Debug(Type)
+	now := time.Now()
+	this.Data["StartYear"] = now.Year()
+	this.Data["StartMonth"] = int(now.Month())
+	this.Data["StartDay"] = int(now.Day())
+	this.Data["StartHour"] = int(now.Hour())
+
+	end := now.Add(5 * time.Hour)
+	this.Data["EndYear"] = end.Year()
+	this.Data["EndMonth"] = int(end.Month())
+	this.Data["EndDay"] = int(end.Day())
+	this.Data["EndHour"] = int(end.Hour())
 
 	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
 	this.Data["Is"+strings.Title(Type)] = true
@@ -66,7 +77,7 @@ func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
 
-// 插入比赛 url:/admin/contest?insert/type?<contest,exercise>
+// 插入比赛 url:/admin/contest/insert?type=<contest,exercise>
 func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Insert")
 	if r.Method != "POST" {
