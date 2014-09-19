@@ -79,6 +79,7 @@ func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 		this.Err400(w, r, "Warning", "Error Privilege to Add problem")
 		return
 	}
+
 	this.Data["Title"] = "Admin - Problem Add"
 	this.Data["IsProblem"] = true
 	this.Data["IsAdd"] = true
@@ -225,6 +226,8 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 
 	problemModel := model.ProblemModel{}
 	problemModel.Delete(pid)
+
+	//TODO:delete testdata
 
 	w.WriteHeader(200)
 }

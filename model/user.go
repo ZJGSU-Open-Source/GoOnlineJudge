@@ -19,7 +19,7 @@ type User struct {
 	Motto  string `json:"motto"bson:"motto"`
 
 	Privilege int `json:"privilege"bson:"privilege"`
-	//module指定user类型，有普通normal，比赛用team两种类型
+	//module指定user类型，有普通normal(0)，比赛用team(1)两种类型
 	Module int `json:"module"bson:"module"`
 
 	Solve  int `json:"solve"bson:"solve"`
@@ -273,7 +273,7 @@ func (this *UserModel) Status(uid string) error {
 	return nil
 }
 
-// 用户做题记录，uid?<uid>/action?<solve/submit>
+// 用户做题记录，uid:<uid>,action:<solve/submit>
 func (this *UserModel) Record(uid string, solve int, submit int) error {
 	log.Logger.Debug("Server UserModel Submit")
 
@@ -292,7 +292,7 @@ func (this *UserModel) Record(uid string, solve int, submit int) error {
 	return nil
 }
 
-// 列出用户offset?<offset>/limit?<limit>/uid?<uid>/nick?<nick>
+// 列出用户 offset:<offset>,limit:<limit>,uid:<uid>,nick:<nick>
 func (this *UserModel) List(args map[string]string) ([]*User, error) {
 	log.Logger.Debug("Server UserModel List")
 
@@ -337,6 +337,7 @@ func (this *UserModel) List(args map[string]string) ([]*User, error) {
 func (this *UserModel) CheckQuery(args map[string]string) (query bson.M, err error) {
 	query = make(bson.M)
 
+	query["module"] = 0
 	if v, ok := args["uid"]; ok {
 		query["uid"] = v
 	}

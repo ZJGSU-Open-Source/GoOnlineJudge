@@ -39,6 +39,7 @@ func (this UserController) Route(w http.ResponseWriter, r *http.Request) {
 	class.CallMethod(&this, strings.Title(action), rv)
 }
 
+//显示具有特殊权限的用户，url:/admin/user/list
 func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
 
@@ -63,6 +64,7 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
+//密码设置页面,url: /admin/user/pagepassword
 func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password Page")
 
@@ -75,8 +77,14 @@ func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request)
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
 
+//设置用户密码，url:/admin/user/password, method: POST
 func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password")
+
+	if r.Method != "POST" {
+		http.Error(w, "err post ", 400)
+		return
+	}
 
 	ok := 1
 	hint := make(map[string]string)
@@ -126,8 +134,14 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+// 设置用户权限
 func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Privilege")
+
+	if r.Method != "POST" {
+		http.Error(w, "err method", 400)
+		return
+	}
 
 	args := r.URL.Query()
 	uid := args.Get("uid")
@@ -180,26 +194,30 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 	}
 }
 
+//Generate 生成指定数量的用户账号，/admin/user/generate
 func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		this.Data["Title"] = "Admin User Generate"
 		this.Data["IsUser"] = true
 		this.Data["IsGenerate"] = true
-
 		this.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
+
 	} else if r.Method == "POST" {
 		prefix := r.FormValue("prefix")
-		amount, err := strconv.Atoi(r.FormValue("amount"))
-		if err != nil {
-			http.Error(w, "args error", 400)
+		module, _ := strconv.Atoi(r.FormValue("module"))
+		module %= 2
+		amount, _ := strconv.Atoi(r.FormValue("amount"))
+		if amount > 100 {
+			amount = 100
 		}
-		//TODO:account type
+
 		count := 0
 		tmp := amount
 		for tmp > 0 {
 			tmp /= 10
 			count++
 		}
+
 		format := "%0" + strconv.Itoa(count) + "d"
 		usermodel := &model.UserModel{}
 		accountlist := "Uid \tPassword\n"
@@ -211,6 +229,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 			one := model.User{}
 			one.Uid = uid
 			one.Pwd = password
+			one.Module = module
 			one.Module, _ = strconv.Atoi(r.FormValue("module"))
 			if err := usermodel.Insert(one); err == nil {
 				accountlist += uid + " \t" + password + "\n"
@@ -218,6 +237,7 @@ func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 			}
 			nxt++
 		}
+
 		w.Header().Add("ContentType", "application/octet-stream")
 		w.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
 		w.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))

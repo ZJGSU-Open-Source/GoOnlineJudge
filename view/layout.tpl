@@ -73,7 +73,7 @@
             </div>
             {{end}}
           {{end}}
-          <li>{{if.IsRecruit}}<span>Recruit</span>{{else}}<a href="/recruit">Recruit</a>{{end}}</li>
+          <li>{{if.IsOSC}}<span>OSC</span>{{else}}<a href="/osc">OSC</a>{{end}}</li>
           <li>{{if.IsFAQ}}<span>FAQ</span>{{else}}<a href="/FAQ">FAQ</a>{{end}}</li>
         </ul>
       </div>

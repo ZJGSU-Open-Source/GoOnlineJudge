@@ -184,9 +184,9 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	errflag := true
 	switch {
 	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
-		hint["info"] = "No such problem"
+		hint["info"] = "No such problem."
 	case code == "":
-		hint["info"] = "Your source code is too short"
+		hint["info"] = "Your source code is too short."
 	default:
 		errflag = false
 	}
