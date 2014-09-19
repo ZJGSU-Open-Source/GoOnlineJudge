@@ -99,7 +99,8 @@ Language: <select id="search_language" name="search_language">
     {{$uid := .Uid}}
     {{with .Solution}}  
       {{range .}} 
-        {{if ShowStatus .Status}} 
+        {{if ShowStatus .Status}}
+        
           <tr>
             <td>{{.Sid}}</td>
             <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
@@ -107,7 +108,7 @@ Language: <select id="search_language" name="search_language">
             <td><span class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
-            <td>{{ShowLanguage .Language}}<a href="/status/code?sid={{.Sid}}">[view]</a></td>
+            <td>{{ShowLanguage .Language}}{{if or (eq $uid .Uid) (LargePU $privilege)}}<a href="/status/code?sid={{.Sid}}">[view]</a>{{end}}</td>
             <td>{{.Length}}B</td>
             <td>{{ShowTime .Create}}</td>
           </tr>
