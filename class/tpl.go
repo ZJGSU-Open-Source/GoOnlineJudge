@@ -33,4 +33,5 @@ func initFuncMap() {
 	funcMap["ShowTime"] = ShowTime
 	funcMap["ShowStatus"] = ShowStatus
 	funcMap["ShowSim"] = ShowSim
+	funcMap["ShowGapTime"] = ShowGapTime
 }
