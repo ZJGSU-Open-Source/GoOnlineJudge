@@ -120,7 +120,7 @@ body pre code,body pre tt
 <br>
 <p><b>为什么我的程序交在这里得到编译错误，而我在自己的机器上已经编译通过了？</b></p>
 <p>本系统所使用的编译器和你在自己机器上使用的可能有区别，请留意几个常见的地方：</p>
-<p><li>本系统运行在 64 位 Linux 系统上，使用的编译器版本和编译参数可以参见编译器帮助</li></p>
+<p><li>本系统运行在 32 位 Linux 系统上，使用的编译器版本和编译参数可以参见编译器帮助</li></p>
 <p><li>Java 代码需使用 Main 作为主类名</li></p>
 <p><li>Visual C++ 6.0 和 Turbo C++ 3.0 （及它们的更低版本）有较多违背 C++ 标准（<a href="http://www.iso.org/iso/iso_catalogue/catalogue_ics/catalogue_detail_ics.htm?ics1=35&ics2=60&ics3=&csnumber=50372" target="new">ISO/IEC 14882</a>）的地方，不要使用它们来判断 C++ 程序语法上是否有问题</li></p>
 <p><li>C++ 下 64 位整数的类型是 long long，不要使用 __int64</li></p>
