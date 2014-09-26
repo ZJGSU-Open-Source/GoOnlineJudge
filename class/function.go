@@ -2,6 +2,7 @@ package class
 
 import (
 	"GoOnlineJudge/config"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -93,4 +94,11 @@ func ShowPrivilege(privilege int) string {
 // 判断两个ID是否相等
 func SameID(ID1, ID2 string) bool {
 	return ID1 == ID2
+}
+
+func ShowGapTime(gaptime int64) string {
+	sec := gaptime % 60
+	hour := gaptime / 3600
+	minute := (gaptime - hour*3600) / 60
+	return fmt.Sprintf("%d:%02d:%02d", hour, minute, sec)
 }

@@ -10,5 +10,8 @@ type HomeController struct {
 }
 
 func (this HomeController) Route(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/news/list", http.StatusFound)
+	this.Init(w, r)
+	newsController := NewsController{}
+	newsController.Data = this.Data
+	newsController.List(w, r)
 }
