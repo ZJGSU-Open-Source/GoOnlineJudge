@@ -283,7 +283,7 @@ func (this *UserModel) Record(uid string, solve int, submit int) error {
 	}
 	defer this.CloseDB()
 
-	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$inc": bson.M{"solve": solve, "submit": submit}})
+	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": bson.M{"solve": solve, "submit": submit}})
 	if err == mgo.ErrNotFound {
 		return NotFoundErr
 	} else if err != nil {

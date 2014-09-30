@@ -209,7 +209,7 @@ func (this *ProblemModel) Record(pid int, solve int, submit int) error {
 	}
 	defer this.CloseDB()
 
-	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$inc": bson.M{"solve": solve, "submit": submit}})
+	err = this.DB.C("Problem").Update(bson.M{"pid": pid}, bson.M{"$set": bson.M{"solve": solve, "submit": submit}})
 	if err == mgo.ErrNotFound {
 		return NotFoundErr
 	} else if err != nil {
