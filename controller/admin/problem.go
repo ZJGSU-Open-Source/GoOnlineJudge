@@ -8,7 +8,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -358,6 +357,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hint := make(map[string]string)
+	one := make(map[string]string)
 
 	if types == "Pid" {
 		pid := id
@@ -383,13 +383,16 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			sid := list[i].Sid
 
 			time.Sleep(1 * time.Second)
-			go func() {
-				cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge=true") //Run Judge
-				err = cmd.Run()
-				if err != nil {
-					class.Logger.Debug(err)
-				}
-			}()
+			one["Sid"] = strconv.Itoa(sid)
+			one["Time"] = strconv.Itoa(pro.Time)
+			one["Memory"] = strconv.Itoa(pro.Memory)
+			one["Rejudge"] = "true"
+			reader, _ := this.PostReader(&one)
+			response, err := http.Post(config.JudgeHost, "application/json", reader)
+			if err != nil {
+				http.Error(w, "post error", 500)
+			}
+			response.Body.Close()
 		}
 	} else if types == "Sid" {
 		sid := id
@@ -413,13 +416,16 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		go func() {
-			cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory), "-rejudge=true") //Run Judge
-			err = cmd.Run()
-			if err != nil {
-				class.Logger.Debug(err)
-			}
-		}()
+		one["Sid"] = strconv.Itoa(sid)
+		one["Time"] = strconv.Itoa(pro.Time)
+		one["Memory"] = strconv.Itoa(pro.Memory)
+		one["Rejudge"] = "true"
+		reader, _ := this.PostReader(&one)
+		response, err := http.Post(config.JudgeHost, "application/json", reader)
+		if err != nil {
+			http.Error(w, "post error", 500)
+		}
+		response.Body.Close()
 	}
 	w.WriteHeader(200)
 }
