@@ -2,6 +2,7 @@ package class
 
 import (
 	"GoOnlineJudge/config"
+	"encoding/json"
 	"io"
 	"net/http"
 	"strconv"
@@ -165,4 +166,13 @@ func (this *Controller) GetAction(path string, pos int) string {
 		return pathsplit[pos]
 	}
 	return ""
+}
+
+func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
+	b, err := json.Marshal(i)
+	if err != nil {
+		return
+	}
+	r = strings.NewReader(string(b))
+	return
 }

@@ -1,13 +1,13 @@
 package config
 
 //server
-const PostHost = "http://127.0.0.1:8080"
 const CookieExpires = 1800
 const Datapath = "../ProblemData/"
+const JudgeHost = "127.0.0.1:8888"
 
 //CONSTANT
 const (
-	ProblemPerPage  = 2
+	ProblemPerPage  = 50
 	ContestPerPage  = 100
 	ExercisePerPage = 100
 	SolutionPerPage = 50

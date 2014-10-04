@@ -6,7 +6,6 @@ import (
 	"GoOnlineJudge/model"
 	"encoding/json"
 	"net/http"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -158,11 +157,16 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	go func() {
-		class.Logger.Debug(sid)
-		cmd := exec.Command("./RunServer", "-sid", strconv.Itoa(sid), "-time", strconv.Itoa(pro.Time), "-memory", strconv.Itoa(pro.Memory)) //Run Judge
-		err = cmd.Run()
+		one := make(map[string]string)
+		one["Sid"] = strconv.Itoa(sid)
+		one["Time"] = strconv.Itoa(pro.Time)
+		one["Memory"] = strconv.Itoa(pro.Memory)
+		one["Rejudge"] = "false"
+		reader, _ := this.PostReader(&one)
+		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			class.Logger.Debug(err)
+			http.Error(w, "post error", 500)
 		}
+		response.Body.Close()
 	}()
 }
