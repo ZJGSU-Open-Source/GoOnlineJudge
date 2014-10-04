@@ -157,12 +157,13 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 
 	go func() {
-		one := make(map[string]string)
-		one["Sid"] = strconv.Itoa(sid)
-		one["Time"] = strconv.Itoa(pro.Time)
-		one["Memory"] = strconv.Itoa(pro.Memory)
-		one["Rejudge"] = "false"
+		one := make(map[string]interface{})
+		one["Sid"] = sid
+		one["Time"] = pro.Time
+		one["Memory"] = pro.Memory
+		one["Rejudge"] = false
 		reader, _ := this.PostReader(&one)
+		class.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 500)
