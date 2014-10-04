@@ -357,7 +357,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	}
 
 	hint := make(map[string]string)
-	one := make(map[string]string)
+	one := make(map[string]interface{})
 
 	if types == "Pid" {
 		pid := id
@@ -383,10 +383,10 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			sid := list[i].Sid
 
 			time.Sleep(1 * time.Second)
-			one["Sid"] = strconv.Itoa(sid)
-			one["Time"] = strconv.Itoa(pro.Time)
-			one["Memory"] = strconv.Itoa(pro.Memory)
-			one["Rejudge"] = "true"
+			one["Sid"] = sid
+			one["Time"] = pro.Time
+			one["Memory"] = pro.Memory
+			one["Rejudge"] = true
 			reader, _ := this.PostReader(&one)
 			response, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
@@ -415,12 +415,12 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), 500)
 			return
 		}
-
-		one["Sid"] = strconv.Itoa(sid)
-		one["Time"] = strconv.Itoa(pro.Time)
-		one["Memory"] = strconv.Itoa(pro.Memory)
-		one["Rejudge"] = "true"
+		one["Sid"] = sid
+		one["Time"] = pro.Time
+		one["Memory"] = pro.Memory
+		one["Rejudge"] = true
 		reader, _ := this.PostReader(&one)
+		class.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 500)

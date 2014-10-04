@@ -220,7 +220,6 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, "post error", 500)
 		}
-		defer response.Body.Close()
-
+		response.Body.Close()
 	}()
 }
