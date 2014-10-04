@@ -3,7 +3,7 @@ package config
 //server
 const CookieExpires = 1800
 const Datapath = "../ProblemData/"
-const JudgeHost = "127.0.0.1:8888"
+const JudgeHost = "http://127.0.0.1:8888"
 
 //CONSTANT
 const (
