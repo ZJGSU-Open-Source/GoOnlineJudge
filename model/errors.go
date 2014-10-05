@@ -2,6 +2,8 @@ package model
 
 import (
 	"errors"
+	"golog"
+	"os"
 )
 
 var (
@@ -28,3 +30,9 @@ var (
 
 	ExistErr = errors.New("Id has existed")
 )
+
+var logger *golog.Log
+
+func init() {
+	logger = golog.NewLog(os.Stdout, golog.Ldebug|golog.Linfo)
+}

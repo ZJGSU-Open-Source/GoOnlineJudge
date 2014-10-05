@@ -25,6 +25,7 @@ func (this StatusController) Route(w http.ResponseWriter, r *http.Request) {
 	class.CallMethod(&this, strings.Title(action), rv)
 }
 
+//TODO : list by arguments like :contest/status/list?cid=1&uid=vsake&solved=3
 func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
 

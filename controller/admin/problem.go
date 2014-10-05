@@ -381,7 +381,6 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 
 		for i := range list {
 			sid := list[i].Sid
-
 			time.Sleep(1 * time.Second)
 			one["Sid"] = sid
 			one["Time"] = pro.Time
