@@ -65,7 +65,7 @@
     <div class="field">
      <div class="rfloat">
         <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
-        use advanced editor
+        Use advanced editor
     </div>
       <label for="code">Code</label><br>
       <textarea id="code" name="code" autofocus=""></textarea>

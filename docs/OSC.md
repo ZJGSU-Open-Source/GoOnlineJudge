@@ -64,6 +64,6 @@ ZJGSU开源社区是一群hacker和geek讨论、交流技术的地方，社区�
 长期有效
 
 ###联系方式
-+ id: sake             email: [jc5930@sina.cn](mailto:jc5930@sina.cn)                       github: [@sakeven](https://github.com/sakeven)
-+ id: clarkzjw        email: [clarkzjw@gmail.com](mailto:clarkzjw@gmail.com)                github: [@JinweiClarkChao](https://github.com/JinweiClarkChao)
-+ id: JeremylWu   email: [wushuaiyi@outlook.com](mailto:wushuaiyi@outlook.com)          github: [@JeremylWu](https://github.com/JeremylWu)
++ id: sake              email: [jc5930@sina.cn](mailto:jc5930@sina.cn)                       github: [@sakeven](https://github.com/sakeven)
++ id: clarkzjw       email: [clarkzjw@gmail.com](mailto:zhao.jinwei@outlook.com)           github: [@JinweiClarkChao](https://github.com/JinweiClarkChao)
++ id: JeremyWu   email: [wushuaiyi@outlook.com](mailto:wushuaiyi@outlook.com)          github: [@JeremylWu](https://github.com/JeremylWu)
