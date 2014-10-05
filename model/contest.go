@@ -1,7 +1,6 @@
 package model
 
 import (
-	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
@@ -34,7 +33,7 @@ type ContestModel struct {
 
 // 参数cid，返回指定cid的contest
 func (this *ContestModel) Detail(cid int) (*Contest, error) {
-	log.Logger.Debug("Server ContestModel Detail")
+	logger.Debug("Server ContestModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -53,7 +52,7 @@ func (this *ContestModel) Detail(cid int) (*Contest, error) {
 
 // 删除指定cid的contest
 func (this *ContestModel) Delete(cid int) error {
-	log.Logger.Debug("Server ContestModel Delete")
+	logger.Debug("Server ContestModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -73,7 +72,7 @@ func (this *ContestModel) Delete(cid int) error {
 
 // 插入新的contest，不能指定cid，statu，和create
 func (this *ContestModel) Insert(one Contest) error {
-	log.Logger.Debug("Server ContestModel Insert")
+	logger.Debug("Server ContestModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -103,7 +102,7 @@ func (this *ContestModel) Insert(one Contest) error {
 
 // 更新指定cid的contest
 func (this *ContestModel) Update(cid int, ori Contest) error {
-	log.Logger.Debug("Server ContestModel Update")
+	logger.Debug("Server ContestModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -132,7 +131,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 
 // 更新指定cid的contest的状态，更新状态由参数status指定
 func (this *ContestModel) Status(cid, status int) error {
-	log.Logger.Debug("Server ContestModel Status")
+	logger.Debug("Server ContestModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -152,7 +151,7 @@ func (this *ContestModel) Status(cid, status int) error {
 
 // 更新指定cid的contest的问题列表
 func (this *ContestModel) Push(cid int, list []int) error {
-	log.Logger.Debug("Server ContestModel Push")
+	logger.Debug("Server ContestModel Push")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -172,7 +171,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 
 //列出由参数args指定所有问题，参数args应该包括type:<type>,offset:<offset>,limit:<limit>,pid:<pid>,title:<title>/之一
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
-	log.Logger.Debug("Server ContestModel List")
+	logger.Debug("Server ContestModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

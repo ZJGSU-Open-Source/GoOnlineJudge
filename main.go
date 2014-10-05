@@ -18,7 +18,7 @@ func main() {
 	class.AddRouter("/user/", controller.UserController{})
 	class.AddRouter("/contest/", contest.ContestUserContorller{})
 	class.AddRouter("/admin/", admin.AdminUserController{})
-	class.AddRouter("/FAQ/", controller.FAQController{})
+	class.AddRouter("/faq/", controller.FAQController{})
 	class.AddRouter("/osc/", controller.OSCController{})
 
 	class.AddFile("/static/", http.FileServer(http.Dir(".")))

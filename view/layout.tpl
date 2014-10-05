@@ -74,7 +74,7 @@
             {{end}}
           {{end}}
           <li>{{if.IsOSC}}<span>OSC</span>{{else}}<a href="/osc">OSC</a>{{end}}</li>
-          <li>{{if.IsFAQ}}<span>FAQ</span>{{else}}<a href="/FAQ">FAQ</a>{{end}}</li>
+          <li>{{if.IsFAQ}}<span>FAQ</span>{{else}}<a href="/faq">FAQ</a>{{end}}</li>
         </ul>
       </div>
       <div id="body" class="span-22 last">

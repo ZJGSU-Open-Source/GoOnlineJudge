@@ -1,7 +1,6 @@
 package model
 
 import (
-	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
@@ -39,7 +38,7 @@ type UserModel struct {
 // 用户登入验证，需要提供uid和pwd两个参数，
 // 如果用户存在并且uid和pwd匹配，则返回一个user
 func (this *UserModel) Login(uid, pwd string) (*User, error) {
-	log.Logger.Debug("Server UserModel Login")
+	logger.Debug("Server UserModel Login")
 
 	var err error
 	pwd, err = this.EncryptPassword(pwd)
@@ -62,7 +61,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	}
 
 	if pwd == alt.Pwd {
-		log.Logger.Debug("Server UserModel Login Successfully")
+		logger.Debug("Server UserModel Login Successfully")
 		return &User{
 			Uid:       alt.Uid,
 			Nick:      alt.Nick,
@@ -70,7 +69,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 			Status:    alt.Status,
 		}, nil
 	}
-	log.Logger.Debug("Server UserModel Login Failed")
+	logger.Debug("Server UserModel Login Failed")
 	return &User{
 		Uid:       "",
 		Nick:      "",
@@ -81,7 +80,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 
 //这个函数貌似没干什么事啊==
 func (this *UserModel) Logout() {
-	log.Logger.Debug("Server UserModel Logout")
+	logger.Debug("Server UserModel Logout")
 
 	// var one User
 	// err := this.LoadJson(r.Body, &one)
@@ -95,7 +94,7 @@ func (this *UserModel) Logout() {
 
 //设定用户密码，需提供uid和pwd
 func (this *UserModel) Password(uid, pwd string) error {
-	log.Logger.Debug("Server UserModel Password")
+	logger.Debug("Server UserModel Password")
 
 	pwd, err := this.EncryptPassword(pwd)
 	if err != nil {
@@ -123,7 +122,7 @@ func (this *UserModel) Password(uid, pwd string) error {
 
 // 设定指定uid用户的权限
 func (this *UserModel) Privilege(uid string, privilege int) error {
-	log.Logger.Debug("Server UserModel Privilege")
+	logger.Debug("Server UserModel Privilege")
 
 	alt := make(map[string]interface{})
 	alt["privilege"] = privilege
@@ -146,7 +145,7 @@ func (this *UserModel) Privilege(uid string, privilege int) error {
 
 // 获得指定uid用户的所有信息
 func (this *UserModel) Detail(uid string) (*User, error) {
-	log.Logger.Debug("Server UserModel Detail")
+	logger.Debug("Server UserModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -168,7 +167,7 @@ func (this *UserModel) Detail(uid string) (*User, error) {
 
 // 删除指定uid用户
 func (this *UserModel) Delete(uid string) error {
-	log.Logger.Debug("Server UserModel Delete")
+	logger.Debug("Server UserModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -188,10 +187,10 @@ func (this *UserModel) Delete(uid string) error {
 
 // 插入一个新的user
 func (this *UserModel) Insert(one User) error {
-	log.Logger.Debug("Server UserModel Insert")
+	logger.Debug("Server UserModel Insert")
 
 	if _, err := this.Detail(one.Uid); err != NotFoundErr { //测试uid是否已经存在
-		log.Logger.Debug(err)
+		logger.Debug(err)
 		return ExistErr
 	}
 
@@ -229,7 +228,7 @@ func (this *UserModel) Insert(one User) error {
 
 // 更新用户信息（nick，mail，scholl，motto）
 func (this *UserModel) Update(uid string, ori User) error {
-	log.Logger.Debug("Server UserModel Update")
+	logger.Debug("Server UserModel Update")
 
 	alt := make(map[string]interface{})
 	alt["nick"] = ori.Nick
@@ -255,7 +254,7 @@ func (this *UserModel) Update(uid string, ori User) error {
 
 // 更新用户状态
 func (this *UserModel) Status(uid string) error {
-	log.Logger.Debug("Server UserModel Status")
+	logger.Debug("Server UserModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -275,7 +274,7 @@ func (this *UserModel) Status(uid string) error {
 
 // 用户做题记录，uid:<uid>,action:<solve/submit>
 func (this *UserModel) Record(uid string, solve int, submit int) error {
-	log.Logger.Debug("Server UserModel Submit")
+	logger.Debug("Server UserModel Submit")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -294,7 +293,7 @@ func (this *UserModel) Record(uid string, solve int, submit int) error {
 
 // 列出用户 offset:<offset>,limit:<limit>,uid:<uid>,nick:<nick>
 func (this *UserModel) List(args map[string]string) ([]*User, error) {
-	log.Logger.Debug("Server UserModel List")
+	logger.Debug("Server UserModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

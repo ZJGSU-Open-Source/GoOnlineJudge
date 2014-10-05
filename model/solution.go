@@ -1,7 +1,6 @@
 package model
 
 import (
-	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
@@ -44,7 +43,7 @@ type SolutionModel struct {
 
 // 查询指定sid的solution的所有详细信息
 func (this *SolutionModel) Detail(sid int) (*Solution, error) {
-	log.Logger.Debug("Server SolutionModel Detail")
+	logger.Debug("Server SolutionModel Detail")
 	err := this.OpenDB()
 	if err != nil {
 		return nil, DBErr
@@ -64,7 +63,7 @@ func (this *SolutionModel) Detail(sid int) (*Solution, error) {
 
 // 删除指定sid的solution
 func (this *SolutionModel) Delete(sid int) error {
-	log.Logger.Debug("Server SolutionModel Delete")
+	logger.Debug("Server SolutionModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -84,7 +83,7 @@ func (this *SolutionModel) Delete(sid int) error {
 
 // 插入一个新的solution，不能指定create和sid
 func (this *SolutionModel) Insert(one Solution) (int, error) {
-	log.Logger.Debug("Server SolutionModel Insert")
+	logger.Debug("Server SolutionModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -113,7 +112,7 @@ func (this *SolutionModel) Insert(one Solution) (int, error) {
 
 // 更新指定sid的solution，可更新参数包括judge、time、memory三个
 func (this *SolutionModel) Update(sid int, ori Solution) error {
-	log.Logger.Debug("Server SolutionModel Update")
+	logger.Debug("Server SolutionModel Update")
 
 	alt := make(map[string]interface{})
 	alt["judge"] = ori.Judge
@@ -140,7 +139,7 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 
 // 更新指定sid的solution状态，状态值由status指定
 func (this *SolutionModel) Status(sid, status int) error {
-	log.Logger.Debug("Server SolutionModel Status")
+	logger.Debug("Server SolutionModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -160,7 +159,7 @@ func (this *SolutionModel) Status(sid, status int) error {
 
 // 计数由参数args指定的solution个数，参数包括pid、uid、module、mid、action
 func (this *SolutionModel) Count(args map[string]string) (int, error) {
-	log.Logger.Debug("Server SolutionModel Count")
+	logger.Debug("Server SolutionModel Count")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
@@ -204,7 +203,7 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 
 // 获取指定uid，judge状态为AC的solutions的相异的pid
 func (this *SolutionModel) Achieve(uid string) ([]int, error) {
-	log.Logger.Debug("Server SolutionModel Achieve")
+	logger.Debug("Server SolutionModel Achieve")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -224,7 +223,7 @@ func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 // 列出符合参数args的Solution，参数包括offset、limit、sid、pid、uid、language、judge、module、mid、from、sort
 //默认按sid从大到小排,sort参数设为resort可以设置为从小到大
 func (this *SolutionModel) List(args map[string]string) ([]*Solution, error) {
-	log.Logger.Debug("Server SolutionModel List")
+	logger.Debug("Server SolutionModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

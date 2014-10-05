@@ -1,7 +1,6 @@
 package model
 
 import (
-	log "GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
@@ -44,7 +43,7 @@ type ProblemModel struct {
 
 // 修改指定pid的problem的expire值
 func (this *ProblemModel) Expire(pid int, expire string) error {
-	log.Logger.Debug("Server ProblemModel Expire")
+	logger.Debug("Server ProblemModel Expire")
 
 	alt := make(map[string]interface{})
 	alt["expire"] = expire
@@ -67,7 +66,7 @@ func (this *ProblemModel) Expire(pid int, expire string) error {
 
 // 查询指定pid的problem的详细信息
 func (this *ProblemModel) Detail(pid int) (*Problem, error) {
-	log.Logger.Debug("Server ProblemModel Detail")
+	logger.Debug("Server ProblemModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -88,7 +87,7 @@ func (this *ProblemModel) Detail(pid int) (*Problem, error) {
 
 // 删除指定pid的problem
 func (this *ProblemModel) Delete(pid int) error {
-	log.Logger.Debug("Server ProblemModel Delete")
+	logger.Debug("Server ProblemModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -109,7 +108,7 @@ func (this *ProblemModel) Delete(pid int) error {
 // 插入一个新的problem，不可指定solve,submit,status,create,exprie和pid参数，
 // 成功则返回新的pid
 func (this *ProblemModel) Insert(one Problem) (int, error) {
-	log.Logger.Debug("Server ProblemModel Insert")
+	logger.Debug("Server ProblemModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -146,7 +145,7 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 
 // 更新指定pid的problem
 func (this *ProblemModel) Update(pid int, ori Problem) error {
-	log.Logger.Debug("Server ProblemModel Update")
+	logger.Debug("Server ProblemModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -179,7 +178,7 @@ func (this *ProblemModel) Update(pid int, ori Problem) error {
 
 // 更新指定pid的problem的状态，状态值由status指定
 func (this *ProblemModel) Status(pid, status int) error {
-	log.Logger.Debug("Server ProblemModel Status")
+	logger.Debug("Server ProblemModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -201,7 +200,7 @@ func (this *ProblemModel) Status(pid, status int) error {
 
 // 记录problem的solve和submit，每次记录时submit值总会加1，而solve则由action指定是否记录
 func (this *ProblemModel) Record(pid int, solve int, submit int) error {
-	log.Logger.Debug("Server ProblemModel Record")
+	logger.Debug("Server ProblemModel Record")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -221,7 +220,7 @@ func (this *ProblemModel) Record(pid int, solve int, submit int) error {
 
 // 列出符合参数args的所有problem，offset?<offset>/limit?<limit>/pid?<pid>/title?<title>/source?<source>
 func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
-	log.Logger.Debug("Server ProblemModel List")
+	logger.Debug("Server ProblemModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
@@ -263,7 +262,7 @@ func (this *ProblemModel) List(args map[string]string) ([]*Problem, error) {
 
 // 计数符合参数args的problem的个数，title:<title>,source:<source>,status:<status>
 func (this *ProblemModel) Count(args map[string]string) (int, error) {
-	log.Logger.Debug("ProblemModel Count")
+	logger.Debug("ProblemModel Count")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {
