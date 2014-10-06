@@ -186,6 +186,14 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 		if err != nil {
 			return 0, QueryErr
 		}
+	case "usolve":
+		var list []string
+		query["judge"] = config.JudgeAC
+		err = c.Find(query).Distinct("pid", &list)
+		if err != nil {
+			return 0, QueryErr
+		}
+		count = len(list)
 	case "solve":
 		var list []string
 		query["judge"] = config.JudgeAC
