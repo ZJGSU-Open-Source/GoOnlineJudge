@@ -44,7 +44,7 @@ $('.ranklist_export').on('click', function() {
 
     $.ajax({
       type: 'POST',
-      url: '/contest/exportranklist/cid?='+{{.Cid}},
+      url: '/contest/ranklist/download/cid?='+{{.Cid}},
       data:$(this).serialize(),
       error: function(response) {
         var json = eval('('+response.responseText+')');

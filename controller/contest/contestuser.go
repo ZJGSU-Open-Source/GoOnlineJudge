@@ -14,10 +14,9 @@ type ContestUserContorller struct {
 }
 
 var RouterMap = map[string]class.Router{
-	"problem":        ProblemController{},
-	"status":         StatusController{},
-	"ranklist":       RanklistController{},
-	"exportranklist": ExportController{},
+	"problem":  ProblemController{},
+	"status":   StatusController{},
+	"ranklist": RanklistController{},
 }
 
 func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) {
