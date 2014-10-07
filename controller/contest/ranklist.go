@@ -4,7 +4,9 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"encoding/csv"
 	"net/http"
+	"os"
 	"sort"
 	"strconv"
 )
@@ -16,6 +18,35 @@ type RanklistController struct {
 func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
+
+	this.Data["UserList"] = this.ranklist()
+	this.Data["IsContestRanklist"] = true
+	this.Data["Cid"] = this.Cid
+	this.Data["ProblemList"] = this.Index
+	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
+}
+
+func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
+	this.InitContest(w, r)
+	f, err := os.Create(strconv.Itoa(this.Cid) + ".csv")
+	if err != nil {
+		class.Logger.Debug(err)
+		return
+	}
+	defer f.Close()
+
+	f.WriteString("\xEF\xBB\xBF") // 写入UTF-8 BOM
+
+	rankcsv := csv.NewWriter(f)
+	rankcsv.Write([]string{"Rank", "Team", "Solved", "Penalty"})
+
+	for rank, user := range this.ranklist() {
+		rankcsv.Write([]string{strconv.Itoa(rank + 1), user.Uid, strconv.Itoa(user.Solved), class.ShowGapTime(user.Time)})
+	}
+	rankcsv.Flush()
+}
+
+func (this *RanklistController) ranklist() UserSorter {
 	qry := make(map[string]string)
 	qry["module"] = strconv.Itoa(config.ModuleC)
 	qry["mid"] = strconv.Itoa(this.Cid)
@@ -24,8 +55,8 @@ func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	solutionModel := model.SolutionModel{}
 	solutionList, err := solutionModel.List(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
-		return
+		class.Logger.Debug(err)
+		return nil
 	}
 
 	UserMap := make(map[string]*userRank)
@@ -61,12 +92,7 @@ func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	}
 	UserList := newSorter(UserMap)
 	sort.Sort(UserList)
-
-	this.Data["UserList"] = UserList
-	this.Data["IsContestRanklist"] = true
-	this.Data["Cid"] = this.Cid
-	this.Data["ProblemList"] = this.Index
-	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
+	return UserList
 }
 
 type userRank struct {
