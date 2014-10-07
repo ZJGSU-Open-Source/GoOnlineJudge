@@ -33,7 +33,7 @@
 <input name="commit"type="submit" value="upload" /> </label>
 </div>
 </form>
-<div class="flash notice">You can just add test.in and test.out</div>
+<div class="flash notice">You can just add test.in and test.out with encoding utf-8.</div>
 {{end}}
 
 <script type="text/javascript">
