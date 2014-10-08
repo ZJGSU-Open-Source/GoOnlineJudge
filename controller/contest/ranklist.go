@@ -5,6 +5,7 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 	"encoding/csv"
+	"io"
 	"net/http"
 	"os"
 	"sort"
@@ -18,22 +19,24 @@ type RanklistController struct {
 func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
 	this.InitContest(w, r)
+	action := this.GetAction(r.URL.Path, 2)
+	if action == "download" {
+		this.Download(w, r)
+	} else {
+		this.Home(w, r)
+	}
 
-	this.Data["UserList"] = this.ranklist()
-	this.Data["IsContestRanklist"] = true
-	this.Data["Cid"] = this.Cid
-	this.Data["ProblemList"] = this.Index
-	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 }
 
+//Download 下载contest排名csv文件
 func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
-	this.InitContest(w, r)
-	f, err := os.Create(strconv.Itoa(this.Cid) + ".csv")
+	filename := strconv.Itoa(this.Cid) + ".csv"
+	f, err := os.Create(filename)
 	if err != nil {
 		class.Logger.Debug(err)
 		return
 	}
-	defer f.Close()
+	defer os.Remove(filename)
 
 	f.WriteString("\xEF\xBB\xBF") // 写入UTF-8 BOM
 
@@ -44,8 +47,33 @@ func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request)
 		rankcsv.Write([]string{strconv.Itoa(rank + 1), user.Uid, strconv.Itoa(user.Solved), class.ShowGapTime(user.Time)})
 	}
 	rankcsv.Flush()
+	f.Close()
+
+	file, _ := os.Open(filename)
+	defer file.Close()
+
+	finfo, _ := file.Stat()
+	w.Header().Set("ContentType", "application/octet-stream")
+	w.Header().Add("Content-disposition", "attachment; filename="+filename)
+	w.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
+
+	_, err = io.Copy(w, file)
+	if err != nil {
+		class.Logger.Debug(err)
+	}
+
 }
 
+//Home ranklist 列表主页
+func (this *RanklistController) Home(w http.ResponseWriter, r *http.Request) {
+	this.Data["UserList"] = this.ranklist()
+	this.Data["IsContestRanklist"] = true
+	this.Data["Cid"] = this.Cid
+	this.Data["ProblemList"] = this.Index
+	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
+}
+
+//ranklist 实时计算排名
 func (this *RanklistController) ranklist() UserSorter {
 	qry := make(map[string]string)
 	qry["module"] = strconv.Itoa(config.ModuleC)
