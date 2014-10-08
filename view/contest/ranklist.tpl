@@ -1,7 +1,7 @@
 {{define "content"}}
 {{$cid := .Cid}}
 <h1>{{.Contest}}</h1>
-<h5><a class="ranklist_export" href="#">Export ranklist to csv</a></h5>
+<h5><a href="/contest/ranklist/download?cid={{.Cid}}">Export ranklist to csv</a></h5>
 <table id="contest_list">
   <thead>
     <tr>
@@ -34,33 +34,4 @@
     {{end}}
   </tbody>
 </table>
-
-<script type="text/javascript">
-$('.ranklist_export').on('click', function() {
-  var ret = confirm('Export this ranklist to csv?');
-  if (ret == true) {
-    var table = document.getElementById("contest_list");
-
-
-    $.ajax({
-      type: 'POST',
-      url: '/contest/ranklist/download/cid?='+{{.Cid}},
-      data:$(this).serialize(),
-      error: function(response) {
-        var json = eval('('+response.responseText+')');
-        if (json.hint != null) {
-          alert(json.hint);
-        } else {
-          alert('failed!');
-        }
-      },
-      success: function(response) {
-        window.location.reload();
-      }
-    });
-
-  }
-});
-</script>
-
 {{end}}

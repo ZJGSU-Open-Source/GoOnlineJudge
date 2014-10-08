@@ -57,7 +57,7 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
 
-// 上传测试数据,URL /admin/testdata?upload/pid?<pid>，method：POST
+// 上传测试数据,URL /admin/testdata/upload?pid=<pid>，method：POST
 func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Upload files")
 	if r.Method != "POST" {
@@ -95,7 +95,7 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/testdata/list?pid="+pid, http.StatusFound)
 }
 
-// Download 下载测试数据,URL:/admin/testdata?download/type?<type>，method:POST
+// Download 下载测试数据,URL:/admin/testdata/download?type=<type>，method:POST
 func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Download files")
 	this.Init(w, r)
@@ -115,7 +115,7 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 	io.Copy(w, file)
 }
 
-// Delete 删除指定testdata，URL:/admin/testdata?delete/type?<type>
+// Delete 删除指定testdata，URL:/admin/testdata/delete?type=<type>
 func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin TestData Delete")
 	if r.Method != "POST" {
