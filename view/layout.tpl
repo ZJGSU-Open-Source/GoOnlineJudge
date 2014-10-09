@@ -8,18 +8,18 @@
       <link rel="shortcut icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
       <title>{{.Title}}</title>
       <link href="/static/css/style.css" rel="stylesheet" type="text/css">
-      <link href="/static/css/bootstrap.min.css" rel="stylesheet">  
+      <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     
       <script src="/static/js/jquery.min.js" type="text/javascript"></script>
       <script src="/static/js/action.js" type="text/javascript"></script>
 
-      {{if .IsEdit}}
-      <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
-      <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
-    {{end}}
+      {{if .IsCode}}
+      <link href="/static/prettify/prettify.css" rel="stylesheet" type="text/css" />
+      <script src="/static/prettify/prettify.js" type="text/javascript"></script>
+      {{end}}
   </head>
 
-  <body>
+  <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
       <div class="container"> 
       <div id="logo" class="lfloat">
             <a href="/"><img alt="Logo" src="/static/img/logo.png"></a>
