@@ -31,7 +31,7 @@ const (
 	JudgeMLE = 7  //Memory Limit Exceeded
 	JudgeOLE = 8  //Output Limit Exceeded
 	JudgePE  = 9  //Presentation Error
-	JudgeNA  = 10 //None
+	JudgeNA  = 10 //System Error
 	JudgeRPD = 11 //Rejudge Pending
 )
 

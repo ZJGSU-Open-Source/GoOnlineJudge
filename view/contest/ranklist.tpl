@@ -1,7 +1,7 @@
 {{define "content"}}
 {{$cid := .Cid}}
 <h1>{{.Contest}}</h1>
-<h5><a href="/contest/ranklist/download?cid={{.Cid}}">Export ranklist to csv</a></h5>
+<h5><a href="/contest/ranklist/download?cid={{.Cid}}">Export ranklist</a></h5>
 <table id="contest_list">
   <thead>
     <tr>
