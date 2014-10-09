@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>FAQ</h1>
+<!-- <h1>FAQ</h1> -->
 <h2>评分</h2>
 <p>用户提交的程序经过Online Judge的即时评测，可能的反馈信息包括：</p>
 <table id="FAQ_list">

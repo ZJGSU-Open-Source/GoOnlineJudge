@@ -971,7 +971,8 @@ html{
 	margin:0 auto;
 	width:1018px;
 }#body{
-	margin-bottom:2em;
+	/*margin-bottom:2em;*/
+	margin: 0 5% 5%;
 }.hline{
 	border-bottom:1px solid #ddd;
 	font-size:1px;

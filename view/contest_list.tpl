@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>Contest List</h1>
+<!-- <h1>Contest List</h1> -->
 <table id="contest_list">
   <thead>
     <tr>

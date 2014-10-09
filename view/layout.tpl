@@ -92,7 +92,7 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
-      <div id="body" class="span-22 last">
+      <div id="body">
         {{template "content" .}}
       </div>
       <div id="pageFooter" class="center">
