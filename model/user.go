@@ -25,7 +25,8 @@ type User struct {
 	Submit int `json:"submit"bson:"submit"`
 
 	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:'create'`
+	Create string `json:"create"bson:"create"`
+	//IPRecord []int  `json:"iprecord"bson:"iprecord"`记录ip地址
 }
 
 var uDetailSelector = bson.M{"_id": 0}

@@ -55,6 +55,10 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		this.SetSession(w, r, "Uid", uid)
 		this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 		w.WriteHeader(200)
+
+		//TODO:IP record
+		class.Logger.Debug(r.RemoteAddr)
+
 	}
 }
 
