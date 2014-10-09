@@ -57,9 +57,12 @@
 
         <tr>
           <td class="green">Output Limit Exceeded</td>
-          <td>您的程序输出的内容超出限制，可能是输出部分陷入无限循环引起。</td>
+          <td>您的程序输出的内容超出限制，可能是输出部分陷入无限循环引起</td>
         </tr> 
-
+        <tr>
+          <td class="green">System Error</td>
+          <td>评测系统出现了错误，竞赛中系统将不会记录罚时</td>
+        </tr> 
   </tbody>
 </table>
 <style>

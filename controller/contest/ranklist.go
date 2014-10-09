@@ -108,7 +108,7 @@ func (this *RanklistController) ranklist() UserSorter {
 			continue
 		}
 		pro.Pid = pid
-		if v.Judge != config.JudgeAC && v.Judge != config.JudgePD && v.Judge != config.JudgeRJ {
+		if v.Judge != config.JudgeAC && v.Judge != config.JudgePD && v.Judge != config.JudgeRJ && v.Judge != config.JudgeNA {
 			pro.Count++
 			pro.Time += 20 * 60 //罚时20分钟
 		} else if v.Judge == config.JudgeAC {
