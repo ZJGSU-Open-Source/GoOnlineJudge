@@ -1,8 +1,11 @@
 {{define "content"}}
+<div class="jumbotron">
 <h1>News List</h1>
 {{with .News}}
+
 	{{range .}}
 		{{if ShowStatus .Status}}
+
 			<p class="news">
 				<span class="flag"></span>
 				<span class="date">{{.Create}}</span>		
@@ -11,4 +14,5 @@
 		{{end}}
 	{{end}}
 {{end}}
+</div>
 {{end}}
