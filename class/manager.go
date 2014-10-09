@@ -44,7 +44,7 @@ func (m *Manager) StartSession(w http.ResponseWriter, r *http.Request) (session 
 			Value:    sid,
 			Path:     "/",
 			HttpOnly: true,
-			MaxAge:   config.CookieExpires,
+			MaxAge:   0, //config.CookieExpires,
 		}
 		http.SetCookie(w, &cookie)
 	} else {
