@@ -1,6 +1,6 @@
 {{define "content"}}
 <meta http-equiv="refresh" content="30">
-<h1>Status List</h1>
+<!-- <h1>Status List</h1> -->
 <form accept-charset="UTF-8" id="search_form">
 User: <input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">
 Problem: <input id="search_pid" name="search_pid" size="10" type="text" value="{{.SearchPid}}">

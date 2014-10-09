@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>Problem List</h1>
+<!-- <h1>Problem List</h1> -->
 
 <form accept-charset="UTF-8" id="search_form" >
 Search: <input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
