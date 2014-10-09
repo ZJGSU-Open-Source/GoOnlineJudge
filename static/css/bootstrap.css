@@ -98,10 +98,10 @@ hr {
      -moz-box-sizing: content-box;
           box-sizing: content-box;
 }
-pre {
+/*pre {
   overflow: auto;
 }
-code,
+*/code,
 kbd,
 pre,
 samp {
@@ -1339,7 +1339,7 @@ address {
 }
 code,
 kbd,
-pre,
+/*pre*/,
 samp {
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
@@ -1366,16 +1366,18 @@ kbd kbd {
           box-shadow: none;
 }
 pre {
+  /*overflow:auto;*/
+  font-family:'Droid Sans Mono', Consolas, Courier New, monospace;
   display: block;
-  padding: 9.5px;
+  /*padding: 9.5px;*/
   margin: 0 0 10px;
   font-size: 13px;
   line-height: 1.42857143;
-  color: #333;
+  /*color: #333;*/
   word-break: break-all;
   word-wrap: break-word;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  /*background-color: #f5f5f5;*/
+  /*border: 1px solid #ccc;*/
   border-radius: 4px;
 }
 pre code {

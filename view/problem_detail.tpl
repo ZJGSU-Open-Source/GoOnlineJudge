@@ -32,9 +32,9 @@
     <p class="problemIteam">Output:</p>
     <p>{{.Output}}</p>
     <span class="problemIteam">Sample Input:</span>
-    <pre>{{.In}}</pre>
+    <pre class="sample">{{.In}}</pre>
     <span class="problemIteam">Sample Output:</span>
-    <pre>{{.Out}}</pre>
+    <pre class="sample">{{.Out}}</pre>
     {{if .Hint}}
       <p><b>Hint:</b></p>
       <p>{{.Hint}}</p>
