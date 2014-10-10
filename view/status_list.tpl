@@ -30,11 +30,11 @@ Language: <select id="search_language" name="search_language">
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}page={{NumSub .CurrentPage 1}}">Prev</a>
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}" class="icon icon-material-arrow-back"></a>
   {{else}}
-  <span>Prev</span>
+  <span class="icon icon-material-arrow-back"></span>
   {{end}}
-
+  &nbsp;
   {{if .IsPageHead}}
     {{with .PageHeadList}}
       {{range .}}
@@ -72,15 +72,15 @@ Language: <select id="search_language" name="search_language">
       {{end}}
     {{end}}
   {{end}}
-
-  {{if .IsNextPage}}
-  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}">Next</a>
+  &nbsp;
+   {{if .IsNextPage}}
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}" class="icon icon-material-arrow-forward"></a>
   {{else}}
-  <span>Next</span>
+  <span class="icon icon-material-arrow-forward"></span>
   {{end}}
 </div>
 <div class="table-responsive">
-<table id="contest_list" class="table table-bordered table-striped table-hover">
+<table id="contest_list" class="table  table-striped table-hover">
   <thead>
     <tr>
       <th class="header">Run ID</th>

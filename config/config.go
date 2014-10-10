@@ -7,7 +7,7 @@ const JudgeHost = "http://127.0.0.1:8888"
 
 //CONSTANT
 const (
-	ProblemPerPage  = 50
+	ProblemPerPage  = 2
 	ContestPerPage  = 100
 	ExercisePerPage = 100
 	SolutionPerPage = 50

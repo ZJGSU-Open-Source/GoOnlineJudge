@@ -83,10 +83,10 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 {{if .IsCurrentUser}}
-                  {{if .IsShowAdmin}}<li><a href="/admin/">[Admin]</a></li>{{end}}
-                  {{if .IsShowTeacher}}<li><a href="/admin/">[Teacher]</a></li>{{end}}
-                  <li><a href="/user/settings">[{{.CurrentUser}}]</a></li>
-                  <li><a class="user_signout" href="#">[Sign Out]</a></li>
+                  {{if .IsShowAdmin}}<li><a href="/admin/" class="icon icon-material-star">[Admin]</a></li>{{end}}
+                  {{if .IsShowTeacher}}<li><a href="/admin/" class="icon icon-material-star-half">[Teacher]</a></li>{{end}}
+                  <li><a href="/user/settings" class="icon icon-material-settings">[{{.CurrentUser}}]</a></li>
+                  <li><a class="user_signout icon icon-material-chevron-right" href="#">[Sign Out]</a></li>
                 {{else}}
                   {{if .IsUserSignIn}}{{else}}<li><a href="/user/signin">[Sign In]</a></li>{{end}}
                   {{if .IsUserSignUp}}{{else}}<li><a href="/user/signup">[Sign Up]</a></li>{{end}}
