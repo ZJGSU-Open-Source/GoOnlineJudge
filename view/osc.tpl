@@ -58,7 +58,7 @@
 <h3>联系方式</h3>
 <ul>
 <li>id: sake                                       email: <a href="mailto:jc5930@sina.cn" target="_blank">jc5930@sina.cn</a>                                                           github: <a href="https://github.com/sakeven" target="_blank">@sakeven</a></li>
-<li>id: clarkzjw                                 email: <a href="mailto:zhao.jinwei@outlook.com" target="_blank">zhao.jinwei@outlook.com</a>               github: <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></li>
+<li>id: clarkzjw                                 email: <a href="mailto:clarkzjw@gmail.com" target="_blank">clarkzjw@gmail.com</a>               github: <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></li>
 <li>id: JeremyWu                            email: <a href="mailto:wushuaiyi@outlook.com" target="_blank">wushuaiyi@outlook.com</a>                    github: <a href="https://github.com/JeremylWu" target="_blank">@JeremylWu</a></li>
 </ul>
 {{end}}

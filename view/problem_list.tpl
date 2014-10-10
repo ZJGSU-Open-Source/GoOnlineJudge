@@ -15,9 +15,9 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}page={{NumSub .CurrentPage 1}}">Prev</a>
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}" class="btn btn-default btn-xs">Prev</a>
   {{else}}
-  <span>Prev</span>
+  <span class="btn btn-default btn-xs disabled">Prev</span>
   {{end}}
 
   {{if .IsPageHead}}
@@ -59,9 +59,9 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   {{end}}
 
   {{if .IsNextPage}}
-  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}">Next</a>
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}" class="btn btn-default btn-xs">Next</a>
   {{else}}
-  <span>Next</span>
+  <span class="btn btn-default btn-xs disabled">Next</span>
   {{end}}
 </div>
 
