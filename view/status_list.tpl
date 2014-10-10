@@ -84,7 +84,7 @@ Language: <select id="search_language" name="search_language">
   <thead>
     <tr>
       <th class="header">Run ID</th>
-      <th class="header" class="btn btn-default btn-xs">User</th>
+      <th class="header">User</th>
       <th class="header">Problem</th>
       <th class="header">Result</th>
       <th class="header">Time</th>
@@ -103,7 +103,7 @@ Language: <select id="search_language" name="search_language">
         
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{.Uid}}"  class="btn btn-default btn-xs">{{.Uid}}</a></td>
             <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
