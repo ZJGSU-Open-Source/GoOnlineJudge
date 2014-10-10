@@ -2729,6 +2729,7 @@ select[multiple].input-lg {
   font-weight: normal;
   line-height: 1.42857143;
   text-align: center;
+  color: white;
   white-space: nowrap;
   vertical-align: middle;
   cursor: pointer;

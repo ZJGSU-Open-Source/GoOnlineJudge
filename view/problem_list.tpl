@@ -15,11 +15,11 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
   {{$current := .CurrentPage}}
   {{$url := .URL}}
   {{if .IsPreviousPage}}
-  <a href="{{$url}}page={{NumSub .CurrentPage 1}}" class="btn btn-default btn-xs">Prev</a>
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}" class="icon icon-material-arrow-back"></a>
   {{else}}
-  <span class="btn btn-default btn-xs disabled">Prev</span>
+  <span class="icon icon-material-arrow-back"></span>
   {{end}}
-
+  &nbsp;
   {{if .IsPageHead}}
     {{with .PageHeadList}}
       {{range .}}
@@ -57,11 +57,11 @@ Search: <input id="search" name="search" size="30" type="text" value="{{.SearchV
       {{end}}
     {{end}}
   {{end}}
-
+  &nbsp;
   {{if .IsNextPage}}
-  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}" class="btn btn-default btn-xs">Next</a>
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}" class="icon icon-material-arrow-forward"></a>
   {{else}}
-  <span class="btn btn-default btn-xs disabled">Next</span>
+  <span class="icon icon-material-arrow-forward"></span>
   {{end}}
 </div>
 
