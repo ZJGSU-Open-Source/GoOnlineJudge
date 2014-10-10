@@ -1,6 +1,6 @@
 {{define "content"}}
 <!-- <h1>Contest List</h1> -->
-<table id="contest_list">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">ID</th>
