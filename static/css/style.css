@@ -1137,7 +1137,6 @@ html{
 }td pre{
 	margin:0;
 	padding:0;
-	max-width:868px;
 }pre{
 	overflow:auto;
 	font-family:'Droid Sans Mono', Consolas, Courier New, monospace;
