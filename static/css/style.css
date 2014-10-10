@@ -1056,15 +1056,25 @@ html{
 	font-size:12px;
 	list-style:square;
 }.submitRes-0{
-	color:#f90;
+	color: #fff;
+  	background-color: #f0ad4e;
+  	border-color: #eea236;
 }.submitRes-1{
-	color:blue;
+	color: #fff;
+  	background-color: #428bca;
+  	border-color: #357ebd;
 }.submitRes-2{
-	color:#90f;
+	color:#fff;
+	background-color: #90f;
+  	border-color: #90f;
 }.submitRes-3,.caseRes-3{
-	color:red;
+	color: #fff;
+  	background-color: #d9534f;
+  	border-color: #d43f3a;
 }.submitRes-4,.submitRes-5,.submitRes-6,.submitRes-7,.submitRes-8,.submitRes-9,.submitRes-10,.submitRes-11,.submitRes-12,.submitRes-13,.caseRes-4,.caseRes-5,.caseRes-6,.caseRes-7,.caseRes-8,.caseRes-9,.caseRes-10,.caseRes-11,.caseRes-12,.caseRes-13{
-	color:green;
+	color: #fff;
+  	background-color: #449d44;
+ 	border-color: #398439;
 }.submitRes-14,.caseRes-14{
 	color:#444;
 }.admin,.red{
@@ -1192,4 +1202,21 @@ html{
 }#motto{
 	font-family:"楷体";
 	font-size:17px;
+}.sbmt{
+	display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
