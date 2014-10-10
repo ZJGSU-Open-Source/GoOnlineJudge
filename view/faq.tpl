@@ -2,7 +2,7 @@
 <!-- <h1>FAQ</h1> -->
 <h2>评分</h2>
 <p>用户提交的程序经过Online Judge的即时评测，可能的反馈信息包括：</p>
-<table id="FAQ_list">
+<table id="FAQ_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="lheader">结果</th>
@@ -11,56 +11,59 @@
   </thead>
   <tbody>
         <tr>
-          <td class="yellow">Pending</td>
+        <td><button type="button" class="btn btn-warning btn-xs disabled">Pending</button></td>
           <td>系统还没有评测到这个提交，请稍候</td>
         </tr>
 
         <tr>
-          <td class="blue">Running&Judging</td>
+        <td><button type="button" class="btn btn-primary btn-xs disabled">Running&Judging</button></td>
+      
           <td>评测系统正在评测，稍候会有结果</td>
         </tr>
 
         <tr>
-          <td class="purple">Compile Error</td>
+        <td><button type="button" class="btn btn-warning btn-xs disabled">Compile Error</button></td>
+          
           <td>您提交的代码无法完成编译</td>
         </tr>
 
         <tr>
-          <td class="red">Accepted</td>
+        <td><button type="button" class="btn btn-danger btn-xs disabled">Accepted</button></td>
+          
           <td>恭喜！您通过了这道题</td>
         </tr> 
 
         <tr>
-          <td class="green">Presentation Error</td>
+        <td><button type="button" class="btn btn-success btn-xs disabled">Presentation Error</button></td>
           <td>您的程序输出的格式不符合要求（比如空格和换行与要求不一致）</td>
         </tr> 
 
         <tr>
-          <td class="green">Runtime Error</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">Runtime Error</button></td>
           <td>您的程序发生运行错误，可能是数组越界，堆栈溢出（比如，递归调用层数太多）等情况引起</td>
         </tr> 
 
         <tr>
-          <td class="green">Wrong Answer</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">Wrong Answer</button></td>
           <td>您的程序未能对评测系统的数据返回正确的结果，即答案错误</td>
         </tr> 
 
         <tr>
-          <td class="green">Time Limit Exceeded</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">Time Limit Exceeded</button></td>
           <td>您的程序未能在规定时间内运行结束</td>
         </tr> 
 
         <tr>
-          <td class="green">Memory Limit Exceeded</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">Memory Limit Exceeded</button></td>
           <td>您的程序使用了超过限制的内存</td>
         </tr> 
 
         <tr>
-          <td class="green">Output Limit Exceeded</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">Output Limit Exceeded</button></td>
           <td>您的程序输出的内容超出限制，可能是输出部分陷入无限循环引起</td>
         </tr> 
         <tr>
-          <td class="green">System Error</td>
+          <td><button type="button" class="btn btn-success btn-xs disabled">System Error</button></td>
           <td>评测系统出现了错误，竞赛中系统将不会记录罚时</td>
         </tr> 
   </tbody>
