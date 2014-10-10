@@ -1,5 +1,4 @@
 {{define "content"}}
-<div class="jumbotron">
 <h1>News List</h1>
 {{with .News}}
 
@@ -14,5 +13,4 @@
 		{{end}}
 	{{end}}
 {{end}}
-</div>
 {{end}}

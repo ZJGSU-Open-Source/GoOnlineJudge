@@ -96,7 +96,9 @@
           </div><!-- /.container-fluid -->
       </nav>
       <div id="body">
+      <div class="jumbotron">
         {{template "content" .}}
+        </div>
       </div>
       <div id="pageFooter" class="center">
         <hr class="nomarginbottom">
