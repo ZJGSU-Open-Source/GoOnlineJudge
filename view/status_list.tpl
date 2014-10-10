@@ -79,12 +79,12 @@ Language: <select id="search_language" name="search_language">
   <span>Next</span>
   {{end}}
 </div>
-
-<table id="contest_list">
+<div class="table-responsive">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">Run ID</th>
-      <th class="header">User</th>
+      <th class="header" class="btn btn-default btn-xs">User</th>
       <th class="header">Problem</th>
       <th class="header">Result</th>
       <th class="header">Time</th>
@@ -117,6 +117,7 @@ Language: <select id="search_language" name="search_language">
     {{end}}
   </tbody>
 </table>
+</div>
 <script type="text/javascript">
   $('#search_form').submit( function(e) {
     e.preventDefault();
