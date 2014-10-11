@@ -42,6 +42,7 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	this.Data["Title"] = "Contest Detail " + strconv.Itoa(this.Cid)
 	this.Data["Contest"] = this.ContestDetail.Title
 	this.Data["IsContestDetail"] = true
+	this.Data["IsContest"] = true
 }
 
 func (this *Contest) GetCount(qry map[string]string) (int, error) {

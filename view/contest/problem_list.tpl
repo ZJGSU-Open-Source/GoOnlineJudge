@@ -1,6 +1,6 @@
 {{define "content"}}
+<div id="contestinfo">
 <h1>{{.Contest}}</h1>
-<div id="contestinfo" style="color:blue">
 <p>Start Time : {{ShowTime .Start}} &nbsp;&nbsp;End Time : {{ShowTime .End}}</p>
 </div>
 <table id="contest_list" class="table table-bordered table-striped table-hover">
