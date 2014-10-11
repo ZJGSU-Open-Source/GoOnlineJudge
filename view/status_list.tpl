@@ -80,7 +80,7 @@ Language: <select id="search_language" name="search_language">
   {{end}}
 </div>
 <div class="table-responsive">
-<table id="contest_list" class="table  table-striped table-hover">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">Run ID</th>

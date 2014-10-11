@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>{{.Contest}}</h1>
-<table id="contest_list">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">ID</th>
@@ -24,7 +24,7 @@
         {{if ShowStatus .Status}} 
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{.Uid}}" class="btn btn-flat btn-info btn-xs">{{.Uid}}</a></td>
             <td><a href="/contest/problem/detail?cid={{$cid}}&pid={{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}">{{if or (eq .Uid $uid) (LargePU $privilege)}}*{{end}}{{ShowJudge .Judge}}</span>
             {{if or (eq .Uid $uid) (LargePU $privilege)}}[{{.Sim}}％]{{.Sim_s_id}}{{end}}</td>
