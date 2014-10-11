@@ -23,7 +23,6 @@
   </head>
 
   <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
-
       <div class="container"> 
       <div id="logo" class="lfloat">
             <a href="/"><img alt="Logo" src="/static/img/logo.png"></a>

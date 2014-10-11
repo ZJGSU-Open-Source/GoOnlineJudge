@@ -3,7 +3,7 @@
 <div id="contestinfo" style="color:blue">
 <p>Start Time : {{ShowTime .Start}} &nbsp;&nbsp;End Time : {{ShowTime .End}}</p>
 </div>
-<table id="contest_list">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">ID</th>
