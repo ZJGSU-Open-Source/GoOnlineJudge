@@ -11,59 +11,59 @@
   </thead>
   <tbody>
         <tr>
-        <td><button type="button" class="btn btn-warning btn-xs disabled">Pending</button></td>
+        <td><button type="button" class="btn btn-warning btn-xs" style="pointer-events:none">Pending</button></td>
           <td>系统还没有评测到这个提交，请稍候</td>
         </tr>
 
         <tr>
-        <td><button type="button" class="btn btn-primary btn-xs disabled">Running&Judging</button></td>
+        <td><button type="button" class="btn btn-primary btn-xs" style="pointer-events:none">Running&Judging</button></td>
       
           <td>评测系统正在评测，稍候会有结果</td>
         </tr>
 
         <tr>
-        <td><button type="button" class="btn btn-warning btn-xs disabled">Compile Error</button></td>
+        <td><button type="button" class="btn btn-ce btn-xs" style="pointer-events:none">Compile Error</button></td>
           
           <td>您提交的代码无法完成编译</td>
         </tr>
 
         <tr>
-        <td><button type="button" class="btn btn-danger btn-xs disabled">Accepted</button></td>
+        <td><button type="button" class="btn btn-danger btn-xs" style="pointer-events:none">Accepted</button></td>
           
           <td>恭喜！您通过了这道题</td>
         </tr> 
 
         <tr>
-        <td><button type="button" class="btn btn-success btn-xs disabled">Presentation Error</button></td>
+        <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Presentation Error</button></td>
           <td>您的程序输出的格式不符合要求（比如空格和换行与要求不一致）</td>
         </tr> 
 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">Runtime Error</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Runtime Error</button></td>
           <td>您的程序发生运行错误，可能是数组越界，堆栈溢出（比如，递归调用层数太多）等情况引起</td>
         </tr> 
 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">Wrong Answer</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Wrong Answer</button></td>
           <td>您的程序未能对评测系统的数据返回正确的结果，即答案错误</td>
         </tr> 
 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">Time Limit Exceeded</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Time Limit Exceeded</button></td>
           <td>您的程序未能在规定时间内运行结束</td>
         </tr> 
 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">Memory Limit Exceeded</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Memory Limit Exceeded</button></td>
           <td>您的程序使用了超过限制的内存</td>
         </tr> 
 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">Output Limit Exceeded</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">Output Limit Exceeded</button></td>
           <td>您的程序输出的内容超出限制，可能是输出部分陷入无限循环引起</td>
         </tr> 
         <tr>
-          <td><button type="button" class="btn btn-success btn-xs disabled">System Error</button></td>
+          <td><button type="button" class="btn btn-success btn-xs" style="pointer-events:none">System Error</button></td>
           <td>评测系统出现了错误，竞赛中系统将不会记录罚时</td>
         </tr> 
   </tbody>

@@ -1236,3 +1236,49 @@ html{
 	background-color: transparent;
 	text-decoration: none;
 }
+
+
+.btn-ce {
+  color: #333;
+  background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce:hover,
+.btn-ce:focus,
+.btn-ce:active,
+.btn-ce.active,
+.open > .dropdown-toggle.btn-ce {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-ce:active,
+.btn-ce.active,
+.open > .dropdown-toggle.btn-ce {
+  background-image: none;
+}
+.btn-ce.disabled,
+.btn-ce[disabled],
+fieldset[disabled] .btn-ce,
+.btn-ce.disabled:hover,
+.btn-ce[disabled]:hover,
+fieldset[disabled] .btn-ce:hover,
+.btn-ce.disabled:focus,
+.btn-ce[disabled]:focus,
+fieldset[disabled] .btn-ce:focus,
+.btn-ce.disabled:active,
+.btn-ce[disabled]:active,
+fieldset[disabled] .btn-ce:active,
+.btn-ce.disabled.active,
+.btn-ce[disabled].active,
+fieldset[disabled] .btn-ce.active {
+  	background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce .badge {
+  background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce:not(.btn-link) {
+  background-color: #9900FF;
+}

@@ -1911,6 +1911,9 @@ body .jumbotron-material-lightgrey,
 .btn-default:not(.btn-link) {
   background-color: transparent;
 }
+.btn-ce:not(.btn-link) {
+  background-color: #9900FF;
+}
 .btn-primary:not(.btn-link) {
   background-color: #4285f4;
 }
