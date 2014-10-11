@@ -1218,10 +1218,10 @@ html{
   	text-decoration:none;
   /*background:#ffc;*/
   	display:block;
-  	margin-top: 10px;
+  	/*margin-top: 10px;*/
   	float: left;
-  	padding: 20px;
-  	width: 110px;        
+  	padding: 20px 0px 10px 10px;
+  	width: 90px;        
   	box-shadow: 5px 5px 7px rgba(33,33,33,.7);
   	-webkit-transform: rotate(-6deg);
      -moz-transform: rotate(-6deg);
