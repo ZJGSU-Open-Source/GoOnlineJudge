@@ -2,7 +2,7 @@
 {{$cid := .Cid}}
 <h1>{{.Contest}}</h1>
 <h5><a href="/contest/ranklist/download?cid={{.Cid}}">Export ranklist</a></h5>
-<table id="contest_list">
+<table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <th class="header">Rank</th>
@@ -21,7 +21,7 @@
       {{range $idx,$v := .}} 
           <tr>
             <td>{{NumAdd $idx 1}}</td>
-            <td><a href="/user/detail?uid={{$v.Uid}}">{{$v.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{$v.Uid}}" class="btn btn-flat btn-info btn-xs">{{$v.Uid}}</a></td>
             <td><a href="/contest/status/list?cid={{$cid}}&uid={{$v.Uid}}&solved=3">{{$v.Solved}}</a></td>
             <td>{{ShowGapTime $v.Time}}</td>
             {{with $v.ProblemList}}
