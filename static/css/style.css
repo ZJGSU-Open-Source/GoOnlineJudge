@@ -1052,24 +1052,24 @@ html{
 	list-style:square;
 }.submitRes-0{
 	color: #fff;
-  	background-color: #f0ad4e;
-  	border-color: #eea236;
+  	background-color: #FF5722;
+  	border-color: #EEA236;
 }.submitRes-1{
 	color: #fff;
-  	background-color: #428bca;
-  	border-color: #357ebd;
+  	background-color: #4285F4;
+  	border-color: #357EBD;
 }.submitRes-2{
 	color:#fff;
 	background-color: #9900FF;
   	border-color: #9900FF;
 }.submitRes-3,.caseRes-3{
 	color: #fff;
-  	background-color: #d9534f;
-  	border-color: #d43f3a;
+  	background-color: #F44336;
+  	border-color: #D43F3A;
 }.submitRes-4,.submitRes-5,.submitRes-6,.submitRes-7,.submitRes-8,.submitRes-9,.submitRes-10,.submitRes-11,.submitRes-12,.submitRes-13,.caseRes-4,.caseRes-5,.caseRes-6,.caseRes-7,.caseRes-8,.caseRes-9,.caseRes-10,.caseRes-11,.caseRes-12,.caseRes-13{
 	color: #fff;
-  	background-color: #449d44;
- 	border-color: #398439;
+  	background-color: #0F9D58;
+ 	border-color: #4CAE4C;
 }.submitRes-14,.caseRes-14{
 	color:#444;
 }.admin,.red{
@@ -1237,4 +1237,50 @@ html{
 	color: #333;
 	background-color: transparent;
 	text-decoration: none;
+}
+
+
+.btn-ce {
+  color: #333;
+  background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce:hover,
+.btn-ce:focus,
+.btn-ce:active,
+.btn-ce.active,
+.open > .dropdown-toggle.btn-ce {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-ce:active,
+.btn-ce.active,
+.open > .dropdown-toggle.btn-ce {
+  background-image: none;
+}
+.btn-ce.disabled,
+.btn-ce[disabled],
+fieldset[disabled] .btn-ce,
+.btn-ce.disabled:hover,
+.btn-ce[disabled]:hover,
+fieldset[disabled] .btn-ce:hover,
+.btn-ce.disabled:focus,
+.btn-ce[disabled]:focus,
+fieldset[disabled] .btn-ce:focus,
+.btn-ce.disabled:active,
+.btn-ce[disabled]:active,
+fieldset[disabled] .btn-ce:active,
+.btn-ce.disabled.active,
+.btn-ce[disabled].active,
+fieldset[disabled] .btn-ce.active {
+  	background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce .badge {
+  background-color: #9900FF;
+  	border-color: #9900FF;
+}
+.btn-ce:not(.btn-link) {
+  background-color: #9900FF;
 }
