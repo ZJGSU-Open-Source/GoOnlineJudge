@@ -1,6 +1,5 @@
 {{define "content"}}
 <!-- <h1>Ranklist</h1> -->
-  
 <div class="pagination">
   {{$current := .CurrentPage}}
   {{$url := .URL}}

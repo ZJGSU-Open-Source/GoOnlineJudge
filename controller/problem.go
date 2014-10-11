@@ -70,6 +70,10 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		qry["page"] = "1"
 	}
 
+	if this.Privilege <= config.PrivilegePU {
+		qry["status"] = "2" //strconv.Itoa(config.StatusAvailable)
+	}
+
 	problemModel := model.ProblemModel{}
 	count, err := problemModel.Count(qry)
 	if err != nil {

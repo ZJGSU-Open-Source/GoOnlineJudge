@@ -1,5 +1,5 @@
 {{define "content"}}
-	<h1 class="compact">Sign Up</h1>
+	<h1 class="compact">Edit Info</h1>
 	{{with .Detail}}
 		<form accept-charset="UTF-8" class="new_user" id="new_user">
 		<div style="margin:0;padding:0;display:inline">

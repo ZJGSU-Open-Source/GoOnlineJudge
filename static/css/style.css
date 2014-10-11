@@ -967,7 +967,7 @@ html{
 	width:1018px;
 }#body{
 	/*margin-bottom:2em;*/
-	margin: 0 5% 5%;
+	/*margin: 0 5% 5%;*/
 }.hline{
 	border-bottom:1px solid #ddd;
 	font-size:1px;
@@ -1198,19 +1198,41 @@ html{
 	font-size:17px;
 }.sbmt{
 	display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -webkit-user-select: none;
+  	padding: 6px 12px;
+  	margin-bottom: 0;
+  	font-size: 14px;
+  	font-weight: normal;
+  	line-height: 1.42857143;
+  	text-align: center;
+  	white-space: nowrap;
+  	vertical-align: middle;
+  	-webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  	background-image: none;
+  	border: 1px solid transparent;
+  	border-radius: 4px;
+}.note {
+  	padding: 18px 20px;
+  	text-decoration:none;
+  /*background:#ffc;*/
+  	display:block;
+  	margin-top: 10px;
+  	float: left;
+  	padding: 20px;
+  	width: 110px;        
+  	box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+  	-webkit-transform: rotate(-6deg);
+     -moz-transform: rotate(-6deg);
+      -ms-transform: rotate(-6deg);
+          transform: rotate(-6deg);
+  	font-size: 15px;
+}.note a{
+	color: #777;
+	text-decoration: none;
+}.note a:hover, a:focus {
+	color: #333;
+	background-color: transparent;
+	text-decoration: none;
 }
