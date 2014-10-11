@@ -63,11 +63,11 @@
       <font  id="warning" color="red"></font>
     </div>
     <div class="field">
-     <div class="rfloat">
+      <div class="rfloat">
         <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
         Use advanced editor
-    </div>
-      <label for="code">Code</label><br>
+    </div>     
+     <label for="code">Code</label>
       <textarea id="code" name="code" autofocus=""></textarea>
     </div>
     <div class="actions">

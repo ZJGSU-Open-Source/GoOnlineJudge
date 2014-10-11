@@ -1,6 +1,6 @@
 {{define "content"}}
 {{$cid := .Cid}}
-<h1>{{.Contest}}</h1>
+<h1 style="text-align:center">Contest RankList -- {{.Contest}}</h1>
 <h5><a href="/contest/ranklist/download?cid={{.Cid}}">Export ranklist</a></h5>
 <table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>

@@ -1196,6 +1196,8 @@ html{
 }#motto{
 	font-family:"楷体";
 	font-size:17px;
+}#contestinfo{
+	text-align: center;
 }.sbmt{
 	display: inline-block;
   	padding: 6px 12px;
@@ -1216,7 +1218,7 @@ html{
 }.note {
   	padding: 18px 20px;
   	text-decoration:none;
-  /*background:#ffc;*/
+  background:#D2D2CD;
   	display:block;
   	/*margin-top: 10px;*/
   	float: left;

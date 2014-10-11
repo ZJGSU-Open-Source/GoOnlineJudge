@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>{{.Contest}}</h1>
+<h1 style="text-align:center">Contest Status -- {{.Contest}}</h1>
 <table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
