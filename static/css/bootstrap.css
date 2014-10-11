@@ -4557,11 +4557,6 @@ a.list-group-item.active > .badge,
 .jumbotron .h1 {
   color: inherit;
 }
-.jumbotron p {
-  margin-bottom: 15px;
-  font-size: 21px;
-  font-weight: 200;
-}
 .jumbotron > hr {
   border-top-color: #d5d5d5;
 }
@@ -4579,10 +4574,6 @@ a.list-group-item.active > .badge,
   .container .jumbotron {
     padding-right: 60px;
     padding-left: 60px;
-  }
-  .jumbotron h1,
-  .jumbotron .h1 {
-    font-size: 63px;
   }
 }
 .thumbnail {

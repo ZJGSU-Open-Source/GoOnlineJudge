@@ -1,6 +1,6 @@
 {{define "content"}}
   {{with .Detail}}
-    <h1>{{.Title}}</h1>
+    <h1 style="text-align: center">{{.Title}}</h1>
     <div id="problemInfo" class="rfloat" title="Problem Information">
       <div class="limit">
         <div class="key">Time Limit</div>
@@ -24,18 +24,18 @@
       </div>
     </div>
     <div id="problemContent">
-      <p class="problemIteam">Description:</p>
+      <span class="problemIteam">Description:</span>
     <p>{{.Description}}</p>
-    <p class="problemIteam">Input:</p>
+    <span class="problemIteam">Input:</span>
     <p>{{.Input}}</p>
-    <p class="problemIteam">Output:</p>
+    <span class="problemIteam">Output:</span>
     <p>{{.Output}}</p>
     <span class="problemIteam">Sample Input:</span>
-    <pre>{{.In}}</pre>
+    <pre class="sample">{{.In}}</pre>
     <span class="problemIteam">Sample Output:</span>
-    <pre>{{.Out}}</pre>
+    <pre class="sample">{{.Out}}</pre>
     {{if .Hint}}
-      <p><b>Hint:</b></p>
+      <span class="problemIteam">Hint:</span>
       <p>{{.Hint}}</p>
     {{end}}
     </div>
