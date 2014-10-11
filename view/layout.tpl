@@ -26,8 +26,8 @@
       <div class="container"> 
       <div id="logo" class="lfloat">
             <a href="/"><img alt="Logo" src="/static/img/logo.png"></a>
-          </div>
-          <hr>
+      </div>
+      <hr>
       <nav class="navbar navbar-default" role="navigation">
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -42,15 +42,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/problem/list">Problem</a></li>
-                <li><a href="/status/list">Status</a></li>
-                <li><a href="/ranklist">Ranklist</a></li>
-                <li><a href="/contestlist?type=contest">Contest</a></li>
-                 <li><a href="/contestlist?type=exercise">Exercise</a></li>
-                
-                <li><a href="/osc">OSC</a></li>
-                <li><a href="/faq">FAQ</a></li>
+                {{if .IsNews}}<li class="active"><a href="/">Home</a></li>{{else}}<li><a href="/">Home</a></li>{{end}}
+                {{if .IsProblem}}<li class="active"><a href="/problem/list">Problem</a>{{else}}<li><a href="/problem/list">Problem</a></li>{{end}}
+                {{if .IsStatus}}<li class="active"><a href="/status/list">Status</a></li>{{else}}<li><a href="/status/list">Status</a></li>{{end}}
+                {{if .IsRanklist}}<li class="active"><a href="/ranklist">Ranklist</a></li>{{else}}<li><a href="/ranklist">Ranklist</a></li>{{end}}
+                {{if .IsContest}}<li class="active"><a href="/contestlist?type=contest">Contest</a></li>{{else}}<li><a href="/contestlist?type=contest">Contest</a></li>{{end}}
+                {{if .IsExercise}}<li class="active"><a href="/contestlist?type=exercise">Exercise</a></li>{{else}}<li><a href="/contestlist?type=exercise">Exercise</a></li>{{end}}
+                {{if.IsOSC}}<li class="active"><a href="/osc">OSC</a></li>{{else}}<li><a href="/osc">OSC</a></li>{{end}}
+                {{if.IsFAQ}}<li class="active"><a href="/faq">FAQ</a></li>{{else}}<li><a href="/faq">FAQ</a></li>{{end}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                 {{if .IsCurrentUser}}
