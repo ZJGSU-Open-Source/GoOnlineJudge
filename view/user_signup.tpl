@@ -1,48 +1,82 @@
 {{define "content"}}
-	<h1 class="compact">Sign Up</h1>
-	<form accept-charset="UTF-8" class="new_user" id="new_user">
-		<div style="margin:0;padding:0;display:inline">
-			<input name="utf8" type="hidden" value="✓">
-		</div>
-		<div class="field">
-		  	<label for="user_handle">Handle</label><font color="red">*</font>
-		  	<font  id="user_warning_handle" color="red"></font><br>
-		 	<input id="user_handle" name="user[handle]" size="30" type="text" autofocus required="required" />
-		</div>
-		<div class="field">
-			<label for="user_nick">Nick</label><font color="red">*</font>
-			<font id="user_warning_nick" color="red"></font><br>
-			<input id="user_nick" name="user[nick]" size="30" type="text">
-		</div>
-		<div class="field">
-			<label for="user_password">Password</label><font color="red">*</font>
-			<font id="user_warning_password" color="red"></font><br>
-			<input id="user_password" name="user[password]" size="30" type="password" required="required" placeholder="at least six characters.">
-		</div>	
-		<div class="field">
-			<label for="user_confirmPassword">Confirm Password</label><font color="red">*</font>
-			<font id="user_warning_confirmPassword" color="red"></font><br>
-			<input id="user_confirmPassword" name="user[confirmPassword]" size="30" type="password" required="required">	
-		</div>
-		<div class="field">
-			<label for="user_mail">Email</label>
-			<font id="user_warning_mail" color="red"></font><br>
-			<input id="user_mail" name="user[mail]" size="30" type="email">	
-		</div>
-		<div class="field">
-			<label for="user_school">School</label>
-			<font id="user_warning_school" color="red"></font><br>
-			<input id="user_school" name="user[school]" size="30" type="text">	
-		</div>
-		<div class="field">
-			<label for="user_motto">Motto</label>
-			<font id="user_warning_motto" color="red"></font><br>
-			<input id="user_motto" name="user[motto]" size="30" type="text">
-		</div>
-		<div class="actions">
-	  	<input name="user_signup" type="submit" value="Sign Up">
-		</div>
-	</form>
+    <div class="row">
+      <div class="col-lg-6">
+
+        <form accept-charset="UTF-8" class="new_user form-horizontal" id="new_user">
+          <legend>Sign Up</legend>
+          <div style="margin:0;padding:0;display:inline">
+            <input name="utf8" type="hidden" value="✓">
+          </div>
+
+          <div class="form-group">
+            <label for="user_handle" class="col-lg-2 control-label">Handle<font color="red">*</font>
+            <font  id="user_warning_handle" color="red"></font><br>
+			</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" autofocus required>
+            </div>
+          </div>
+
+			<div class="form-group">
+            <label for="user_nick" class="col-lg-2 control-label">Nick<font color="red">*</font>
+            <font  id="user_warning_nick" color="red"></font><br>
+            </label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="user_nick" name="user[nick]" placeholder="Nick" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="user_password" class="col-lg-2 control-label">Password<font color="red">*</font>
+             <font id="user_warning_password" color="red"></font><br>
+			</label>
+            <div class="col-lg-10">
+              <input type="password" class="form-control" id="user_password" name="user[password]" required placeholder="at least six characters.">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="user_confirmPassword" class="col-lg-2 control-label">Confirm Password<font color="red">*</font></label>
+            <font id="user_warning_confirmPassword" color="red"></font><br>
+            <div class="col-lg-10">
+              <input type="password" class="form-control" id="user_confirmPassword" name="user[confirmPassword]" required placeholder="Confirm Password">
+            </div>
+          </div>
+
+		<div class="form-group">
+            <label for="user_mail" class="col-lg-2 control-label">Email</label>
+            <!-- <font  id="user_warning_mail" color="red"></font><br> -->
+            <div class="col-lg-10">
+              <input type="email" class="form-control" id="user_mail" name="user[mail]" placeholder="Mail" >
+            </div>
+          </div>
+
+			<div class="form-group">
+            <label for="user_school" class="col-lg-2 control-label">School</label>
+            <!-- <font  id="user_warning_school" color="red"></font><br> -->
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="user_school" name="user[school]" placeholder="School">
+            </div>
+          </div>
+
+			<div class="form-group">
+            <label for="user_motto" class="col-lg-2 control-label">Motto</label>
+            <!-- <font  id="user_warning_motto" color="red"></font><br> -->
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="user_motto" name="user[motto]" placeholder="Motto">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-5">
+              <button type="submit" name="user_signup" class="btn btn-flat btn-sm btn-primary" value="Sign Up">Submit</button>
+            </div>
+          </div>  
+        </form>
+
+      </div>
+  </div>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/material/js/material.min.js"></script>
 
 	<script type="text/javascript">
 	$('#new_user').submit( function(e) {
