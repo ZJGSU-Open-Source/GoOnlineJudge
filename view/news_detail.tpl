@@ -1,6 +1,6 @@
 {{define "content"}}
 	{{with .Detail}}
-		<h1>{{.Title}}</h1>
+		<h2>{{.Title}}</h2>
 		<p><b>Date: </b>{{.Create}}</p>
 		{{.Content}}
 	{{end}}

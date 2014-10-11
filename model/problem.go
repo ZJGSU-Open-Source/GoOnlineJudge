@@ -301,6 +301,13 @@ func (this *ProblemModel) CheckQuery(args map[string]string) (query bson.M, err 
 	if v, ok := args["source"]; ok {
 		query["source"] = bson.M{"$regex": bson.RegEx{v, "i"}}
 	}
-
+	if v, ok := args["status"]; ok {
+		var status int
+		status, err = strconv.Atoi(v)
+		if err != nil {
+			return
+		}
+		query["status"] = status
+	}
 	return
 }

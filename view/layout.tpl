@@ -23,6 +23,7 @@
   </head>
 
   <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
+
       <div class="container"> 
       <div id="logo" class="lfloat">
             <a href="/"><img alt="Logo" src="/static/img/logo.png"></a>
@@ -47,37 +48,8 @@
                 <li><a href="/status/list">Status</a></li>
                 <li><a href="/ranklist">Ranklist</a></li>
                 <li><a href="/contestlist?type=contest">Contest</a></li>
-                {{if .IsContestDetail}}
-                  <div id="psnavi">
-                  <ul>
-                    <li>{{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>{{end}}</li>
-                    <li>{{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}</li>
-                    <li>{{if .IsContestRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}</li>
-                  </ul>
-                  </div>
-                {{end}}
                  <li><a href="/contestlist?type=exercise">Exercise</a></li>
-                {{if .IsExerciseDetail}}
-                  <div id="psnavi">
-                  <ul>
-                    <li>{{if .IsExerciseProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>{{end}}</li>
-                    <li>{{if .IsExerciseStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}</li>
-                    <li>{{if .IsExerciseRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}</li>
-                  </ul>
-                  </div>
-                {{end}}
-                {{if .IsCurrentUser}}
-                  {{if .IsSettings}}
-                  <li><a href="/user/settings">Settings</a></li>
-                  <div id="psnavi">
-                  <ul>
-                    <li>{{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail?uid={{.CurrentUser}}">Detail</a>{{end}}</li>
-                    <li>{{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/edit">Edit Info</a>{{end}}</li>
-                    <li>{{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/user/pagepassword">Password</a>{{end}}</li>
-                  </ul>
-                  </div>
-                  {{end}}
-                {{end}}
+                
                 <li><a href="/osc">OSC</a></li>
                 <li><a href="/faq">FAQ</a></li>
                 </ul>
@@ -95,7 +67,38 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
-      <div id="body">
+
+      <div id="body"> 
+      
+                {{if .IsContestDetail}}
+                <div class="pinned note" >
+                    {{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>{{end}}
+                    {{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}
+                    {{if .IsContestRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}
+                </div>
+                  {{end}}
+                {{if .IsExerciseDetail}}
+                <div class="pinned note" >
+                    {{if .IsExerciseProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>{{end}}
+                    {{if .IsExerciseStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}
+                    {{if .IsExerciseRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}
+                </div>
+                {{end}}
+                {{if .IsCurrentUser}}
+                  {{if .IsSettings}}
+                  <div class="pinned note" >
+                    {{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail?uid={{.CurrentUser}}">Detail</a>{{end}}
+                    {{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/edit">Edit Info</a>{{end}}
+                    {{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/user/pagepassword">Password</a>{{end}}
+                  </div>
+                  {{end}}
+                {{end}}
+</div> 
+<script src="/static/js/jquery.pin.js" type="text/javascript"></script>
+<script type="text/javascript">
+  $(".pinned").pin();
+</script>
+
       <div class="jumbotron">
         {{template "content" .}}
         </div>
@@ -105,7 +108,7 @@
         <div id="footerContainer">
           <center><div class="center">ZJGSU Online Judge Beta 4.0 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">Github</a></div></center>
             <center><div class="center">Copyright © 2013-2014 ZJGSU ACM Club</div></center>
-            <center> <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></div></center>
+            <center> <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a> <a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a></div></center>
         </div>
       </div>
       </div>
