@@ -1,39 +1,57 @@
 {{define "content"}}
-	<h1 class="compact">Edit Info</h1>
-	{{with .Detail}}
-		<form accept-charset="UTF-8" class="new_user" id="new_user">
-		<div style="margin:0;padding:0;display:inline">
-			<input name="utf8" type="hidden" value="✓">
+{{with .Detail}}
+	<div class="row">
+	    <div class="col-lg-6">
+			<form accept-charset="UTF-8" class="new_user form-horizontal" id="new_user">
+				<legend>Edit Info</legend>
+				<div style="margin:0;padding:0;display:inline">
+					<input name="utf8" type="hidden" value="✓">
+				</div>
+				<div class="form-group">
+		            <label for="user_handle" class="col-lg-2 control-label">Handle</label>
+		            <div class="col-lg-10">
+		              <input type="text" class="form-control" id="user_handle" name="user[handle]" value="{{.Uid}}" readonly autofocus>
+		            </div>
+		         </div>
+		         <div class="form-group">
+		            <label for="user_nick" class="col-lg-2 control-label">Nick<font color="red">*</font></label>
+		            <div class="col-lg-10">
+		              <input type="text" class="form-control" id="user_nick" name="user[nick]" value="{{.Nick}}" required>
+		            </div>
+		          </div>
+				<div class="form-group">
+		            <label for="user_mail" class="col-lg-2 control-label">Email</label>
+		            <div class="col-lg-10">
+		              <input type="email" class="form-control" id="user_mail" name="user[mail]" value="{{.Mail}}" >
+		            </div>
+		         </div>
+
+				<div class="form-group">
+		            <label for="user_school" class="col-lg-2 control-label">School</label>
+		            <div class="col-lg-10">
+		              <input type="text" class="form-control" id="user_school" name="user[school]" value="{{.School}}">
+		            </div>
+		        </div>
+
+				<div class="form-group">
+		            <label for="user_motto" class="col-lg-2 control-label">Motto</label>
+		            <div class="col-lg-10">
+		              <input type="text" class="form-control" id="user_motto" name="user[motto]" value="{{.Motto}}">
+		            </div>
+		        </div>
+				<div class="form-group">
+		            <div class="col-lg-10 col-lg-offset-5">
+		              <div class="actions">
+		                <input name="user_signup" type="submit" value="Edit">
+		               </div>
+		            </div>
+		          </div>  
+					
+			</form>
 		</div>
-			<div class="field">
-			  	<label for="user_handle">Handle</label><br>
-			 	<input id="user_handle" name="user[handle]" size="30" type="text" value="{{.Uid}}" readonly>
-			</div>
-			<div class="field">
-				<label for="user_nick">Nick</label><font color="red">*</font>
-				<font id="user_warning_nick" color="red"></font><br>
-				<input id="user_nick" name="user[nick]" size="30" type="text" value="{{.Nick}}">
-			</div>
-			<div class="field">
-				<label for="user_mail">Email</label>
-				<font id="user_warning_mail" color="red"></font><br>
-				<input id="user_mail" name="user[mail]" size="30" type="email" value="{{.Mail}}">	
-			</div>
-			<div class="field">
-				<label for="user_school">School</label>
-				<font id="user_warning_school" color="red"></font><br>
-				<input id="user_school" name="user[school]" size="30" type="text" value="{{.School}}">	
-			</div>
-			<div class="field">
-				<label for="user_motto">Motto</label>
-				<font id="user_warning_motto" color="red"></font><br>
-				<input id="user_motto" name="user[motto]" size="30" type="text" value="{{.Motto}}">
-			</div>
-		
-			<div class="actions">
-		  		<input name="user_edit" type="submit" value="Edit">
-			</div>
-		</form>
+	</div>
+	<script src="/static/js/bootstrap.min.js"></script>
+  	<script src="/static/material/js/material.min.js"></script>
 	{{end}}
 	<script type="text/javascript">
 	$('#new_user').submit( function(e) {
