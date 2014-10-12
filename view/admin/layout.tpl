@@ -99,7 +99,7 @@
       <div id="pageFooter" class="center">
         <hr class="nomarginbottom">
         <div id="footerContainer">
-         <div class="center">ZJGSU Online Judge Beta 4.1 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">Github</a></div>
+         <div class="center">ZJGSU Online Judge Version 14.10.12 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">Github</a></div>
           <div class="center">Copyright &copy; 2013-2014 ZJGSU ACM Club</div>
           <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></div>
         </div>

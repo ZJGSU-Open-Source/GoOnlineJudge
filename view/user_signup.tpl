@@ -10,60 +10,74 @@
 
           <div class="form-group">
             <label for="user_handle" class="col-lg-2 control-label">Handle<font color="red">*</font>
-            <font  id="user_warning_handle" color="red"></font><br>
 		      	</label>
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" autofocus required>
+            </div>
+            <div class="col-lg-10">
+                  <font  id="user_warning_handle" color="red"></font>
             </div>
           </div>
 
 		    	<div class="form-group">
             <label for="user_nick" class="col-lg-2 control-label">Nick<font color="red">*</font>
-            <font  id="user_warning_nick" color="red"></font><br>
             </label>
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_nick" name="user[nick]" placeholder="Nick" required>
+            </div>
+            <div class="col-lg-10">
+            <font  id="user_warning_nick" color="red"></font>              
             </div>
           </div>
 
           <div class="form-group">
             <label for="user_password" class="col-lg-2 control-label">Password<font color="red">*</font>
-             <font id="user_warning_password" color="red"></font><br>
 			     </label>
             <div class="col-lg-10">
               <input type="password" class="form-control" id="user_password" name="user[password]" required placeholder="at least six characters.">
+            </div>
+            <div class="col-lg-10">
+              <font  id="user_warning_password" color="red"></font>              
             </div>
           </div>
 
           <div class="form-group">
             <label for="user_confirmPassword" class="col-lg-2 control-label">Confirm Password<font color="red">*</font></label>
-            <font id="user_warning_confirmPassword" color="red"></font><br>
             <div class="col-lg-10">
               <input type="password" class="form-control" id="user_confirmPassword" name="user[confirmPassword]" required placeholder="Confirm Password">
+            </div>
+                        <div class="col-lg-10">
+              <font  id="user_warning_confirmPassword" color="red"></font>              
             </div>
           </div>
 
 		      <div class="form-group">
             <label for="user_mail" class="col-lg-2 control-label">Email</label>
-            <!-- <font  id="user_warning_mail" color="red"></font><br> -->
             <div class="col-lg-10">
               <input type="email" class="form-control" id="user_mail" name="user[mail]" placeholder="Mail" >
+            </div>
+            <div class="col-lg-10">
+              <font  id="user_warning_mail" color="red"></font>              
             </div>
           </div>
 
 			     <div class="form-group">
             <label for="user_school" class="col-lg-2 control-label">School</label>
-            <!-- <font  id="user_warning_school" color="red"></font><br> -->
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_school" name="user[school]" placeholder="School">
+            </div>
+            <div class="col-lg-10">
+              <font  id="user_warning_school" color="red"></font>              
             </div>
           </div>
 
 			     <div class="form-group">
             <label for="user_motto" class="col-lg-2 control-label">Motto</label>
-            <!-- <font  id="user_warning_motto" color="red"></font><br> -->
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_motto" name="user[motto]" placeholder="Motto">
+            </div>
+            <div class="col-lg-10">
+              <font  id="user_motto" color="red"></font>              
             </div>
           </div>
           <div class="form-group">
