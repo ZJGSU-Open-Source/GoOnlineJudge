@@ -1,6 +1,6 @@
 {{define "content"}}
   <h1>User Detail</h1> 
-  <table>
+  <table class="table table-bordered table-striped table-hover">
     <tbody>
       {{with .Detail}}
         <tr>

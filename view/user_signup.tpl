@@ -71,7 +71,7 @@
             </div>
           </div>
 
-			     <div class="form-group">
+				<div class="form-group">
             <label for="user_motto" class="col-lg-2 control-label">Motto</label>
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_motto" name="user[motto]" placeholder="Motto">
@@ -83,10 +83,10 @@
           <div class="form-group">
             <div class="col-lg-10 col-lg-offset-5">
               <div class="actions">
-                <input name="user_signup" type="submit" value="Sign Up">
+                <input class="btn btn-info" name="user_signup" type="submit" value="Sign Up">
                </div>
             </div>
-          </div>  
+          </div>
         </form>
 
       </div>

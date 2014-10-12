@@ -1,5 +1,5 @@
 {{define "content"}}
-  <div class="flash alert" id="signin_failed" style="display:none;">Incorrect Handle or Password.</div>
+  <div class="flash alert alert-warning" id="signin_failed" style="display:none;">Incorrect Handle or Password.</div>
     <div class="row">
       <div class="col-lg-6">
 
@@ -26,10 +26,10 @@
           <div class="form-group">
             <div class="col-lg-10 col-lg-offset-5">
               <div class="actions">
-                <input name="user_signin" type="submit" value="Sign In">
+                <input class="btn btn-info" name="user_signin" type="submit" value="Sign In">
                  </div>
             </div>
-          </div>  
+          </div>
         </form>
 
       </div>
