@@ -12,7 +12,7 @@
           <div class="form-group">
             <label for="user_handle" class="col-lg-2 control-label">Handle</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle">
+              <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" autofocus>
             </div>
           </div>
 
@@ -25,7 +25,9 @@
 
           <div class="form-group">
             <div class="col-lg-10 col-lg-offset-5">
-              <button type="submit" class="btn btn-flat btn-sm btn-primary" value="Sign In">Submit</button>
+              <div class="actions">
+                <input name="user_signin" type="submit" value="Sign In">
+                 </div>
             </div>
           </div>  
         </form>

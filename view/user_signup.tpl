@@ -11,13 +11,13 @@
           <div class="form-group">
             <label for="user_handle" class="col-lg-2 control-label">Handle<font color="red">*</font>
             <font  id="user_warning_handle" color="red"></font><br>
-			</label>
+		      	</label>
             <div class="col-lg-10">
               <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" autofocus required>
             </div>
           </div>
 
-			<div class="form-group">
+		    	<div class="form-group">
             <label for="user_nick" class="col-lg-2 control-label">Nick<font color="red">*</font>
             <font  id="user_warning_nick" color="red"></font><br>
             </label>
@@ -29,7 +29,7 @@
           <div class="form-group">
             <label for="user_password" class="col-lg-2 control-label">Password<font color="red">*</font>
              <font id="user_warning_password" color="red"></font><br>
-			</label>
+			     </label>
             <div class="col-lg-10">
               <input type="password" class="form-control" id="user_password" name="user[password]" required placeholder="at least six characters.">
             </div>
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-		<div class="form-group">
+		      <div class="form-group">
             <label for="user_mail" class="col-lg-2 control-label">Email</label>
             <!-- <font  id="user_warning_mail" color="red"></font><br> -->
             <div class="col-lg-10">
@@ -51,7 +51,7 @@
             </div>
           </div>
 
-			<div class="form-group">
+			     <div class="form-group">
             <label for="user_school" class="col-lg-2 control-label">School</label>
             <!-- <font  id="user_warning_school" color="red"></font><br> -->
             <div class="col-lg-10">
@@ -59,7 +59,7 @@
             </div>
           </div>
 
-			<div class="form-group">
+			     <div class="form-group">
             <label for="user_motto" class="col-lg-2 control-label">Motto</label>
             <!-- <font  id="user_warning_motto" color="red"></font><br> -->
             <div class="col-lg-10">
@@ -68,7 +68,9 @@
           </div>
           <div class="form-group">
             <div class="col-lg-10 col-lg-offset-5">
-              <button type="submit" name="user_signup" class="btn btn-flat btn-sm btn-primary" value="Sign Up">Submit</button>
+              <div class="actions">
+                <input name="user_signup" type="submit" value="Sign Up">
+               </div>
             </div>
           </div>  
         </form>
