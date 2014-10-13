@@ -1,5 +1,5 @@
 {{define "content"}}
-<h1>ZJGSU开源社区宣言</h1>
+<h1 class="page-header">ZJGSU开源社区宣言</h1>
 <!-->我浙工商开源社区劝人为善，广积功德，宣讲正道。奉请五方诸佛，韦驮菩萨，护教伽蓝护持。<-->
 <blockquote>
 <p>We had to be rescued from our folly by a rebel alliance of obsessive geeks and creative misfits—who then proceeded to show us that professionalism and dedication really meant what we had been doing before we succumbed to the mundane persuasions of "sound business practices".<br>(只有痴迷的“黑客”和具有创造力的怪人结成的反叛联盟才能把我们从愚蠢中拯救出来——他们接着教导我们，真正的专业和奉献精神， 正是我们在屈服于世俗观念的"合理商业做法"之所作所为。)<br>-- The Art of Unix Programming</p>

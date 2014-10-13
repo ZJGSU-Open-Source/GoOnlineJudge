@@ -32,7 +32,7 @@
 				<div class="form-group">
 			        <div class="col-lg-10 col-lg-offset-5">
 			          <div class="actions">
-			            <input name="user_signup" type="submit" value="Edit">
+			            <input class="btn btn-info" name="user_signup" type="submit" value="Edit">
 			           </div>
 			        </div>
 			     </div>  
