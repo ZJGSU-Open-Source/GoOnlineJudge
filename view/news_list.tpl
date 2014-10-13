@@ -1,5 +1,5 @@
 {{define "content"}}
-<h2>News List</h2>
+<h2 class="page-header">News List</h2>
 {{with .News}}
 
 	{{range .}}
