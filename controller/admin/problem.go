@@ -106,7 +106,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The value 'Time' is neither too short nor too large", 400)
 		return
 	}
-	one.Time = time
+	one.Time = time * 1000
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
 		http.Error(w, "The value 'Memory' is neither too short nor too large", 400)
@@ -252,7 +252,7 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
+	one.Time /= 1000 // change ms to s
 	this.Data["Detail"] = one
 	this.Data["Title"] = "Admin - Problem Edit"
 	this.Data["IsProblem"] = true
@@ -427,4 +427,12 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		response.Body.Close()
 	}
 	w.WriteHeader(200)
+}
+
+func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
+	this.Data["Title"] = "Problem Import"
+	this.Data["IsProblem"] = true
+	this.Data["IsImport"] = true
+	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
+
 }

@@ -6,11 +6,9 @@
     <link rel="shortcut icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
     <title>{{.Title}}</title>
     <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
-    <!--[if lt IE 8]><link href="/static/css/style-lt8.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-    <!--[if lt IE 7]><link href="/static/css/style-lt7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+   
     <script src="/static/js/jquery.min.js" type="text/javascript"></script>
     <script src="/static/js/action.js" type="text/javascript"></script>
-    <!-- link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' -->
     {{if .IsEdit}}
       <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
       <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
@@ -54,6 +52,7 @@
                 <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problem/list">List</a>{{end}}</li>
                 {{if .IsAdmin}}
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem/add">Add</a>{{end}}</li>
+                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problem/import">Import</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}
                 <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem/rejudgepage">Rejudge</a>{{end}}</li>
@@ -101,7 +100,7 @@
         <div id="footerContainer">
          <div class="center">ZJGSU Online Judge Version 14.10.12 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">Github</a></div>
           <div class="center">Copyright &copy; 2013-2014 ZJGSU ACM Club</div>
-          <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></div>
+          <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a> <a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a></div>
         </div>
       </div>
     </div>

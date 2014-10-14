@@ -11,7 +11,7 @@
     </div>
     <div class="field">
       <label for="problem_time">Time Limit</label><br>
-      <input id="problem_time" name="time" size="30" type="number" value="{{.Time}}"> ms
+      <input id="problem_time" name="time" size="30" type="number" value="{{.Time}}"> S
     </div>
     <div class="field">
       <label for="problem_memory">Memory Limit</label><br>
