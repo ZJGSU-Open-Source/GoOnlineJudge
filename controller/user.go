@@ -58,7 +58,7 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 		//TODO:IP record
 		class.Logger.Debug(r.RemoteAddr)
-
+		userModel.RecordIP(uid, r.RemoteAddr)
 	}
 }
 

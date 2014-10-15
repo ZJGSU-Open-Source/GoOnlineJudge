@@ -24,18 +24,18 @@
       </div>
     </div>
     <div id="problemContent">
-      <span class="problemIteam">Description:</span>
+      <div class="problemIteam">Description:</div>
     <p>{{.Description}}</p>
-    <span class="problemIteam">Input:</span>
+    <div class="problemIteam">Input:</div>
     <p>{{.Input}}</p>
-    <span class="problemIteam">Output:</span>
+    <div class="problemIteam">Output:</div>
     <p>{{.Output}}</p>
-    <span class="problemIteam">Sample Input:</span>
+    <div class="problemIteam">Sample Input:</div>
     <pre class="sample">{{.In}}</pre>
-    <span class="problemIteam">Sample Output:</span>
+    <div class="problemIteam">Sample Output:</div>
     <pre class="sample">{{.Out}}</pre>
     {{if .Hint}}
-      <span class="problemIteam">Hint:</span>
+      <div class="problemIteam">Hint:</div>
       <p>{{.Hint}}</p>
     {{end}}
     </div>
