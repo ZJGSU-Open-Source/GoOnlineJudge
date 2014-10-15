@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+const IPCNT = 5
+
 type User struct {
 	Uid string `json:"uid"bson:"uid"`
 	Pwd string `json:"pwd"bson:"pwd"`
@@ -24,13 +26,13 @@ type User struct {
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
 
-	Status int    `json:"status"bson:"status"`
-	Create string `json:"create"bson:"create"`
-	//IPRecord []int  `json:"iprecord"bson:"iprecord"`记录ip地址
+	Status   int           `json:"status"bson:"status"`
+	Create   string        `json:"create"bson:"create"`
+	IPRecord [IPCNT]string `json:"iprecord"bson:"iprecord"` //记录ip地址
 }
 
 var uDetailSelector = bson.M{"_id": 0}
-var uListSelector = bson.M{"_id": 0, "uid": 1, "nick": 1, "motto": 1, "privilege": 1, "solve": 1, "submit": 1, "status": 1}
+var uListSelector = bson.M{"_id": 0, "uid": 1, "nick": 1, "motto": 1, "privilege": 1, "solve": 1, "submit": 1, "status": 1, "IPRecord": 1}
 
 type UserModel struct {
 	class.Model
@@ -77,6 +79,36 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 		Privilege: config.PrivilegeNA,
 		Status:    config.StatusReverse,
 	}, nil
+}
+
+func (this *UserModel) RecordIP(uid, IP string) error {
+	err := this.OpenDB()
+	if err != nil {
+		return DBErr
+	}
+	defer this.CloseDB()
+
+	var alt User
+	err = this.DB.C("User").Find(bson.M{"uid": uid}).Select(uDetailSelector).One(&alt)
+	if err == mgo.ErrNotFound {
+		return NotFoundErr
+	} else if err != nil {
+		return OpErr
+	}
+
+	ipRecord := alt.IPRecord
+
+	ipcnt := len(ipRecord)
+	if ipcnt < IPCNT {
+		ipRecord[ipcnt] = IP
+	} else {
+		for i := 0; i < IPCNT-1; i++ {
+			ipRecord[i] = ipRecord[i+1]
+		}
+		ipRecord[IPCNT-1] = IP
+	}
+	return nil
+
 }
 
 //这个函数貌似没干什么事啊==

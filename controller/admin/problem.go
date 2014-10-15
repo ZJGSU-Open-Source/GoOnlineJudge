@@ -434,5 +434,4 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsProblem"] = true
 	this.Data["IsImport"] = true
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
-
 }
