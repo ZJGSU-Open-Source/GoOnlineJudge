@@ -6,6 +6,7 @@ import (
 	"GoOnlineJudge/model"
 	"encoding/json"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -159,7 +160,9 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["List"] = solvedList
+	achieveList := sort.IntSlice(solvedList)
+	achieveList.Sort()
+	this.Data["List"] = achieveList
 	//class.Logger.Debug(solvedList)
 	this.Data["Title"] = "User Detail"
 	if uid != "" && uid == this.Uid {
@@ -192,7 +195,9 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["List"] = solvedList
+	achieveList := sort.IntSlice(solvedList)
+	achieveList.Sort()
+	this.Data["List"] = achieveList
 
 	this.Data["Title"] = "User Settings"
 	this.Data["IsSettings"] = true
