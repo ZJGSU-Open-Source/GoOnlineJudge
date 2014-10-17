@@ -163,7 +163,8 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
 	this.Data["List"] = achieveList
-	//class.Logger.Debug(solvedList)
+	this.Data["IpList"] = one.IPRecord
+	class.Logger.Debug(one.IPRecord)
 	this.Data["Title"] = "User Detail"
 	if uid != "" && uid == this.Uid {
 		this.Data["IsSettings"] = true
@@ -198,7 +199,7 @@ func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
 	this.Data["List"] = achieveList
-
+	this.Data["IpList"] = one.IPRecord
 	this.Data["Title"] = "User Settings"
 	this.Data["IsSettings"] = true
 	this.Data["IsSettingsDetail"] = true

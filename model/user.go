@@ -26,9 +26,9 @@ type User struct {
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
 
-	Status   int           `json:"status"bson:"status"`
-	Create   string        `json:"create"bson:"create"`
-	IPRecord [IPCNT]string `json:"iprecord"bson:"iprecord"` //记录ip地址
+	Status   int       `json:"status"bson:"status"`
+	Create   string    `json:"create"bson:"create"`
+	IPRecord [5]string `json:"iprecord"bson:"iprecord"` //记录ip地址
 }
 
 var uDetailSelector = bson.M{"_id": 0}
@@ -107,6 +107,14 @@ func (this *UserModel) RecordIP(uid, IP string) error {
 		}
 		ipRecord[IPCNT-1] = IP
 	}
+
+	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": bson.M{"iprecord": ipRecord}})
+	if err == mgo.ErrNotFound {
+		return NotFoundErr
+	} else if err != nil {
+		return OpErr
+	}
+
 	return nil
 
 }
