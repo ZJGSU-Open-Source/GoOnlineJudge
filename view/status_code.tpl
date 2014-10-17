@@ -1,7 +1,7 @@
 {{define "content"}}
 {{with .Solution}}
 <h1>View Code of Problem {{.Pid}}</h1>
-    <textarea id="sourceCode" name="sourceCode" style="display: none;">{{.Code}}</textarea>
+    <textarea id="sourceCode" name="sourceCode" style="display: none;" readonly>{{.Code}}</textarea>
     <table class="CodeRay">
       <tbody>
         <tr>

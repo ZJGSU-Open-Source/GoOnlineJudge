@@ -6,8 +6,11 @@ import (
 	"GoOnlineJudge/model"
 	"encoding/json"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -434,4 +437,41 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 	this.Data["IsProblem"] = true
 	this.Data["IsImport"] = true
 	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
+	if r.Method == "POST" {
+		content, err := ioutil.ReadFile("problem.xml")
+		if err != nil {
+			class.Logger.Debug(err)
+		}
+		contentStr := string(content)
+		problem := Problem{}
+		protype := reflect.TypeOf(problem)
+		proValue := reflect.ValueOf(&problem).Elem()
+		for i, lenth := 0, protype.NumField(); i < lenth; i++ {
+			tag := protype.Field(i).Tag.Get("xml")
+
+			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
+			tagRx := regexp.MustCompile(matchStr)
+			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
+			class.Logger.Debug(tag)
+			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
+				class.Logger.Debug(tagString[j][1])
+			}
+			proValue.Field(i).SetString("123") //tagString[0])
+		}
+	}
+}
+
+type Problem struct {
+	Titile        string `xml:"title"`
+	Time_limit    string `xml:"time_limit"`
+	Memory_limit  string `xml:"memory_limit"`
+	Description   string `xml:"description"`
+	Input         string `xml:"input"`
+	Output        string `xml:"output"`
+	Sample_input  string `xml:"sample_input"`
+	Sample_output string `xml:"sample_output"`
+	Test_input    string `xml:"test_input"`
+	Test_output   string `xml:"test_output"`
+	Hint          string `xml:"hint"`
+	Source        string `xml:"source"`
 }
