@@ -38,6 +38,18 @@
             {{end}}
           </td>
         </tr>
+        <tr>
+          <th>Login IP</th>
+          <td>
+            {{with .IpList}}
+              {{range .}}
+              {{if .}}
+                <li>{{.}}</li>
+              {{end}}
+              {{end}}
+            {{end}}
+          </td>
+          </tr>
     </tbody>
   </table>
   
