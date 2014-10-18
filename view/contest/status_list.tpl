@@ -23,11 +23,12 @@
       {{range .}} 
         {{if ShowStatus .Status}} 
           <tr>
+
             <td>{{.Sid}}</td>
             <td><a href="/user/detail?uid={{.Uid}}" class="btn btn-flat btn-info btn-xs">{{.Uid}}</a></td>
             <td><a href="/contest/problem/detail?cid={{$cid}}&pid={{.Pid}}">{{.Pid}}</a></td>
-            <td><span class="submitRes-{{.Judge}}">{{if or (eq .Uid $uid) (LargePU $privilege)}}*{{end}}{{ShowJudge .Judge}}</span>
-            {{if or (eq .Uid $uid) (LargePU $privilege)}}[{{.Sim}}％]{{.Sim_s_id}}{{end}}</td>
+            <td><span class="submitRes-{{.Judge}}">{{if (LargePU $privilege)}}{{if .Sim}}*{{end}}{{end}}{{ShowJudge .Judge}}</span>
+            {{if (LargePU $privilege)}} {{if .Sim}} ID:{{.Sim_s_id}} [{{.Sim}}％] {{end}} {{end}}</td>
             <td>{{.Time}}ms</td>
             <td>{{.Memory}}kB</td>
             <td>{{ShowLanguage .Language}}{{if or (eq .Uid $uid) (LargePU $privilege)}}<a href="/contest/status/code?cid={{$cid}}&sid={{.Sid}}">[view]</a>{{end}}</td>
