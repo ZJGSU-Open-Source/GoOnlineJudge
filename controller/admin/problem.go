@@ -109,7 +109,7 @@ func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "The value 'Time' is neither too short nor too large", 400)
 		return
 	}
-	one.Time = time * 1000
+	one.Time = time
 	memory, err := strconv.Atoi(r.FormValue("memory"))
 	if err != nil {
 		http.Error(w, "The value 'Memory' is neither too short nor too large", 400)
@@ -448,7 +448,7 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
-		class.Logger.Debug(fhs[0].Filename)
+		// class.Logger.Debug(fhs[0].Filename)
 		// var content []byte
 		content, err := ioutil.ReadAll(file)
 		if err != nil {
@@ -456,7 +456,7 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		contentStr := string(content)
-		class.Logger.Debug(contentStr)
+		// class.Logger.Debug(contentStr)
 
 		problem := model.Problem{}
 		protype := reflect.TypeOf(problem)
@@ -500,11 +500,11 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 		createfile(config.Datapath+strconv.Itoa(pid), "sample.in", problem.In)
 		createfile(config.Datapath+strconv.Itoa(pid), "sample.out", problem.Out)
 		for _, tag := range []string{"test_input", "test_output"} {
-			class.Logger.Debug(tag)
+			// class.Logger.Debug(tag)
 			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
 			tagRx := regexp.MustCompile(matchStr)
 			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
-			class.Logger.Debug(tagString)
+			// class.Logger.Debug(tagString)
 			caselenth, flagJ := 0, -1
 			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
 				if len(tagString[j][1]) > caselenth {
@@ -513,7 +513,7 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 			if flagJ >= 0 {
-				class.Logger.Debug(tagString[flagJ][1])
+				// class.Logger.Debug(tagString[flagJ][1])
 				filename := strings.Replace(tag, "_", ".", 1)
 				filename = strings.Replace(filename, "put", "", -1)
 				createfile(config.Datapath+strconv.Itoa(pid), filename, tagString[flagJ][1])

@@ -4,7 +4,7 @@
     <div id="problemInfo" class="rfloat" title="Problem Information">
       <div class="limit">
         <div class="key">Time Limit</div>
-        <div class="value">{{.Time}}ms<br></div>
+        <div class="value">{{.Time}}s<br></div>
       </div>
       <div class="limit">
         <div class="key">Memory Limit</div>
