@@ -433,45 +433,92 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
-	this.Data["Title"] = "Problem Import"
-	this.Data["IsProblem"] = true
-	this.Data["IsImport"] = true
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
-	if r.Method == "POST" {
-		content, err := ioutil.ReadFile("problem.xml")
+	if r.Method == "GET" {
+		this.Data["Title"] = "Problem Import"
+		this.Data["IsProblem"] = true
+		this.Data["IsImport"] = true
+		this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
+	} else if r.Method == "POST" {
+		r.ParseMultipartForm(32 << 20)
+		fhs := r.MultipartForm.File["fps.xml"]
+		file, err := fhs[0].Open()
 		if err != nil {
 			class.Logger.Debug(err)
+			return
+		}
+		defer file.Close()
+
+		class.Logger.Debug(fhs[0].Filename)
+		// var content []byte
+		content, err := ioutil.ReadAll(file)
+		if err != nil {
+			class.Logger.Debug(err)
+			return
 		}
 		contentStr := string(content)
-		problem := Problem{}
+		class.Logger.Debug(contentStr)
+
+		problem := model.Problem{}
 		protype := reflect.TypeOf(problem)
 		proValue := reflect.ValueOf(&problem).Elem()
+		class.Logger.Debug(protype.NumField())
 		for i, lenth := 0, protype.NumField(); i < lenth; i++ {
 			tag := protype.Field(i).Tag.Get("xml")
-
+			class.Logger.Debug(i, tag)
+			if tag == "" {
+				continue
+			}
 			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
 			tagRx := regexp.MustCompile(matchStr)
 			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
 			class.Logger.Debug(tag)
-			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
-				class.Logger.Debug(tagString[j][1])
+			//for matchLen, j := len(tagString), 0; j < matchLen; j++ {
+			//class.Logger.Debug(tagString[j][1])
+			if len(tagString) > 0 {
+				switch tag {
+				case "time_limit", "memory_limit":
+					limit, err := strconv.Atoi(tagString[0][1])
+					if err != nil {
+						class.Logger.Debug(err)
+						limit = 1
+					}
+					proValue.Field(i).Set(reflect.ValueOf(limit))
+				case "description", "input", "output":
+					proValue.Field(i).SetString(tagString[0][1])
+				default:
+					proValue.Field(i).SetString(tagString[0][1])
+				}
 			}
-			proValue.Field(i).SetString("123") //tagString[0])
 		}
-	}
-}
+		proModel := model.ProblemModel{}
+		pid, err := proModel.Insert(problem)
+		if err != nil {
+			class.Logger.Debug(err)
+		}
 
-type Problem struct {
-	Titile        string `xml:"title"`
-	Time_limit    string `xml:"time_limit"`
-	Memory_limit  string `xml:"memory_limit"`
-	Description   string `xml:"description"`
-	Input         string `xml:"input"`
-	Output        string `xml:"output"`
-	Sample_input  string `xml:"sample_input"`
-	Sample_output string `xml:"sample_output"`
-	Test_input    string `xml:"test_input"`
-	Test_output   string `xml:"test_output"`
-	Hint          string `xml:"hint"`
-	Source        string `xml:"source"`
+		// 建立测试数据文件
+		createfile(config.Datapath+strconv.Itoa(pid), "sample.in", problem.In)
+		createfile(config.Datapath+strconv.Itoa(pid), "sample.out", problem.Out)
+		for _, tag := range []string{"test_input", "test_output"} {
+			class.Logger.Debug(tag)
+			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
+			tagRx := regexp.MustCompile(matchStr)
+			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
+			class.Logger.Debug(tagString)
+			caselenth, flagJ := 0, -1
+			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
+				if len(tagString[j][1]) > caselenth {
+					caselenth = len(tagString[j][1])
+					flagJ = j
+				}
+			}
+			if flagJ >= 0 {
+				class.Logger.Debug(tagString[flagJ][1])
+				filename := strings.Replace(tag, "_", ".", 1)
+				filename = strings.Replace(filename, "put", "", -1)
+				createfile(config.Datapath+strconv.Itoa(pid), filename, tagString[flagJ][1])
+			}
+		}
+		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
+	}
 }
