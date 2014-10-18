@@ -12,20 +12,20 @@ import (
 type Problem struct {
 	Pid int `json:"pid"bson:"pid"`
 
-	Time    int    `json:"time"bson:"time"`
-	Memory  int    `json:"memory"bson:"memory"`
+	Time    int    `json:"time"bson:"time"xml:"time_limit"`
+	Memory  int    `json:"memory"bson:"memory"xml:"memory_limit"`
 	Special int    `json:"special"bson:"special"`
 	Expire  string `json:"expire"bson:"expire"`
 
-	Title       string        `json:"title"bson:"title"`
-	Description template.HTML `json:"description"bson:"description"`
-	Input       template.HTML `json:"input"bson:"input"`
-	Output      template.HTML `json:"output"bson:"output"`
-	Source      string        `json:"source"bson:"source"`
-	Hint        string        `json:"hint"bson:"hint"`
+	Title       string        `json:"title"bson:"title"xml:"title"`
+	Description template.HTML `json:"description"bson:"description"xml:"description"`
+	Input       template.HTML `json:"input"bson:"input"xml:"input"`
+	Output      template.HTML `json:"output"bson:"output"xml:"output"`
+	Source      string        `json:"source"bson:"source"xml:"source"`
+	Hint        string        `json:"hint"bson:"hint"xml:"hint"`
 
-	In  string `json:"in"bson:"in"`
-	Out string `json:"out"bson:"out"`
+	In  string `json:"in"bson:"in"xml:"sample_input"`
+	Out string `json:"out"bson:"out"xml:"sample_output"`
 
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`

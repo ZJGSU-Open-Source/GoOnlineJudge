@@ -30,7 +30,7 @@
 <form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload?pid={{.Pid}}">
 <div class="actions">
 <label><input type="file" multiple="" size="80" name="testfiles" style="background-color:white;color:black" />
-<input name="commit"type="submit" value="upload" /> </label>
+<input name="commit" type="submit" value="upload" /> </label>
 </div>
 </form>
 <div class="flash notice">You can just add test.in and test.out with encoding utf-8.</div>
