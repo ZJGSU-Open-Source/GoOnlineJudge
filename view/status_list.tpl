@@ -103,9 +103,9 @@ Language: <select id="search_language" name="search_language">
         
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user/detail?uid={{.Uid}}" class="btn btn-info btn-flat btn-xs">{{.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
-            <td><span class="sbmt btn-xs btn-flat submitRes-{{.Judge}}" disabled="disabled">{{ShowJudge .Judge}}</span></td>
+            <td><span class="submitRes-{{.Judge}}" disabled="disabled">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
             <td>{{ShowLanguage .Language}}{{if or (eq $uid .Uid) (LargePU $privilege)}}<a href="/status/code?sid={{.Sid}}">[view]</a>{{end}}</td>

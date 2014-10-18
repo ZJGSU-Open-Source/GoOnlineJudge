@@ -499,20 +499,25 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 		// 建立测试数据文件
 		createfile(config.Datapath+strconv.Itoa(pid), "sample.in", problem.In)
 		createfile(config.Datapath+strconv.Itoa(pid), "sample.out", problem.Out)
+
+		flag, flagJ := true, -1
 		for _, tag := range []string{"test_input", "test_output"} {
 			// class.Logger.Debug(tag)
 			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
 			tagRx := regexp.MustCompile(matchStr)
 			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
 			// class.Logger.Debug(tagString)
-			caselenth, flagJ := 0, -1
-			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
-				if len(tagString[j][1]) > caselenth {
-					caselenth = len(tagString[j][1])
-					flagJ = j
+			if flag {
+				flag = false
+				caselenth := 0
+				for matchLen, j := len(tagString), 0; j < matchLen; j++ {
+					if len(tagString[j][1]) > caselenth {
+						caselenth = len(tagString[j][1])
+						flagJ = j
+					}
 				}
 			}
-			if flagJ >= 0 {
+			if flagJ >= 0 && flagJ < len(tagString) {
 				// class.Logger.Debug(tagString[flagJ][1])
 				filename := strings.Replace(tag, "_", ".", 1)
 				filename = strings.Replace(filename, "put", "", -1)
