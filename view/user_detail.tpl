@@ -28,17 +28,7 @@
           <td>{{.Solve}}</td>
         </tr>
       {{end}}
-        <tr>
-          <th>Achieve</th>
-          <td>
-            {{with .List}}
-              {{range .}}
-                <a href="/problem/detail?pid={{.}}">{{.}}</a> 
-              {{end}}
-            {{end}}
-          </td>
-        </tr>
-        <tr>
+      <tr>
           <th>Login IP</th>
           <td>
             {{with .IpList}}
@@ -50,6 +40,17 @@
             {{end}}
           </td>
           </tr>
+        <tr>
+          <th>Achieve</th>
+          <td>
+            {{with .List}}
+              {{range .}}
+                <a href="/problem/detail?pid={{.}}">{{.}}</a> 
+              {{end}}
+            {{end}}
+          </td>
+        </tr>
+        
     </tbody>
   </table>
   
