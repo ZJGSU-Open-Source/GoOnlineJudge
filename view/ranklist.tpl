@@ -69,7 +69,7 @@
           {{if ShowStatus .Status}}
             <tr>
               <td>{{.Index}}</td>
-              <td><a href="/user/detail?uid={{.Uid}}" class="btn btn-flat btn-info btn-xs">{{.Uid}}</a></td>
+              <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
               <td id="motto" >{{.Motto}}</td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list?uid={{.Uid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?uid={{.Uid}}">{{.Submit}}</a>)</td>
             </tr>
