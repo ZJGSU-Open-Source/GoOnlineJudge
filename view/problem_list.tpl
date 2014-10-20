@@ -1,14 +1,14 @@
 {{define "content"}}
 <!-- <h1>Problem List</h1> -->
 
-<form accept-charset="UTF-8" id="search_form" >
-Search: <input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
-<select id="option" name="option">
-  <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
-  <option value="title" {{if .SearchTitle}}selected{{end}}>Title</option>
-  <option value="source" {{if .SearchSource}}selected{{end}}>Source</option>
-</select>
-<input name="commit" type="submit" value="Go">
+<form accept-charset="UTF-8" id="search_form" class="form-inline">
+  <span> Search: </span><input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
+  <select id="option" name="option" class="form-control" style="margin-left:10px">
+    <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
+    <option value="title" {{if .SearchTitle}}selected{{end}}>Title</option>
+    <option value="source" {{if .SearchSource}}selected{{end}}>Source</option>
+  </select>
+  <input name="commit" type="submit" value="Go" style="margin-left:10px">
 </form>
 
 <div class="pagination">
