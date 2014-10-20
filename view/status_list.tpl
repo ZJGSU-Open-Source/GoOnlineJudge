@@ -1,29 +1,31 @@
 {{define "content"}}
 <meta http-equiv="refresh" content="30">
 <!-- <h1>Status List</h1> -->
-<form accept-charset="UTF-8" id="search_form">
-User: <input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">
-Problem: <input id="search_pid" name="search_pid" size="10" type="text" value="{{.SearchPid}}">
-Result: <select id="search_judge" name="search_judge">
-  <option value="0" {{if .SearchJudge0}}selected{{end}}>All</option>
-  <option value="1" {{if .SearchJudge1}}selected{{end}}>Pending</option>
-  <option value="2" {{if .SearchJudge2}}selected{{end}}>Running &amp;Judging</option>
-  <option value="3" {{if .SearchJudge3}}selected{{end}}>Accepted</option>
-  <option value="4" {{if .SearchJudge4}}selected{{end}}>Compile Error</option>
-  <option value="5" {{if .SearchJudge5}}selected{{end}}>Runtime Error</option>
-  <option value="6" {{if .SearchJudge6}}selected{{end}}>Wrong Answer</option>
-  <option value="7" {{if .SearchJudge7}}selected{{end}}>Time Limit Exceeded</option>
-  <option value="8" {{if .SearchJudge8}}selected{{end}}>Memory Limit Exceeded</option>
-  <option value="9" {{if .SearchJudge9}}selected{{end}}>Output Limit Exceeded</option>
-  <option value="10" {{if .SearchJudge9}}selected{{end}}>Presentation Error</option>
-</select>
-Language: <select id="search_language" name="search_language">
-  <option value="0" {{if .SearchLanguage0}}selected{{end}}>All</option>
-  <option value="1" {{if .SearchLanguage1}}selected{{end}}>C</option>
-  <option value="2" {{if .SearchLanguage2}}selected{{end}}>C++</option>
-  <option value="3" {{if .SearchLanguage3}}selected{{end}}>Java</option>
-</select>
-<input name="commit" type="submit" value="Go">
+<form accept-charset="UTF-8" id="search_form" class="form-inline">
+  <span> User: </span><input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">
+  <span style="margin-left:10px">Problem: </span><input id="search_pid" name="search_pid" size="10" type="text" value="{{.SearchPid}}">
+  <span style="margin-left:10px">Result: </span>
+    <select class="form-control" id="search_judge" name="search_judge">
+      <option value="0" {{if .SearchJudge0}}selected{{end}}>All</option>
+      <option value="1" {{if .SearchJudge1}}selected{{end}}>Pending</option>
+      <option value="2" {{if .SearchJudge2}}selected{{end}}>Running &amp;Judging</option>
+      <option value="3" {{if .SearchJudge3}}selected{{end}}>Accepted</option>
+      <option value="4" {{if .SearchJudge4}}selected{{end}}>Compile Error</option>
+      <option value="5" {{if .SearchJudge5}}selected{{end}}>Runtime Error</option>
+      <option value="6" {{if .SearchJudge6}}selected{{end}}>Wrong Answer</option>
+      <option value="7" {{if .SearchJudge7}}selected{{end}}>Time Limit Exceeded</option>
+      <option value="8" {{if .SearchJudge8}}selected{{end}}>Memory Limit Exceeded</option>
+      <option value="9" {{if .SearchJudge9}}selected{{end}}>Output Limit Exceeded</option>
+      <option value="10" {{if .SearchJudge9}}selected{{end}}>Presentation Error</option>
+    </select>
+    <span style="margin-left:10px">Language: </span>
+    <select class="form-control" id="search_language" name="search_language">
+      <option value="0" {{if .SearchLanguage0}}selected{{end}}>All</option>
+      <option value="1" {{if .SearchLanguage1}}selected{{end}}>C</option>
+      <option value="2" {{if .SearchLanguage2}}selected{{end}}>C++</option>
+      <option value="3" {{if .SearchLanguage3}}selected{{end}}>Java</option>
+    </select>
+  <input name="commit" type="submit" value="Go" style="margin-left:10px">
 </form>
 
 <div class="pagination">
