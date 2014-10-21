@@ -3,7 +3,7 @@
 
 <form accept-charset="UTF-8" id="search_form" class="form-inline">
   <span> Search: </span><input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
-  <select id="option" name="option" class="form-control" style="margin-left:10px">
+  <select id="option" name="option" style="margin-left:10px">
     <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
     <option value="title" {{if .SearchTitle}}selected{{end}}>Title</option>
     <option value="source" {{if .SearchSource}}selected{{end}}>Source</option>
