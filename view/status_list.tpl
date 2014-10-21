@@ -5,7 +5,7 @@
   <span> User: </span><input id="search_uid" name="search_uid" size="20" type="text" value="{{.SearchUid}}">
   <span style="margin-left:10px">Problem: </span><input id="search_pid" name="search_pid" size="10" type="text" value="{{.SearchPid}}">
   <span style="margin-left:10px">Result: </span>
-    <select class="form-control" id="search_judge" name="search_judge">
+    <select id="search_judge" name="search_judge">
       <option value="0">All</option>
       <option value="1" {{if .SearchJudge0}}selected{{end}}>Pending</option>
       <option value="2" {{if .SearchJudge1}}selected{{end}}>Running &amp;Judging</option>
@@ -20,7 +20,7 @@
       <option value="11" {{if .SearchJudge10}}selected{{end}}>System Error</option>
     </select>
     <span style="margin-left:10px">Language: </span>
-    <select class="form-control" id="search_language" name="search_language">
+    <select id="search_language" name="search_language">
       <option value="0" {{if .SearchLanguage0}}selected{{end}}>All</option>
       <option value="1" {{if .SearchLanguage1}}selected{{end}}>C</option>
       <option value="2" {{if .SearchLanguage2}}selected{{end}}>C++</option>
