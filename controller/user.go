@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"net/http"
 	"sort"
@@ -15,28 +16,28 @@ type UserController struct {
 	class.Controller
 }
 
-func (this UserController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 1)
+func (uc UserController) Route(w http.ResponseWriter, r *http.Request) {
+	uc.Init(w, r)
+	action := uc.GetAction(r.URL.Path, 1)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&uc, strings.Title(action), rv)
 }
 
-func (this *UserController) Signin(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
 
-	this.Data["Title"] = "User Sign In"
-	this.Data["IsUserSignIn"] = true
+	uc.Data["Title"] = "User Sign In"
+	uc.Data["IsUserSignIn"] = true
 
-	this.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
+	uc.Execute(w, "view/layout.tpl", "view/user_signin.tpl")
 }
 
-func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Login")
 
 	uid := r.FormValue("user[handle]")
@@ -53,26 +54,26 @@ func (this *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	if ret.Uid == "" {
 		w.WriteHeader(400)
 	} else {
-		this.SetSession(w, r, "Uid", uid)
-		this.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
+		uc.SetSession(w, r, "Uid", uid)
+		uc.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 		w.WriteHeader(200)
 
-		//TODO:IP record
+		//TODO:record login time
 		class.Logger.Debug(r.RemoteAddr)
-		userModel.RecordIP(uid, r.RemoteAddr)
+		userModel.RecordIP(uid, strings.Split(r.RemoteAddr, ":")[0])
 	}
 }
 
-func (this *UserController) Signup(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Sign Up")
 
-	this.Data["Title"] = "User Sign Up"
-	this.Data["IsUserSignUp"] = true
-	this.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
+	uc.Data["Title"] = "User Sign Up"
+	uc.Data["IsUserSignUp"] = true
+	uc.Execute(w, "view/layout.tpl", "view/user_signup.tpl")
 
 }
 
-func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Register")
 
 	var one model.User
@@ -98,7 +99,7 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 		} else if len(ret) > 0 {
-			ok, hint["uid"] = 0, "This handle is currently in use."
+			ok, hint["uid"] = 0, "uc handle is currently in use."
 		}
 	}
 	if nick == "" {
@@ -123,8 +124,8 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		this.SetSession(w, r, "Uid", uid)
-		this.SetSession(w, r, "Privilege", "1")
+		uc.SetSession(w, r, "Uid", uid)
+		uc.SetSession(w, r, "Privilege", "1")
 		w.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
@@ -133,14 +134,14 @@ func (this *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (this *UserController) Logout(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Logout")
 
-	this.DeleteSession(w, r)
+	uc.DeleteSession(w, r)
 	w.WriteHeader(200)
 }
 
-func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Detail")
 
 	args := r.URL.Query()
@@ -151,7 +152,7 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Detail"] = one
+	uc.Data["Detail"] = one
 
 	solutionModle := model.SolutionModel{}
 	solvedList, err := solutionModle.Achieve(uid)
@@ -162,81 +163,81 @@ func (this *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
-	this.Data["List"] = achieveList
-	this.Data["IpList"] = one.IPRecord
+	uc.Data["List"] = achieveList
+	uc.Data["IpList"] = one.IPRecord
 	class.Logger.Debug(one.IPRecord)
-	this.Data["Title"] = "User Detail"
-	if uid != "" && uid == this.Uid {
-		this.Data["IsSettings"] = true
-		this.Data["IsSettingsDetail"] = true
+	uc.Data["Title"] = "User Detail"
+	if uid != "" && uid == uc.Uid {
+		uc.Data["IsSettings"] = true
+		uc.Data["IsSettingsDetail"] = true
 	}
 
-	this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
+	uc.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 }
 
-func (this *UserController) Settings(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Settings")
 
-	if this.Uid == "" {
+	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
 	}
 
 	userModel := model.UserModel{}
 
-	one, err := userModel.Detail(this.Uid)
+	one, err := userModel.Detail(uc.Uid)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Detail"] = one
+	uc.Data["Detail"] = one
 
 	solutionModel := model.SolutionModel{}
-	solvedList, err := solutionModel.Achieve(this.Uid)
+	solvedList, err := solutionModel.Achieve(uc.Uid)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
-	this.Data["List"] = achieveList
-	this.Data["IpList"] = one.IPRecord
-	this.Data["Title"] = "User Settings"
-	this.Data["IsSettings"] = true
-	this.Data["IsSettingsDetail"] = true
+	uc.Data["List"] = achieveList
+	uc.Data["IpList"] = one.IPRecord
+	uc.Data["Title"] = "User Settings"
+	uc.Data["IsSettings"] = true
+	uc.Data["IsSettingsDetail"] = true
 
-	this.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
+	uc.Execute(w, "view/layout.tpl", "view/user_detail.tpl")
 }
 
-func (this *UserController) Edit(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Edit")
 
-	if this.Uid == "" {
+	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
 		return
 	}
 
-	uid := this.Uid
+	uid := uc.Uid
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uid)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Detail"] = one
+	uc.Data["Detail"] = one
 
-	this.Data["Title"] = "User Edit"
-	this.Data["IsSettings"] = true
-	this.Data["IsSettingsEdit"] = true
+	uc.Data["Title"] = "User Edit"
+	uc.Data["IsSettings"] = true
+	uc.Data["IsSettingsEdit"] = true
 
-	this.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
+	uc.Execute(w, "view/layout.tpl", "view/user_edit.tpl")
 }
 
-func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Update")
 
 	ok := 1
 	hint := make(map[string]string)
-	hint["uid"] = this.Uid
+	hint["uid"] = uc.Uid
 
 	var one model.User
 	one.Nick = r.FormValue("user[nick]")
@@ -250,7 +251,7 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 
 	if ok == 1 {
 		userModel := model.UserModel{}
-		err := userModel.Update(this.Uid, one)
+		err := userModel.Update(uc.Uid, one)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
@@ -264,34 +265,34 @@ func (this *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password Page")
 
-	if this.Uid == "" {
+	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
 		return
 	}
 
-	this.Data["Title"] = "User Password"
-	this.Data["IsSettings"] = true
-	this.Data["IsSettingsPassword"] = true
+	uc.Data["Title"] = "User Password"
+	uc.Data["IsSettings"] = true
+	uc.Data["IsSettingsPassword"] = true
 
-	this.Execute(w, "view/layout.tpl", "view/user_password.tpl")
+	uc.Execute(w, "view/layout.tpl", "view/user_password.tpl")
 }
 
-func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password")
 
 	ok := 1
 	hint := make(map[string]string)
-	hint["uid"] = this.Uid
+	hint["uid"] = uc.Uid
 
 	data := make(map[string]string)
 	data["oldPassword"] = r.FormValue("user[oldPassword]")
 	data["newPassword"] = r.FormValue("user[newPassword]")
 	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
-	uid := this.Uid
+	uid := uc.Uid
 	pwd := data["oldPassword"]
 
 	userModel := model.UserModel{}

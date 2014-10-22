@@ -15,24 +15,24 @@ type Session struct {
 }
 
 // Set 设置session，添加key－value
-func (this *Session) Set(Key, Value string) {
-	this.Lock()
-	defer this.Unlock()
-	this.Update()
-	this.data[Key] = Value
+func (s *Session) Set(Key, Value string) {
+	s.Lock()
+	defer s.Unlock()
+	s.Update()
+	s.data[Key] = Value
 }
 
 // Get 获得key指定的value
-func (this *Session) Get(Key string) string {
-	this.Lock()
-	defer this.Unlock()
-	this.Update()
-	return this.data[Key]
+func (s *Session) Get(Key string) string {
+	s.Lock()
+	defer s.Unlock()
+	s.Update()
+	return s.data[Key]
 }
 
 // Update 更新session时间
-func (this *Session) Update() {
-	this.timeAccessed = time.Now()
+func (s *Session) Update() {
+	s.timeAccessed = time.Now()
 }
 
 // NewSession 生成一个新的session

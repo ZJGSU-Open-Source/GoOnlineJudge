@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strconv"
 )
@@ -15,8 +16,8 @@ type Contest struct {
 	class.Controller
 }
 
-func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
+func (c *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
+	c.Init(w, r)
 
 	args := r.URL.Query()
 
@@ -25,32 +26,32 @@ func (this *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	this.Cid = cid
+	c.Cid = cid
 
 	contestModel := model.ContestModel{}
-	this.ContestDetail, err = contestModel.Detail(cid)
+	c.ContestDetail, err = contestModel.Detail(cid)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	this.Index = make(map[int]int)
-	for k, v := range this.ContestDetail.List {
-		this.Index[v] = k
+	c.Index = make(map[int]int)
+	for k, v := range c.ContestDetail.List {
+		c.Index[v] = k
 	}
-	this.Data["Cid"] = strconv.Itoa(this.Cid)
-	this.Data["Title"] = "Contest Detail " + strconv.Itoa(this.Cid)
-	this.Data["Contest"] = this.ContestDetail.Title
-	this.Data["IsContestDetail"] = true
-	this.Data["IsContest"] = true
+	c.Data["Cid"] = strconv.Itoa(c.Cid)
+	c.Data["Title"] = "Contest Detail " + strconv.Itoa(c.Cid)
+	c.Data["Contest"] = c.ContestDetail.Title
+	c.Data["IsContestDetail"] = true
+	c.Data["IsContest"] = true
 }
 
-func (this *Contest) GetCount(qry map[string]string) (int, error) {
+func (c *Contest) GetCount(qry map[string]string) (int, error) {
 	if qry == nil {
 		qry = make(map[string]string)
 	}
 	qry["module"] = strconv.Itoa(config.ModuleC)
-	qry["mid"] = strconv.Itoa(this.Cid)
+	qry["mid"] = strconv.Itoa(c.Cid)
 	solutionModel := model.SolutionModel{}
 	count, err := solutionModel.Count(qry)
 	if err != nil {

@@ -3,6 +3,7 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+
 	"net/http"
 )
 
@@ -19,17 +20,17 @@ var RouterMap = map[string]class.Router{
 	"user":     UserController{},
 }
 
-func (this AdminUserController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
+func (auc AdminUserController) Route(w http.ResponseWriter, r *http.Request) {
+	auc.Init(w, r)
 
-	if this.Privilege <= config.PrivilegePU {
-		this.Err400(w, r, "Warning", "You are not admin!")
+	if auc.Privilege <= config.PrivilegePU {
+		auc.Err400(w, r, "Warning", "You are not admin!")
 		return
 	} else if r.URL.Path == "/admin/" {
 		c := HomeController{}
 		c.Home(w, r)
 	} else {
-		action := this.GetAction(r.URL.Path, 1)
+		action := auc.GetAction(r.URL.Path, 1)
 		if v, ok := RouterMap[action]; ok {
 			v.Route(w, r)
 		} else {

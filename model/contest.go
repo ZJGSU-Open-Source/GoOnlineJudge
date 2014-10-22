@@ -184,7 +184,7 @@ func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	}
 	defer this.CloseDB()
 
-	q := this.DB.C("Contest").Find(query).Select(cListSelector).Sort("cid")
+	q := this.DB.C("Contest").Find(query).Select(cListSelector).Sort("-cid")
 
 	if v, ok := args["offset"]; ok {
 		offset, err := strconv.Atoi(v)

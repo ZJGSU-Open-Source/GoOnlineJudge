@@ -21,7 +21,7 @@
       {{range $idx,$v := .}} 
           <tr>
             <td>{{NumAdd $idx 1}}</td>
-            <td><a href="/user/detail?uid={{$v.Uid}}" class="btn btn-flat btn-info btn-xs">{{$v.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{$v.Uid}}">{{$v.Uid}}</a></td>
             <td><a href="/contest/status/list?cid={{$cid}}&uid={{$v.Uid}}&solved=3">{{$v.Solved}}</a></td>
             <td>{{ShowGapTime $v.Time}}</td>
             {{with $v.ProblemList}}

@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/csv"
 	"io"
 	"net/http"
@@ -16,21 +17,21 @@ type RanklistController struct {
 	Contest
 }
 
-func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
+func (rc RanklistController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("RankList")
-	this.InitContest(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+	rc.InitContest(w, r)
+	action := rc.GetAction(r.URL.Path, 2)
 	if action == "download" {
-		this.Download(w, r)
+		rc.Download(w, r)
 	} else {
-		this.Home(w, r)
+		rc.Home(w, r)
 	}
 
 }
 
 //Download 下载contest排名csv文件
-func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
-	filename := strconv.Itoa(this.Cid) + ".csv"
+func (rc *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
+	filename := strconv.Itoa(rc.Cid) + ".csv"
 	f, err := os.Create(filename)
 	if err != nil {
 		class.Logger.Debug(err)
@@ -43,7 +44,7 @@ func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request)
 	rankcsv := csv.NewWriter(f)
 	rankcsv.Write([]string{"Rank", "Team", "Solved", "Penalty"})
 
-	for rank, user := range this.ranklist() {
+	for rank, user := range rc.ranklist() {
 		rankcsv.Write([]string{strconv.Itoa(rank + 1), user.Uid, strconv.Itoa(user.Solved), class.ShowGapTime(user.Time)})
 	}
 	rankcsv.Flush()
@@ -65,19 +66,19 @@ func (this *RanklistController) Download(w http.ResponseWriter, r *http.Request)
 }
 
 //Home ranklist 列表主页
-func (this *RanklistController) Home(w http.ResponseWriter, r *http.Request) {
-	this.Data["UserList"] = this.ranklist()
-	this.Data["IsContestRanklist"] = true
-	this.Data["Cid"] = this.Cid
-	this.Data["ProblemList"] = this.Index
-	this.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
+func (rc *RanklistController) Home(w http.ResponseWriter, r *http.Request) {
+	rc.Data["UserList"] = rc.ranklist()
+	rc.Data["IsContestRanklist"] = true
+	rc.Data["Cid"] = rc.Cid
+	rc.Data["ProblemList"] = rc.Index
+	rc.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 }
 
 //ranklist 实时计算排名
-func (this *RanklistController) ranklist() UserSorter {
+func (rc *RanklistController) ranklist() UserSorter {
 	qry := make(map[string]string)
 	qry["module"] = strconv.Itoa(config.ModuleC)
-	qry["mid"] = strconv.Itoa(this.Cid)
+	qry["mid"] = strconv.Itoa(rc.Cid)
 	qry["sort"] = "resort"
 
 	solutionModel := model.SolutionModel{}
@@ -95,10 +96,10 @@ func (this *RanklistController) ranklist() UserSorter {
 		if user == nil {
 			user = &userRank{}
 			UserMap[v.Uid] = user
-			user.ProblemList = make([]*probleminfo, len(this.Index), len(this.Index))
+			user.ProblemList = make([]*probleminfo, len(rc.Index), len(rc.Index))
 		}
 		user.Uid = v.Uid
-		pid := this.Index[v.Pid]
+		pid := rc.Index[v.Pid]
 		pro = user.ProblemList[pid]
 		if pro == nil {
 			pro = &probleminfo{}
@@ -112,7 +113,7 @@ func (this *RanklistController) ranklist() UserSorter {
 			pro.Count++
 			pro.Time += 20 * 60 //罚时20分钟
 		} else if v.Judge == config.JudgeAC {
-			pro.Time += v.Create - this.ContestDetail.Start
+			pro.Time += v.Create - rc.ContestDetail.Start
 			pro.Judge = config.JudgeAC
 			user.Time += pro.Time
 			user.Solved += 1

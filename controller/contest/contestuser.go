@@ -3,6 +3,7 @@ package contest
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -19,41 +20,41 @@ var RouterMap = map[string]class.Router{
 	"ranklist": RanklistController{},
 }
 
-func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) {
+func (cuc ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest User")
-	this.InitContest(w, r)
+	cuc.InitContest(w, r)
 
-	if this.Privilege < config.PrivilegeTC {
-		if time.Now().Unix() < this.ContestDetail.Start || this.ContestDetail.Status == config.StatusReverse {
+	if cuc.Privilege < config.PrivilegeTC {
+		if time.Now().Unix() < cuc.ContestDetail.Start || cuc.ContestDetail.Status == config.StatusReverse {
 			info := "The contest has not started yet"
-			if this.ContestDetail.Status == config.StatusReverse {
+			if cuc.ContestDetail.Status == config.StatusReverse {
 				info = "No such contest"
 			}
-			this.Err400(w, r, "Contest Detail "+strconv.Itoa(this.Cid), info)
+			cuc.Err400(w, r, "Contest Detail "+strconv.Itoa(cuc.Cid), info)
 			return
-		} else if this.ContestDetail.Encrypt == config.EncryptPW {
-			if this.Uid == "" {
+		} else if cuc.ContestDetail.Encrypt == config.EncryptPW {
+			if cuc.Uid == "" {
 				http.Redirect(w, r, "/user/signin", http.StatusFound)
 				return
-			} else if this.GetSession(w, r, strconv.Itoa(this.Cid)) != this.ContestDetail.Argument.(string) {
-				this.Password(w, r)
+			} else if cuc.GetSession(w, r, strconv.Itoa(cuc.Cid)) != cuc.ContestDetail.Argument.(string) {
+				cuc.Password(w, r)
 				return
 			}
-		} else if this.ContestDetail.Encrypt == config.EncryptPT {
-			if this.Uid == "" {
+		} else if cuc.ContestDetail.Encrypt == config.EncryptPT {
+			if cuc.Uid == "" {
 				http.Redirect(w, r, "/user/signin", http.StatusFound)
 				return
 			} else {
-				userlist := strings.Split(this.ContestDetail.Argument.(string), "\n")
+				userlist := strings.Split(cuc.ContestDetail.Argument.(string), "\n")
 				flag := false
 				for _, user := range userlist {
-					if user == this.Uid {
+					if user == cuc.Uid {
 						flag = true
 						break
 					}
 				}
 				if flag == false {
-					this.Err400(w, r, this.ContestDetail.Title,
+					cuc.Err400(w, r, cuc.ContestDetail.Title,
 						"Sorry, the contest is private and you are not granted to participate in the contest.")
 					return
 				}
@@ -61,7 +62,7 @@ func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 
-	action := this.GetAction(r.URL.Path, 1)
+	action := cuc.GetAction(r.URL.Path, 1)
 	class.Logger.Debug(action)
 	if v, ok := RouterMap[action]; ok {
 		v.Route(w, r)
@@ -70,13 +71,13 @@ func (this ContestUserContorller) Route(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-func (this *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
+func (cuc *ContestUserContorller) Password(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		this.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
+		cuc.Execute(w, "view/layout.tpl", "view/contest/passwd.tpl")
 	} else if r.Method == "POST" {
 		passwd := r.FormValue("password")
-		if passwd == this.ContestDetail.Argument.(string) {
-			this.SetSession(w, r, strconv.Itoa(this.Cid), passwd)
+		if passwd == cuc.ContestDetail.Argument.(string) {
+			cuc.SetSession(w, r, strconv.Itoa(cuc.Cid), passwd)
 			w.WriteHeader(200)
 		} else {
 			http.Error(w, "incorrect password", 400)

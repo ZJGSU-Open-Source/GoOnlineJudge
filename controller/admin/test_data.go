@@ -3,6 +3,7 @@ package admin
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+
 	"io"
 	"net/http"
 	"os"
@@ -15,20 +16,20 @@ type TestdataController struct {
 	class.Controller
 }
 
-func (this TestdataController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+func (tc TestdataController) Route(w http.ResponseWriter, r *http.Request) {
+	tc.Init(w, r)
+	action := tc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&tc, strings.Title(action), rv)
 }
 
 // List 列出对应题目的test data，method：GET
-func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
+func (tc *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin testdata list")
 
 	pid := r.URL.Query().Get("pid")
@@ -49,24 +50,24 @@ func (this *TestdataController) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	this.Data["Files"] = file
-	this.Data["Pid"] = pid
-	this.Data["Title"] = "Problem" + pid + " - Test data"
-	this.Data["IsProblem"] = true
+	tc.Data["Files"] = file
+	tc.Data["Pid"] = pid
+	tc.Data["Title"] = "Problem" + pid + " - Test data"
+	tc.Data["IsProblem"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
+	tc.Execute(w, "view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
 
 // 上传测试数据,URL /admin/testdata/upload?pid=<pid>，method：POST
-func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
+func (tc *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Upload files")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Update testdate")
+		tc.Err400(w, r, "Error", "Error Method to Update testdate")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Update testdate")
+	if tc.Privilege != config.PrivilegeAD {
+		tc.Err400(w, r, "Warning", "Error Privilege to Update testdate")
 		return
 	}
 
@@ -96,9 +97,9 @@ func (this *TestdataController) Upload(w http.ResponseWriter, r *http.Request) {
 }
 
 // Download 下载测试数据,URL:/admin/testdata/download?type=<type>，method:POST
-func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request) {
+func (tc *TestdataController) Download(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Download files")
-	this.Init(w, r)
+	tc.Init(w, r)
 
 	args := r.URL.Query()
 	filename := args.Get("type")
@@ -116,15 +117,15 @@ func (this *TestdataController) Download(w http.ResponseWriter, r *http.Request)
 }
 
 // Delete 删除指定testdata，URL:/admin/testdata/delete?type=<type>
-func (this *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
+func (tc *TestdataController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin TestData Delete")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Delete testdate")
+		tc.Err400(w, r, "Error", "Error Method to Delete testdate")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Delete testdate")
+	if tc.Privilege != config.PrivilegeAD {
+		tc.Err400(w, r, "Warning", "Error Privilege to Delete testdate")
 		return
 	}
 

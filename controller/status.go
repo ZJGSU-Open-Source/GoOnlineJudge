@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -13,19 +14,19 @@ type StatusController struct {
 	class.Controller
 }
 
-func (this StatusController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 1)
+func (sc StatusController) Route(w http.ResponseWriter, r *http.Request) {
+	sc.Init(w, r)
+	action := sc.GetAction(r.URL.Path, 1)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&sc, strings.Title(action), rv)
 }
 
-func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
+func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status List")
 	args := r.URL.Query()
 	searchUrl := ""
@@ -33,25 +34,25 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	// Search
 	if v := args.Get("uid"); v != "" {
 		searchUrl += "uid=" + v + "&"
-		this.Data["SearchUid"] = v
+		sc.Data["SearchUid"] = v
 		qry["uid"] = v
 	}
 	if v := args.Get("pid"); v != "" {
 		searchUrl += "pid=" + v + "&"
-		this.Data["SearchPid"] = v
+		sc.Data["SearchPid"] = v
 		qry["pid"] = v
 	}
 	if v := args.Get("judge"); v != "" {
 		searchUrl += "judge=" + v + "&"
-		this.Data["SearchJudge"+v] = v
+		sc.Data["SearchJudge"+v] = v
 		qry["judge"] = v
 	}
 	if v := args.Get("language"); v != "" {
 		searchUrl += "language=" + v + "&"
-		this.Data["SearchLanguage"+v] = v
+		sc.Data["SearchLanguage"+v] = v
 		qry["language"] = v
 	}
-	this.Data["URL"] = "/status/list?" + searchUrl
+	sc.Data["URL"] = "/status/list?" + searchUrl
 
 	// Page
 	qry["page"] = args.Get("page")
@@ -81,9 +82,9 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	qry["offset"] = strconv.Itoa((page - 1) * config.SolutionPerPage)
 	qry["limit"] = strconv.Itoa(config.SolutionPerPage)
 
-	pageData := this.GetPage(page, pageCount)
+	pageData := sc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		this.Data[k] = v
+		sc.Data[k] = v
 	}
 
 	list, err := solutionModel.List(qry)
@@ -92,16 +93,16 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Solution"] = list
-	this.Data["Title"] = "Status List"
-	this.Data["IsStatus"] = true
-	this.Data["Privilege"] = this.Privilege
-	this.Data["Uid"] = this.Uid
+	sc.Data["Solution"] = list
+	sc.Data["Title"] = "Status List"
+	sc.Data["IsStatus"] = true
+	sc.Data["Privilege"] = sc.Privilege
+	sc.Data["Uid"] = sc.Uid
 
-	this.Execute(w, "view/layout.tpl", "view/status_list.tpl")
+	sc.Execute(w, "view/layout.tpl", "view/status_list.tpl")
 }
 
-func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
+func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status Code")
 
 	args := r.URL.Query()
@@ -118,12 +119,12 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	if one.Uid == this.Uid || this.Privilege > config.PrivilegePU {
-		this.Data["Solution"] = one
-		this.Data["Title"] = "View Code"
-		this.Data["IsCode"] = true
-		this.Execute(w, "view/layout.tpl", "view/status_code.tpl")
+	if one.Uid == sc.Uid || sc.Privilege > config.PrivilegePU {
+		sc.Data["Solution"] = one
+		sc.Data["Title"] = "View Code"
+		sc.Data["IsCode"] = true
+		sc.Execute(w, "view/layout.tpl", "view/status_code.tpl")
 	} else {
-		this.Err400(w, r, "Warning", "You can't see it!")
+		sc.Err400(w, r, "Warning", "You can't see it!")
 	}
 }

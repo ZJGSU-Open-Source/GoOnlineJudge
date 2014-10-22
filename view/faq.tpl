@@ -169,5 +169,5 @@ OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)
 <p>如果对于Online Judge有任何需求或者bug report，请在Github发起一个<a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge/issues/new" target="_blank">issue</a></p><br>
 
 <h2>维护人员</h2>
-<a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a> <a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a>
+<a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a> <a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a>
 {{end}}

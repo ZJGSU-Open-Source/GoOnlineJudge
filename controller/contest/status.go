@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -13,27 +14,27 @@ type StatusController struct {
 	Contest
 }
 
-func (this StatusController) Route(w http.ResponseWriter, r *http.Request) {
-	this.InitContest(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+func (sc StatusController) Route(w http.ResponseWriter, r *http.Request) {
+	sc.InitContest(w, r)
+	action := sc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&sc, strings.Title(action), rv)
 }
 
 //TODO : list by arguments like :contest/status/list?cid=1&uid=vsake&solved=3
-func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
+func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Status List")
 
 	solutionModel := model.SolutionModel{}
 	qry := make(map[string]string)
 
 	qry["module"] = strconv.Itoa(config.ModuleC)
-	qry["mid"] = strconv.Itoa(this.Cid)
+	qry["mid"] = strconv.Itoa(sc.Cid)
 	solutionList, err := solutionModel.List(qry)
 
 	if err != nil {
@@ -41,18 +42,18 @@ func (this *StatusController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for i, v := range solutionList {
-		solutionList[i].Pid = this.Index[v.Pid]
+		solutionList[i].Pid = sc.Index[v.Pid]
 	}
-	this.Data["Solution"] = solutionList
-	this.Data["Privilege"] = this.Privilege
-	this.Data["IsContestStatus"] = true
-	this.Data["Privilege"] = this.Privilege
-	this.Data["Uid"] = this.Uid
+	sc.Data["Solution"] = solutionList
+	sc.Data["Privilege"] = sc.Privilege
+	sc.Data["IsContestStatus"] = true
+	sc.Data["Privilege"] = sc.Privilege
+	sc.Data["Uid"] = sc.Uid
 
-	this.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
+	sc.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
 }
 
-func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
+func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Status Code")
 
 	args := r.URL.Query()
@@ -69,11 +70,11 @@ func (this *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if one.Uid == this.Uid || this.Privilege >= config.PrivilegeTC {
-		this.Data["Solution"] = one
-		this.Data["Privilege"] = this.Privilege
-		this.Data["Title"] = "View Code"
-		this.Data["IsCode"] = true
-		this.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
+	if one.Uid == sc.Uid || sc.Privilege >= config.PrivilegeTC {
+		sc.Data["Solution"] = one
+		sc.Data["Privilege"] = sc.Privilege
+		sc.Data["Title"] = "View Code"
+		sc.Data["IsCode"] = true
+		sc.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
 	}
 }
