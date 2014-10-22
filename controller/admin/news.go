@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"html/template"
 	"net/http"
 	"strconv"
@@ -15,20 +16,20 @@ type NewsController struct {
 	class.Controller
 }
 
-func (this NewsController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+func (nc NewsController) Route(w http.ResponseWriter, r *http.Request) {
+	nc.Init(w, r)
+	action := nc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&nc, strings.Title(action), rv)
 }
 
 //新闻详细信息
-func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Detail")
 
 	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
@@ -43,19 +44,19 @@ func (this *NewsController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "load error", 400)
 		return
 	}
-	this.Data["Detail"] = one
+	nc.Data["Detail"] = one
 
-	this.Data["Title"] = "Admin - News Detail"
-	this.Data["IsNews"] = true
-	this.Data["IsList"] = false
+	nc.Data["Title"] = "Admin - News Detail"
+	nc.Data["IsNews"] = true
+	nc.Data["IsList"] = false
 
-	this.Execute(w, "view/admin/layout.tpl", "view/news_detail.tpl")
+	nc.Execute(w, "view/admin/layout.tpl", "view/news_detail.tpl")
 }
 
 // 列出所有新闻
-func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News List")
-	this.Init(w, r)
+	nc.Init(w, r)
 
 	newsModel := model.NewsModel{}
 	newlist, err := newsModel.List(-1, -1)
@@ -63,38 +64,38 @@ func (this *NewsController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	this.Data["News"] = newlist
-	this.Data["Title"] = "Admin - News List"
-	this.Data["IsNews"] = true
-	this.Data["IsList"] = true
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_list.tpl")
+	nc.Data["News"] = newlist
+	nc.Data["Title"] = "Admin - News List"
+	nc.Data["IsNews"] = true
+	nc.Data["IsList"] = true
+	nc.Execute(w, "view/admin/layout.tpl", "view/admin/news_list.tpl")
 }
 
-func (this *NewsController) Add(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Add")
-	this.Init(w, r)
+	nc.Init(w, r)
 
-	this.Data["Title"] = "Admin - News Add"
-	this.Data["IsNews"] = true
-	this.Data["IsAdd"] = true
-	this.Data["IsEdit"] = true
+	nc.Data["Title"] = "Admin - News Add"
+	nc.Data["IsNews"] = true
+	nc.Data["IsAdd"] = true
+	nc.Data["IsEdit"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_add.tpl")
+	nc.Execute(w, "view/admin/layout.tpl", "view/admin/news_add.tpl")
 
 }
 
-func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Insert")
 
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Insert news")
+		nc.Err400(w, r, "Error", "Error Method to Insert news")
 		return
 	}
 
-	this.Init(w, r)
+	nc.Init(w, r)
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Insert news")
+	if nc.Privilege != config.PrivilegeAD {
+		nc.Err400(w, r, "Warning", "Error Privilege to Insert news")
 		return
 	}
 
@@ -112,17 +113,17 @@ func (this *NewsController) Insert(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/news/list", http.StatusFound)
 }
 
-func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Status")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to change news status")
+		nc.Err400(w, r, "Error", "Error Method to change news status")
 		return
 	}
 
-	this.Init(w, r)
+	nc.Init(w, r)
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to change news status")
+	if nc.Privilege != config.PrivilegeAD {
+		nc.Err400(w, r, "Warning", "Error Privilege to change news status")
 		return
 	}
 
@@ -155,17 +156,17 @@ func (this *NewsController) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 // 删除指定新闻
-func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Delete")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Delete news")
+		nc.Err400(w, r, "Error", "Error Method to Delete news")
 		return
 	}
 
-	this.Init(w, r)
+	nc.Init(w, r)
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Delete news")
+	if nc.Privilege != config.PrivilegeAD {
+		nc.Err400(w, r, "Warning", "Error Privilege to Delete news")
 		return
 	}
 
@@ -185,9 +186,9 @@ func (this *NewsController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Edit")
-	this.Init(w, r)
+	nc.Init(w, r)
 
 	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
 	if err != nil {
@@ -197,31 +198,31 @@ func (this *NewsController) Edit(w http.ResponseWriter, r *http.Request) {
 
 	newsModel := model.NewsModel{}
 	one, err := newsModel.Detail(nid)
-	this.Data["Detail"] = one
+	nc.Data["Detail"] = one
 	if err != nil {
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	this.Data["Title"] = "Admin - News Edit"
-	this.Data["IsNews"] = true
-	this.Data["IsList"] = false
-	this.Data["IsEdit"] = true
+	nc.Data["Title"] = "Admin - News Edit"
+	nc.Data["IsNews"] = true
+	nc.Data["IsList"] = false
+	nc.Data["IsEdit"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/news_edit.tpl")
+	nc.Execute(w, "view/admin/layout.tpl", "view/admin/news_edit.tpl")
 }
 
-func (this *NewsController) Update(w http.ResponseWriter, r *http.Request) {
+func (nc *NewsController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin News Update")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Update news")
+		nc.Err400(w, r, "Error", "Error Method to Update news")
 		return
 	}
 
-	this.Init(w, r)
+	nc.Init(w, r)
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Update news")
+	if nc.Privilege != config.PrivilegeAD {
+		nc.Err400(w, r, "Warning", "Error Privilege to Update news")
 		return
 	}
 

@@ -16,64 +16,64 @@ type Controller struct {
 	Data      map[string]interface{}
 }
 
-func (this *Controller) Init(w http.ResponseWriter, r *http.Request) {
+func (ct *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	this.Data = make(map[string]interface{})
+	ct.Data = make(map[string]interface{})
 
 	session := SessionManager.StartSession(w, r)
-	this.Uid = session.Get("Uid")
+	ct.Uid = session.Get("Uid")
 
-	this.Data["CurrentUser"] = this.Uid
-	this.Data["Privilege"] = this.Privilege
+	ct.Data["CurrentUser"] = ct.Uid
+	ct.Data["Privilege"] = ct.Privilege
 
-	if this.Uid != "" {
-		this.Data["IsCurrentUser"] = true
+	if ct.Uid != "" {
+		ct.Data["IsCurrentUser"] = true
 		var err error
-		this.Privilege, err = strconv.Atoi(session.Get("Privilege"))
+		ct.Privilege, err = strconv.Atoi(session.Get("Privilege"))
 		if err != nil {
 			http.Error(w, "args error", 400)
 			return
 		}
-		if this.Privilege == config.PrivilegeAD {
-			this.Data["IsShowAdmin"] = true
-			this.Data["IsAdmin"] = true
-			this.Data["RejudgePrivilege"] = true
-		} else if this.Privilege == config.PrivilegeTC {
-			this.Data["IsShowTeacher"] = true
-			this.Data["IsTeacher"] = true
-			this.Data["RejudgePrivilege"] = true
+		if ct.Privilege == config.PrivilegeAD {
+			ct.Data["IsShowAdmin"] = true
+			ct.Data["IsAdmin"] = true
+			ct.Data["RejudgePrivilege"] = true
+		} else if ct.Privilege == config.PrivilegeTC {
+			ct.Data["IsShowTeacher"] = true
+			ct.Data["IsTeacher"] = true
+			ct.Data["RejudgePrivilege"] = true
 		}
 	}
 }
 
-func (this *Controller) Err400(w http.ResponseWriter, r *http.Request, title string, info string) {
-	Logger.Info(r.RemoteAddr + " " + this.Uid)
-	this.Data["Title"] = title
-	this.Data["Info"] = info
-	this.Execute(w, "view/layout.tpl", "view/400.tpl")
+func (ct *Controller) Err400(w http.ResponseWriter, r *http.Request, title string, info string) {
+	Logger.Info(r.RemoteAddr + " " + ct.Uid)
+	ct.Data["Title"] = title
+	ct.Data["Info"] = info
+	ct.Execute(w, "view/layout.tpl", "view/400.tpl")
 }
 
-func (this *Controller) GetTime() (t int64) {
+func (ct *Controller) GetTime() (t int64) {
 	t = time.Now().Unix()
 	return
 }
 
-func (this *Controller) SetSession(w http.ResponseWriter, r *http.Request, key string, value string) {
+func (ct *Controller) SetSession(w http.ResponseWriter, r *http.Request, key string, value string) {
 	session := SessionManager.StartSession(w, r)
 	session.Set(key, value)
 }
 
-func (this *Controller) GetSession(w http.ResponseWriter, r *http.Request, key string) (value string) {
+func (ct *Controller) GetSession(w http.ResponseWriter, r *http.Request, key string) (value string) {
 	session := SessionManager.StartSession(w, r)
 	value = session.Get(key)
 	return
 }
 
-func (this *Controller) DeleteSession(w http.ResponseWriter, r *http.Request) {
+func (ct *Controller) DeleteSession(w http.ResponseWriter, r *http.Request) {
 	SessionManager.DeleteSession(w, r)
 }
 
-func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
+func (ct *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
 	ret = make(map[string]interface{})
 	if page > 1 {
 		ret["IsPreviousPage"] = true
@@ -143,7 +143,7 @@ func (this *Controller) GetPage(page int, pageCount int) (ret map[string]interfa
 	return
 }
 
-func (this *Controller) GetCodeLen(strLen int) (codeLen int) {
+func (ct *Controller) GetCodeLen(strLen int) (codeLen int) {
 	codeLen = strLen
 	return
 }
@@ -159,7 +159,7 @@ func (c *Controller) Execute(w io.Writer, tplfiles ...string) {
 	}
 }
 
-func (this *Controller) GetAction(path string, pos int) string {
+func (ct *Controller) GetAction(path string, pos int) string {
 	path = strings.Trim(path, "/")
 	pathsplit := strings.Split(path, "/")
 	if pos >= 0 && pos < len(pathsplit) {
@@ -168,7 +168,7 @@ func (this *Controller) GetAction(path string, pos int) string {
 	return ""
 }
 
-func (this *Controller) PostReader(i interface{}) (r io.Reader, err error) {
+func (ct *Controller) PostReader(i interface{}) (r io.Reader, err error) {
 	b, err := json.Marshal(i)
 	if err != nil {
 		return

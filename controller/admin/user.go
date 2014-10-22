@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
@@ -23,31 +24,31 @@ type UserController struct {
 	class.Controller
 }
 
-func (this UserController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	if this.Privilege < config.PrivilegeAD {
-		this.Err400(w, r, "Admin", "Privilege Error")
+func (uc UserController) Route(w http.ResponseWriter, r *http.Request) {
+	uc.Init(w, r)
+	if uc.Privilege < config.PrivilegeAD {
+		uc.Err400(w, r, "Admin", "Privilege Error")
 		return
 	}
-	action := this.GetAction(r.URL.Path, 2)
+	action := uc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&uc, strings.Title(action), rv)
 }
 
 //显示具有特殊权限的用户，url:/admin/user/list
-func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Privilege User List")
 
-	if this.Privilege != config.PrivilegeAD {
-		class.Logger.Info(r.RemoteAddr + " " + this.Uid + " try to visit Admin page")
-		this.Data["Title"] = "Warning"
-		this.Data["Info"] = "You are not admin!"
-		this.Execute(w, "view/layout.tpl", "view/400.tpl")
+	if uc.Privilege != config.PrivilegeAD {
+		class.Logger.Info(r.RemoteAddr + " " + uc.Uid + " try to visit Admin page")
+		uc.Data["Title"] = "Warning"
+		uc.Data["Info"] = "You are not admin!"
+		uc.Execute(w, "view/layout.tpl", "view/400.tpl")
 		return
 	}
 	userModel := model.UserModel{}
@@ -57,28 +58,28 @@ func (this *UserController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["User"] = userlist
-	this.Data["Title"] = "Privilege User List"
-	this.Data["IsUser"] = true
-	this.Data["IsList"] = true
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
+	uc.Data["User"] = userlist
+	uc.Data["Title"] = "Privilege User List"
+	uc.Data["IsUser"] = true
+	uc.Data["IsList"] = true
+	uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
 //密码设置页面,url: /admin/user/pagepassword
-func (this *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password Page")
 
-	this.Data["Title"] = "Admin Password"
-	this.Data["IsSettings"] = true
-	this.Data["IsSettingsPassword"] = true
-	this.Data["IsUser"] = true
-	this.Data["IsPwd"] = true
+	uc.Data["Title"] = "Admin Password"
+	uc.Data["IsSettings"] = true
+	uc.Data["IsSettingsPassword"] = true
+	uc.Data["IsUser"] = true
+	uc.Data["IsPwd"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
+	uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
 
 //设置用户密码，url:/admin/user/password, method: POST
-func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Password")
 
 	if r.Method != "POST" {
@@ -102,7 +103,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		userModel := model.UserModel{}
 		_, err := userModel.Detail(uid)
 		if err == model.NotFoundErr {
-			ok, hint["uid"] = 0, "This handle does not exist!"
+			ok, hint["uid"] = 0, "uc handle does not exist!"
 		} else if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
@@ -135,7 +136,7 @@ func (this *UserController) Password(w http.ResponseWriter, r *http.Request) {
 }
 
 // 设置用户权限
-func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Privilege")
 
 	if r.Method != "POST" {
@@ -164,13 +165,13 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 
 	if uid == "" {
 		ok, hint["hint"] = 0, "Handle should not be empty."
-	} else if uid == this.Uid {
+	} else if uid == uc.Uid {
 		ok, hint["hint"] = 0, "You cannot delete yourself!"
 	} else {
 		userModel := model.UserModel{}
 		_, err := userModel.Detail(uid)
 		if err == model.NotFoundErr {
-			ok, hint["hint"] = 0, "This handle does not exist!"
+			ok, hint["hint"] = 0, "uc handle does not exist!"
 		} else if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
@@ -195,12 +196,12 @@ func (this *UserController) Privilegeset(w http.ResponseWriter, r *http.Request)
 }
 
 //Generate 生成指定数量的用户账号，/admin/user/generate
-func (this *UserController) Generate(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		this.Data["Title"] = "Admin User Generate"
-		this.Data["IsUser"] = true
-		this.Data["IsGenerate"] = true
-		this.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
+		uc.Data["Title"] = "Admin User Generate"
+		uc.Data["IsUser"] = true
+		uc.Data["IsGenerate"] = true
+		uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
 
 	} else if r.Method == "POST" {
 		prefix := r.FormValue("prefix")

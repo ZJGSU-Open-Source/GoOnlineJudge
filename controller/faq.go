@@ -2,6 +2,7 @@ package controller
 
 import (
 	"GoOnlineJudge/class"
+
 	"net/http"
 )
 
@@ -10,11 +11,11 @@ type FAQController struct {
 }
 
 //faq 页面
-func (this FAQController) Route(w http.ResponseWriter, r *http.Request) {
+func (fc FAQController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("FAQ Page")
-	this.Init(w, r)
+	fc.Init(w, r)
 
-	this.Data["Title"] = "FAQ"
-	this.Data["IsFAQ"] = true
-	this.Execute(w, "view/layout.tpl", "view/faq.tpl")
+	fc.Data["Title"] = "FAQ"
+	fc.Data["IsFAQ"] = true
+	fc.Execute(w, "view/layout.tpl", "view/faq.tpl")
 }

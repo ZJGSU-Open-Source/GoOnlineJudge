@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strconv"
 )
@@ -19,12 +20,12 @@ type RanklistController struct {
 	class.Controller
 }
 
-func (this RanklistController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	this.Index(w, r)
+func (rc RanklistController) Route(w http.ResponseWriter, r *http.Request) {
+	rc.Init(w, r)
+	rc.Index(w, r)
 }
 
-func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
+func (rc *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Ranklist")
 
 	args := r.URL.Query()
@@ -61,9 +62,9 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pageData := this.GetPage(page, pageCount)
+	pageData := rc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		this.Data[k] = v
+		rc.Data[k] = v
 	}
 
 	qry := make(map[string]string)
@@ -83,9 +84,9 @@ func (this *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 			count += 1
 		}
 	}
-	this.Data["URL"] = "/ranklist?"
-	this.Data["User"] = list
-	this.Data["Title"] = "Ranklist"
-	this.Data["IsRanklist"] = true
-	this.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
+	rc.Data["URL"] = "/ranklist?"
+	rc.Data["User"] = list
+	rc.Data["Title"] = "Ranklist"
+	rc.Data["IsRanklist"] = true
+	rc.Execute(w, "view/layout.tpl", "view/ranklist.tpl")
 }

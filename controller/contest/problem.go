@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -15,27 +16,27 @@ type ProblemController struct {
 	Contest
 }
 
-func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
-	this.InitContest(w, r)
+func (pc ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	pc.InitContest(w, r)
 
-	action := this.GetAction(r.URL.Path, 2)
+	action := pc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&pc, strings.Title(action), rv)
 
 }
 
-func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem List")
 
-	list := make([]*model.Problem, len(this.ContestDetail.List))
+	list := make([]*model.Problem, len(pc.ContestDetail.List))
 
 	idx := 0
-	for _, v := range this.ContestDetail.List {
+	for _, v := range pc.ContestDetail.List {
 		problemModel := model.ProblemModel{}
 		one, err := problemModel.Detail(v)
 		if err != nil {
@@ -46,13 +47,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		qry := make(map[string]string)
 		qry["pid"] = strconv.Itoa(v)
 		qry["action"] = "accept"
-		one.Solve, err = this.GetCount(qry)
+		one.Solve, err = pc.GetCount(qry)
 		if err != nil {
 			class.Logger.Debug(err)
 			continue
 		}
 		qry["action"] = "submit"
-		one.Submit, err = this.GetCount(qry)
+		one.Submit, err = pc.GetCount(qry)
 		if err != nil {
 			class.Logger.Debug(err)
 			continue
@@ -62,15 +63,15 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		idx++
 	}
 
-	this.Data["Problem"] = list
-	this.Data["IsContestProblem"] = true
-	this.Data["Start"] = this.ContestDetail.Start
-	this.Data["End"] = this.ContestDetail.End
+	pc.Data["Problem"] = list
+	pc.Data["IsContestProblem"] = true
+	pc.Data["Start"] = pc.ContestDetail.Start
+	pc.Data["End"] = pc.ContestDetail.End
 
-	this.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
+	pc.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
 }
 
-func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Detail")
 
 	args := r.URL.Query()
@@ -80,7 +81,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	problemModel := model.ProblemModel{}
-	one, err := problemModel.Detail(this.ContestDetail.List[pid])
+	one, err := problemModel.Detail(pc.ContestDetail.List[pid])
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -88,38 +89,38 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	qry := make(map[string]string)
 	qry["pid"] = strconv.Itoa(pid)
 	qry["action"] = "accept"
-	one.Solve, err = this.GetCount(qry)
+	one.Solve, err = pc.GetCount(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 	qry["action"] = "submit"
-	one.Submit, err = this.GetCount(qry)
+	one.Submit, err = pc.GetCount(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	this.Data["Detail"] = one
-	this.Data["Pid"] = pid
-	this.Data["Status"] = this.ContestDetail.Status
+	pc.Data["Detail"] = one
+	pc.Data["Pid"] = pid
+	pc.Data["Status"] = pc.ContestDetail.Status
 
-	this.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
+	pc.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
 }
 
-func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Submit")
 
 	args := r.URL.Query()
 
 	pid, err := strconv.Atoi(args.Get("pid"))
-	if err != nil || pid >= len(this.ContestDetail.List) {
+	if err != nil || pid >= len(pc.ContestDetail.List) {
 		http.Error(w, "args error", 400)
 		return
 	}
 
-	pid = this.ContestDetail.List[pid] //get real pid
-	uid := this.Uid
+	pid = pc.ContestDetail.List[pid] //get real pid
+	uid := pc.Uid
 	if uid == "" {
 		http.Error(w, "user login required", 401)
 	}
@@ -127,7 +128,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	one := model.Solution{}
 	one.Pid = pid
 	one.Uid = uid
-	one.Mid = this.ContestDetail.Cid
+	one.Mid = pc.ContestDetail.Cid
 	one.Module = config.ModuleC
 
 	problemModel := model.ProblemModel{}
@@ -139,7 +140,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	code := r.FormValue("code")
 	one.Code = code
-	one.Length = this.GetCodeLen(len(r.FormValue("code")))
+	one.Length = pc.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	hint := make(map[string]string)
@@ -149,7 +150,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		hint["info"] = "No such problem"
 	case code == "":
 		hint["info"] = "Your source code is too short"
-	case time.Now().Unix() > this.ContestDetail.End:
+	case time.Now().Unix() > pc.ContestDetail.End:
 		hint["info"] = "The contest has ended"
 	default:
 		errflag = false
@@ -179,7 +180,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		one["Time"] = pro.Time
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = false
-		reader, _ := this.PostReader(&one)
+		reader, _ := pc.PostReader(&one)
 		class.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {

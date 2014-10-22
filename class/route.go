@@ -41,9 +41,9 @@ type Server struct {
 }
 
 //路由，先处理静态文件，后处理控件，按照最大匹配原则匹配路由
-func (this *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path + "/"
-	Logger.Debug(path)
+	// Logger.Debug(path)
 	filemaxlenth := 0
 	var realFileHandler http.Handler
 	for pattern, fileHandler := range FileMap {
@@ -57,7 +57,7 @@ func (this *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var realRouter Router
 	for pattern, router := range RouterMap {
 		if len(pattern) > maxlenth && strings.HasPrefix(path, pattern) {
-			Logger.Debug(pattern)
+			// Logger.Debug(pattern)
 			maxlenth = len(pattern)
 			realRouter = router
 		}

@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1 style="text-align:center">Contest Status -- {{.Contest}}</h1>
-<table id="contest_list" class="table table-bordered table-striped table-hover">
+<table id="contest_list" class="table table-striped table-hover">
   <thead>
     <tr>
       <th class="header">ID</th>
@@ -25,7 +25,7 @@
           <tr>
 
             <td>{{.Sid}}</td>
-            <td><a href="/user/detail?uid={{.Uid}}" class="btn btn-flat btn-info btn-xs">{{.Uid}}</a></td>
+            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/contest/problem/detail?cid={{$cid}}&pid={{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}">{{if (LargePU $privilege)}}{{if .Sim}}*{{end}}{{end}}{{ShowJudge .Judge}}</span>
             {{if (LargePU $privilege)}} {{if .Sim}} ID:{{.Sim_s_id}} [{{.Sim}}％] {{end}} {{end}}</td>

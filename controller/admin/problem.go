@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"html/template"
 	"io/ioutil"
@@ -20,19 +21,19 @@ type ProblemController struct {
 	class.Controller
 }
 
-func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+func (pc ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	pc.Init(w, r)
+	action := pc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&pc, strings.Title(action), rv)
 }
 
-func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Detail")
 
 	pid, err := strconv.Atoi(r.URL.Query().Get("pid"))
@@ -47,15 +48,15 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Detail"] = one
-	this.Data["Title"] = "Admin - Problem Detail"
-	this.Data["IsProblem"] = true
-	this.Data["IsList"] = false
+	pc.Data["Detail"] = one
+	pc.Data["Title"] = "Admin - Problem Detail"
+	pc.Data["IsProblem"] = true
+	pc.Data["IsList"] = false
 
-	this.Execute(w, "view/admin/layout.tpl", "view/problem_detail.tpl")
+	pc.Execute(w, "view/admin/layout.tpl", "view/problem_detail.tpl")
 }
 
-func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem List")
 
 	problemModel := model.ProblemModel{}
@@ -66,39 +67,39 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Problem"] = proList
-	this.Data["Title"] = "Admin - Problem List"
-	this.Data["IsProblem"] = true
-	this.Data["IsList"] = true
+	pc.Data["Problem"] = proList
+	pc.Data["Title"] = "Admin - Problem List"
+	pc.Data["IsProblem"] = true
+	pc.Data["IsList"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
+	pc.Execute(w, "view/admin/layout.tpl", "view/admin/problem_list.tpl")
 }
 
-func (this *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Add")
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Add problem")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Add problem")
 		return
 	}
 
-	this.Data["Title"] = "Admin - Problem Add"
-	this.Data["IsProblem"] = true
-	this.Data["IsAdd"] = true
-	this.Data["IsEdit"] = true
+	pc.Data["Title"] = "Admin - Problem Add"
+	pc.Data["IsProblem"] = true
+	pc.Data["IsAdd"] = true
+	pc.Data["IsEdit"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
+	pc.Execute(w, "view/admin/layout.tpl", "view/admin/problem_add.tpl")
 }
 
-func (this *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Insert")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Insert problem")
+		pc.Err400(w, r, "Error", "Error Method to Insert problem")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Insert problem")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Insert problem")
 		return
 	}
 
@@ -167,15 +168,15 @@ func createfile(path, filename string, context string) {
 	file.WriteString(context)
 }
 
-func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Status")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Change problem status")
+		pc.Err400(w, r, "Error", "Error Method to Change problem status")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Change problem status")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Change problem status")
 		return
 	}
 
@@ -191,7 +192,7 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	this.Data["Detail"] = one
+	pc.Data["Detail"] = one
 	var status int
 	switch one.Status {
 	case config.StatusAvailable:
@@ -208,15 +209,15 @@ func (this *ProblemController) Status(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 }
 
-func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Delete")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Delete problem")
+		pc.Err400(w, r, "Error", "Error Method to Delete problem")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Delete problem")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Delete problem")
 		return
 	}
 
@@ -234,12 +235,12 @@ func (this *ProblemController) Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Edit")
-	this.Init(w, r)
+	pc.Init(w, r)
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Edit problem")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Edit problem")
 		return
 	}
 
@@ -256,24 +257,24 @@ func (this *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	one.Time /= 1000 // change ms to s
-	this.Data["Detail"] = one
-	this.Data["Title"] = "Admin - Problem Edit"
-	this.Data["IsProblem"] = true
-	this.Data["IsList"] = false
-	this.Data["IsEdit"] = true
+	pc.Data["Detail"] = one
+	pc.Data["Title"] = "Admin - Problem Edit"
+	pc.Data["IsProblem"] = true
+	pc.Data["IsList"] = false
+	pc.Data["IsEdit"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
+	pc.Execute(w, "view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 }
 
-func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Problem Update")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Update problem")
+		pc.Err400(w, r, "Error", "Error Method to Update problem")
 		return
 	}
 
-	if this.Privilege != config.PrivilegeAD {
-		this.Err400(w, r, "Warning", "Error Privilege to Update problem")
+	if pc.Privilege != config.PrivilegeAD {
+		pc.Err400(w, r, "Warning", "Error Privilege to Update problem")
 		return
 	}
 
@@ -327,27 +328,27 @@ func (this *ProblemController) Update(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/admin/problem/detail?pid="+strconv.Itoa(pid), http.StatusFound)
 }
 
-func (this *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Rejudgepage(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Rejudge Page")
 
-	if this.Privilege < config.PrivilegeTC {
-		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
+	if pc.Privilege < config.PrivilegeTC {
+		pc.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
 		return
 	}
 
-	this.Data["Title"] = "Problem Rejudge"
-	this.Data["RejudgePrivilege"] = true
-	this.Data["IsProblem"] = true
-	this.Data["IsRejudge"] = true
+	pc.Data["Title"] = "Problem Rejudge"
+	pc.Data["RejudgePrivilege"] = true
+	pc.Data["IsProblem"] = true
+	pc.Data["IsRejudge"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
+	pc.Execute(w, "view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
 }
 
-func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Rejudge")
 
-	if this.Privilege < config.PrivilegeTC {
-		this.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
+	if pc.Privilege < config.PrivilegeTC {
+		pc.Err400(w, r, "Warning", "Error Privilege to Rejudge problem")
 		return
 	}
 
@@ -389,7 +390,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			one["Time"] = pro.Time
 			one["Memory"] = pro.Memory
 			one["Rejudge"] = true
-			reader, _ := this.PostReader(&one)
+			reader, _ := pc.PostReader(&one)
 			response, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
 				http.Error(w, "post error", 500)
@@ -421,7 +422,7 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		one["Time"] = pro.Time
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = true
-		reader, _ := this.PostReader(&one)
+		reader, _ := pc.PostReader(&one)
 		class.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
@@ -432,12 +433,12 @@ func (this *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		this.Data["Title"] = "Problem Import"
-		this.Data["IsProblem"] = true
-		this.Data["IsImport"] = true
-		this.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
+		pc.Data["Title"] = "Problem Import"
+		pc.Data["IsProblem"] = true
+		pc.Data["IsImport"] = true
+		pc.Execute(w, "view/admin/layout.tpl", "view/admin/problem_import.tpl")
 	} else if r.Method == "POST" {
 		r.ParseMultipartForm(32 << 20)
 		fhs := r.MultipartForm.File["fps.xml"]
@@ -524,6 +525,7 @@ func (this *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 				createfile(config.Datapath+strconv.Itoa(pid), filename, tagString[flagJ][1])
 			}
 		}
+
 		http.Redirect(w, r, "/admin/problem/list", http.StatusFound)
 	}
 }

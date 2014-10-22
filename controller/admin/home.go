@@ -2,6 +2,7 @@ package admin
 
 import (
 	"GoOnlineJudge/class"
+
 	"net/http"
 )
 
@@ -9,10 +10,10 @@ type HomeController struct {
 	class.Controller
 }
 
-func (this HomeController) Home(w http.ResponseWriter, r *http.Request) {
+func (hc HomeController) Home(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Admin Home")
-	this.Init(w, r)
+	hc.Init(w, r)
 
-	this.Data["Title"] = "Admin - Home"
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
+	hc.Data["Title"] = "Admin - Home"
+	hc.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
 }

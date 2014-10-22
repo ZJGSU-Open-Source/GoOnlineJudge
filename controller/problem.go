@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -15,24 +16,24 @@ type ProblemController struct {
 	class.Controller
 }
 
-func (this ProblemController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 1)
+func (pc ProblemController) Route(w http.ResponseWriter, r *http.Request) {
+	pc.Init(w, r)
+	action := pc.GetAction(r.URL.Path, 1)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&pc, strings.Title(action), rv)
 }
 
 // 列出特定数量的问题,URL，/problem/list?pid=<pid>&titile=<titile>&source=<source>&page=<page>
-func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 
 	args := r.URL.Query()
-	//args := this.ParseURL(r.URL.String())
+	//args := pc.ParseURL(r.URL.String())
 	qry := make(map[string]string)
 	url := "/problem/list?"
 
@@ -41,13 +42,13 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	if v := args.Get("pid"); v != "" { //按pid查找
 		qry["pid"] = v
 		url += "pid=" + v + "&"
-		this.Data["SearchPid"] = true
-		this.Data["SearchValue"] = v
+		pc.Data["SearchPid"] = true
+		pc.Data["SearchValue"] = v
 	} else if v := args.Get("title"); v != "" { //按问题标题查找
 		class.Logger.Debug(v)
 		url += "title=" + v + "&"
-		this.Data["SearchTitle"] = true
-		this.Data["SearchValue"] = v
+		pc.Data["SearchTitle"] = true
+		pc.Data["SearchValue"] = v
 		for _, ep := range "+.?$|*^ " {
 			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
 		}
@@ -55,14 +56,14 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	} else if v := args.Get("source"); v != "" { //按问题来源查找
 		class.Logger.Debug(v)
 		url += "source=" + v + "&"
-		this.Data["SearchSource"] = true
-		this.Data["SearchValue"] = v
+		pc.Data["SearchSource"] = true
+		pc.Data["SearchValue"] = v
 		for _, ep := range "+.?$|*^ " {
 			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
 		}
 		qry["source"] = v
 	}
-	this.Data["URL"] = url
+	pc.Data["URL"] = url
 
 	// Page
 	qry["page"] = args.Get("page")
@@ -70,7 +71,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		qry["page"] = "1"
 	}
 
-	if this.Privilege <= config.PrivilegePU {
+	if pc.Privilege <= config.PrivilegePU {
 		qry["status"] = "2" //strconv.Itoa(config.StatusAvailable)
 	}
 
@@ -95,9 +96,9 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	qry["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
 	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
-	pageData := this.GetPage(page, pageCount)
+	pageData := pc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		this.Data[k] = v
+		pc.Data[k] = v
 	}
 
 	problemList, err := problemModel.List(qry)
@@ -107,16 +108,16 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	}
 	class.Logger.Debug(len(problemList))
 
-	this.Data["Problem"] = problemList
-	this.Data["Privilege"] = this.Privilege
-	this.Data["Time"] = this.GetTime()
-	this.Data["Title"] = "Problem List"
-	this.Data["IsProblem"] = true
-	this.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
+	pc.Data["Problem"] = problemList
+	pc.Data["Privilege"] = pc.Privilege
+	pc.Data["Time"] = pc.GetTime()
+	pc.Data["Title"] = "Problem List"
+	pc.Data["IsProblem"] = true
+	pc.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
 }
 
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
-func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Detail")
 
 	args := r.URL.Query()
@@ -129,23 +130,23 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		this.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
+		pc.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
 		return
 	}
-	this.Data["Detail"] = one
+	pc.Data["Detail"] = one
 
-	if this.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
-		this.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
+	if pc.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
+		pc.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
 		return
 	}
 
-	this.Data["Privilege"] = this.Privilege
-	this.Data["Title"] = "Problem — " + strconv.Itoa(pid)
-	this.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
+	pc.Data["Privilege"] = pc.Privilege
+	pc.Data["Title"] = "Problem — " + strconv.Itoa(pid)
+	pc.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
 }
 
 //提交某一问题的solution， URL /problem/submit?pid=<pid>，method POST
-func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Problem Submit")
 
 	if r.Method != "POST" { // 要求请求方法为post
@@ -153,7 +154,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if this.Uid == "" { //要求用户登入
+	if pc.Uid == "" { //要求用户登入
 		http.Error(w, "user login required", 401)
 		return
 	}
@@ -167,7 +168,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 
 	var one model.Solution
 	one.Pid = pid
-	one.Uid = this.Uid
+	one.Uid = pc.Uid
 	one.Module = config.ModuleP
 	one.Mid = config.ModuleP
 
@@ -180,7 +181,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 
 	one.Code = code
-	one.Length = this.GetCodeLen(len(r.FormValue("code")))
+	one.Length = pc.GetCodeLen(len(r.FormValue("code")))
 	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
 
 	hint := make(map[string]string)
@@ -218,7 +219,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		one["Time"] = pro.Time
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = false
-		reader, _ := this.PostReader(&one)
+		reader, _ := pc.PostReader(&one)
 		class.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {

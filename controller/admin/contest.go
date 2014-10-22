@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,20 +19,20 @@ type ContestController struct {
 	class.Controller
 }
 
-func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
-	this.Init(w, r)
-	action := this.GetAction(r.URL.Path, 2)
+func (cc ContestController) Route(w http.ResponseWriter, r *http.Request) {
+	cc.Init(w, r)
+	action := cc.GetAction(r.URL.Path, 2)
 	defer func() {
 		if e := recover(); e != nil {
 			http.Error(w, "no such page", 404)
 		}
 	}()
 	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&this, strings.Title(action), rv)
+	class.CallMethod(&cc, strings.Title(action), rv)
 }
 
 //列出所有的比赛 url:/admin/contest/list?type=<contest,exercise>
-func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 
 	Type := r.URL.Query().Get("type")
@@ -44,44 +45,44 @@ func (this *ContestController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 	}
 
-	this.Data["Contest"] = contestList
-	this.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
-	this.Data["Is"+strings.Title(Type)] = true
-	this.Data["IsList"] = true
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
+	cc.Data["Contest"] = contestList
+	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
+	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["IsList"] = true
+	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
 // 添加比赛页面 url:/admin/contest/add?type=<contest,exercise>
-func (this *ContestController) Add(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Add")
 
 	Type := r.URL.Query().Get("type")
 	//class.Logger.Debug(Type)
 	now := time.Now()
-	this.Data["StartYear"] = now.Year()
-	this.Data["StartMonth"] = int(now.Month())
-	this.Data["StartDay"] = int(now.Day())
-	this.Data["StartHour"] = int(now.Hour())
+	cc.Data["StartYear"] = now.Year()
+	cc.Data["StartMonth"] = int(now.Month())
+	cc.Data["StartDay"] = int(now.Day())
+	cc.Data["StartHour"] = int(now.Hour())
 
 	end := now.Add(5 * time.Hour)
-	this.Data["EndYear"] = end.Year()
-	this.Data["EndMonth"] = int(end.Month())
-	this.Data["EndDay"] = int(end.Day())
-	this.Data["EndHour"] = int(end.Hour())
+	cc.Data["EndYear"] = end.Year()
+	cc.Data["EndMonth"] = int(end.Month())
+	cc.Data["EndDay"] = int(end.Day())
+	cc.Data["EndHour"] = int(end.Hour())
 
-	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
-	this.Data["Is"+strings.Title(Type)] = true
-	this.Data["IsAdd"] = true
-	this.Data["Type"] = Type
+	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
+	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["IsAdd"] = true
+	cc.Data["Type"] = Type
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
+	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
 
 // 插入比赛 url:/admin/contest/insert?type=<contest,exercise>
-func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Insert")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Insert contest")
+		cc.Err400(w, r, "Error", "Error Method to Insert contest")
 		return
 	}
 
@@ -141,12 +142,18 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	for _, v := range problemList {
 		pid, err := strconv.Atoi(v)
 		if err != nil {
-			http.Error(w, "conv error", 400)
-			return
+			class.Logger.Debug(err)
+			continue
+		}
+		problemModel := model.ProblemModel{}
+		_, err = problemModel.Detail(pid) //检查题目是否存在
+		if err != nil {
+			class.Logger.Debug(err)
+			continue
 		}
 		list = append(list, pid)
 	}
-	one.List = list //problemList 建议检查下problem是否存在，存在的将其在普通列表中不可见
+	one.List = list
 
 	contestModel := model.ContestModel{}
 	err = contestModel.Insert(one)
@@ -159,10 +166,10 @@ func (this *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 }
 
 //更改contest状态 url:/admin/contest/status/
-func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Status")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Change contest status")
+		cc.Err400(w, r, "Error", "Error Method to Change contest status")
 		return
 	}
 	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
@@ -194,10 +201,10 @@ func (this *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 }
 
 //删除竞赛 url:/admin/contest/delete/，method:POST
-func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Delete")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Delete contest")
+		cc.Err400(w, r, "Error", "Error Method to Delete contest")
 		return
 	}
 
@@ -217,7 +224,7 @@ func (this *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 // 竞赛编辑页面，url:/admin/contest/edit/
-func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Edit")
 
 	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
@@ -279,20 +286,20 @@ func (this *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 		one.IsPassword = true
 	}
 
-	this.Data["Detail"] = one
+	cc.Data["Detail"] = one
 	Type := one.Type
-	this.Data["Title"] = "Admin - " + strings.Title(Type) + " Edit"
-	this.Data["Is"+strings.Title(Type)] = true
-	this.Data["IsEdit"] = true
+	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " Edit"
+	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["IsEdit"] = true
 
-	this.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
+	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 }
 
 // 更新竞赛，url:/admin/contest/update/，method:POST
-func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
+func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Update")
 	if r.Method != "POST" {
-		this.Err400(w, r, "Error", "Error Method to Update contest")
+		cc.Err400(w, r, "Error", "Error Method to Update contest")
 		return
 	}
 
@@ -323,7 +330,7 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	one.End = end.Unix()
 
 	if start.After(end) {
-		http.Error(w, "this.Query error", 400)
+		http.Error(w, "cc.Query error", 400)
 		return
 	}
 
@@ -357,8 +364,14 @@ func (this *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	for _, v := range problemList {
 		pid, err := strconv.Atoi(v)
 		if err != nil {
-			http.Error(w, "conv error", 400)
-			return
+			class.Logger.Debug(err)
+			continue
+		}
+		problemModel := model.ProblemModel{}
+		_, err = problemModel.Detail(pid) //检查题目是否存在
+		if err != nil {
+			class.Logger.Debug(err)
+			continue
 		}
 		list = append(list, pid)
 	}

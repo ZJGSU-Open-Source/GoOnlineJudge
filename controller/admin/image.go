@@ -2,6 +2,7 @@ package admin
 
 import (
 	"GoOnlineJudge/class"
+
 	"encoding/json"
 	"io"
 	"net/http"
@@ -19,9 +20,9 @@ type image struct {
 }
 
 //Upload support kindeditor upload images,the response must return json eg. like {"err":0,"url":"http:...."}
-func (this ImageController) Route(w http.ResponseWriter, r *http.Request) {
+func (ic ImageController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("AdminUpload Image")
-	this.Init(w, r)
+	ic.Init(w, r)
 
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["imgFile"]

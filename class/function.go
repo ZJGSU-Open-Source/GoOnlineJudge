@@ -2,6 +2,7 @@ package class
 
 import (
 	"GoOnlineJudge/config"
+
 	"fmt"
 	"strconv"
 	"time"
@@ -96,6 +97,7 @@ func SameID(ID1, ID2 string) bool {
 	return ID1 == ID2
 }
 
+// 格式化间隔时间
 func ShowGapTime(gaptime int64) string {
 	sec := gaptime % 60
 	hour := gaptime / 3600

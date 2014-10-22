@@ -3,6 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
+
 	"net/http"
 	"strings"
 )
@@ -12,9 +13,9 @@ type ContestController struct {
 	Type string
 }
 
-func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
+func (c ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
-	this.Init(w, r)
+	c.Init(w, r)
 
 	Type := r.URL.Query().Get("type")
 	qry := make(map[string]string)
@@ -27,11 +28,11 @@ func (this ContestController) Route(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	this.Data["Contest"] = conetestList
-	this.Data["Time"] = this.GetTime()
-	this.Data["Type"] = Type
-	this.Data["Title"] = strings.Title(Type) + " List"
-	this.Data["Is"+strings.Title(Type)] = true
-	this.Data["Privilege"] = this.Privilege
-	this.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
+	c.Data["Contest"] = conetestList
+	c.Data["Time"] = c.GetTime()
+	c.Data["Type"] = Type
+	c.Data["Title"] = strings.Title(Type) + " List"
+	c.Data["Is"+strings.Title(Type)] = true
+	c.Data["Privilege"] = c.Privilege
+	c.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
 }
