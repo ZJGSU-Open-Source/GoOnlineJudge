@@ -33,30 +33,33 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem List")
 
 	list := make([]*model.Problem, len(this.ContestDetail.List))
+
+	idx := 0
 	for k, v := range this.ContestDetail.List {
 		problemModel := model.ProblemModel{}
 		one, err := problemModel.Detail(v)
 		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+			class.Logger.Debug(err)
+			continue
 		}
-		one.Pid = k
+		one.Pid = idx
 		qry := make(map[string]string)
 		qry["pid"] = strconv.Itoa(v)
 		qry["action"] = "accept"
 		one.Solve, err = this.GetCount(qry)
 		if err != nil {
-			http.Error(w, "count error", 500)
-			return
+			class.Logger.Debug(err)
+			continue
 		}
 		qry["action"] = "submit"
 		one.Submit, err = this.GetCount(qry)
 		if err != nil {
-			http.Error(w, "count error", 500)
-			return
+			class.Logger.Debug(err)
+			continue
 		}
 
-		list[k] = one
+		list[idx] = one
+		idx++
 	}
 
 	this.Data["Problem"] = list
@@ -78,6 +81,20 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	}
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(this.ContestDetail.List[pid])
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	qry := make(map[string]string)
+	qry["pid"] = strconv.Itoa(v)
+	qry["action"] = "accept"
+	one.Solve, err = this.GetCount(qry)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	qry["action"] = "submit"
+	one.Submit, err = this.GetCount(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -128,7 +145,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	hint := make(map[string]string)
 	errflag := true
 	switch {
-	case pro.Pid == 0 || (pro.Status == config.StatusReverse && this.Privilege <= config.PrivilegePU):
+	case pro.Pid == 0:
 		hint["info"] = "No such problem"
 	case code == "":
 		hint["info"] = "Your source code is too short"
