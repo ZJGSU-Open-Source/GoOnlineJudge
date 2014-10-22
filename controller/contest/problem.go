@@ -35,7 +35,7 @@ func (this *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	list := make([]*model.Problem, len(this.ContestDetail.List))
 
 	idx := 0
-	for k, v := range this.ContestDetail.List {
+	for _, v := range this.ContestDetail.List {
 		problemModel := model.ProblemModel{}
 		one, err := problemModel.Detail(v)
 		if err != nil {
@@ -86,7 +86,7 @@ func (this *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	qry := make(map[string]string)
-	qry["pid"] = strconv.Itoa(v)
+	qry["pid"] = strconv.Itoa(pid)
 	qry["action"] = "accept"
 	one.Solve, err = this.GetCount(qry)
 	if err != nil {
@@ -113,7 +113,7 @@ func (this *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	args := r.URL.Query()
 
 	pid, err := strconv.Atoi(args.Get("pid"))
-	if err != nil {
+	if err != nil || pid >= len(this.ContestDetail.List) {
 		http.Error(w, "args error", 400)
 		return
 	}
