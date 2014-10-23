@@ -82,3 +82,6 @@ Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 If you want to visit it at 80 port, we suggest you install [nginx](http://nginx.org/) as a reverse proxy and run nginx at 80 port. 
 
 Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
+
+#Contribute
+Please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
