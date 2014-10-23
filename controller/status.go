@@ -119,6 +119,10 @@ func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+	if one.Error != "" {
+		one.Code = one.Code + "\n/*\n" + one.Error + "*/\n"
+	}
+
 	if one.Uid == sc.Uid || sc.Privilege > config.PrivilegePU {
 		sc.Data["Solution"] = one
 		sc.Data["Title"] = "View Code"

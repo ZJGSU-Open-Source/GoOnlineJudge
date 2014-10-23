@@ -24,7 +24,8 @@ type Solution struct {
 	Module int `json:"module"bson:"module"`
 	Mid    int `json:"mid"bson:"mid"`
 
-	Code string `json:"code"bson:"code"`
+	Code  string `json:"code"bson:"code"`
+	Error string `json:"error"bson:"error"` //compiler error
 
 	Status    int   `json:"status"bson:"status"`
 	Create    int64 `json:"create"bson:"create"`
@@ -35,7 +36,8 @@ type Solution struct {
 
 var sDetailSelector = bson.M{"_id": 0}
 var sAchieveSelector = bson.M{"_id": 0, "pid": 1}
-var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1, "length": 1, "language": 1, "create": 1, "status": 1, "sim": 1, "sim_s_id": 1, "isviewsim": true}
+var sListSelector = bson.M{"_id": 0, "sid": 1, "pid": 1, "uid": 1, "judge": 1, "time": 1, "memory": 1,
+	"length": 1, "language": 1, "create": 1, "status": 1, "sim": 1, "sim_s_id": 1, "isviewsim": true, "error": 1}
 
 type SolutionModel struct {
 	class.Model
@@ -120,6 +122,7 @@ func (this *SolutionModel) Update(sid int, ori Solution) error {
 	alt["memory"] = ori.Memory
 	alt["sim"] = ori.Sim
 	alt["sim_s_id"] = ori.Sim_s_id
+	alt["error"] = ori.Error
 
 	err := this.OpenDB()
 	if err != nil {

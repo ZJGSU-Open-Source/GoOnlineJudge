@@ -70,6 +70,9 @@ func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if one.Error != "" {
+		one.Code += "\n/*\n" + one.Error + "\n*/"
+	}
 	if one.Uid == sc.Uid || sc.Privilege >= config.PrivilegeTC {
 		sc.Data["Solution"] = one
 		sc.Data["Privilege"] = sc.Privilege
