@@ -1,7 +1,7 @@
 #ZJGSU
 
-> We had to be rescued from our folly by a rebel alliance of obsessive geeks and creative misfits—who then proceeded to show us that professionalism and dedication really meant what we had been doing before we succumbed to the mundane persuasions of "sound business practices". 
-(只有痴迷的“黑客”和具有创造力的怪人结成的反叛联盟才能把我们从愚蠢中拯救出来——他们接着教导我们，真正的专业和奉献精神， 正是我们在屈服于世俗观念的"合理商业做法"之所作所为。) 
+> We had to be rescued from our folly by a rebel alliance of obsessive geeks and creative misfits—who then proceeded to show us that professionalism and dedication really meant what we had been doing before we succumbed to the mundane persuasions of "sound business practices".
+(只有痴迷的“黑客”和具有创造力的怪人结成的反叛联盟才能把我们从愚蠢中拯救出来——他们接着教导我们，真正的专业和奉献精神， 正是我们在屈服于世俗观念的"合理商业做法"之所作所为。)
 -- The Art of Unix Programming
 
 ZJGSU开源社区是一群hacker和geek讨论、交流技术的地方，社区的精神是hacker精神，社区源于开源项目，也必将于开源项目而繁荣。社区倡导平等，开放，自由。社区努力为每一个酷爱技术的人提供良好的探索环境，使其兴趣得到充分发展。社区的思想不能受学校规定或政治的牵制，但仍有自己的态度和哲学：
