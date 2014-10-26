@@ -111,6 +111,12 @@ func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest Problem Submit")
 
+	uid := pc.Uid
+	if uid == "" {
+		http.Error(w, "user login required", 401)
+		return
+	}
+
 	args := r.URL.Query()
 
 	pid, err := strconv.Atoi(args.Get("pid"))
@@ -120,10 +126,6 @@ func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pid = pc.ContestDetail.List[pid] //get real pid
-	uid := pc.Uid
-	if uid == "" {
-		http.Error(w, "user login required", 401)
-	}
 
 	one := model.Solution{}
 	one.Pid = pid

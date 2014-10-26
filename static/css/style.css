@@ -828,7 +828,7 @@ html{
 }.CodeRay .head .head{
 	color:#f4f;
 }table.CodeRay{
-	width:auto;
+	/*width:auto;*/
 }.CodeMirror{
 	margin:6px 0;
 	line-height:1em;
@@ -1053,30 +1053,15 @@ html{
 	font-size:12px;
 	list-style:square;
 }.submitRes-0{
-	/*color: #fff;*/
-  	/*background-*/
-  	color: #FF5722;
-  	/*border-color: #EEA236;*/
+	color:#f90;
 }.submitRes-1{
-	/*color: #fff;*/
-  	/*background-*/
-  	color: #4285F4;
-  	/*border-color: #357EBD;*/
+	color:blue;
 }.submitRes-2{
-	/*color:#fff;*/
-	/*background-*/
-	color: #9900FF;
-  	/*border-color: #9900FF;*/
+	color:#90f;
 }.submitRes-3,.caseRes-3{
-	/*color: #fff;*/
-  	/*background-*/
-  	color: #F44336;
-  	/*border-color: #D43F3A;*/
+	color:red;
 }.submitRes-4,.submitRes-5,.submitRes-6,.submitRes-7,.submitRes-8,.submitRes-9,.submitRes-10,.submitRes-11,.submitRes-12,.submitRes-13,.caseRes-4,.caseRes-5,.caseRes-6,.caseRes-7,.caseRes-8,.caseRes-9,.caseRes-10,.caseRes-11,.caseRes-12,.caseRes-13{
-	/*color: #fff;*/
-  	/*background-*/
-  	color: #0F9D58;
- 	/*border-color: #4CAE4C;*/
+	color:green;
 }.submitRes-14,.caseRes-14{
 	color:#444;
 }.admin,.red{
