@@ -59,6 +59,7 @@
       <tr>
         <th class="header">Rank</th>
         <th class="header">User</th>
+        <th class="header">Nick</th>
         <th class="header">Motto</th>
         <th class="header">Ratio(Solve/Submit)</th>
       </tr>
@@ -70,6 +71,7 @@
             <tr>
               <td>{{.Index}}</td>
               <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
+              <td>{{.Nick}}</td>
               <td id="motto" >{{.Motto}}</td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list?uid={{.Uid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?uid={{.Uid}}">{{.Submit}}</a>)</td>
             </tr>
