@@ -93,15 +93,15 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty."
 	} else {
-		qry := make(map[string]string)
-		qry["uid"] = uid
-		ret, err := userModel.List(qry)
-		if err != nil {
+		_, err := userModel.Detail(uid)
+		if err != nil && err != model.NotFoundErr {
 			http.Error(w, err.Error(), 500)
-		} else if len(ret) > 0 {
+			return
+		} else if err == nil {
 			ok, hint["uid"] = 0, "uc handle is currently in use."
 		}
 	}
+
 	if nick == "" {
 		ok, hint["nick"] = 0, "Nick should not be empty."
 	}
@@ -116,7 +116,6 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		one.Nick = nick
 		one.Pwd = pwd
 		one.Privilege = config.PrivilegePU
-		//one.Privilege = config.PrivilegeAD
 
 		err := userModel.Insert(one)
 		if err != nil {
@@ -125,7 +124,7 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 		}
 
 		uc.SetSession(w, r, "Uid", uid)
-		uc.SetSession(w, r, "Privilege", "1")
+		uc.SetSession(w, r, "Privilege", strconv.Itoa(config.PrivilegePU))
 		w.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
@@ -165,7 +164,7 @@ func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 	achieveList.Sort()
 	uc.Data["List"] = achieveList
 	uc.Data["IpList"] = one.IPRecord
-	class.Logger.Debug(one.IPRecord)
+	// class.Logger.Debug(one.IPRecord)
 	uc.Data["Title"] = "User Detail"
 	if uid != "" && uid == uc.Uid {
 		uc.Data["IsSettings"] = true
@@ -183,7 +182,6 @@ func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userModel := model.UserModel{}
-
 	one, err := userModel.Detail(uc.Uid)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
@@ -235,10 +233,6 @@ func (uc *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Update")
 
-	ok := 1
-	hint := make(map[string]string)
-	hint["uid"] = uc.Uid
-
 	var one model.User
 	one.Nick = r.FormValue("user[nick]")
 	one.Mail = r.FormValue("user[mail]")
@@ -246,10 +240,12 @@ func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	one.Motto = r.FormValue("user[motto]")
 
 	if one.Nick == "" {
-		ok, hint["nick"] = 0, "Nick should not be empty."
-	}
-
-	if ok == 1 {
+		hint := make(map[string]string)
+		hint["nick"] = "Nick should not be empty."
+		w.WriteHeader(400)
+		b, _ := json.Marshal(&hint)
+		w.Write(b)
+	} else {
 		userModel := model.UserModel{}
 		err := userModel.Update(uc.Uid, one)
 		if err != nil {
@@ -257,12 +253,7 @@ func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.WriteHeader(200)
-	} else {
-		w.WriteHeader(400)
 	}
-
-	b, _ := json.Marshal(&hint)
-	w.Write(b)
 }
 
 func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
@@ -284,19 +275,16 @@ func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("User Password")
 
 	ok := 1
-	hint := make(map[string]string)
-	hint["uid"] = uc.Uid
-
-	data := make(map[string]string)
-	data["oldPassword"] = r.FormValue("user[oldPassword]")
-	data["newPassword"] = r.FormValue("user[newPassword]")
-	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
-
 	uid := uc.Uid
-	pwd := data["oldPassword"]
+	hint := make(map[string]string)
+	hint["uid"] = uid
+
+	oldPwd := r.FormValue("user[oldPassword]")
+	newPwd := r.FormValue("user[newPassword]")
+	confirmPwd := r.FormValue("user[confirmPassword]")
 
 	userModel := model.UserModel{}
-	ret, err := userModel.Login(uid, pwd)
+	ret, err := userModel.Login(uid, oldPwd)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -305,16 +293,15 @@ func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 	if ret.Uid == "" {
 		ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
 	}
-	if len(data["newPassword"]) < 6 {
+	if len(newPwd) < 6 {
 		ok, hint["newPassword"] = 0, "Password should contain at least six characters."
 	}
-	if data["newPassword"] != data["confirmPassword"] {
+	if newPwd != confirmPwd {
 		ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
 	}
 
 	if ok == 1 {
-		pwd = data["newPassword"]
-		err := userModel.Password(uid, pwd)
+		err := userModel.Password(uid, newPwd)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return

@@ -393,9 +393,11 @@ func (pc *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 			reader, _ := pc.PostReader(&one)
 			response, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
-				http.Error(w, "post error", 500)
+				// http.Error(w, "post error", 500)
+				class.Logger.Debug(err)
+			} else {
+				response.Body.Close()
 			}
-			response.Body.Close()
 		}
 	} else if types == "Sid" {
 		sid := id
@@ -427,8 +429,9 @@ func (pc *ProblemController) Rejudge(w http.ResponseWriter, r *http.Request) {
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 500)
+			return
 		}
-		response.Body.Close()
+		defer response.Body.Close()
 	}
 	w.WriteHeader(200)
 }
@@ -449,15 +452,12 @@ func (pc *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
-		// class.Logger.Debug(fhs[0].Filename)
-		// var content []byte
 		content, err := ioutil.ReadAll(file)
 		if err != nil {
 			class.Logger.Debug(err)
 			return
 		}
 		contentStr := string(content)
-		// class.Logger.Debug(contentStr)
 
 		problem := model.Problem{}
 		protype := reflect.TypeOf(problem)
@@ -473,8 +473,6 @@ func (pc *ProblemController) Import(w http.ResponseWriter, r *http.Request) {
 			tagRx := regexp.MustCompile(matchStr)
 			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
 			class.Logger.Debug(tag)
-			//for matchLen, j := len(tagString), 0; j < matchLen; j++ {
-			//class.Logger.Debug(tagString[j][1])
 			if len(tagString) > 0 {
 				switch tag {
 				case "time_limit", "memory_limit":
