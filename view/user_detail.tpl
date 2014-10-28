@@ -30,8 +30,8 @@
       {{end}}
       <table class="table table-bordered table-striped table-hover">
         <tr>
-          <th>Login IP</th>
-          <th>Login Time</th>
+          <th><center>Login IP</center></th>
+          <th><center>Login Time</center></th>
         </tr>
           <td>
             {{with .IpList}}
