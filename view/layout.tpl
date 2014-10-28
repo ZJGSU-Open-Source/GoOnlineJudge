@@ -47,7 +47,6 @@
                 {{if .IsStatus}}<li class="active"><a href="/status/list">Status</a></li>{{else}}<li><a href="/status/list">Status</a></li>{{end}}
                 {{if .IsRanklist}}<li class="active"><a href="/ranklist">Ranklist</a></li>{{else}}<li><a href="/ranklist">Ranklist</a></li>{{end}}
                 {{if .IsContest}}<li class="active"><a href="/contestlist?type=contest">Contest</a></li>{{else}}<li><a href="/contestlist?type=contest">Contest</a></li>{{end}}
-                {{if .IsExercise}}<li class="active"><a href="/contestlist?type=exercise">Exercise</a></li>{{else}}<li><a href="/contestlist?type=exercise">Exercise</a></li>{{end}}
                 {{if.IsOSC}}<li class="active"><a href="/osc">OSC</a></li>{{else}}<li><a href="/osc">OSC</a></li>{{end}}
                 {{if.IsFAQ}}<li class="active"><a href="/faq">FAQ</a></li>{{else}}<li><a href="/faq">FAQ</a></li>{{end}}
                 </ul>
@@ -65,9 +64,11 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
+      {{if .Notice}}
      <center>
       <marquee style='width:60%;height:60px' scrollamount=2 direction=left scrolldelay=30 onMouseOver='this.stop()' onMouseOut='this.start()'>123</marquee>
      </center>
+     {{end}}
       <div id="body"> 
       {{if .IsContestDetail}}
       <div class="pinned note" >

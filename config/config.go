@@ -71,3 +71,21 @@ const (
 	StatusRunning   = 4 //进行中
 	StatusEnding    = 5 //结束
 )
+
+// 权限分离
+const (
+	AddProblem    = 1 << iota //添加问题
+	DeleteProblem             //删除问题
+	AddContest                //添加竞赛
+	DeleteContest             //删除竞赛
+	AddNews                   //添加新闻
+	DeleteNews                //删除新闻
+	Testcase                  //测试数据管理
+	ReJudge                   //重判
+	ViewCode                  //查看代码
+	ViewSim                   //查看相似度
+	viewReverse               //查看保留问题、新闻、竞赛
+	UseControl                //用户控制
+	GenerateUse               //生成用户
+	Notice                    //通知消息
+)

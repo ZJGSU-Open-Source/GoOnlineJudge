@@ -35,10 +35,7 @@ func (cc ContestController) Route(w http.ResponseWriter, r *http.Request) {
 func (cc *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Contest List")
 
-	Type := r.URL.Query().Get("type")
-
 	qry := make(map[string]string)
-	qry["type"] = Type
 	contestModel := model.ContestModel{}
 	contestList, err := contestModel.List(qry)
 	if err != nil {
@@ -46,8 +43,8 @@ func (cc *ContestController) List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cc.Data["Contest"] = contestList
-	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " List"
-	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["Title"] = "Admin - Contest List"
+	cc.Data["IsContest"] = true
 	cc.Data["IsList"] = true
 	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
@@ -56,8 +53,6 @@ func (cc *ContestController) List(w http.ResponseWriter, r *http.Request) {
 func (cc *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug("Admin Contest Add")
 
-	Type := r.URL.Query().Get("type")
-	//class.Logger.Debug(Type)
 	now := time.Now()
 	cc.Data["StartYear"] = now.Year()
 	cc.Data["StartMonth"] = int(now.Month())
@@ -70,10 +65,9 @@ func (cc *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	cc.Data["EndDay"] = int(end.Day())
 	cc.Data["EndHour"] = int(end.Hour())
 
-	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " Add"
-	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["Title"] = "Admin - Contest Add"
+	cc.Data["IsContest"] = true
 	cc.Data["IsAdd"] = true
-	cc.Data["Type"] = Type
 
 	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
@@ -86,12 +80,9 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Type := r.URL.Query().Get("type")
-
 	one := model.Contest{}
 
 	one.Title = r.FormValue("title")
-	one.Type = Type
 	year, err := strconv.Atoi(r.FormValue("startTimeYear"))
 	month, err := strconv.Atoi(r.FormValue("startTimeMonth"))
 	day, err := strconv.Atoi(r.FormValue("startTimeDay"))
@@ -162,7 +153,7 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound) //重定向到竞赛列表页
+	http.Redirect(w, r, "/admin/contest/list", http.StatusFound) //重定向到竞赛列表页
 }
 
 //更改contest状态 url:/admin/contest/status/
@@ -181,8 +172,6 @@ func (cc *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 	contestModel := model.ContestModel{}
 	one, err := contestModel.Detail(cid)
 
-	Type := one.Type
-
 	var status int
 	switch one.Status {
 	case config.StatusAvailable:
@@ -197,7 +186,7 @@ func (cc *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound) //重定向到竞赛列表页
+	http.Redirect(w, r, "/admin/contest/list", http.StatusFound) //重定向到竞赛列表页
 }
 
 //删除竞赛 url:/admin/contest/delete/，method:POST
@@ -287,9 +276,8 @@ func (cc *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cc.Data["Detail"] = one
-	Type := one.Type
-	cc.Data["Title"] = "Admin - " + strings.Title(Type) + " Edit"
-	cc.Data["Is"+strings.Title(Type)] = true
+	cc.Data["Title"] = "Admin - " + "Contest" + " Edit"
+	cc.Data["IsContest"] = true
 	cc.Data["IsEdit"] = true
 
 	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
@@ -308,11 +296,9 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "args error", 400)
 		return
 	}
-	Type := r.URL.Query().Get("type")
 
 	one := model.Contest{}
 	one.Title = r.FormValue("title")
-	one.Type = Type
 	year, _ := strconv.Atoi(r.FormValue("startTimeYear"))
 	month, _ := strconv.Atoi(r.FormValue("startTimeMonth"))
 	day, _ := strconv.Atoi(r.FormValue("startTimeDay"))
@@ -383,5 +369,5 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	http.Redirect(w, r, "/admin/contest/list?type="+Type, http.StatusFound)
+	http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
 }
