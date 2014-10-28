@@ -64,14 +64,10 @@
 				var json = eval('('+response.responseText+')');	
 				if(json.nick != null) {
 					$('#user_nick').css({"border-color": "red"});
-					$('#user_warning_nick').text(json.nick);
-				} else {
-					$('#user_warning_nick').text('');
-				}			
+				} 		
 			},
 			success: function(result) {
-				var json = eval('('+result+')');
-				window.location.href = '/user/detail?uid='+json.uid;
+				window.location.href = '/user/detail?uid='+{{.CurrentUser}};
 			}
 		});
 	});

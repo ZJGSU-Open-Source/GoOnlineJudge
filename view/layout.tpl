@@ -23,7 +23,7 @@
 
   <body {{if .IsCode}}onload="prettyPrint()"{{end}}>
       <div class="container"> 
-      
+    
       <div id="logo" class="lfloat">
             <a href="/"><img alt="Logo" src="/static/img/logo.png"></a>
       </div>
@@ -65,7 +65,9 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
-
+     <center>
+      <marquee style='width:60%;height:60px' scrollamount=2 direction=left scrolldelay=30 onMouseOver='this.stop()' onMouseOut='this.start()'>123</marquee>
+     </center>
       <div id="body"> 
       {{if .IsContestDetail}}
       <div class="pinned note" >
@@ -105,7 +107,6 @@
 
       <div class="jumbotron">
         {{template "content" .}}
-      </div>
       </div>
       <div id="pageFooter" class="center">
         <hr class="nomarginbottom">
