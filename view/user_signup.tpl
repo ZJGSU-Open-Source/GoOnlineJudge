@@ -34,7 +34,7 @@
             <label for="user_password" class="col-lg-2 control-label">Password<font color="red">*</font>
 			     </label>
             <div class="col-lg-10">
-              <input type="password" class="form-control" id="user_password" name="user[password]" required placeholder="at least six characters.">
+              <input type="password" class="form-control" id="user_password" name="user[password]" required placeholder="At least six characters.">
             </div>
             <div class="col-lg-10">
               <font  id="user_warning_password" color="red"></font>              

@@ -19,7 +19,7 @@
 			         <font id="user_warning_newPassword" color="red"></font><br>
 					     </label>
 			        <div class="col-lg-10">
-			          <input type="password" class="form-control" id="user_newPassword" name="user[newPassword]" required placeholder="at least six characters.">
+			          <input type="password" class="form-control" id="user_newPassword" name="user[newPassword]" required placeholder="At least six characters.">
 			        </div>
 			     </div>
 			     <div class="form-group">
