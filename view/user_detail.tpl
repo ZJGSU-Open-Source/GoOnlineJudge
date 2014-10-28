@@ -28,37 +28,40 @@
           <td>{{.Solve}}</td>
         </tr>
       {{end}}
+      {{if .IPPrivilege}}
       <table class="table table-bordered table-striped table-hover">
         <tr>
           <th><center>Login IP</center></th>
           <th><center>Login Time</center></th>
-        </tr>
-          <td>
+        
             {{with .IpList}}
               {{range .}}
-              {{if .}}
-                <li>{{.}}</li>
+              {{if .}}</tr>
+                <td>{{.}}</td>
+                <td></td>
+                </tr> 
               {{end}}
               {{end}}
             {{end}}
-          </td>
-          <td>
           <!--login time模块-->
           </td>
-       </table>
+      </table>
+      {{end}}
       <table class="table table-bordered table-striped table-hover">
         <tr>
           <th><center>Achieve</center></th>
         </tr>
-        <tr>
+       
+        {{with .List}}
+          <tr>
           <td>
-            {{with .List}}
               {{range .}}
                 <a href="/problem/detail?pid={{.}}">{{.}}</a> 
               {{end}}
-            {{end}}
           </td>
-        </tr>
+          </tr>
+        {{end}}
+         
       </table>
         
     </tbody>

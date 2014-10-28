@@ -60,21 +60,12 @@
               </ul>
             </div>
           {{end}}
-          <li><a href="/admin/contest/list?type=contest">Contest</a></li>
+          <li><a href="/admin/contest/list">Contest</a></li>
           {{if .IsContest}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list?type=contest">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add?type=contest">Add</a>{{end}}</li>
-              </ul>
-            </div>
-          {{end}}
-           <li><a href="/admin/contest/list?type=exercise">Exercise</a></li>
-          {{if .IsExercise}}
-            <div id="psnavi">
-              <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list?type=exercise">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add?type=exercise">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
