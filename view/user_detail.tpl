@@ -28,8 +28,11 @@
           <td>{{.Solve}}</td>
         </tr>
       {{end}}
-      <tr>
+      <table class="table table-bordered table-striped table-hover">
+        <tr>
           <th>Login IP</th>
+          <th>Login Time</th>
+        </tr>
           <td>
             {{with .IpList}}
               {{range .}}
@@ -39,9 +42,15 @@
               {{end}}
             {{end}}
           </td>
-          </tr>
+          <td>
+          <!--login time模块-->
+          </td>
+       </table>
+      <table class="table table-bordered table-striped table-hover">
         <tr>
-          <th>Achieve</th>
+          <th><center>Achieve</center></th>
+        </tr>
+        <tr>
           <td>
             {{with .List}}
               {{range .}}
@@ -50,6 +59,7 @@
             {{end}}
           </td>
         </tr>
+      </table>
         
     </tbody>
   </table>
