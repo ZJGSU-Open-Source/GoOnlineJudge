@@ -61,6 +61,37 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	problemModel := model.ProblemModel{}
 	qry := make(map[string]string)
+
+	args := r.URL.Query()
+	qry["page"] = args.Get("page")
+	if v := qry["page"]; v == "" { //指定页码
+		qry["page"] = "1"
+	}
+	count, err := problemModel.Count(qry)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	class.Logger.Debug(count)
+	var pageCount = (count-1)/config.ProblemPerPage + 1
+	page, err := strconv.Atoi(qry["page"])
+	if err != nil {
+		http.Error(w, "args error", 400)
+		return
+	}
+	if page > pageCount {
+		http.Error(w, "args error", 400)
+		return
+	}
+
+	qry["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
+	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
+	pageData := pc.GetPage(page, pageCount)
+	for k, v := range pageData {
+		pc.Data[k] = v
+	}
+
 	proList, err := problemModel.List(qry)
 	if err != nil {
 		http.Error(w, err.Error(), 400)

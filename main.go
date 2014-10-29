@@ -1,4 +1,4 @@
-// GoOnlineJudge is an online judge system for zjgsu.
+// GoOnlineJudge Version 14.10.12 is an online judge system for zjgsu.
 // Copyright (C) 2013-2014 -  ZJGSU OSC[https://github.com/ZJGSU-Open-Source/]
 
 // This program is free software: you can redistribute it and/or modify

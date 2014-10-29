@@ -33,7 +33,6 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
 
 	args := r.URL.Query()
-	//args := pc.ParseURL(r.URL.String())
 	qry := make(map[string]string)
 	url := "/problem/list?"
 

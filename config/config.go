@@ -10,7 +10,7 @@ const (
 	ProblemPerPage  = 50
 	ContestPerPage  = 100
 	ExercisePerPage = 100
-	SolutionPerPage = 50
+	SolutionPerPage = 30
 	UserPerPage     = 50
 )
 
