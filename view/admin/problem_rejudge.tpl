@@ -3,8 +3,8 @@
 
 <form accept-charset="UTF-8" id="search_form">
 <select id="type" name="type">
-<option value="Pid">Problem ID</option>
 <option value="Sid">Solution ID</option>
+<option value="Pid">Problem ID</option>
 </select>
 <br>
 <input id="id" name="id" size="20" type="text" pattern="^[0-9]+" required>

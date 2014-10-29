@@ -1,6 +1,60 @@
 {{define "content"}}
 <h1>Admin - Problem List</h1>
 {{$isAdmin := .IsAdmin}}
+
+<div class="pagination">
+  {{$current := .CurrentPage}}
+  {{if .IsPreviousPage}}
+  <a href="?page={{NumSub .CurrentPage 1}}">Prev</a>
+  {{else}}
+  <span>Prev</span>
+  {{end}}
+  &nbsp;
+  {{if .IsPageHead}}
+    {{with .PageHeadList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="?page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageMid}}
+  ...
+    {{with .PageMidList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="?page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageTail}}
+  ...
+    {{with .PageTailList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="?page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+  &nbsp;
+  {{if .IsNextPage}}
+  <a href="?page={{NumAdd .CurrentPage 1}}">Next</a>
+  {{else}}
+  <span>Next</span>
+  {{end}}
+</div>
+
 <table id="problem_list">
   <thead>
     <tr>
