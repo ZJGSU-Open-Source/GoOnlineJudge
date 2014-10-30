@@ -5,7 +5,6 @@ import (
 	"GoOnlineJudge/model"
 
 	"net/http"
-	"strings"
 )
 
 type ContestController struct {
@@ -30,9 +29,8 @@ func (c ContestController) Route(w http.ResponseWriter, r *http.Request) {
 
 	c.Data["Contest"] = conetestList
 	c.Data["Time"] = c.GetTime()
-	c.Data["Type"] = Type
-	c.Data["Title"] = strings.Title(Type) + " List"
-	c.Data["Is"+strings.Title(Type)] = true
+	c.Data["Title"] = "Contest List"
+	c.Data["IsContest"] = true
 	c.Data["Privilege"] = c.Privilege
 	c.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
 }
