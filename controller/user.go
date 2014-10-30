@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type UserController struct {
@@ -60,7 +61,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 		//TODO:record login time
 		class.Logger.Debug(r.RemoteAddr)
-		userModel.RecordIP(uid, strings.Split(r.RemoteAddr, ":")[0])
+		userModel.RecordIP(uid, strings.Split(r.RemoteAddr, ":")[0], time.Now().Unix())
 	}
 }
 
@@ -160,11 +161,24 @@ func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	type IPs struct {
+		Time int64
+		IP   string
+	}
+	var ips []IPs
+	ipo := IPs{}
+
+	for i, lenth := 0, len(one.IPRecord); i < lenth; i++ {
+		ipo.Time = one.TimeRecord[i]
+		ipo.IP = one.IPRecord[i]
+		ips = append(ips, ipo)
+		class.Logger.Debug(ips[i].IP)
+	}
+
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
 	uc.Data["List"] = achieveList
-	uc.Data["IpList"] = one.IPRecord
-	// class.Logger.Debug(one.IPRecord)
+	uc.Data["IpList"] = ips
 	uc.Data["Title"] = "User Detail"
 	if uid != "" && uid == uc.Uid {
 		uc.Data["IsSettings"] = true
@@ -195,10 +209,24 @@ func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+	type IPs struct {
+		Time int64
+		IP   string
+	}
+	var ips []IPs
+	ipo := IPs{}
+
+	for i, lenth := 0, len(one.IPRecord); i < lenth; i++ {
+		ipo.Time = one.TimeRecord[i]
+		ipo.IP = one.IPRecord[i]
+		ips = append(ips, ipo)
+		class.Logger.Debug(ips[i].IP)
+	}
+
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
 	uc.Data["List"] = achieveList
-	uc.Data["IpList"] = one.IPRecord
+	uc.Data["IpList"] = ips
 	uc.Data["Title"] = "User Settings"
 	uc.Data["IsSettings"] = true
 	uc.Data["IsSettingsDetail"] = true

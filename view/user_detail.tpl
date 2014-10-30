@@ -28,25 +28,23 @@
           <td>{{.Solve}}</td>
         </tr>
       {{end}}
-      {{if .IPPrivilege}}
+      {{/*if .IPPrivilege*/}}
       <table class="table table-bordered table-striped table-hover">
         <tr>
-          <th><center>Login IP</center></th>
           <th><center>Login Time</center></th>
-        
+          <th><center>Login IP</center></th>
             {{with .IpList}}
               {{range .}}
               {{if .}}</tr>
-                <td>{{.}}</td>
-                <td></td>
+                <td><center>{{ShowTime .Time}}</center></td>
+                <td><center>{{.IP}}</center></td>
                 </tr> 
               {{end}}
               {{end}}
             {{end}}
-          <!--login time模块-->
           </td>
       </table>
-      {{end}}
+      {{/*end*/}}
       <table class="table table-bordered table-striped table-hover">
         <tr>
           <th><center>Achieve</center></th>
@@ -63,7 +61,6 @@
         {{end}}
          
       </table>
-        
     </tbody>
   </table>
   

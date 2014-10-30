@@ -26,13 +26,15 @@ type User struct {
 	Solve  int `json:"solve"bson:"solve"`
 	Submit int `json:"submit"bson:"submit"`
 
-	Status   int           `json:"status"bson:"status"`
-	Create   string        `json:"create"bson:"create"`
-	IPRecord [IPCNT]string `json:"iprecord"bson:"iprecord"` //记录ip地址
+	Status     int           `json:"status"bson:"status"`
+	Create     string        `json:"create"bson:"create"`
+	IPRecord   [IPCNT]string `json:"iprecord"bson:"iprecord"` //记录ip地址
+	TimeRecord [IPCNT]int64  `json:"timerecord"bson:"timerecord"`
 }
 
 var uDetailSelector = bson.M{"_id": 0}
-var uListSelector = bson.M{"_id": 0, "uid": 1, "nick": 1, "motto": 1, "privilege": 1, "solve": 1, "submit": 1, "status": 1, "IPRecord": 1}
+var uListSelector = bson.M{"_id": 0, "uid": 1, "nick": 1, "motto": 1, "privilege": 1,
+	"solve": 1, "submit": 1, "status": 1, "iprecord": 1, "timerecord": 1}
 
 type UserModel struct {
 	class.Model
@@ -81,7 +83,7 @@ func (this *UserModel) Login(uid, pwd string) (*User, error) {
 	}, nil
 }
 
-func (this *UserModel) RecordIP(uid, IP string) error {
+func (this *UserModel) RecordIP(uid, IP string, time int64) error {
 	err := this.OpenDB()
 	if err != nil {
 		return DBErr
@@ -97,18 +99,22 @@ func (this *UserModel) RecordIP(uid, IP string) error {
 	}
 
 	ipRecord := alt.IPRecord
+	timeRecord := alt.TimeRecord
 
 	ipcnt := len(ipRecord)
 	if ipcnt < IPCNT {
 		ipRecord[ipcnt] = IP
+		timeRecord[ipcnt] = time
 	} else {
 		for i := 0; i < IPCNT-1; i++ {
 			ipRecord[i] = ipRecord[i+1]
+			timeRecord[i] = timeRecord[i+1]
 		}
 		ipRecord[IPCNT-1] = IP
+		timeRecord[IPCNT-1] = time
 	}
 
-	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": bson.M{"iprecord": ipRecord}})
+	err = this.DB.C("User").Update(bson.M{"uid": uid}, bson.M{"$set": bson.M{"iprecord": ipRecord, "timerecord": timeRecord}})
 	if err == mgo.ErrNotFound {
 		return NotFoundErr
 	} else if err != nil {
