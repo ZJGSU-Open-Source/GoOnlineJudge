@@ -46,6 +46,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		one.Pid = idx
 		qry := make(map[string]string)
 		qry["pid"] = strconv.Itoa(v)
+		qry["module"] = strconv.Itoa(config.ModuleC)
 		qry["action"] = "accept"
 		one.Solve, err = pc.GetCount(qry)
 		if err != nil {
