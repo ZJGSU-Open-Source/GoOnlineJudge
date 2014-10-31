@@ -159,7 +159,7 @@ There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR P
 <li>版本</li>
 <pre><code>java version "1.7.0_55"
 OpenJDK Runtime Environment (IcedTea 2.4.7) (7u55-2.4.7-1ubuntu1)
-OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)
+OpenJDK Client VM (build 24.51-b03, mixed mode, sharing)
 </code></pre>
 <li>编译运行选项</li>
 <pre><code>javac -J-Xms32m -J-Xmx256m Main.java &&/usr/bin/java -Xms128M -Xms512M -DONLINE_JUDGE=true Main</code></pre>

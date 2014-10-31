@@ -53,9 +53,11 @@
         {{with .List}}
           <tr>
           <td>
+          <center>
               {{range .}}
                 <a href="/problem/detail?pid={{.}}">{{.}}</a> 
-              {{end}}
+              {{end}}            
+          </center>
           </td>
           </tr>
         {{end}}

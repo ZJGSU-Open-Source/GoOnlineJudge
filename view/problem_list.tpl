@@ -68,7 +68,7 @@
 <table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
-      <th class="header">Flag</th>
+      <!-- <th class="header">Flag</th> -->
       <th class="header">ID</th>
       <th class="header">Title</th>
       <th class="header">Ratio(Solve/Submit)</th>
@@ -82,7 +82,7 @@
         {{if or (ShowStatus .Status) (LargePU $privilege)}}
           {{/*if ShowExpire .Expire $time*/}}
             <tr>
-              <td><span class="icon icon-material-check"></span><span class="icon icon-material-clear" ></span></td>
+              <!-- <td><span class="icon icon-material-check"></span><span class="icon icon-material-clear" ></span></td> -->
               <td>{{.Pid}}</td>
               <td><a href="/problem/detail?pid={{.Pid}}">{{.Title}}</a></td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?pid={{.Pid}}">{{.Submit}}</a>)</td>
