@@ -1185,9 +1185,6 @@ html{
   	background-color: #f5f5f5;
   	border: 1px solid #ccc;
   	border-radius: 4px;
-}#motto{
-	font-family:"楷体";
-	font-size:17px;
 }#contestinfo{
 	text-align: center;
 }.sbmt{
@@ -1230,8 +1227,6 @@ html{
 	background-color: transparent;
 	text-decoration: none;
 }
-
-
 .btn-ce {
   color: #333;
   background-color: #9900FF;
@@ -1276,5 +1271,5 @@ fieldset[disabled] .btn-ce.active {
 .btn-ce:not(.btn-link) {
   background-color: #9900FF;
 }.ac{
-	background-color: green;
+	background-color: rgb(79, 234, 79);
 }
