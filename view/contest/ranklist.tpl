@@ -10,8 +10,8 @@
       <th class="header">Solved</th>
       <th class="header">Penalty</th>
       {{with .ProblemList}}
-      {{range .}}
-      <th class="header"><a href="/contest/problem/detail?cid={{$cid}}&pid={{.}}">{{.}}</a></th>
+      {{range $idx,$pid:= .}}
+      <th class="header"><a href="/contest/problem/detail?cid={{$cid}}&pid={{$idx}}">{{$idx}}</a></th>
       {{end}}
       {{end}}
     </tr>

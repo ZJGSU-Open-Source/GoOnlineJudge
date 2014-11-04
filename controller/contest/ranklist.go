@@ -70,7 +70,7 @@ func (rc *RanklistController) Home(w http.ResponseWriter, r *http.Request) {
 	rc.Data["UserList"] = rc.ranklist()
 	rc.Data["IsContestRanklist"] = true
 	rc.Data["Cid"] = rc.Cid
-	rc.Data["ProblemList"] = rc.Index
+	rc.Data["ProblemList"] = rc.ContestDetail.List
 	rc.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
 }
 
