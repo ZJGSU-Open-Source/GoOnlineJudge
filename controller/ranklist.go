@@ -76,11 +76,11 @@ func (rc *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	list := make([]rank, len(userList), len(userList))
-	count = (page-1)*count + 1
+	count = 1
 	for i, one := range userList {
 		list[i].User = *one
 		if one.Status == config.StatusAvailable {
-			list[count-1].Index = count
+			list[count-1].Index = count + (page-1)*config.UserPerPage
 			count += 1
 		}
 	}

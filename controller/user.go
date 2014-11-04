@@ -59,9 +59,11 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		uc.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 		w.WriteHeader(200)
 
-		//TODO:record login time
 		class.Logger.Debug(r.RemoteAddr)
-		userModel.RecordIP(uid, strings.Split(r.RemoteAddr, ":")[0], time.Now().Unix())
+		//remoteAddr := r.Header.Get("X-Real-IP") // if you set niginx as reverse proxy
+		//class.Logger.Debug(remoteAddr)
+		remoteAddr := strings.Split(r.RemoteAddr, ":")[0] // otherwise
+		userModel.RecordIP(uid, remoteAddr, time.Now().Unix())
 	}
 }
 
@@ -111,6 +113,9 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	}
 	if pwd != pwdConfirm {
 		ok, hint["pwdConfirm"] = 0, "Confirmation mismatched."
+	}
+	if one.Mail != "" && class.CheckMail(one.Mail) == false {
+		ok, hint["mail"] = 0, "Wrong mail."
 	}
 	if ok == 1 {
 		one.Uid = uid
