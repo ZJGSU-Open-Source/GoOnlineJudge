@@ -4,8 +4,8 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-
 	"net/http"
+	"restweb"
 	"strconv"
 )
 
@@ -20,13 +20,13 @@ type RanklistController struct {
 	class.Controller
 }
 
-func (rc RanklistController) Route(w http.ResponseWriter, r *http.Request) {
+func (rc RanklistController) Get(w http.ResponseWriter, r *http.Request) {
 	rc.Init(w, r)
 	rc.Index(w, r)
 }
 
 func (rc *RanklistController) Index(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Ranklist")
+	restweb.Logger.Debug("Ranklist")
 
 	args := r.URL.Query()
 

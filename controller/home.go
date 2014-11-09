@@ -10,9 +10,7 @@ type HomeController struct {
 	class.Controller
 }
 
-func (hc HomeController) Route(w http.ResponseWriter, r *http.Request) {
-	hc.Init(w, r)
+func (hc HomeController) Get(w http.ResponseWriter, r *http.Request) {
 	newsController := NewsController{}
-	newsController.Data = hc.Data
-	newsController.List(w, r)
+	newsController.Get(w, r)
 }

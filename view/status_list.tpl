@@ -106,8 +106,8 @@
         
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user/detail?uid={{.Uid}}">{{.Uid}}</a></td>
-            <td><a href="/problem/detail?pid={{.Pid}}">{{.Pid}}</a></td>
+            <td><a href="/user/{{.Uid}}">{{.Uid}}</a></td>
+            <td><a href="/problem/{{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}" disabled="disabled">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
@@ -128,7 +128,7 @@
     var pid = $('#search_pid').val();
     var judge = $('#search_judge').val();
     var language = $('#search_language').val();
-    var url = '/status/list?';
+    var url = '/status?';
     if (uid != '')
       url += 'uid=' + uid + "&";
     if (pid != '')

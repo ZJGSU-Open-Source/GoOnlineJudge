@@ -65,7 +65,7 @@
   {{end}}
 </div>
 
-<table id="contest_list" class="table table-bordered table-striped table-hover">
+<table id="problem_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
       <!-- <th class="header">Flag</th> -->
@@ -84,8 +84,8 @@
             <tr>
               <!-- <td><span class="icon icon-material-check"></span><span class="icon icon-material-clear" ></span></td> -->
               <td>{{.Pid}}</td>
-              <td><a href="/problem/detail?pid={{.Pid}}">{{.Title}}</a></td>
-              <td>{{ShowRatio .Solve .Submit}} (<a href="/status/list?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?pid={{.Pid}}">{{.Submit}}</a>)</td>
+              <td><a href="/problem/{{.Pid}}">{{.Title}}</a></td>
+              <td>{{ShowRatio .Solve .Submit}} (<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)</td>
             </tr>
           {{/*end*/}}
         {{end}}
@@ -100,7 +100,7 @@
     var value = $('#search').val();
     var key = $('#option').val();
     value = encodeURIComponent(value);
-    window.location.href = '/problem/list?'+key+'='+value;
+    window.location.href = '/problem?'+key+'='+value;
   });
   </script>
 {{end}}

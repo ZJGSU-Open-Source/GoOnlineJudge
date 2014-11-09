@@ -2,11 +2,9 @@ package class
 
 import (
 	"GoOnlineJudge/config"
+	"restweb"
 
-	"fmt"
-	"regexp"
 	"strconv"
-	"time"
 )
 
 var specialArr = []string{"Standard", "Special"}
@@ -16,12 +14,6 @@ var languageArr = []string{"None", "C", "C++", "Java"}
 var encryptArr = []string{"None", "Public", "Private", "Password"}
 var privilegeArr = []string{"None", "Primary User", "Teacher", "Admin"}
 
-// ShowNext 返回num加1的值
-func ShowNext(num int) (next int) {
-	next = num + 1
-	return
-}
-
 // ShowStatus 根据status确定状态是否可达的
 func ShowStatus(status int) bool {
 	return status == config.StatusAvailable
@@ -30,11 +22,6 @@ func ShowStatus(status int) bool {
 // ShowSim 是否显示相似度
 func ShowSim(sim int) bool {
 	return sim != 0
-}
-
-// ShowTime 将unixtime转换为当地时间
-func ShowTime(unixtime int64) string {
-	return time.Unix(unixtime, 0).Local().Format("2006-01-02 15:04:05")
 }
 
 // ShowRatio 显示solve/submit的比率
@@ -71,18 +58,6 @@ func ShowEncrypt(num int) (encrypt string) {
 	return
 }
 
-// NumAdd 将两数相加
-func NumAdd(a int, b int) (ret int) {
-	ret = a + b
-	return
-}
-
-// NumSub 两数相减a-b
-func NumSub(a int, b int) (ret int) {
-	ret = a - b
-	return
-}
-
 // LargePU 判断privilege是否大于普通用户
 func LargePU(privilege int) bool {
 	return privilege > config.PrivilegePU
@@ -98,21 +73,15 @@ func SameID(ID1, ID2 string) bool {
 	return ID1 == ID2
 }
 
-// 格式化间隔时间
-func ShowGapTime(gaptime int64) string {
-	sec := gaptime % 60
-	hour := gaptime / 3600
-	minute := (gaptime - hour*3600) / 60
-	return fmt.Sprintf("%d:%02d:%02d", hour, minute, sec)
-}
-
-// 检查邮箱地址格式
-func CheckMail(mail string) bool {
-	matchStr := `^\w(\.?\w)*@\w(\.?\w)*\.[A-Za-z]+$`
-	tagRx := regexp.MustCompile(matchStr)
-	tagString := tagRx.FindString(mail)
-	if tagString == mail {
-		return true
-	}
-	return false
+// initFuncMap 初始化FuncMap
+func initFuncMap() {
+	restweb.AddFuncMap("ShowRatio", ShowRatio)
+	restweb.AddFuncMap("ShowSpecial", ShowSpecial)
+	restweb.AddFuncMap("ShowJudge", ShowJudge)
+	restweb.AddFuncMap("ShowLanguage", ShowLanguage)
+	restweb.AddFuncMap("ShowEncrypt", ShowEncrypt)
+	restweb.AddFuncMap("ShowPrivilege", ShowPrivilege)
+	restweb.AddFuncMap("LargePU", LargePU)
+	restweb.AddFuncMap("ShowStatus", ShowStatus)
+	restweb.AddFuncMap("ShowSim", ShowSim)
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
+	"restweb"
 
 	"net/http"
 )
@@ -12,8 +13,8 @@ type ContestController struct {
 	Type string
 }
 
-func (c ContestController) Route(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest List")
+func (c ContestController) Get(w http.ResponseWriter, r *http.Request) {
+	restweb.Logger.Debug("Contest List")
 	c.Init(w, r)
 
 	Type := r.URL.Query().Get("type")
@@ -28,7 +29,7 @@ func (c ContestController) Route(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c.Data["Contest"] = conetestList
-	c.Data["Time"] = c.GetTime()
+	c.Data["Time"] = restweb.GetTime()
 	c.Data["Title"] = "Contest List"
 	c.Data["IsContest"] = true
 	c.Data["Privilege"] = c.Privilege

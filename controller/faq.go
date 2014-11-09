@@ -2,8 +2,8 @@ package controller
 
 import (
 	"GoOnlineJudge/class"
-
 	"net/http"
+	"restweb"
 )
 
 type FAQController struct {
@@ -11,8 +11,8 @@ type FAQController struct {
 }
 
 //faq 页面
-func (fc FAQController) Route(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("FAQ Page")
+func (fc FAQController) Get(w http.ResponseWriter, r *http.Request) {
+	restweb.Logger.Debug("FAQ Page")
 	fc.Init(w, r)
 
 	fc.Data["Title"] = "FAQ"

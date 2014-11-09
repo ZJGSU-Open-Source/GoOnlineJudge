@@ -2,8 +2,8 @@ package controller
 
 import (
 	"GoOnlineJudge/class"
-
 	"net/http"
+	"restweb"
 )
 
 type OSCController struct {
@@ -11,7 +11,7 @@ type OSCController struct {
 }
 
 func (oc OSCController) Route(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("OSC Page")
+	restweb.Logger.Debug("OSC Page")
 	oc.Init(w, r)
 
 	oc.Data["Title"] = "ZJGSU OSC"

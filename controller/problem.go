@@ -4,9 +4,9 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-
 	"encoding/json"
 	"net/http"
+	"restweb"
 	"strconv"
 	"strings"
 )
@@ -16,27 +16,25 @@ type ProblemController struct {
 	class.Controller
 }
 
-func (pc ProblemController) Route(w http.ResponseWriter, r *http.Request) {
-	pc.Init(w, r)
-	action := pc.GetAction(r.URL.Path, 1)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&pc, strings.Title(action), rv)
+func (p ProblemController) Get(w http.ResponseWriter, r *http.Request) {
+	p.Init(w, r)
+	action := p.GetAction(r.URL.Path, 1)
+	if action == "" {
+		p.List(w, r)
+	} else {
+		p.Detail(w, r)
+	}
 }
 
 // 列出特定数量的问题,URL，/problem/list?pid=<pid>&titile=<titile>&source=<source>&page=<page>
 func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug(r.RemoteAddr + "visit Problem List")
+	restweb.Logger.Debug(r.RemoteAddr + "visit Problem List")
 
 	args := r.URL.Query()
 	qry := make(map[string]string)
-	url := "/problem/list?"
+	url := "/problem?"
 
-	class.Logger.Debug(r.URL.RequestURI())
+	restweb.Logger.Debug(r.URL.RequestURI())
 	// Search
 	if v := args.Get("pid"); v != "" { //按pid查找
 		qry["pid"] = v
@@ -44,7 +42,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		pc.Data["SearchPid"] = true
 		pc.Data["SearchValue"] = v
 	} else if v := args.Get("title"); v != "" { //按问题标题查找
-		class.Logger.Debug(v)
+		restweb.Logger.Debug(v)
 		url += "title=" + v + "&"
 		pc.Data["SearchTitle"] = true
 		pc.Data["SearchValue"] = v
@@ -53,7 +51,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		}
 		qry["title"] = v
 	} else if v := args.Get("source"); v != "" { //按问题来源查找
-		class.Logger.Debug(v)
+		restweb.Logger.Debug(v)
 		url += "source=" + v + "&"
 		pc.Data["SearchSource"] = true
 		pc.Data["SearchValue"] = v
@@ -81,7 +79,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	class.Logger.Debug(count)
+	restweb.Logger.Debug(count)
 	var pageCount = (count-1)/config.ProblemPerPage + 1
 	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
@@ -105,11 +103,11 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "post error", 500)
 		return
 	}
-	class.Logger.Debug(len(problemList))
+	restweb.Logger.Debug(len(problemList))
 
 	pc.Data["Problem"] = problemList
 	pc.Data["Privilege"] = pc.Privilege
-	pc.Data["Time"] = pc.GetTime()
+	pc.Data["Time"] = restweb.GetTime()
 	pc.Data["Title"] = "Problem List"
 	pc.Data["IsProblem"] = true
 	pc.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
@@ -117,10 +115,10 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
 func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Problem Detail")
+	restweb.Logger.Debug("Problem Detail")
 
-	args := r.URL.Query()
-	pid, err := strconv.Atoi(args.Get("pid"))
+	Pid := pc.GetAction(r.URL.Path, 1)
+	pid, err := strconv.Atoi(Pid)
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -129,37 +127,34 @@ func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		pc.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
+		pc.Err400(w, r, "Problem "+Pid, "No such problem")
 		return
 	}
 	pc.Data["Detail"] = one
 
 	if pc.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
-		pc.Err400(w, r, "Problem "+args.Get("pid"), "No such problem")
+		pc.Err400(w, r, "Problem "+Pid, "No such problem")
 		return
 	}
 
 	pc.Data["Privilege"] = pc.Privilege
-	pc.Data["Title"] = "Problem — " + strconv.Itoa(pid)
+	pc.Data["Title"] = "Problem — " + Pid
 	pc.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
 }
 
-//提交某一问题的solution， URL /problem/submit?pid=<pid>，method POST
-func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Problem Submit")
+//提交某一问题的solution， URL /problem?pid=<pid>，method POST
+func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
+	restweb.Logger.Debug("Problem Submit")
 
-	if r.Method != "POST" { // 要求请求方法为post
-		http.Error(w, "method error", 400)
-		return
-	}
+	pc.Init(w, r)
 
 	if pc.Uid == "" { //要求用户登入
 		http.Error(w, "user login required", 401)
 		return
 	}
 
-	args := r.URL.Query()
-	pid, err := strconv.Atoi(args.Get("pid"))
+	Pid := pc.GetAction(r.URL.Path, 1)
+	pid, err := strconv.Atoi(Pid)
 	if err != nil {
 		http.Error(w, "args error", 400)
 		return
@@ -219,7 +214,7 @@ func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
-		class.Logger.Debug(reader)
+		restweb.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			http.Error(w, "post error", 500)

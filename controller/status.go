@@ -4,30 +4,18 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
-
 	"net/http"
+	"restweb"
 	"strconv"
-	"strings"
 )
 
 type StatusController struct {
 	class.Controller
 }
 
-func (sc StatusController) Route(w http.ResponseWriter, r *http.Request) {
+func (sc StatusController) Get(w http.ResponseWriter, r *http.Request) {
 	sc.Init(w, r)
-	action := sc.GetAction(r.URL.Path, 1)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&sc, strings.Title(action), rv)
-}
-
-func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Status List")
+	restweb.Logger.Debug("Status List")
 	args := r.URL.Query()
 	searchUrl := ""
 	qry := make(map[string]string)
@@ -103,10 +91,10 @@ func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Status Code")
+	restweb.Logger.Debug("Status Code")
 
 	args := r.URL.Query()
-	class.Logger.Debug(args.Get("sid"))
+	restweb.Logger.Debug(args.Get("sid"))
 	sid, err := strconv.Atoi(args.Get("sid"))
 	if err != nil {
 		http.Error(w, "args error", 400)
