@@ -8,7 +8,7 @@
 			<p class="news">
 				<span class="flag"></span>
 				<span class="date">{{.Create}}</span>		
-				<br><a href="/news/detail?nid={{.Nid}}">{{.Title}}</a>
+				<br><a href="/news/{{.Nid}}">{{.Title}}</a>
 			</p>
 		{{end}}
 	{{end}}

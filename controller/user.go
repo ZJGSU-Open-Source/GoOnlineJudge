@@ -5,6 +5,8 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
+	"restweb"
+
 	"encoding/json"
 	"net/http"
 	"sort"
@@ -25,12 +27,12 @@ func (uc UserController) Route(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "no such page", 404)
 		}
 	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&uc, strings.Title(action), rv)
+	rv := restweb.GetReflectValue(w, r)
+	restweb.CallMethod(&uc, strings.Title(action), rv)
 }
 
 func (uc *UserController) Signin(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Login")
+	restweb.Logger.Debug("User Login")
 
 	uc.Data["Title"] = "User Sign In"
 	uc.Data["IsUserSignIn"] = true
@@ -39,7 +41,7 @@ func (uc *UserController) Signin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Login")
+	restweb.Logger.Debug("User Login")
 
 	uid := r.FormValue("user[handle]")
 	pwd := r.FormValue("user[password]")
@@ -47,7 +49,7 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	userModel := model.UserModel{}
 	ret, err := userModel.Login(uid, pwd)
 	if err != nil {
-		class.Logger.Debug(err)
+		restweb.Logger.Debug(err)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -59,16 +61,16 @@ func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		uc.SetSession(w, r, "Privilege", strconv.Itoa(ret.Privilege))
 		w.WriteHeader(200)
 
-		class.Logger.Debug(r.RemoteAddr)
+		restweb.Logger.Debug(r.RemoteAddr)
 		//remoteAddr := r.Header.Get("X-Real-IP") // if you set niginx as reverse proxy
-		//class.Logger.Debug(remoteAddr)
+		//restweb.Logger.Debug(remoteAddr)
 		remoteAddr := strings.Split(r.RemoteAddr, ":")[0] // otherwise
 		userModel.RecordIP(uid, remoteAddr, time.Now().Unix())
 	}
 }
 
 func (uc *UserController) Signup(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Sign Up")
+	restweb.Logger.Debug("User Sign Up")
 
 	uc.Data["Title"] = "User Sign Up"
 	uc.Data["IsUserSignUp"] = true
@@ -77,7 +79,7 @@ func (uc *UserController) Signup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Register")
+	restweb.Logger.Debug("User Register")
 
 	var one model.User
 	userModel := model.UserModel{}
@@ -114,7 +116,7 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	if pwd != pwdConfirm {
 		ok, hint["pwdConfirm"] = 0, "Confirmation mismatched."
 	}
-	if one.Mail != "" && class.CheckMail(one.Mail) == false {
+	if one.Mail != "" && restweb.CheckMail(one.Mail) == false {
 		ok, hint["mail"] = 0, "Wrong mail."
 	}
 	if ok == 1 {
@@ -140,14 +142,14 @@ func (uc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Logout(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Logout")
+	restweb.Logger.Debug("User Logout")
 
 	uc.DeleteSession(w, r)
 	w.WriteHeader(200)
 }
 
 func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Detail")
+	restweb.Logger.Debug("User Detail")
 
 	args := r.URL.Query()
 	uid := args.Get("uid")
@@ -177,7 +179,7 @@ func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 		ipo.Time = one.TimeRecord[i]
 		ipo.IP = one.IPRecord[i]
 		ips = append(ips, ipo)
-		class.Logger.Debug(ips[i].IP)
+		restweb.Logger.Debug(ips[i].IP)
 	}
 
 	achieveList := sort.IntSlice(solvedList)
@@ -194,7 +196,7 @@ func (uc *UserController) Detail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Settings")
+	restweb.Logger.Debug("User Settings")
 
 	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
@@ -225,7 +227,7 @@ func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 		ipo.Time = one.TimeRecord[i]
 		ipo.IP = one.IPRecord[i]
 		ips = append(ips, ipo)
-		class.Logger.Debug(ips[i].IP)
+		restweb.Logger.Debug(ips[i].IP)
 	}
 
 	achieveList := sort.IntSlice(solvedList)
@@ -240,7 +242,7 @@ func (uc *UserController) Settings(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Edit(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Edit")
+	restweb.Logger.Debug("User Edit")
 
 	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
@@ -264,7 +266,7 @@ func (uc *UserController) Edit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Update")
+	restweb.Logger.Debug("User Update")
 
 	var one model.User
 	one.Nick = r.FormValue("user[nick]")
@@ -290,7 +292,7 @@ func (uc *UserController) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Password Page")
+	restweb.Logger.Debug("User Password Page")
 
 	if uc.Uid == "" {
 		http.Redirect(w, r, "/user/signin", http.StatusFound)
@@ -305,7 +307,7 @@ func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Password")
+	restweb.Logger.Debug("User Password")
 
 	ok := 1
 	uid := uc.Uid

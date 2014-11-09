@@ -94,7 +94,7 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/problem/submit?pid={{.Pid}}',
+      url:'/problem?pid={{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
@@ -111,7 +111,7 @@
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/status/list';
+        window.location.href = '/status';
       }
     });
   });

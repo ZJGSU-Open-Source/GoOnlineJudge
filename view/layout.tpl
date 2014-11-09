@@ -44,8 +44,8 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                 {{if .IsNews}}<li class="active"><a href="/">Home</a></li>{{else}}<li><a href="/">Home</a></li>{{end}}
-                {{if .IsProblem}}<li class="active"><a href="/problem/list">Problem</a>{{else}}<li><a href="/problem/list">Problem</a></li>{{end}}
-                {{if .IsStatus}}<li class="active"><a href="/status/list">Status</a></li>{{else}}<li><a href="/status/list">Status</a></li>{{end}}
+                {{if .IsProblem}}<li class="active"><a href="/problem">Problem</a>{{else}}<li><a href="/problem">Problem</a></li>{{end}}
+                {{if .IsStatus}}<li class="active"><a href="/status">Status</a></li>{{else}}<li><a href="/status">Status</a></li>{{end}}
                 {{if .IsRanklist}}<li class="active"><a href="/ranklist">Ranklist</a></li>{{else}}<li><a href="/ranklist">Ranklist</a></li>{{end}}
                 {{if .IsContest}}<li class="active"><a href="/contestlist">Contest</a></li>{{else}}<li><a href="/contestlist">Contest</a></li>{{end}}
                 {{if.IsOSC}}<li class="active"><a href="/osc">OSC</a></li>{{else}}<li><a href="/osc">OSC</a></li>{{end}}
