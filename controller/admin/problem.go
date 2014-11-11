@@ -287,7 +287,7 @@ func (pc *ProblemController) Edit(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	one.Time /= 1000 // change ms to s
+	
 	pc.Data["Detail"] = one
 	pc.Data["Title"] = "Admin - Problem Edit"
 	pc.Data["IsProblem"] = true
