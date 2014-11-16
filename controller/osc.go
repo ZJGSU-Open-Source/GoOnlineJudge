@@ -2,7 +2,6 @@ package controller
 
 import (
 	"GoOnlineJudge/class"
-	"net/http"
 	"restweb"
 )
 
@@ -10,11 +9,10 @@ type OSCController struct {
 	class.Controller
 }
 
-func (oc OSCController) Route(w http.ResponseWriter, r *http.Request) {
+func (oc OSCController) Index() {
 	restweb.Logger.Debug("OSC Page")
-	oc.Init(w, r)
 
 	oc.Data["Title"] = "ZJGSU OSC"
 	oc.Data["IsOSC"] = true
-	oc.Execute(w, "view/layout.tpl", "view/osc.tpl")
+	oc.RenderTemplate("view/layout.tpl", "view/osc.tpl")
 }

@@ -20,7 +20,7 @@
     <div class="checker">
       <div class="key">Ratio(Solve/Submit)</div>
       <div class="value">
-        <span>{{ShowRatio .Solve .Submit}}(<a href="/status/list?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status/list?pid={{.Pid}}">{{.Submit}}</a>)</span>
+        <span>{{ShowRatio .Solve .Submit}}(<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)</span>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
     {{end}}
     {{if .Source}}
       <div class="problemIteam">Source:</div>
-      <p><a href="/problem/list?source={{.Source}}">{{.Source}}</a></p>
+      <p><a href="/problems?source={{.Source}}">{{.Source}}</a></p>
     {{end}}
   </div>
   <hr>
@@ -94,12 +94,12 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/problem?pid={{.Pid}}',
+      url:'/problems/{{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
-          window.location.href = '/user/signin';
+          window.location.href = '/sess';
         }else {
           var json = eval('('+XMLHttpRequest.responseText+')');
           if(json.info != null) {

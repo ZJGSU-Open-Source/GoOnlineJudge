@@ -13,12 +13,10 @@ type Controller struct {
 	Privilege int
 }
 
-func (ct *Controller) Init(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	ct.Data = make(map[string]interface{})
+func (ct *Controller) Init() {
+	ct.Response.Header().Set("Content-Type", "text/html")
 
-	session := restweb.SessionManager.StartSession(w, r)
-	ct.Uid = session.Get("Uid")
+	ct.Uid = ct.GetSession("Uid")
 
 	ct.Data["CurrentUser"] = ct.Uid
 	ct.Data["Privilege"] = ct.Privilege
@@ -26,9 +24,9 @@ func (ct *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	if ct.Uid != "" {
 		ct.Data["IsCurrentUser"] = true
 		var err error
-		ct.Privilege, err = strconv.Atoi(session.Get("Privilege"))
+		ct.Privilege, err = strconv.Atoi(ct.GetSession("Privilege"))
 		if err != nil {
-			http.Error(w, "args error", 400)
+			http.Error(ct.Response, "args error", 400)
 			return
 		}
 		if ct.Privilege == config.PrivilegeAD {
@@ -43,11 +41,11 @@ func (ct *Controller) Init(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (ct *Controller) Err400(w http.ResponseWriter, r *http.Request, title string, info string) {
-	restweb.Logger.Info(r.RemoteAddr + " " + ct.Uid)
+func (ct *Controller) Err400(title string, info string) {
+	restweb.Logger.Info(ct.Requset.RemoteAddr + " " + ct.Uid)
 	ct.Data["Title"] = title
 	ct.Data["Info"] = info
-	ct.Execute(w, "view/layout.tpl", "view/400.tpl")
+	ct.RenderTemplate("view/layout.tpl", "view/400.tpl")
 }
 
 func (ct *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {

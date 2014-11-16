@@ -25,22 +25,24 @@ import (
 
 	"restweb"
 
+	"log"
 	"net/http"
 )
 
 func main() {
-	restweb.AddRouter("/", controller.HomeController{})
-	restweb.AddRouter("/news/", controller.NewsController{})
-	restweb.AddRouter("/problem/", controller.ProblemController{})
-	restweb.AddRouter("/status/", controller.StatusController{})
-	restweb.AddRouter("/ranklist/", controller.RanklistController{})
-	restweb.AddRouter("/contestlist", controller.ContestController{})
-	restweb.AddRouter("/user/", controller.UserController{})
-	// class.AddRouter("/contest/", contest.ContestUserContorller{})
-	// class.AddRouter("/admin/", admin.AdminUserController{})
-	restweb.AddRouter("/faq/", controller.FAQController{})
-	restweb.AddRouter("/osc/", controller.OSCController{})
+	restweb.RegisterController(controller.HomeController{})
+	restweb.RegisterController(controller.NewsController{})
+	restweb.RegisterController(controller.ProblemController{})
+	restweb.RegisterController(controller.StatusController{})
+	restweb.RegisterController(controller.RanklistController{})
+	restweb.RegisterController(controller.ContestController{})
+	restweb.RegisterController(controller.UserController{})
+	// class.RegisterController("/contest/", contest.ContestUserContorller{})
+	// class.RegisterController("/admin/", admin.AdminUserController{})
+	restweb.RegisterController(controller.FAQController{})
+	restweb.RegisterController(controller.OSCController{})
+	restweb.RegisterController(controller.SessController{})
 
 	restweb.AddFile("/static/", http.FileServer(http.Dir(".")))
-	restweb.Run()
+	log.Fatal(restweb.Run())
 }

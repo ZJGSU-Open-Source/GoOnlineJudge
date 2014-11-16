@@ -16,25 +16,15 @@ type ProblemController struct {
 	class.Controller
 }
 
-func (p ProblemController) Get(w http.ResponseWriter, r *http.Request) {
-	p.Init(w, r)
-	action := p.GetAction(r.URL.Path, 1)
-	if action == "" {
-		p.List(w, r)
-	} else {
-		p.Detail(w, r)
-	}
-}
-
 // 列出特定数量的问题,URL，/problem/list?pid=<pid>&titile=<titile>&source=<source>&page=<page>
-func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	restweb.Logger.Debug(r.RemoteAddr + "visit Problem List")
+func (pc *ProblemController) List() {
+	restweb.Logger.Debug(pc.Requset.RemoteAddr + "visit Problem List")
 
-	args := r.URL.Query()
+	args := pc.Requset.URL.Query()
 	qry := make(map[string]string)
 	url := "/problem?"
 
-	restweb.Logger.Debug(r.URL.RequestURI())
+	restweb.Logger.Debug(pc.Requset.URL.RequestURI())
 	// Search
 	if v := args.Get("pid"); v != "" { //按pid查找
 		qry["pid"] = v
@@ -75,7 +65,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	count, err := problemModel.Count(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(pc.Response, err.Error(), 500)
 		return
 	}
 
@@ -83,11 +73,11 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	var pageCount = (count-1)/config.ProblemPerPage + 1
 	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
-		http.Error(w, "args error", 400)
+		http.Error(pc.Response, "args error", 400)
 		return
 	}
 	if page > pageCount {
-		http.Error(w, "args error", 400)
+		http.Error(pc.Response, "args error", 400)
 		return
 	}
 
@@ -100,7 +90,7 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 
 	problemList, err := problemModel.List(qry)
 	if err != nil {
-		http.Error(w, "post error", 500)
+		http.Error(pc.Response, "post error", 500)
 		return
 	}
 	restweb.Logger.Debug(len(problemList))
@@ -110,53 +100,51 @@ func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
 	pc.Data["Time"] = restweb.GetTime()
 	pc.Data["Title"] = "Problem List"
 	pc.Data["IsProblem"] = true
-	pc.Execute(w, "view/layout.tpl", "view/problem_list.tpl")
+	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl")
 }
 
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
-func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Detail() {
 	restweb.Logger.Debug("Problem Detail")
 
-	Pid := pc.GetAction(r.URL.Path, 1)
+	Pid := pc.GetAction(pc.Requset.URL.Path, 1)
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		http.Error(pc.Response, "args error", 400)
 		return
 	}
 
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pid)
 	if err != nil {
-		pc.Err400(w, r, "Problem "+Pid, "No such problem")
+		pc.Err400("Problem "+Pid, "No such problem")
 		return
 	}
 	pc.Data["Detail"] = one
 
 	if pc.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
-		pc.Err400(w, r, "Problem "+Pid, "No such problem")
+		pc.Err400("Problem "+Pid, "No such problem")
 		return
 	}
 
 	pc.Data["Privilege"] = pc.Privilege
 	pc.Data["Title"] = "Problem — " + Pid
-	pc.Execute(w, "view/layout.tpl", "view/problem_detail.tpl")
+	pc.RenderTemplate("view/layout.tpl", "view/problem_detail.tpl")
 }
 
 //提交某一问题的solution， URL /problem?pid=<pid>，method POST
-func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
+func (pc *ProblemController) Submit() {
 	restweb.Logger.Debug("Problem Submit")
 
-	pc.Init(w, r)
-
 	if pc.Uid == "" { //要求用户登入
-		http.Error(w, "user login required", 401)
+		http.Error(pc.Response, "user login required", 401)
 		return
 	}
 
-	Pid := pc.GetAction(r.URL.Path, 1)
+	Pid := pc.GetAction(pc.Requset.URL.Path, 1)
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		http.Error(pc.Response, "args error", 400)
 		return
 	}
 
@@ -169,14 +157,14 @@ func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	pro, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(pc.Response, err.Error(), 500)
 		return
 	}
-	code := r.FormValue("code")
+	code := pc.Requset.FormValue("code")
 
 	one.Code = code
-	one.Length = pc.GetCodeLen(len(r.FormValue("code")))
-	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
+	one.Length = pc.GetCodeLen(len(pc.Requset.FormValue("code")))
+	one.Language, _ = strconv.Atoi(pc.Requset.FormValue("compiler_id"))
 
 	hint := make(map[string]string)
 	errflag := true
@@ -190,8 +178,8 @@ func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
 	}
 	if errflag {
 		b, _ := json.Marshal(&hint)
-		w.WriteHeader(400)
-		w.Write(b)
+		pc.Response.WriteHeader(400)
+		pc.Response.Write(b)
 		return
 	}
 
@@ -201,11 +189,11 @@ func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
 	solutionModel := model.SolutionModel{}
 	sid, err := solutionModel.Insert(one)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(pc.Response, err.Error(), 500)
 		return
 	}
 
-	w.WriteHeader(200)
+	pc.Response.WriteHeader(200)
 
 	go func() { //编译运行solution
 		one := make(map[string]interface{})
@@ -217,7 +205,7 @@ func (pc ProblemController) Post(w http.ResponseWriter, r *http.Request) {
 		restweb.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			http.Error(w, "post error", 500)
+			http.Error(pc.Response, "post error", 500)
 		}
 		response.Body.Close()
 	}()

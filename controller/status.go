@@ -13,10 +13,10 @@ type StatusController struct {
 	class.Controller
 }
 
-func (sc StatusController) Get(w http.ResponseWriter, r *http.Request) {
-	sc.Init(w, r)
+func (sc StatusController) List() {
+
 	restweb.Logger.Debug("Status List")
-	args := r.URL.Query()
+	args := sc.Requset.URL.Query()
 	searchUrl := ""
 	qry := make(map[string]string)
 	// Search
@@ -53,18 +53,18 @@ func (sc StatusController) Get(w http.ResponseWriter, r *http.Request) {
 	qry["action"] = "submit"
 	count, err := solutionModel.Count(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(sc.Response, err.Error(), 400)
 		return
 	}
 	var pageCount = (count-1)/config.SolutionPerPage + 1
 
 	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
-		http.Error(w, "args error", 400)
+		http.Error(sc.Response, "args error", 400)
 		return
 	}
 	if page > pageCount {
-		http.Error(w, "args error", 400)
+		http.Error(sc.Response, "args error", 400)
 		return
 	}
 	qry["offset"] = strconv.Itoa((page - 1) * config.SolutionPerPage)
@@ -77,7 +77,7 @@ func (sc StatusController) Get(w http.ResponseWriter, r *http.Request) {
 
 	list, err := solutionModel.List(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(sc.Response, err.Error(), 500)
 		return
 	}
 
@@ -87,24 +87,24 @@ func (sc StatusController) Get(w http.ResponseWriter, r *http.Request) {
 	sc.Data["Privilege"] = sc.Privilege
 	sc.Data["Uid"] = sc.Uid
 
-	sc.Execute(w, "view/layout.tpl", "view/status_list.tpl")
+	sc.RenderTemplate("view/layout.tpl", "view/status_list.tpl")
 }
 
-func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
+func (sc *StatusController) Code() {
 	restweb.Logger.Debug("Status Code")
 
-	args := r.URL.Query()
+	args := sc.Requset.URL.Query()
 	restweb.Logger.Debug(args.Get("sid"))
 	sid, err := strconv.Atoi(args.Get("sid"))
 	if err != nil {
-		http.Error(w, "args error", 400)
+		http.Error(sc.Response, "args error", 400)
 		return
 	}
 
 	solutionModel := model.SolutionModel{}
 	one, err := solutionModel.Detail(sid)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		http.Error(sc.Response, err.Error(), 400)
 		return
 	}
 	if one.Error != "" {
@@ -115,8 +115,8 @@ func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		sc.Data["Solution"] = one
 		sc.Data["Title"] = "View Code"
 		sc.Data["IsCode"] = true
-		sc.Execute(w, "view/layout.tpl", "view/status_code.tpl")
+		sc.RenderTemplate("view/layout.tpl", "view/status_code.tpl")
 	} else {
-		sc.Err400(w, r, "Warning", "You can't see it!")
+		sc.Err400("Warning", "You can't see it!")
 	}
 }
