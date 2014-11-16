@@ -84,7 +84,7 @@
             <tr>
               <!-- <td><span class="icon icon-material-check"></span><span class="icon icon-material-clear" ></span></td> -->
               <td>{{.Pid}}</td>
-              <td><a href="/problem/{{.Pid}}">{{.Title}}</a></td>
+              <td><a href="/problems/{{.Pid}}">{{.Title}}</a></td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)</td>
             </tr>
           {{/*end*/}}
@@ -100,7 +100,7 @@
     var value = $('#search').val();
     var key = $('#option').val();
     value = encodeURIComponent(value);
-    window.location.href = '/problem?'+key+'='+value;
+    window.location.href = '/problems?'+key+'='+value;
   });
   </script>
 {{end}}

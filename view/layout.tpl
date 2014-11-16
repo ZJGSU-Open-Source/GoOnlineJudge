@@ -44,10 +44,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                 {{if .IsNews}}<li class="active"><a href="/">Home</a></li>{{else}}<li><a href="/">Home</a></li>{{end}}
-                {{if .IsProblem}}<li class="active"><a href="/problem">Problem</a>{{else}}<li><a href="/problem">Problem</a></li>{{end}}
+                {{if .IsProblem}}<li class="active"><a href="/problems">Problems</a>{{else}}<li><a href="/problems">Problems</a></li>{{end}}
                 {{if .IsStatus}}<li class="active"><a href="/status">Status</a></li>{{else}}<li><a href="/status">Status</a></li>{{end}}
                 {{if .IsRanklist}}<li class="active"><a href="/ranklist">Ranklist</a></li>{{else}}<li><a href="/ranklist">Ranklist</a></li>{{end}}
-                {{if .IsContest}}<li class="active"><a href="/contestlist">Contest</a></li>{{else}}<li><a href="/contestlist">Contest</a></li>{{end}}
+                {{if .IsContest}}<li class="active"><a href="/contests">Contests</a></li>{{else}}<li><a href="/contests">Contests</a></li>{{end}}
                 {{if.IsOSC}}<li class="active"><a href="/osc">OSC</a></li>{{else}}<li><a href="/osc">OSC</a></li>{{end}}
                 {{if.IsFAQ}}<li class="active"><a href="/faq">FAQ</a></li>{{else}}<li><a href="/faq">FAQ</a></li>{{end}}
                 </ul>
@@ -58,8 +58,8 @@
                   <li><a href="/user/settings" class="icon icon-material-settings">[{{.CurrentUser}}]</a></li>
                   <li><a class="user_signout icon icon-material-chevron-right" href="#">[Sign Out]</a></li>
                 {{else}}
-                  {{if .IsUserSignIn}}{{else}}<li><a class="icon icon-material-account-circle" href="/user/signin">[Sign In]</a></li>{{end}}
-                  {{if .IsUserSignUp}}{{else}}<li><a class="icon icon-material-person-add" href="/user/signup">[Sign Up]</a></li>{{end}}
+                  {{if .IsUserSignIn}}{{else}}<li><a class="icon icon-material-account-circle" href="/sess">[Sign In]</a></li>{{end}}
+                  {{if .IsUserSignUp}}{{else}}<li><a class="icon icon-material-person-add" href="/user/new">[Sign Up]</a></li>{{end}}
                 {{end}}
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -123,14 +123,14 @@
         $('.user_signout').on('click', function(e) {
             e.preventDefault();
             $.ajax({
-              type:'POST',
-              url:'/user/logout',
+              type:'DELETE',
+              url:'/sess',
               data:$(this).serialize(),
               error: function() {
                   alert('Sign Out Failed.');
               },
               success: function() {
-                  window.location.href = '/user/signin';
+                  window.location.href = '/sess';
               }
             });
         });

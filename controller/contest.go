@@ -13,18 +13,17 @@ type ContestController struct {
 	Type string
 }
 
-func (c ContestController) Get(w http.ResponseWriter, r *http.Request) {
+func (c ContestController) Index() {
 	restweb.Logger.Debug("Contest List")
-	c.Init(w, r)
 
-	Type := r.URL.Query().Get("type")
+	Type := c.Requset.URL.Query().Get("type")
 	qry := make(map[string]string)
 	qry["type"] = Type
 
 	CModel := model.ContestModel{}
 	conetestList, err := CModel.List(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(c.Response, err.Error(), 500)
 		return
 	}
 
@@ -33,5 +32,5 @@ func (c ContestController) Get(w http.ResponseWriter, r *http.Request) {
 	c.Data["Title"] = "Contest List"
 	c.Data["IsContest"] = true
 	c.Data["Privilege"] = c.Privilege
-	c.Execute(w, "view/layout.tpl", "view/contest_list.tpl")
+	c.RenderTemplate("view/layout.tpl", "view/contest_list.tpl")
 }
