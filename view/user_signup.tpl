@@ -12,7 +12,7 @@
             <label for="user_handle" class="col-lg-2 control-label">Handle<font color="red">*</font>
 		      	</label>
             <div class="col-lg-10">
-              <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" autofocus required>
+              <input type="text" class="form-control" id="user_handle" name="user[handle]" placeholder="Handle" pattern="\w+" autofocus required>
             </div>
             <div class="col-lg-10">
                   <font  id="user_warning_handle" color="red"></font>

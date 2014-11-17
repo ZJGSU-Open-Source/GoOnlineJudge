@@ -35,10 +35,9 @@ func (nc NewsController) List() {
 	nc.RenderTemplate("view/layout.tpl", "view/news_list.tpl")
 }
 
-func (nc NewsController) Detail() {
+func (nc NewsController) Detail(Nid string) {
 
-	action := nc.GetAction(nc.Requset.URL.Path, 1)
-	nid, err := strconv.Atoi(action) //获取nid
+	nid, err := strconv.Atoi(Nid) //获取nid
 	if err != nil {
 		// http.Error(w, "args error", 400)
 		return
