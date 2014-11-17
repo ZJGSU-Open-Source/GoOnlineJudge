@@ -5,6 +5,8 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
+	"restweb"
+
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,46 +14,34 @@ import (
 )
 
 //竞赛控件
-type ContestController struct {
+type AdminContest struct {
 	Cid           int
 	ContestDetail *model.Contest
 	Index         map[int]int
 	class.Controller
 }
 
-func (cc ContestController) Route(w http.ResponseWriter, r *http.Request) {
-	cc.Init(w, r)
-	action := cc.GetAction(r.URL.Path, 2)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&cc, strings.Title(action), rv)
-}
-
 //列出所有的比赛 url:/admin/contest/list?type=<contest,exercise>
-func (cc *ContestController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest List")
+func (cc *AdminContest) List() {
+	restweb.Logger.Debug("Contest List")
 
 	qry := make(map[string]string)
 	contestModel := model.ContestModel{}
 	contestList, err := contestModel.List(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		cc.Error(err.Error(), 400)
 	}
 
 	cc.Data["Contest"] = contestList
 	cc.Data["Title"] = "Admin - Contest List"
 	cc.Data["IsContest"] = true
 	cc.Data["IsList"] = true
-	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_list.tpl")
+	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
 // 添加比赛页面 url:/admin/contest/add?type=<contest,exercise>
-func (cc *ContestController) Add(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Add")
+func (cc *AdminContest) Add() {
+	restweb.Logger.Debug("Admin Contest Add")
 
 	now := time.Now()
 	cc.Data["StartYear"] = now.Year()
@@ -69,18 +59,15 @@ func (cc *ContestController) Add(w http.ResponseWriter, r *http.Request) {
 	cc.Data["IsContest"] = true
 	cc.Data["IsAdd"] = true
 
-	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_add.tpl")
+	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
 
 // 插入比赛 url:/admin/contest/insert?type=<contest,exercise>
-func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Insert")
-	if r.Method != "POST" {
-		cc.Err400(w, r, "Error", "Error Method to Insert contest")
-		return
-	}
+func (cc *AdminContest) Insert() {
+	restweb.Logger.Debug("Admin Contest Insert")
 
 	one := model.Contest{}
+	r := cc.Requset
 
 	one.Title = r.FormValue("title")
 	year, err := strconv.Atoi(r.FormValue("startTimeYear"))
@@ -100,7 +87,7 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	one.End = end.Unix()
 
 	if start.After(end) {
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
@@ -121,7 +108,7 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 		one.Encrypt = config.EncryptPW
 		one.Argument = r.FormValue("password")
 	default:
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
@@ -133,13 +120,13 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	for _, v := range problemList {
 		pid, err := strconv.Atoi(v)
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			continue
 		}
 		problemModel := model.ProblemModel{}
 		_, err = problemModel.Detail(pid) //检查题目是否存在
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			continue
 		}
 		list = append(list, pid)
@@ -149,23 +136,20 @@ func (cc *ContestController) Insert(w http.ResponseWriter, r *http.Request) {
 	contestModel := model.ContestModel{}
 	err = contestModel.Insert(one)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		cc.Error(err.Error(), 500)
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest/list", http.StatusFound) //重定向到竞赛列表页
+	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
 }
 
 //更改contest状态 url:/admin/contest/status/
-func (cc *ContestController) Status(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Status")
-	if r.Method != "POST" {
-		cc.Err400(w, r, "Error", "Error Method to Change contest status")
-		return
-	}
-	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
+func (cc *AdminContest) Status(Cid string) {
+	restweb.Logger.Debug("Admin Contest Status")
+
+	cid, err := strconv.Atoi(Cid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
@@ -182,43 +166,39 @@ func (cc *ContestController) Status(w http.ResponseWriter, r *http.Request) {
 
 	err = contestModel.Status(cid, status)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		cc.Error(err.Error(), 500)
 		return
 	}
 
-	http.Redirect(w, r, "/admin/contest/list", http.StatusFound) //重定向到竞赛列表页
+	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
 }
 
 //删除竞赛 url:/admin/contest/delete/，method:POST
-func (cc *ContestController) Delete(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Delete")
-	if r.Method != "POST" {
-		cc.Err400(w, r, "Error", "Error Method to Delete contest")
-		return
-	}
+func (cc *AdminContest) Delete(Cid string) {
+	restweb.Logger.Debug("Admin Contest Delete")
 
-	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
+	cid, err := strconv.Atoi(Cid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
 	contestModel := model.ContestModel{}
 	err = contestModel.Delete(cid)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		cc.Error(err.Error(), 400)
 		return
 	}
-	w.WriteHeader(200)
+	cc.Response.WriteHeader(200)
 }
 
 // 竞赛编辑页面，url:/admin/contest/edit/
-func (cc *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Edit")
+func (cc *AdminContest) Edit(Cid string) {
+	restweb.Logger.Debug("Admin Contest Edit")
 
-	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
+	cid, err := strconv.Atoi(Cid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
@@ -242,7 +222,7 @@ func (cc *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	contestModel := model.ContestModel{}
 	one.Contest, err = contestModel.Detail(cid)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		cc.Error(err.Error(), 400)
 		return
 	}
 
@@ -280,23 +260,20 @@ func (cc *ContestController) Edit(w http.ResponseWriter, r *http.Request) {
 	cc.Data["IsContest"] = true
 	cc.Data["IsEdit"] = true
 
-	cc.Execute(w, "view/admin/layout.tpl", "view/admin/contest_edit.tpl")
+	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 }
 
 // 更新竞赛，url:/admin/contest/update/，method:POST
-func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Contest Update")
-	if r.Method != "POST" {
-		cc.Err400(w, r, "Error", "Error Method to Update contest")
-		return
-	}
+func (cc *AdminContest) Update(Cid string) {
+	restweb.Logger.Debug("Admin Contest Update")
 
-	cid, err := strconv.Atoi(r.URL.Query().Get("cid"))
+	cid, err := strconv.Atoi(Cid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
+	r := cc.Requset
 	one := model.Contest{}
 	one.Title = r.FormValue("title")
 	year, _ := strconv.Atoi(r.FormValue("startTimeYear"))
@@ -316,7 +293,7 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	one.End = end.Unix()
 
 	if start.After(end) {
-		http.Error(w, "cc.Query error", 400)
+		cc.Error("cc.Query error", 400)
 		return
 	}
 
@@ -338,10 +315,10 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 		one.Encrypt = config.EncryptPW
 		one.Argument = r.FormValue("password")
 	default:
-		http.Error(w, "args error", 400)
+		cc.Error("args error", 400)
 		return
 	}
-	class.Logger.Debug(one.Argument)
+	restweb.Logger.Debug(one.Argument)
 	problemString := r.FormValue("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
@@ -350,13 +327,13 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	for _, v := range problemList {
 		pid, err := strconv.Atoi(v)
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			continue
 		}
 		problemModel := model.ProblemModel{}
 		_, err = problemModel.Detail(pid) //检查题目是否存在
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			continue
 		}
 		list = append(list, pid)
@@ -366,8 +343,8 @@ func (cc *ContestController) Update(w http.ResponseWriter, r *http.Request) {
 	contestModel := model.ContestModel{}
 	err = contestModel.Update(cid, one)
 	if err != nil {
-		http.Error(w, err.Error(), 400)
+		cc.Error(err.Error(), 400)
 		return
 	}
-	http.Redirect(w, r, "/admin/contest/list", http.StatusFound)
+	cc.Redirect("/admin/contests", http.StatusFound)
 }
