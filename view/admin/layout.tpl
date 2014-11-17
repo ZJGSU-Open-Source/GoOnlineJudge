@@ -25,7 +25,7 @@
             <a href="/user/settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{else}}
-            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/user/signin">[Sign In]</a>{{end}}
+            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/sess">[Sign In]</a>{{end}}
             {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
           {{end}}
         </div>
@@ -35,48 +35,48 @@
         <ul>
           <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
           {{if .IsAdmin}}
-          <li><a href="/admin/news/list">News</a></li>
+          <li><a href="/admin/news">News</a></li>
           {{if .IsNews}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news/list">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news/add">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news/new">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
           {{end}}
-          <li><a href="/admin/problem/list">Problem</a></li>
+          <li><a href="/admin/problems">Problem</a></li>
           {{if .IsProblem}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problem/list">List</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problems">List</a>{{end}}</li>
                 {{if .IsAdmin}}
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problem/add">Add</a>{{end}}</li>
-                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problem/import">Import</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problems/new">Add</a>{{end}}</li>
+                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/import">Import</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}
-                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problem/rejudgepage">Rejudge</a>{{end}}</li>
+                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problems/rejudgepage">Rejudge</a>{{end}}</li>
                 {{end}}
               </ul>
             </div>
           {{end}}
-          <li><a href="/admin/contest/list">Contest</a></li>
+          <li><a href="/admin/contests/">Contest</a></li>
           {{if .IsContest}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contest/list">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contest/add">Add</a>{{end}}</li>
+                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contests/">List</a>{{end}}</li>
+                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contests/new">Add</a>{{end}}</li>
               </ul>
             </div>
           {{end}}
           {{if .IsAdmin }}
-          <li><a href="/admin/user/list">User</a></li>
+          <li><a href="/admin/users">User</a></li>
           {{if .IsUser}}
             <div id="psnavi">
               <ul>
-                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/user/list">Privilege</a>{{end}}</li>
-                <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/user/pagepassword">Password</a>{{end}}</li>
-                <li>{{if .IsGenerate}}<span>Generate</sapn>{{else}}<a href="/admin/user/generate">Generate</a>{{end}}</li>
+                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/users">Privilege</a>{{end}}</li>
+                <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/users/pagepassword">Password</a>{{end}}</li>
+                <li>{{if .IsGenerate}}<span>Generate</sapn>{{else}}<a href="/admin/users/generate">Generate</a>{{end}}</li>
               </ul>
             </div>
             {{end}}
@@ -99,14 +99,14 @@
     $('.user_signout').on('click', function(e) {
       e.preventDefault();
       $.ajax({
-        type:'POST',
-        url:'/user/logout',
+        type:'DELETE',
+        url:'/sess',
         data:$(this).serialize(),
         error: function() {
           alert('Sign Out Failed.');
         },
         success: function() {
-          window.location.href = '/user/signin';
+          window.location.href = '/sess';
         }
       });
     });

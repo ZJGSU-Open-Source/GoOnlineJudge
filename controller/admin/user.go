@@ -5,14 +5,14 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
+	"restweb"
+
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 	"strconv"
-	"strings"
 )
 
 type privilegeUser struct {
@@ -24,37 +24,22 @@ type UserController struct {
 	class.Controller
 }
 
-func (uc UserController) Route(w http.ResponseWriter, r *http.Request) {
-	uc.Init(w, r)
-	if uc.Privilege < config.PrivilegeAD {
-		uc.Err400(w, r, "Admin", "Privilege Error")
-		return
-	}
-	action := uc.GetAction(r.URL.Path, 2)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&uc, strings.Title(action), rv)
-}
-
 //显示具有特殊权限的用户，url:/admin/user/list
-func (uc *UserController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Privilege User List")
+func (uc *UserController) List() {
+	restweb.Logger.Debug("Admin Privilege User List")
 
 	if uc.Privilege != config.PrivilegeAD {
-		class.Logger.Info(r.RemoteAddr + " " + uc.Uid + " try to visit Admin page")
+		restweb.Logger.Info(uc.Uid + " try to visit Admin page")
 		uc.Data["Title"] = "Warning"
 		uc.Data["Info"] = "You are not admin!"
-		uc.Execute(w, "view/layout.tpl", "view/400.tpl")
+		uc.RenderTemplate("view/layout.tpl", "view/400.tpl")
 		return
 	}
+
 	userModel := model.UserModel{}
 	userlist, err := userModel.List(nil)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		uc.Error(err.Error(), 500)
 		return
 	}
 
@@ -62,12 +47,12 @@ func (uc *UserController) List(w http.ResponseWriter, r *http.Request) {
 	uc.Data["Title"] = "Privilege User List"
 	uc.Data["IsUser"] = true
 	uc.Data["IsList"] = true
-	uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_list.tpl")
+	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
 //密码设置页面,url: /admin/user/pagepassword
-func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Password Page")
+func (uc *UserController) Pagepassword() {
+	restweb.Logger.Debug("Admin Password Page")
 
 	uc.Data["Title"] = "Admin Password"
 	uc.Data["IsSettings"] = true
@@ -75,21 +60,16 @@ func (uc *UserController) Pagepassword(w http.ResponseWriter, r *http.Request) {
 	uc.Data["IsUser"] = true
 	uc.Data["IsPwd"] = true
 
-	uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_password.tpl")
+	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
 
 //设置用户密码，url:/admin/user/password, method: POST
-func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Admin Password")
-
-	if r.Method != "POST" {
-		http.Error(w, "err post ", 400)
-		return
-	}
+func (uc *UserController) Password() {
+	restweb.Logger.Debug("Admin Password")
 
 	ok := 1
 	hint := make(map[string]string)
-
+	r := uc.Requset
 	data := make(map[string]string)
 	data["userHandle"] = r.FormValue("user[Handle]")
 	data["newPassword"] = r.FormValue("user[newPassword]")
@@ -105,7 +85,7 @@ func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		if err == model.NotFoundErr {
 			ok, hint["uid"] = 0, "uc handle does not exist!"
 		} else if err != nil {
-			http.Error(w, err.Error(), 400)
+			uc.Error(err.Error(), 400)
 			return
 		}
 
@@ -123,27 +103,23 @@ func (uc *UserController) Password(w http.ResponseWriter, r *http.Request) {
 		userModel := model.UserModel{}
 		err := userModel.Password(uid, pwd)
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			uc.Error(err.Error(), 400)
 			return
 		}
 
-		w.WriteHeader(200)
+		uc.Response.WriteHeader(200)
 	} else {
-		w.WriteHeader(400)
+		uc.Response.WriteHeader(400)
 	}
 	b, _ := json.Marshal(&hint)
-	w.Write(b)
+	uc.Response.Write(b)
 }
 
 // 设置用户权限
-func (uc *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("User Privilege")
+func (uc *UserController) Privilegeset() {
+	restweb.Logger.Debug("User Privilege")
 
-	if r.Method != "POST" {
-		http.Error(w, "err method", 400)
-		return
-	}
-
+	r := uc.Requset
 	args := r.URL.Query()
 	uid := args.Get("uid")
 	privilegeStr := args.Get("type")
@@ -157,7 +133,7 @@ func (uc *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 	case "PU":
 		privilege = config.PrivilegePU
 	default:
-		http.Error(w, "args error", 400)
+		uc.Error("args error", 400)
 	}
 
 	ok := 1
@@ -173,7 +149,7 @@ func (uc *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 		if err == model.NotFoundErr {
 			ok, hint["hint"] = 0, "uc handle does not exist!"
 		} else if err != nil {
-			http.Error(w, err.Error(), 400)
+			uc.Error(err.Error(), 400)
 			return
 		}
 	}
@@ -182,26 +158,27 @@ func (uc *UserController) Privilegeset(w http.ResponseWriter, r *http.Request) {
 		userModel := model.UserModel{}
 		err := userModel.Privilege(uid, privilege)
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			uc.Error(err.Error(), 400)
 			return
 		}
 
-		w.WriteHeader(200)
+		uc.Response.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
 
-		w.WriteHeader(400)
-		w.Write(b)
+		uc.Response.WriteHeader(400)
+		uc.Response.Write(b)
 	}
 }
 
 //Generate 生成指定数量的用户账号，/admin/user/generate
-func (uc *UserController) Generate(w http.ResponseWriter, r *http.Request) {
+func (uc *UserController) Generate() {
+	r := uc.Requset
 	if r.Method == "GET" {
 		uc.Data["Title"] = "Admin User Generate"
 		uc.Data["IsUser"] = true
 		uc.Data["IsGenerate"] = true
-		uc.Execute(w, "view/admin/layout.tpl", "view/admin/user_generate.tpl")
+		uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_generate.tpl")
 
 	} else if r.Method == "POST" {
 		prefix := r.FormValue("prefix")
@@ -226,7 +203,7 @@ func (uc *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 		for i, nxt := 0, 1; i < amount; {
 			uid := prefix + fmt.Sprintf(format, nxt)
 			password := RandPassword()
-			class.Logger.Debug(uid, password)
+			restweb.Logger.Debug(uid, password)
 			one := model.User{}
 			one.Uid = uid
 			one.Pwd = password
@@ -239,10 +216,10 @@ func (uc *UserController) Generate(w http.ResponseWriter, r *http.Request) {
 			nxt++
 		}
 
-		w.Header().Add("ContentType", "application/octet-stream")
-		w.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
-		w.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
-		w.Write([]byte(accountlist))
+		uc.Response.Header().Add("ContentType", "application/octet-stream")
+		uc.Response.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
+		uc.Response.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
+		uc.Response.Write([]byte(accountlist))
 	}
 }
 

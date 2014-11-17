@@ -3,9 +3,10 @@ package admin
 import (
 	"GoOnlineJudge/class"
 
+	"restweb"
+
 	"encoding/json"
 	"io"
-	"net/http"
 	"os"
 )
 
@@ -20,10 +21,10 @@ type image struct {
 }
 
 //Upload support kindeditor upload images,the response must return json eg. like {"err":0,"url":"http:...."}
-func (ic ImageController) Route(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("AdminUpload Image")
-	ic.Init(w, r)
+func (ic ImageController) Route() {
+	restweb.Logger.Debug("AdminUpload Image")
 
+	r := ic.Requset
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["imgFile"]
 
@@ -32,10 +33,10 @@ func (ic ImageController) Route(w http.ResponseWriter, r *http.Request) {
 
 	for _, fheader := range fhs {
 		filename := fheader.Filename
-		class.Logger.Debug(filename)
+		restweb.Logger.Debug(filename)
 		file, err := fheader.Open()
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			errflag++
 			break
 		}
@@ -44,7 +45,7 @@ func (ic ImageController) Route(w http.ResponseWriter, r *http.Request) {
 		path = "static/img/" + filename
 		f, err := os.Create(path)
 		if err != nil {
-			class.Logger.Debug(err)
+			restweb.Logger.Debug(err)
 			errflag++
 			break
 		}
@@ -53,5 +54,5 @@ func (ic ImageController) Route(w http.ResponseWriter, r *http.Request) {
 	}
 	im := &image{Error: errflag, Url: "/" + path}
 	b, _ := json.Marshal(im)
-	w.Write(b)
+	ic.Response.Write(b)
 }

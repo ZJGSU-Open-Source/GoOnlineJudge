@@ -20,8 +20,8 @@ package main
 import (
 	//"GoOnlineJudge/class"
 	"GoOnlineJudge/controller"
-	// "GoOnlineJudge/controller/admin"
-	// "GoOnlineJudge/controller/contest"
+	"GoOnlineJudge/controller/admin"
+	//"GoOnlineJudge/controller/contest"
 
 	"restweb"
 
@@ -37,8 +37,11 @@ func main() {
 	restweb.RegisterController(controller.RanklistController{})
 	restweb.RegisterController(controller.ContestController{})
 	restweb.RegisterController(controller.UserController{})
-	// class.RegisterController("/contest/", contest.ContestUserContorller{})
-	// class.RegisterController("/admin/", admin.AdminUserController{})
+	// restweb.RegisterController(contest.ContestUserContorller{})
+	restweb.RegisterController(admin.AdminHome{})
+	restweb.RegisterController(admin.AdminNews{})
+	restweb.RegisterController(admin.AdminProblem{})
+	restweb.RegisterController(admin.AdminContest{})
 	restweb.RegisterController(controller.FAQController{})
 	restweb.RegisterController(controller.OSCController{})
 	restweb.RegisterController(controller.SessController{})

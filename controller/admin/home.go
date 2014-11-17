@@ -3,17 +3,16 @@ package admin
 import (
 	"GoOnlineJudge/class"
 
-	"net/http"
+	"restweb"
 )
 
-type HomeController struct {
+type AdminHome struct {
 	class.Controller
 }
 
-func (hc HomeController) Home(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug(r.RemoteAddr + "visit Admin Home")
-	hc.Init(w, r)
+func (hc AdminHome) Home() {
+	restweb.Logger.Debug("Admin Home")
 
 	hc.Data["Title"] = "Admin - Home"
-	hc.Execute(w, "view/admin/layout.tpl", "view/admin/home.tpl")
+	hc.RenderTemplate("view/admin/layout.tpl", "view/admin/home.tpl")
 }

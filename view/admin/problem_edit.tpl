@@ -1,7 +1,7 @@
 {{define "content"}}
 <h1>Admin - Problem Edit</h1>
 {{with .Detail}}
-<form accept-charset="UTF-8" class="new_problem" id="new_problem" method="post" action="/admin/problem/update?pid={{.Pid}}">
+<form accept-charset="UTF-8" class="new_problem" id="new_problem" method="post" action="/admin/problems/{{.Pid}}">
     <div style="margin:0;padding:0;display:inline">
       <input name="utf8" type="hidden" value="✓">
     </div>

@@ -73,13 +73,13 @@
       {{range .}} 
         <tr>
           <td>{{.Pid}}</td>
-          <td><a href="/admin/problem/detail?pid={{.Pid}}">{{.Title}}</a></td>
+          <td><a href="/problems/{{.Pid}}">{{.Title}}</a></td>
           {{if $isAdmin}}
           <td><a class="problem_status" href="#" data-id="{{.Pid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
           <td><a class="problem_delete" href="#" data-id="{{.Pid}}">[Delete]</a></td>
           <td><a class="problem_edit" href="#" data-id="{{.Pid}}">[Edit]</a></td>
           {{end}}
-          <td><a class="test_data" href="/admin/testdata/list?pid={{.Pid}}">[Test Data]</a></td>
+          <td><a class="test_data" href="/admin/testdata/{{.Pid}}">[Test Data]</a></td>
         </tr>
       {{end}}  
     {{end}}
@@ -90,7 +90,7 @@ $('.problem_status').on('click', function() {
   var pid = $(this).data('id');
   $.ajax({
     type:'POST',
-    url:'/admin/problem/status?pid='+pid,
+    url:'/admin/problems/'+pid+'/status',
     data:$(this).serialize(),
     error: function(){
       alert('failed!');
@@ -105,8 +105,8 @@ $('.problem_delete').on('click', function() {
   if (ret == true) {
     var pid = $(this).data('id');
     $.ajax({
-      type:'POST',
-      url:'/admin/problem/delete?pid='+pid,
+      type:'DELETE',
+      url:'/admin/problems/'+pid,
       data:$(this).serialize(),
       error: function() {
         alert('failed!');
@@ -119,7 +119,7 @@ $('.problem_delete').on('click', function() {
 });
 $('.problem_edit').on('click', function() {
   var pid = $(this).data('id');
-  window.location.href = '/admin/problem/edit?pid='+pid;
+  window.location.href = '/admin/problems/'+pid;
 });
 </script>
 {{end}}
