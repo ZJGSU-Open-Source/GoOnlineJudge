@@ -86,10 +86,9 @@ func (uc *UserController) Register() {
 	}
 }
 
-func (uc *UserController) Detail() {
-	restweb.Logger.Debug("User Detail")
+func (uc *UserController) Detail(uid string) {
+	restweb.Logger.Debug("User Detail", uid)
 
-	uid := uc.GetAction(uc.Requset.URL.Path, 1)
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uid)
 	if err != nil {

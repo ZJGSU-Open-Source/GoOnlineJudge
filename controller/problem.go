@@ -24,7 +24,6 @@ func (pc *ProblemController) List() {
 	qry := make(map[string]string)
 	url := "/problems?"
 
-	restweb.Logger.Debug(pc.Requset.URL.RequestURI())
 	// Search
 	if v := args.Get("pid"); v != "" { //按pid查找
 		qry["pid"] = v
@@ -32,7 +31,6 @@ func (pc *ProblemController) List() {
 		pc.Data["SearchPid"] = true
 		pc.Data["SearchValue"] = v
 	} else if v := args.Get("title"); v != "" { //按问题标题查找
-		restweb.Logger.Debug(v)
 		url += "title=" + v + "&"
 		pc.Data["SearchTitle"] = true
 		pc.Data["SearchValue"] = v
@@ -41,7 +39,6 @@ func (pc *ProblemController) List() {
 		}
 		qry["title"] = v
 	} else if v := args.Get("source"); v != "" { //按问题来源查找
-		restweb.Logger.Debug(v)
 		url += "source=" + v + "&"
 		pc.Data["SearchSource"] = true
 		pc.Data["SearchValue"] = v
@@ -104,10 +101,9 @@ func (pc *ProblemController) List() {
 }
 
 //列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
-func (pc *ProblemController) Detail() {
+func (pc *ProblemController) Detail(Pid string) {
 	restweb.Logger.Debug("Problem Detail")
 
-	Pid := pc.GetAction(pc.Requset.URL.Path, 1)
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
 		http.Error(pc.Response, "args error", 400)
@@ -133,7 +129,7 @@ func (pc *ProblemController) Detail() {
 }
 
 //提交某一问题的solution， URL /problem?pid=<pid>，method POST
-func (pc *ProblemController) Submit() {
+func (pc *ProblemController) Submit(Pid string) {
 	restweb.Logger.Debug("Problem Submit")
 
 	if pc.Uid == "" { //要求用户登入
@@ -141,7 +137,6 @@ func (pc *ProblemController) Submit() {
 		return
 	}
 
-	Pid := pc.GetAction(pc.Requset.URL.Path, 1)
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
 		http.Error(pc.Response, "args error", 400)
