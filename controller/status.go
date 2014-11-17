@@ -40,7 +40,7 @@ func (sc StatusController) List() {
 		sc.Data["SearchLanguage"+v] = v
 		qry["language"] = v
 	}
-	sc.Data["URL"] = "/status/list?" + searchUrl
+	sc.Data["URL"] = "/status?" + searchUrl
 
 	// Page
 	qry["page"] = args.Get("page")

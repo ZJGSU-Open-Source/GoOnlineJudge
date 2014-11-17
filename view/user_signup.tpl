@@ -99,7 +99,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user/register',
+			url:'/user',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
@@ -129,7 +129,7 @@
 				}				
 			},
 			success: function() {
-				window.location.href = '/';
+				window.location.href = '/sess';
 			}
 		});
 	});

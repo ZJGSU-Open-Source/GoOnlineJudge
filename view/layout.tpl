@@ -93,12 +93,12 @@
         {{if .IsSettings}}
         <div class="pinned note" >
         <div class="icon icon-material-add-circle" style="float:right"></div>
-          {{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/detail?uid={{.CurrentUser}}">Detail</a>{{end}}
+          {{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/{{.CurrentUser}}">Detail</a>{{end}}
 
           <br/>
-          {{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/edit">Edit Info</a>{{end}}
+          {{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/profile">Edit Info</a>{{end}}
           <br/>
-          {{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/user/pagepassword">Password</a>{{end}}
+          {{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/account">Password</a>{{end}}
         </div>
         {{end}}
       {{end}}
