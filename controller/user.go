@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"sort"
-	"strconv"
 )
 
 type UserController struct {
@@ -79,8 +78,6 @@ func (uc *UserController) Register() {
 			return
 		}
 
-		uc.SetSession("Uid", uid)
-		uc.SetSession("Privilege", strconv.Itoa(config.PrivilegePU))
 		uc.Response.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
@@ -139,7 +136,7 @@ func (uc *UserController) Settings() {
 	restweb.Logger.Debug("User Settings")
 
 	if uc.Uid == "" {
-		uc.Redirect("/user/signin", http.StatusFound)
+		uc.Redirect("/sess", http.StatusFound)
 	}
 
 	userModel := model.UserModel{}
@@ -185,7 +182,7 @@ func (uc *UserController) Edit() {
 	restweb.Logger.Debug("User Edit")
 
 	if uc.Uid == "" {
-		uc.Redirect("/user/signin", http.StatusFound)
+		uc.Redirect("/sess", http.StatusFound)
 		return
 	}
 
@@ -235,7 +232,7 @@ func (uc *UserController) Pagepassword() {
 	restweb.Logger.Debug("User Password Page")
 
 	if uc.Uid == "" {
-		uc.Redirect("/user/signin", http.StatusFound)
+		uc.Redirect("/sess", http.StatusFound)
 		return
 	}
 

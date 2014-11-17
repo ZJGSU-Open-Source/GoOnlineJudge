@@ -46,7 +46,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user/password',
+			url:'/account',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
@@ -72,7 +72,7 @@
 			success: function(response) {
 				var json = eval('('+response+')');
 				alert("Success");
-				window.location.href = '/user/detail?uid='+json.uid;
+				window.location.href = '/user/'+json.uid;
 			}
 		});
 	});

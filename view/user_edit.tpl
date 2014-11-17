@@ -58,7 +58,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user/update',
+			url:'/user/profile',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');	
@@ -67,7 +67,7 @@
 				} 		
 			},
 			success: function(result) {
-				window.location.href = '/user/detail?uid='+{{.CurrentUser}};
+				window.location.href = '/user/'+{{.CurrentUser}};
 			}
 		});
 	});

@@ -22,7 +22,7 @@ func (pc *ProblemController) List() {
 
 	args := pc.Requset.URL.Query()
 	qry := make(map[string]string)
-	url := "/problem?"
+	url := "/problems?"
 
 	restweb.Logger.Debug(pc.Requset.URL.RequestURI())
 	// Search
