@@ -33,7 +33,7 @@
         </div>
         <div id="navibar" class="span-3">
         <ul>
-          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/">Home</a>{{end}}</li>
+          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/admin">Home</a>{{end}}</li>
           {{if .IsAdmin}}
           <li><a href="/admin/news">News</a></li>
           {{if .IsNews}}
@@ -52,10 +52,10 @@
                 <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problems">List</a>{{end}}</li>
                 {{if .IsAdmin}}
                 <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problems/new">Add</a>{{end}}</li>
-                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/import">Import</a>{{end}}</li>
+                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/importor">Import</a>{{end}}</li>
                 {{end}}
                 {{if .RejudgePrivilege}}
-                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/problems/rejudgepage">Rejudge</a>{{end}}</li>
+                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/rejudger">Rejudge</a>{{end}}</li>
                 {{end}}
               </ul>
             </div>

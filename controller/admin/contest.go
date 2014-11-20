@@ -192,7 +192,7 @@ func (cc *AdminContest) Delete(Cid string) {
 	cc.Response.WriteHeader(200)
 }
 
-// 竞赛编辑页面，url:/admin/contest/edit/
+// 竞赛编辑页面，url:/admin/contests/
 func (cc *AdminContest) Edit(Cid string) {
 	restweb.Logger.Debug("Admin Contest Edit")
 
