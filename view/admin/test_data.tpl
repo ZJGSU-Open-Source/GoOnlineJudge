@@ -20,14 +20,14 @@
       {{if $isAdmin}}
       <td><a class="testdata_delete" href="#" data-type="{{.}}">[Delete]</a></td>
       {{end}}
-      <td><a href="/admin/testdata/download?pid={{$Pid}}&type={{.}}">[Download] </a></td>
+      <td><a href="/admin/testdata/{{$Pid}}/file?type={{.}}">[Download] </a></td>
     </tr>
     {{end}}
     {{end}}     
   </tbody>
 </table>
 {{if $isAdmin}}
-<form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata/upload?pid={{.Pid}}">
+<form name="uploadfiles" enctype="multipart/form-data" method="post" action="/admin/testdata/{{.Pid}}">
 <div class="actions">
 <label><input type="file" multiple="" size="80" name="testfiles" style="background-color:white;color:black" />
 <input name="commit" type="submit" value="upload" /> </label>
@@ -43,8 +43,8 @@ $('.testdata_delete').on('click', function() {
    if (ret == true) {
                var pid = {{.Pid}}
                $.ajax({
-                type: 'POST',
-                url: '/admin/testdata/delete?pid=' + pid + '&type=' + type,
+                type: 'DELETE',
+                url: '/admin/testdata/' + pid + '?type=' + type,
                 data:$(this).serialize(),
                 error: function() {
                     alert('failed!');

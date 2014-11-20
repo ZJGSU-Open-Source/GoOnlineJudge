@@ -49,7 +49,12 @@
       },
       success: function() {
         $('#signin_failed').css('display', 'none');
-        window.location = document.referrer;
+
+        if (document.referrer != ""){
+          window.location = document.referrer;
+        }else{
+          window.location = "/";
+        }
       }
     });
   });

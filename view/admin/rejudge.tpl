@@ -20,7 +20,7 @@ $('#search_form').submit( function(e) {
 	var type = $('#type').val();
 	$.ajax({
 		type:'POST',
-		url:'/admin/problem/rejudge?type='+type+'&id='+id,
+		url:'/admin/rejudger?type='+type+'&id='+id,
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');

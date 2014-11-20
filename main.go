@@ -18,7 +18,7 @@
 package main
 
 import (
-	//"GoOnlineJudge/class"
+	"GoOnlineJudge/config"
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	//"GoOnlineJudge/controller/contest"
@@ -27,6 +27,7 @@ import (
 
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func main() {
@@ -37,15 +38,58 @@ func main() {
 	restweb.RegisterController(controller.RanklistController{})
 	restweb.RegisterController(controller.ContestController{})
 	restweb.RegisterController(controller.UserController{})
+	restweb.RegisterController(controller.FAQController{})
+	restweb.RegisterController(controller.OSCController{})
+	restweb.RegisterController(controller.SessController{})
 	// restweb.RegisterController(contest.ContestUserContorller{})
 	restweb.RegisterController(admin.AdminHome{})
 	restweb.RegisterController(admin.AdminNews{})
 	restweb.RegisterController(admin.AdminProblem{})
 	restweb.RegisterController(admin.AdminContest{})
-	restweb.RegisterController(controller.FAQController{})
-	restweb.RegisterController(controller.OSCController{})
-	restweb.RegisterController(controller.SessController{})
+	restweb.RegisterController(admin.AdminRejudge{})
+	restweb.RegisterController(admin.AdminTestdata{})
+
+	restweb.RegisterFilters(restweb.ANY, "/admin", restweb.Before, requireAdmin)
+	restweb.RegisterFilters(restweb.POST, `^/problems/\d+`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.ANY, `^/account`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.GET, "/user/(settings|profile)", restweb.Before, requireLogin)
+	// restweb.RegisterFilters(restweb.GET, "/user/profile", restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.POST, `/user/(\w+)`, restweb.Before, requireLogin)
 
 	restweb.AddFile("/static/", http.FileServer(http.Dir(".")))
 	log.Fatal(restweb.Run())
+}
+
+func requireAdmin(ctx *restweb.Context) bool {
+	uid := ctx.GetSession("Uid")
+	if uid == "" {
+		ctx.Redirect("/sess", http.StatusFound)
+		return true
+	}
+
+	prv := ctx.GetSession("Privilege")
+	prt, err := strconv.Atoi(prv)
+	if err != nil {
+		ctx.Error("Error occured", http.StatusForbidden)
+		return true
+	}
+	restweb.Logger.Debug(prt)
+	if prt < config.PrivilegeTC {
+		ctx.Error("No privilege", http.StatusForbidden)
+		return true
+	}
+	return false
+}
+
+func requireLogin(ctx *restweb.Context) bool {
+	uid := ctx.GetSession("Uid")
+	if uid == "" {
+		if ctx.Requset.Method == restweb.GET {
+			ctx.Redirect("/sess", http.StatusFound)
+		} else {
+			ctx.Response.WriteHeader(http.StatusUnauthorized)
+		}
+		return true
+	}
+	return false
 }

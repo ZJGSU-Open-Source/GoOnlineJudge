@@ -13,12 +13,12 @@ import (
 	"strconv"
 )
 
-type TestdataController struct {
+type AdminTestdata struct {
 	class.Controller
 }
 
 // List 列出对应题目的test data，method：GET
-func (tc *TestdataController) List(pid string) {
+func (tc *AdminTestdata) List(pid string) {
 	restweb.Logger.Debug("Admin testdata list")
 
 	file := []string{}
@@ -47,7 +47,7 @@ func (tc *TestdataController) List(pid string) {
 }
 
 // 上传测试数据,URL /admin/testdata/upload?pid=<pid>，method：POST
-func (tc *TestdataController) Upload(pid string) {
+func (tc *AdminTestdata) Upload(pid string) {
 	restweb.Logger.Debug("Admin Upload files")
 
 	if tc.Privilege != config.PrivilegeAD {
@@ -79,12 +79,12 @@ func (tc *TestdataController) Upload(pid string) {
 }
 
 // Download 下载测试数据,URL:/admin/testdata/download?type=<type>，method:POST
-func (tc *TestdataController) Download() {
+func (tc *AdminTestdata) Download(pid string) {
 	restweb.Logger.Debug("Admin Download files")
 
 	args := tc.Requset.URL.Query()
 	filename := args.Get("type")
-	file, err := os.Open(config.Datapath + args.Get("pid") + "/" + filename)
+	file, err := os.Open(config.Datapath + pid + "/" + filename)
 	if err != nil {
 		restweb.Logger.Debug(err)
 		return
@@ -98,7 +98,7 @@ func (tc *TestdataController) Download() {
 }
 
 // Delete 删除指定testdata，URL:/admin/testdata/delete?type=<type>
-func (tc *TestdataController) Delete(pid string) {
+func (tc *AdminTestdata) Delete(pid string) {
 	restweb.Logger.Debug("Admin TestData Delete")
 
 	if tc.Privilege != config.PrivilegeAD {
@@ -114,5 +114,5 @@ func (tc *TestdataController) Delete(pid string) {
 	if err != nil {
 		restweb.Logger.Debug(err)
 	}
-	tc.Redirect("/admin/testdata/"+pid, http.StatusFound)
+	tc.Response.WriteHeader(200)
 }

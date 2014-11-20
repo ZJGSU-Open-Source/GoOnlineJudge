@@ -7,7 +7,6 @@ import (
 
 	"restweb"
 
-	"encoding/json"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -16,7 +15,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type AdminProblem struct {
@@ -332,203 +330,94 @@ func (pc *AdminProblem) Update(Pid string) {
 	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
 }
 
-func (pc *AdminProblem) Rejudgepage() {
-	restweb.Logger.Debug("Rejudge Page")
-
-	if pc.Privilege < config.PrivilegeTC {
-		pc.Err400("Warning", "Error Privilege to Rejudge problem")
-		return
-	}
-
-	pc.Data["Title"] = "Problem Rejudge"
-	pc.Data["RejudgePrivilege"] = true
+func (pc *AdminProblem) ImportPage() {
+	pc.Data["Title"] = "Problem Import"
 	pc.Data["IsProblem"] = true
-	pc.Data["IsRejudge"] = true
-
-	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_rejudge.tpl")
-}
-
-func (pc *AdminProblem) Rejudge() {
-	restweb.Logger.Debug("Problem Rejudge")
-
-	if pc.Privilege < config.PrivilegeTC {
-		pc.Err400("Warning", "Error Privilege to Rejudge problem")
-		return
-	}
-
-	args := pc.Requset.URL.Query()
-	types := args.Get("type")
-	id, err := strconv.Atoi(args.Get("id"))
-	if err != nil {
-		pc.Error("args error", 400)
-		return
-	}
-
-	hint := make(map[string]string)
-	one := make(map[string]interface{})
-
-	if types == "Pid" {
-		pid := id
-		proModel := model.ProblemModel{}
-		pro, err := proModel.Detail(pid)
-		if err != nil {
-			restweb.Logger.Debug(err)
-			hint["info"] = "Problem does not exist!"
-
-			b, _ := json.Marshal(&hint)
-			pc.Response.WriteHeader(400)
-			pc.Response.Write(b)
-
-			return
-		}
-		qry := make(map[string]string)
-		qry["pid"] = strconv.Itoa(pro.Pid)
-
-		solutionModel := model.SolutionModel{}
-		list, err := solutionModel.List(qry)
-
-		for i := range list {
-			sid := list[i].Sid
-			time.Sleep(1 * time.Second)
-			one["Sid"] = sid
-			one["Time"] = pro.Time
-			one["Memory"] = pro.Memory
-			one["Rejudge"] = true
-			reader, _ := pc.PostReader(&one)
-			response, err := http.Post(config.JudgeHost, "application/json", reader)
-			if err != nil {
-				// http.Error(w, "post error", 500)
-				restweb.Logger.Debug(err)
-			} else {
-				response.Body.Close()
-			}
-		}
-	} else if types == "Sid" {
-		sid := id
-
-		solutionModel := model.SolutionModel{}
-		sol, err := solutionModel.Detail(sid)
-		if err != nil {
-			restweb.Logger.Debug(err)
-
-			hint["info"] = "Solution does not exist!"
-			b, _ := json.Marshal(&hint)
-			pc.Response.WriteHeader(400)
-			pc.Response.Write(b)
-			return
-		}
-
-		problemModel := model.ProblemModel{}
-		pro, err := problemModel.Detail(sol.Pid)
-		if err != nil {
-			pc.Error(err.Error(), 500)
-			return
-		}
-		one["Sid"] = sid
-		one["Time"] = pro.Time
-		one["Memory"] = pro.Memory
-		one["Rejudge"] = true
-		reader, _ := pc.PostReader(&one)
-		restweb.Logger.Debug(reader)
-		response, err := http.Post(config.JudgeHost, "application/json", reader)
-		if err != nil {
-			pc.Error("post error", 500)
-			return
-		}
-		defer response.Body.Close()
-	}
-	pc.Response.WriteHeader(200)
+	pc.Data["IsImport"] = true
+	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_import.tpl")
 }
 
 func (pc *AdminProblem) Import() {
-	r := pc.Requset
-	if r.Method == "GET" {
-		pc.Data["Title"] = "Problem Import"
-		pc.Data["IsProblem"] = true
-		pc.Data["IsImport"] = true
-		pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_import.tpl")
-	} else if r.Method == "POST" {
-		pc.Requset.ParseMultipartForm(32 << 20)
-		fhs := pc.Requset.MultipartForm.File["fps.xml"]
-		file, err := fhs[0].Open()
-		if err != nil {
-			restweb.Logger.Debug(err)
-			return
-		}
-		defer file.Close()
-
-		content, err := ioutil.ReadAll(file)
-		if err != nil {
-			restweb.Logger.Debug(err)
-			return
-		}
-		contentStr := string(content)
-
-		problem := model.Problem{}
-		protype := reflect.TypeOf(problem)
-		proValue := reflect.ValueOf(&problem).Elem()
-		restweb.Logger.Debug(protype.NumField())
-		for i, lenth := 0, protype.NumField(); i < lenth; i++ {
-			tag := protype.Field(i).Tag.Get("xml")
-			restweb.Logger.Debug(i, tag)
-			if tag == "" {
-				continue
-			}
-			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
-			tagRx := regexp.MustCompile(matchStr)
-			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
-			restweb.Logger.Debug(tag)
-			if len(tagString) > 0 {
-				switch tag {
-				case "time_limit", "memory_limit":
-					limit, err := strconv.Atoi(tagString[0][1])
-					if err != nil {
-						restweb.Logger.Debug(err)
-						limit = 1
-					}
-					proValue.Field(i).Set(reflect.ValueOf(limit))
-				case "description", "input", "output":
-					proValue.Field(i).SetString(tagString[0][1])
-				default:
-					proValue.Field(i).SetString(tagString[0][1])
-				}
-			}
-		}
-		proModel := model.ProblemModel{}
-		pid, err := proModel.Insert(problem)
-		if err != nil {
-			restweb.Logger.Debug(err)
-		}
-
-		// 建立测试数据文件
-		createfile(config.Datapath+strconv.Itoa(pid), "sample.in", problem.In)
-		createfile(config.Datapath+strconv.Itoa(pid), "sample.out", problem.Out)
-
-		flag, flagJ := true, -1
-		for _, tag := range []string{"test_input", "test_output"} {
-			// restweb.Logger.Debug(tag)
-			matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
-			tagRx := regexp.MustCompile(matchStr)
-			tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
-			// restweb.Logger.Debug(tagString)
-			if flag {
-				flag = false
-				caselenth := 0
-				for matchLen, j := len(tagString), 0; j < matchLen; j++ {
-					if len(tagString[j][1]) > caselenth {
-						caselenth = len(tagString[j][1])
-						flagJ = j
-					}
-				}
-			}
-			if flagJ >= 0 && flagJ < len(tagString) {
-				// restweb.Logger.Debug(tagString[flagJ][1])
-				filename := strings.Replace(tag, "_", ".", 1)
-				filename = strings.Replace(filename, "put", "", -1)
-				createfile(config.Datapath+strconv.Itoa(pid), filename, tagString[flagJ][1])
-			}
-		}
-
-		pc.Redirect("/admin/problems", http.StatusFound)
+	pc.Requset.ParseMultipartForm(32 << 20)
+	fhs := pc.Requset.MultipartForm.File["fps.xml"]
+	file, err := fhs[0].Open()
+	if err != nil {
+		restweb.Logger.Debug(err)
+		return
 	}
+	defer file.Close()
+
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		restweb.Logger.Debug(err)
+		return
+	}
+	contentStr := string(content)
+
+	problem := model.Problem{}
+	protype := reflect.TypeOf(problem)
+	proValue := reflect.ValueOf(&problem).Elem()
+	restweb.Logger.Debug(protype.NumField())
+	for i, lenth := 0, protype.NumField(); i < lenth; i++ {
+		tag := protype.Field(i).Tag.Get("xml")
+		restweb.Logger.Debug(i, tag)
+		if tag == "" {
+			continue
+		}
+		matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
+		tagRx := regexp.MustCompile(matchStr)
+		tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
+		restweb.Logger.Debug(tag)
+		if len(tagString) > 0 {
+			switch tag {
+			case "time_limit", "memory_limit":
+				limit, err := strconv.Atoi(tagString[0][1])
+				if err != nil {
+					restweb.Logger.Debug(err)
+					limit = 1
+				}
+				proValue.Field(i).Set(reflect.ValueOf(limit))
+			case "description", "input", "output":
+				proValue.Field(i).SetString(tagString[0][1])
+			default:
+				proValue.Field(i).SetString(tagString[0][1])
+			}
+		}
+	}
+	proModel := model.ProblemModel{}
+	pid, err := proModel.Insert(problem)
+	if err != nil {
+		restweb.Logger.Debug(err)
+	}
+
+	// 建立测试数据文件
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", problem.In)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", problem.Out)
+
+	flag, flagJ := true, -1
+	for _, tag := range []string{"test_input", "test_output"} {
+		// restweb.Logger.Debug(tag)
+		matchStr := "<" + tag + `><!\[CDATA\[(?ms:(.*?))\]\]></` + tag + ">"
+		tagRx := regexp.MustCompile(matchStr)
+		tagString := tagRx.FindAllStringSubmatch(contentStr, -1)
+		// restweb.Logger.Debug(tagString)
+		if flag {
+			flag = false
+			caselenth := 0
+			for matchLen, j := len(tagString), 0; j < matchLen; j++ {
+				if len(tagString[j][1]) > caselenth {
+					caselenth = len(tagString[j][1])
+					flagJ = j
+				}
+			}
+		}
+		if flagJ >= 0 && flagJ < len(tagString) {
+			// restweb.Logger.Debug(tagString[flagJ][1])
+			filename := strings.Replace(tag, "_", ".", 1)
+			filename = strings.Replace(filename, "put", "", -1)
+			createfile(config.Datapath+strconv.Itoa(pid), filename, tagString[flagJ][1])
+		}
+	}
+
+	pc.Redirect("/admin/problems", http.StatusFound)
 }
