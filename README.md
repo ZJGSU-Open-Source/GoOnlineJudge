@@ -35,6 +35,7 @@ Then you can download our source code.
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
 git clone https://github.com/sakeven/golog.git $GOPATH/src/golog
+git clone https://github.com/sakeven/restweb.git
 ```
 Those source codes file should be in your $GOPATH/src. 
 ```bash
