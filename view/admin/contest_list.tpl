@@ -44,7 +44,7 @@ $('.contest_delete').on('click', function() {
   if (ret == true) {
     var cid = $(this).data('id');
     $.ajax({
-      type:'POST',
+      type:'DELETE',
       url:'/admin/contests/'+cid,
       data:$(this).serialize(),
       error: function() {

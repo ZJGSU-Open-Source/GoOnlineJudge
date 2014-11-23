@@ -5,7 +5,7 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
-	"net/http"
+	"restweb"
 	"strconv"
 )
 
@@ -16,14 +16,12 @@ type Contest struct {
 	class.Controller
 }
 
-func (c *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
-	c.Init(w, r)
+func (c *Contest) InitContest(Cid string) {
+	c.Init()
 
-	args := r.URL.Query()
-
-	cid, err := strconv.Atoi(args.Get("cid"))
+	cid, err := strconv.Atoi(Cid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		c.Error(err.Error(), 400)
 		return
 	}
 	c.Cid = cid
@@ -31,7 +29,7 @@ func (c *Contest) InitContest(w http.ResponseWriter, r *http.Request) {
 	contestModel := model.ContestModel{}
 	c.ContestDetail, err = contestModel.Detail(cid)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		c.Error(err.Error(), 500)
 		return
 	}
 
@@ -58,4 +56,46 @@ func (c *Contest) GetCount(qry map[string]string) (int, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (c *Contest) Detail(Cid string) {
+	restweb.Logger.Debug("Contest Problem List")
+
+	c.InitContest(Cid)
+	list := make([]*model.Problem, len(c.ContestDetail.List))
+	idx := 0
+	for _, v := range c.ContestDetail.List {
+		problemModel := model.ProblemModel{}
+		one, err := problemModel.Detail(v)
+		if err != nil {
+			restweb.Logger.Debug(err)
+			continue
+		}
+		one.Pid = idx
+		qry := make(map[string]string)
+		qry["pid"] = strconv.Itoa(v)
+		qry["module"] = strconv.Itoa(config.ModuleC)
+		qry["action"] = "accept"
+		one.Solve, err = c.GetCount(qry)
+		if err != nil {
+			restweb.Logger.Debug(err)
+			continue
+		}
+		qry["action"] = "submit"
+		one.Submit, err = c.GetCount(qry)
+		if err != nil {
+			restweb.Logger.Debug(err)
+			continue
+		}
+
+		list[idx] = one
+		idx++
+	}
+
+	c.Data["Problem"] = list
+	c.Data["IsContestProblem"] = true
+	c.Data["Start"] = c.ContestDetail.Start
+	c.Data["End"] = c.ContestDetail.End
+
+	c.RenderTemplate("view/layout.tpl", "view/contest/problem_list.tpl")
 }

@@ -74,19 +74,11 @@
       {{if .IsContestDetail}}
       <div class="pinned note" >
           <div class="icon icon-material-add-circle" style="float:right"></div>
-          {{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>
+          {{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contests/{{.Cid}}">Problem</a>
           {{end}}
           <br/>
-          {{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}
-          {{if .IsContestRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}
-      </div>
-      {{end}}
-      {{if .IsExerciseDetail}}
-      <div class="pinned note" >
-          <div class="icon icon-material-add-circle" style="float:right"></div>
-          {{if .IsExerciseProblem}}<span>Problem</sapn>{{else}}<a href="/contest/problem/list?cid={{.Cid}}">Problem</a>{{end}}
-          {{if .IsExerciseStatus}}<span>Status</sapn>{{else}}<a href="/contest/status/list?cid={{.Cid}}">Status</a>{{end}}
-          {{if .IsExerciseRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contest/ranklist?cid={{.Cid}}">Ranklist</a>{{end}}
+          {{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contests/{{.Cid}}/status">Status</a>{{end}}
+          {{if .IsContestRanklist}}<span>Ranklist</sapn>{{else}}<a href="/contests/{{.Cid}}/ranklist">Ranklist</a>{{end}}
       </div>
       {{end}}
       {{if .IsCurrentUser}}

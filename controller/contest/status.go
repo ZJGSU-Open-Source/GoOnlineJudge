@@ -1,44 +1,32 @@
 package contest
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
-	"net/http"
+	"restweb"
+
 	"strconv"
-	"strings"
 )
 
-type StatusController struct {
+type ContestStatus struct {
 	Contest
 }
 
-func (sc StatusController) Route(w http.ResponseWriter, r *http.Request) {
-	sc.InitContest(w, r)
-	action := sc.GetAction(r.URL.Path, 2)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&sc, strings.Title(action), rv)
-}
-
 //TODO : list by arguments like :contest/status/list?cid=1&uid=vsake&solved=3
-func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest Status List")
+func (sc *ContestStatus) List(Cid string) {
+	restweb.Logger.Debug("Contest Status List")
 
+	sc.InitContest(Cid)
 	solutionModel := model.SolutionModel{}
 	qry := make(map[string]string)
 
 	qry["module"] = strconv.Itoa(config.ModuleC)
-	qry["mid"] = strconv.Itoa(sc.Cid)
+	qry["mid"] = Cid
 	solutionList, err := solutionModel.List(qry)
 
 	if err != nil {
-		http.Error(w, "load error", 400)
+		sc.Error("load error", 400)
 		return
 	}
 	for i, v := range solutionList {
@@ -50,23 +38,23 @@ func (sc *StatusController) List(w http.ResponseWriter, r *http.Request) {
 	sc.Data["Privilege"] = sc.Privilege
 	sc.Data["Uid"] = sc.Uid
 
-	sc.Execute(w, "view/layout.tpl", "view/contest/status_list.tpl")
+	sc.RenderTemplate("view/layout.tpl", "view/contest/status_list.tpl")
 }
 
-func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Status Code")
+func (sc *ContestStatus) Code(Cid string, Sid string) {
+	restweb.Logger.Debug("Status Code")
 
-	args := r.URL.Query()
-	sid, err := strconv.Atoi(args.Get("sid"))
+	sc.InitContest(Cid)
+	sid, err := strconv.Atoi(Sid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		sc.Error("args error", 400)
 		return
 	}
 
 	solutionModel := model.SolutionModel{}
 	one, err := solutionModel.Detail(sid)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		sc.Error(err.Error(), 500)
 		return
 	}
 
@@ -78,6 +66,6 @@ func (sc *StatusController) Code(w http.ResponseWriter, r *http.Request) {
 		sc.Data["Privilege"] = sc.Privilege
 		sc.Data["Title"] = "View Code"
 		sc.Data["IsCode"] = true
-		sc.Execute(w, "view/layout.tpl", "view/contest/status_code.tpl")
+		sc.RenderTemplate("view/layout.tpl", "view/contest/status_code.tpl")
 	}
 }

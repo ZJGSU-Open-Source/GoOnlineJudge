@@ -1,40 +1,29 @@
 package contest
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
+	"restweb"
+
 	"encoding/csv"
 	"io"
-	"net/http"
 	"os"
 	"sort"
 	"strconv"
 )
 
-type RanklistController struct {
+type ContestRanklist struct {
 	Contest
 }
 
-func (rc RanklistController) Route(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("RankList")
-	rc.InitContest(w, r)
-	action := rc.GetAction(r.URL.Path, 2)
-	if action == "download" {
-		rc.Download(w, r)
-	} else {
-		rc.Home(w, r)
-	}
-
-}
-
 //Download 下载contest排名csv文件
-func (rc *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
+func (rc *ContestRanklist) Download(Cid string) {
+	rc.InitContest(Cid)
 	filename := strconv.Itoa(rc.Cid) + ".csv"
 	f, err := os.Create(filename)
 	if err != nil {
-		class.Logger.Debug(err)
+		restweb.Logger.Debug(err)
 		return
 	}
 	defer os.Remove(filename)
@@ -45,7 +34,7 @@ func (rc *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
 	rankcsv.Write([]string{"Rank", "Team", "Solved", "Penalty"})
 
 	for rank, user := range rc.ranklist() {
-		rankcsv.Write([]string{strconv.Itoa(rank + 1), user.Uid, strconv.Itoa(user.Solved), class.ShowGapTime(user.Time)})
+		rankcsv.Write([]string{strconv.Itoa(rank + 1), user.Uid, strconv.Itoa(user.Solved), restweb.ShowGapTime(user.Time)})
 	}
 	rankcsv.Flush()
 	f.Close()
@@ -53,6 +42,7 @@ func (rc *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
+	w := rc.Response
 	finfo, _ := file.Stat()
 	w.Header().Set("ContentType", "application/octet-stream")
 	w.Header().Add("Content-disposition", "attachment; filename="+filename)
@@ -60,22 +50,23 @@ func (rc *RanklistController) Download(w http.ResponseWriter, r *http.Request) {
 
 	_, err = io.Copy(w, file)
 	if err != nil {
-		class.Logger.Debug(err)
+		restweb.Logger.Debug(err)
 	}
 
 }
 
 //Home ranklist 列表主页
-func (rc *RanklistController) Home(w http.ResponseWriter, r *http.Request) {
+func (rc *ContestRanklist) Home(Cid string) {
+	rc.InitContest(Cid)
 	rc.Data["UserList"] = rc.ranklist()
 	rc.Data["IsContestRanklist"] = true
 	rc.Data["Cid"] = rc.Cid
 	rc.Data["ProblemList"] = rc.ContestDetail.List
-	rc.Execute(w, "view/layout.tpl", "view/contest/ranklist.tpl")
+	rc.RenderTemplate("view/layout.tpl", "view/contest/ranklist.tpl")
 }
 
 //ranklist 实时计算排名
-func (rc *RanklistController) ranklist() UserSorter {
+func (rc *ContestRanklist) ranklist() UserSorter {
 	qry := make(map[string]string)
 	qry["module"] = strconv.Itoa(config.ModuleC)
 	qry["mid"] = strconv.Itoa(rc.Cid)
@@ -84,7 +75,7 @@ func (rc *RanklistController) ranklist() UserSorter {
 	solutionModel := model.SolutionModel{}
 	solutionList, err := solutionModel.List(qry)
 	if err != nil {
-		class.Logger.Debug(err)
+		restweb.Logger.Debug(err)
 		return nil
 	}
 
