@@ -12,8 +12,6 @@ type HomeController struct {
 }
 
 func (hc HomeController) Index() {
-	// newsController := NewsController{}
-	// newsController.Get()
 
 	restweb.Logger.Debug("Home")
 

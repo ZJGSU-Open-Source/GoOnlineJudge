@@ -4,8 +4,6 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
 	"restweb"
-
-	"net/http"
 )
 
 type ContestController struct {
@@ -16,14 +14,10 @@ type ContestController struct {
 func (c ContestController) Index() {
 	restweb.Logger.Debug("Contest List")
 
-	Type := c.Requset.URL.Query().Get("type")
-	qry := make(map[string]string)
-	qry["type"] = Type
-
 	CModel := model.ContestModel{}
-	conetestList, err := CModel.List(qry)
+	conetestList, err := CModel.List(nil)
 	if err != nil {
-		http.Error(c.Response, err.Error(), 500)
+		c.Error(err.Error(), 500)
 		return
 	}
 

@@ -15,14 +15,14 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/contest/password?cid={{.Cid}}',
+      url:'/contests/{{.Cid}}/password',
       data:$(this).serialize(),
       error: function() {
         $('#signin_failed').css('display', 'block');
       },
       success: function() {
       	$('#signin_failed').css('display', 'none');
-        window.location.href = "contest/problem/list?cid={{.Cid}}";
+        window.location.href = "contests/{{.Cid}}";
       }
     });
   });

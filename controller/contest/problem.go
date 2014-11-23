@@ -1,104 +1,48 @@
 package contest
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
+	"restweb"
 
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 )
 
-type ProblemController struct {
+type ContestProblem struct {
 	Contest
 }
 
-func (pc ProblemController) Route(w http.ResponseWriter, r *http.Request) {
-	pc.InitContest(w, r)
+func (pc *ContestProblem) Detail(Cid, Pid string) {
+	pc.InitContest(Cid)
+	restweb.Logger.Debug("Contest Problem Detail")
 
-	action := pc.GetAction(r.URL.Path, 2)
-	defer func() {
-		if e := recover(); e != nil {
-			http.Error(w, "no such page", 404)
-		}
-	}()
-	rv := class.GetReflectValue(w, r)
-	class.CallMethod(&pc, strings.Title(action), rv)
-
-}
-
-func (pc *ProblemController) List(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest Problem List")
-
-	list := make([]*model.Problem, len(pc.ContestDetail.List))
-
-	idx := 0
-	for _, v := range pc.ContestDetail.List {
-		problemModel := model.ProblemModel{}
-		one, err := problemModel.Detail(v)
-		if err != nil {
-			class.Logger.Debug(err)
-			continue
-		}
-		one.Pid = idx
-		qry := make(map[string]string)
-		qry["pid"] = strconv.Itoa(v)
-		qry["module"] = strconv.Itoa(config.ModuleC)
-		qry["action"] = "accept"
-		one.Solve, err = pc.GetCount(qry)
-		if err != nil {
-			class.Logger.Debug(err)
-			continue
-		}
-		qry["action"] = "submit"
-		one.Submit, err = pc.GetCount(qry)
-		if err != nil {
-			class.Logger.Debug(err)
-			continue
-		}
-
-		list[idx] = one
-		idx++
-	}
-
-	pc.Data["Problem"] = list
-	pc.Data["IsContestProblem"] = true
-	pc.Data["Start"] = pc.ContestDetail.Start
-	pc.Data["End"] = pc.ContestDetail.End
-
-	pc.Execute(w, "view/layout.tpl", "view/contest/problem_list.tpl")
-}
-
-func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest Problem Detail")
-
-	args := r.URL.Query()
-	pid, err := strconv.Atoi(args.Get("pid"))
+	pid, err := strconv.Atoi(Pid)
 	if err != nil {
-		http.Error(w, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 	problemModel := model.ProblemModel{}
 	one, err := problemModel.Detail(pc.ContestDetail.List[pid])
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 	qry := make(map[string]string)
-	qry["pid"] = strconv.Itoa(pid)
+	qry["pid"] = Pid
 	qry["action"] = "accept"
 	one.Solve, err = pc.GetCount(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 	qry["action"] = "submit"
 	one.Submit, err = pc.GetCount(qry)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 
@@ -106,23 +50,22 @@ func (pc *ProblemController) Detail(w http.ResponseWriter, r *http.Request) {
 	pc.Data["Pid"] = pid
 	pc.Data["Status"] = pc.ContestDetail.Status
 
-	pc.Execute(w, "view/layout.tpl", "view/contest/problem_detail.tpl")
+	pc.RenderTemplate("view/layout.tpl", "view/contest/problem_detail.tpl")
 }
 
-func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
-	class.Logger.Debug("Contest Problem Submit")
+func (pc *ContestProblem) Submit(Cid, Pid string) {
+	restweb.Logger.Debug("Contest Problem Submit")
+	pc.InitContest(Cid)
 
 	uid := pc.Uid
 	if uid == "" {
-		http.Error(w, "user login required", 401)
+		pc.Error("user login required", 401)
 		return
 	}
 
-	args := r.URL.Query()
-
-	pid, err := strconv.Atoi(args.Get("pid"))
+	pid, err := strconv.Atoi(Pid)
 	if err != nil || pid >= len(pc.ContestDetail.List) {
-		http.Error(w, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 
@@ -137,10 +80,12 @@ func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	problemModel := model.ProblemModel{}
 	pro, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 
+	r := pc.Requset
+	w := pc.Response
 	code := r.FormValue("code")
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(r.FormValue("code")))
@@ -171,7 +116,7 @@ func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 	solutionModle := model.SolutionModel{}
 	sid, err := solutionModle.Insert(one)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 
@@ -184,10 +129,10 @@ func (pc *ProblemController) Submit(w http.ResponseWriter, r *http.Request) {
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
-		class.Logger.Debug(reader)
+		restweb.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			http.Error(w, "post error", 500)
+			pc.Error("post error", 500)
 		}
 		response.Body.Close()
 	}()

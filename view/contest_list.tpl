@@ -18,7 +18,7 @@
         {{if or (ShowStatus .Status) (LargePU $privilege)}}
           <tr>
             <td>{{.Cid}}</td>
-            <td><a href="/contest/problem/list?cid={{.Cid}}">{{.Title}}</a></td>
+            <td><a href="/contests/{{.Cid}}">{{.Title}}</a></td>
             <td>{{if ge $time .End }}<font color="green">Ended@{{ShowTime .End}}</font>{{else}}{{if ge .Start $time}}<font color="blue">Start@{{ShowTime .Start}}</font>{{else}}<font color="red">Running</font>{{end}}{{end}}</td>
             <td>{{ShowEncrypt .Encrypt}}</td>
           </tr>

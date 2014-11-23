@@ -87,12 +87,12 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/contest/problem/submit?pid={{.Pid}}&cid={{.Cid}}',
+      url:'/contest/{{.Cid}}/problem/{{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
           alert('Please Sign In.');
-          window.location.href = '/user/signin';
+          window.location.href = '/sess';
         }else {
           var json = eval('('+XMLHttpRequest.responseText+')');
           if(json.info != null) {
@@ -104,7 +104,7 @@
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/contest/status/list?cid={{.Cid}}';
+        window.location.href = '/contest/{{.Cid}}/status';
       }
     });
   });
