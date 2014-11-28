@@ -9,7 +9,6 @@ import (
 
 	"net/http"
 	"strconv"
-	// "strings"
 )
 
 //新闻控件
@@ -19,7 +18,6 @@ type NewsController struct {
 
 //列出所有新闻
 func (nc NewsController) List() {
-
 	restweb.Logger.Debug("News List")
 
 	newsModel := model.NewsModel{}
@@ -36,7 +34,6 @@ func (nc NewsController) List() {
 }
 
 func (nc NewsController) Detail(Nid string) {
-
 	nid, err := strconv.Atoi(Nid) //获取nid
 	if err != nil {
 		// http.Error(w, "args error", 400)
@@ -50,7 +47,7 @@ func (nc NewsController) Detail(Nid string) {
 	}
 	nc.Data["Detail"] = one
 
-	if one.Status == config.StatusReverse && nc.Privilege != config.PrivilegeAD { //如果news的状态为普通用户不可见
+	if one.Status == config.StatusReverse {
 		nc.Err400("No such news", "No such news")
 		return
 	}
