@@ -16,7 +16,7 @@ type ProblemController struct {
 	class.Controller
 }
 
-// 列出特定数量的问题,URL，/problem/list?pid=<pid>&titile=<titile>&source=<source>&page=<page>
+// 列出特定数量的问题,URL，/problems?pid=<pid>&titile=<titile>&source=<source>&page=<page>
 func (pc *ProblemController) List() {
 	restweb.Logger.Debug(pc.Requset.RemoteAddr + "visit Problem List")
 
@@ -100,7 +100,7 @@ func (pc *ProblemController) List() {
 	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl")
 }
 
-//列出某问题的详细信息，URL，/probliem/detail?pid=<pid>
+//列出某问题的详细信息，URL，/probliems/<pid>
 func (pc *ProblemController) Detail(Pid string) {
 	restweb.Logger.Debug("Problem Detail")
 
@@ -128,7 +128,7 @@ func (pc *ProblemController) Detail(Pid string) {
 	pc.RenderTemplate("view/layout.tpl", "view/problem_detail.tpl")
 }
 
-//提交某一问题的solution， URL /problem?pid=<pid>，method POST
+//提交某一问题的solution， URL /problems/<pid>，method POST
 func (pc *ProblemController) Submit(Pid string) {
 	restweb.Logger.Debug("Problem Submit")
 
