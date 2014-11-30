@@ -49,6 +49,10 @@
 </li>
 <li><p>加入开源社区邮件列表的方法很简单：<br>发送任意内容邮件至 <a href="mailto:zjgsu_osc+subscribe@googlegroups.com" target="_blank">zjgsu_osc+subscribe@googlegroups.com</a> 即可完成订阅，收到大家讨论的邮件，并参与讨论。</p>
 </li>
+<li><p>加入邮件列表后发帖的方法也很简单，直接向 <a href="mailto:zjgsu_osc@googlegroups.com" target="_blank">zjgsu_osc@googlegroups.com</a> 发邮件就行了，Google Groups 会帮您转发给所有加入邮件列表的人。新人发布主题时需要审核，请耐心等待。</p>
+</li>
+<li><p><a href="http://192.157.221.58/mediawiki/%E9%82%AE%E4%BB%B6%E5%88%97%E8%A1%A8" target="_blank">这里</a>有一份邮件列表使用的详细指南。</p>
+</li>
 <li>当邮件列表每天的邮件量很大时，有会话整理功能的邮箱才是明智的选择。推荐使用gmail，不推荐使用163等国内的邮箱。</li>
 </ul>
 <h3>要求</h3>
@@ -57,8 +61,6 @@
 <p>长期有效</p>
 <h3>联系方式</h3>
 <ul>
-<li>id: sake                                       email: <a href="mailto:jc5930@sina.cn" target="_blank">jc5930@sina.cn</a>                                                           github: <a href="https://github.com/sakeven" target="_blank">@sakeven</a></li>
-<li>id: clarkzjw                                 email: <a href="mailto:clarkzjw@gmail.com" target="_blank">clarkzjw@gmail.com</a>               github: <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></li>
-<li>id: JeremyWu                            email: <a href="mailto:wushuaiyi@outlook.com" target="_blank">wushuaiyi@outlook.com</a>                    github: <a href="https://github.com/JeremylWu" target="_blank">@JeremylWu</a></li>
+<p><a href="http://192.157.221.58/mediawiki/%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC" target="_blank">联系我们</a></p>
 </ul>
 {{end}}
