@@ -25,7 +25,6 @@ import (
 	"restweb"
 
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -57,6 +56,6 @@ func main() {
 	restweb.RegisterFilters(restweb.POST, `^/user/\w+`, restweb.Before, requireLogin)
 	restweb.RegisterFilters(restweb.ANY, `^/contests/\d+`, restweb.Before, requireContest)
 
-	restweb.AddFile("/static/", http.FileServer(http.Dir(".")))
+	restweb.AddFile("/static/", ".")
 	log.Fatal(restweb.Run())
 }
