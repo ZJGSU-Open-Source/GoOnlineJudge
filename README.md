@@ -34,8 +34,7 @@ Then you can download our source code.
 #Get our code from Github
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
-git clone https://github.com/sakeven/golog.git $GOPATH/src/golog
-git clone https://github.com/sakeven/restweb.git
+git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```
 Those source codes file should be in your $GOPATH/src. 
 ```bash
@@ -60,7 +59,7 @@ Make sure you have these directories in your $GOPATH/src:
 	ProblemData/
 	run/
 	log/
-	golog/
+	restweb/
 
 Now, it's time for compilation.
 ```bash
