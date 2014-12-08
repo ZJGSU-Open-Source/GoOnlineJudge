@@ -21,10 +21,10 @@ func (c ContestController) Index() {
 		return
 	}
 
-	c.Data["Contest"] = conetestList
-	c.Data["Time"] = restweb.GetTime()
-	c.Data["Title"] = "Contest List"
-	c.Data["IsContest"] = true
-	c.Data["Privilege"] = c.Privilege
+	c.Output["Contest"] = conetestList
+	c.Output["Time"] = restweb.GetTime()
+	c.Output["Title"] = "Contest List"
+	c.Output["IsContest"] = true
+	c.Output["Privilege"] = c.Privilege
 	c.RenderTemplate("view/layout.tpl", "view/contest_list.tpl")
 }

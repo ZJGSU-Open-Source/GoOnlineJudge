@@ -23,12 +23,10 @@ type RanklistController struct {
 func (rc *RanklistController) Index() {
 	restweb.Logger.Debug("Ranklist")
 
-	args := rc.Requset.URL.Query()
-
 	// Page
 
-	if v := args.Get("page"); v == "" {
-		args.Set("page", "1")
+	if _, ok := rc.Input["page"]; !ok {
+		rc.Input.Set("page", "1")
 	}
 
 	userModel := model.UserModel{}
@@ -47,19 +45,19 @@ func (rc *RanklistController) Index() {
 	}
 
 	var pageCount = (count-1)/config.UserPerPage + 1
-	page, err := strconv.Atoi(args.Get("page"))
+	page, err := strconv.Atoi(rc.Input.Get("page"))
 	if err != nil {
-		http.Error(rc.Response, "args error", 400)
+		rc.Error("args error", 400)
 		return
 	}
 	if page > pageCount {
-		http.Error(rc.Response, "args error", 400)
+		rc.Error("args error", 400)
 		return
 	}
 
 	pageData := rc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		rc.Data[k] = v
+		rc.Output[k] = v
 	}
 
 	qry := make(map[string]string)
@@ -79,9 +77,9 @@ func (rc *RanklistController) Index() {
 			count += 1
 		}
 	}
-	rc.Data["URL"] = "/ranklist?"
-	rc.Data["User"] = list
-	rc.Data["Title"] = "Ranklist"
-	rc.Data["IsRanklist"] = true
+	rc.Output["URL"] = "/ranklist?"
+	rc.Output["User"] = list
+	rc.Output["Title"] = "Ranklist"
+	rc.Output["IsRanklist"] = true
 	rc.RenderTemplate("view/layout.tpl", "view/ranklist.tpl")
 }

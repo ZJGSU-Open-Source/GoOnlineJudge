@@ -32,11 +32,11 @@ func (sc *ContestStatus) List(Cid string) {
 	for i, v := range solutionList {
 		solutionList[i].Pid = sc.Index[v.Pid]
 	}
-	sc.Data["Solution"] = solutionList
-	sc.Data["Privilege"] = sc.Privilege
-	sc.Data["IsContestStatus"] = true
-	sc.Data["Privilege"] = sc.Privilege
-	sc.Data["Uid"] = sc.Uid
+	sc.Output["Solution"] = solutionList
+	sc.Output["Privilege"] = sc.Privilege
+	sc.Output["IsContestStatus"] = true
+	sc.Output["Privilege"] = sc.Privilege
+	sc.Output["Uid"] = sc.Uid
 
 	sc.RenderTemplate("view/layout.tpl", "view/contest/status_list.tpl")
 }
@@ -62,10 +62,10 @@ func (sc *ContestStatus) Code(Cid string, Sid string) {
 		one.Code += "\n/*\n" + one.Error + "\n*/"
 	}
 	if one.Uid == sc.Uid || sc.Privilege >= config.PrivilegeTC {
-		sc.Data["Solution"] = one
-		sc.Data["Privilege"] = sc.Privilege
-		sc.Data["Title"] = "View Code"
-		sc.Data["IsCode"] = true
+		sc.Output["Solution"] = one
+		sc.Output["Privilege"] = sc.Privilege
+		sc.Output["Title"] = "View Code"
+		sc.Output["IsCode"] = true
 		sc.RenderTemplate("view/layout.tpl", "view/contest/status_code.tpl")
 	}
 }

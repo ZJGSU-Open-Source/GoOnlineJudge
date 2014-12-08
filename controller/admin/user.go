@@ -30,8 +30,8 @@ func (uc *UserController) List() {
 
 	if uc.Privilege != config.PrivilegeAD {
 		restweb.Logger.Info(uc.Uid + " try to visit Admin page")
-		uc.Data["Title"] = "Warning"
-		uc.Data["Info"] = "You are not admin!"
+		uc.Output["Title"] = "Warning"
+		uc.Output["Info"] = "You are not admin!"
 		uc.RenderTemplate("view/layout.tpl", "view/400.tpl")
 		return
 	}
@@ -43,10 +43,10 @@ func (uc *UserController) List() {
 		return
 	}
 
-	uc.Data["User"] = userlist
-	uc.Data["Title"] = "Privilege User List"
-	uc.Data["IsUser"] = true
-	uc.Data["IsList"] = true
+	uc.Output["User"] = userlist
+	uc.Output["Title"] = "Privilege User List"
+	uc.Output["IsUser"] = true
+	uc.Output["IsList"] = true
 	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
@@ -54,11 +54,11 @@ func (uc *UserController) List() {
 func (uc *UserController) Pagepassword() {
 	restweb.Logger.Debug("Admin Password Page")
 
-	uc.Data["Title"] = "Admin Password"
-	uc.Data["IsSettings"] = true
-	uc.Data["IsSettingsPassword"] = true
-	uc.Data["IsUser"] = true
-	uc.Data["IsPwd"] = true
+	uc.Output["Title"] = "Admin Password"
+	uc.Output["IsSettings"] = true
+	uc.Output["IsSettingsPassword"] = true
+	uc.Output["IsUser"] = true
+	uc.Output["IsPwd"] = true
 
 	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
@@ -69,13 +69,13 @@ func (uc *UserController) Password() {
 
 	ok := 1
 	hint := make(map[string]string)
-	r := uc.Requset
 	data := make(map[string]string)
-	data["userHandle"] = r.FormValue("user[Handle]")
-	data["newPassword"] = r.FormValue("user[newPassword]")
-	data["confirmPassword"] = r.FormValue("user[confirmPassword]")
 
-	uid := r.FormValue("user[Handle]")
+	data["userHandle"] = uc.Input.Get("user[Handle]")
+	data["newPassword"] = uc.Input.Get("user[newPassword]")
+	data["confirmPassword"] = uc.Input.Get("user[confirmPassword]")
+
+	uid := uc.Input.Get("user[Handle]")
 
 	if uid == "" {
 		ok, hint["uid"] = 0, "Handle should not be empty"
@@ -119,10 +119,8 @@ func (uc *UserController) Password() {
 func (uc *UserController) Privilegeset() {
 	restweb.Logger.Debug("User Privilege")
 
-	r := uc.Requset
-	args := r.URL.Query()
-	uid := args.Get("uid")
-	privilegeStr := args.Get("type")
+	uid := uc.Input.Get("uid")
+	privilegeStr := uc.Input.Get("type")
 
 	privilege := config.PrivilegeNA
 	switch privilegeStr {
@@ -175,9 +173,9 @@ func (uc *UserController) Privilegeset() {
 func (uc *UserController) Generate() {
 	r := uc.Requset
 	if r.Method == "GET" {
-		uc.Data["Title"] = "Admin User Generate"
-		uc.Data["IsUser"] = true
-		uc.Data["IsGenerate"] = true
+		uc.Output["Title"] = "Admin User Generate"
+		uc.Output["IsUser"] = true
+		uc.Output["IsGenerate"] = true
 		uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_generate.tpl")
 
 	} else if r.Method == "POST" {

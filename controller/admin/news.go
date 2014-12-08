@@ -33,11 +33,11 @@ type AdminNews struct {
 // 		nc.Error("load error", 400)
 // 		return
 // 	}
-// 	nc.Data["Detail"] = one
+// 	nc.Output["Detail"] = one
 
-// 	nc.Data["Title"] = "Admin - News Detail"
-// 	nc.Data["IsNews"] = true
-// 	nc.Data["IsList"] = false
+// 	nc.Output["Title"] = "Admin - News Detail"
+// 	nc.Output["IsNews"] = true
+// 	nc.Output["IsList"] = false
 
 // 	nc.RenderTemplate("view/admin/layout.tpl", "view/news_detail.tpl")
 // }
@@ -52,20 +52,20 @@ func (nc *AdminNews) List() {
 		nc.Error(err.Error(), 500)
 		return
 	}
-	nc.Data["News"] = newlist
-	nc.Data["Title"] = "Admin - News List"
-	nc.Data["IsNews"] = true
-	nc.Data["IsList"] = true
+	nc.Output["News"] = newlist
+	nc.Output["Title"] = "Admin - News List"
+	nc.Output["IsNews"] = true
+	nc.Output["IsList"] = true
 	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_list.tpl")
 }
 
 func (nc *AdminNews) Add() {
 	restweb.Logger.Debug("Admin News Add")
 
-	nc.Data["Title"] = "Admin - News Add"
-	nc.Data["IsNews"] = true
-	nc.Data["IsAdd"] = true
-	nc.Data["IsEdit"] = true
+	nc.Output["Title"] = "Admin - News Add"
+	nc.Output["IsNews"] = true
+	nc.Output["IsAdd"] = true
+	nc.Output["IsEdit"] = true
 
 	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_add.tpl")
 
@@ -81,7 +81,7 @@ func (nc *AdminNews) Insert() {
 
 	one := model.News{}
 	one.Title = nc.Requset.FormValue("title")
-	one.Content = template.HTML(nc.Requset.FormValue("content"))
+	one.Content = template.HTML(nc.Input.Get("content"))
 
 	newsModel := model.NewsModel{}
 	err := newsModel.Insert(one)
@@ -165,16 +165,16 @@ func (nc *AdminNews) Edit(Nid string) {
 
 	newsModel := model.NewsModel{}
 	one, err := newsModel.Detail(nid)
-	nc.Data["Detail"] = one
+	nc.Output["Detail"] = one
 	if err != nil {
 		nc.Error(err.Error(), 400)
 		return
 	}
 
-	nc.Data["Title"] = "Admin - News Edit"
-	nc.Data["IsNews"] = true
-	nc.Data["IsList"] = false
-	nc.Data["IsEdit"] = true
+	nc.Output["Title"] = "Admin - News Edit"
+	nc.Output["IsNews"] = true
+	nc.Output["IsList"] = false
+	nc.Output["IsEdit"] = true
 
 	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_edit.tpl")
 }
@@ -195,8 +195,8 @@ func (nc *AdminNews) Update(Nid string) {
 
 	one := model.News{}
 	newsModel := model.NewsModel{}
-	one.Title = nc.Requset.FormValue("title")
-	one.Content = template.HTML(nc.Requset.FormValue("content"))
+	one.Title = nc.Input.Get("title")
+	one.Content = template.HTML(nc.Input.Get("content"))
 
 	err = newsModel.Update(nid, one)
 	if err != nil {

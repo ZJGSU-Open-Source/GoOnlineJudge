@@ -6,7 +6,6 @@ import (
 
 	"restweb"
 
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -19,8 +18,8 @@ type SessController struct {
 func (s SessController) Get() {
 	restweb.Logger.Debug("User Login")
 
-	s.Data["Title"] = "User Sign In"
-	s.Data["IsUserSignIn"] = true
+	s.Output["Title"] = "User Sign In"
+	s.Output["IsUserSignIn"] = true
 
 	s.RenderTemplate("view/layout.tpl", "view/user_signin.tpl")
 }
@@ -28,14 +27,14 @@ func (s SessController) Get() {
 func (s SessController) Post() {
 	restweb.Logger.Debug("User Login")
 
-	uid := s.Requset.FormValue("user[handle]")
-	pwd := s.Requset.FormValue("user[password]")
-	restweb.Logger.Debug(uid)
+	uid := s.Input.Get("user[handle]")
+	pwd := s.Input.Get("user[password]")
+
 	userModel := model.UserModel{}
 	ret, err := userModel.Login(uid, pwd)
 	if err != nil {
 		restweb.Logger.Debug(err)
-		http.Error(s.Response, err.Error(), 500)
+		s.Error(err.Error(), 500)
 		return
 	}
 

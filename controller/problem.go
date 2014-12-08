@@ -20,39 +20,38 @@ type ProblemController struct {
 func (pc *ProblemController) List() {
 	restweb.Logger.Debug(pc.Requset.RemoteAddr + "visit Problem List")
 
-	args := pc.Requset.URL.Query()
 	qry := make(map[string]string)
 	url := "/problems?"
 
 	// Search
-	if v := args.Get("pid"); v != "" { //按pid查找
-		qry["pid"] = v
-		url += "pid=" + v + "&"
-		pc.Data["SearchPid"] = true
-		pc.Data["SearchValue"] = v
-	} else if v := args.Get("title"); v != "" { //按问题标题查找
-		url += "title=" + v + "&"
-		pc.Data["SearchTitle"] = true
-		pc.Data["SearchValue"] = v
+	if v, ok := pc.Input["pid"]; ok { //按pid查找
+		qry["pid"] = v[0]
+		url += "pid=" + v[0] + "&"
+		pc.Output["SearchPid"] = true
+		pc.Output["SearchValue"] = v[0]
+	} else if v, ok := pc.Input["title"]; ok { //按问题标题查找
+		url += "title=" + v[0] + "&"
+		pc.Output["SearchTitle"] = true
+		pc.Output["SearchValue"] = v[0]
 		for _, ep := range "+.?$|*^ " {
-			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
+			v[0] = strings.Replace(v[0], string(ep), "\\"+string(ep), -1)
 		}
-		qry["title"] = v
-	} else if v := args.Get("source"); v != "" { //按问题来源查找
-		url += "source=" + v + "&"
-		pc.Data["SearchSource"] = true
-		pc.Data["SearchValue"] = v
+		qry["title"] = v[0]
+	} else if v, ok := pc.Input["source"]; ok { //按问题来源查找
+		url += "source=" + v[0] + "&"
+		pc.Output["SearchSource"] = true
+		pc.Output["SearchValue"] = v[0]
 		for _, ep := range "+.?$|*^ " {
-			v = strings.Replace(v, string(ep), "\\"+string(ep), -1)
+			v[0] = strings.Replace(v[0], string(ep), "\\"+string(ep), -1)
 		}
-		qry["source"] = v
+		qry["source"] = v[0]
 	}
-	pc.Data["URL"] = url
+	pc.Output["URL"] = url
 
 	// Page
-	qry["page"] = args.Get("page")
-	if v := qry["page"]; v == "" { //指定页码
-		qry["page"] = "1"
+	qry["page"] = "1"
+	if v, ok := pc.Input["page"]; ok { //指定页码
+		qry["page"] = v[0]
 	}
 
 	if pc.Privilege <= config.PrivilegePU {
@@ -62,7 +61,7 @@ func (pc *ProblemController) List() {
 	problemModel := model.ProblemModel{}
 	count, err := problemModel.Count(qry)
 	if err != nil {
-		http.Error(pc.Response, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 
@@ -70,11 +69,11 @@ func (pc *ProblemController) List() {
 	var pageCount = (count-1)/config.ProblemPerPage + 1
 	page, err := strconv.Atoi(qry["page"])
 	if err != nil {
-		http.Error(pc.Response, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 	if page > pageCount {
-		http.Error(pc.Response, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 
@@ -82,21 +81,21 @@ func (pc *ProblemController) List() {
 	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
 	pageData := pc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		pc.Data[k] = v
+		pc.Output[k] = v
 	}
 
 	problemList, err := problemModel.List(qry)
 	if err != nil {
-		http.Error(pc.Response, "post error", 500)
+		pc.Error("post error", 500)
 		return
 	}
 	restweb.Logger.Debug(len(problemList))
 
-	pc.Data["Problem"] = problemList
-	pc.Data["Privilege"] = pc.Privilege
-	pc.Data["Time"] = restweb.GetTime()
-	pc.Data["Title"] = "Problem List"
-	pc.Data["IsProblem"] = true
+	pc.Output["Problem"] = problemList
+	pc.Output["Privilege"] = pc.Privilege
+	pc.Output["Time"] = restweb.GetTime()
+	pc.Output["Title"] = "Problem List"
+	pc.Output["IsProblem"] = true
 	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl")
 }
 
@@ -106,7 +105,7 @@ func (pc *ProblemController) Detail(Pid string) {
 
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
-		http.Error(pc.Response, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 
@@ -116,15 +115,15 @@ func (pc *ProblemController) Detail(Pid string) {
 		pc.Err400("Problem "+Pid, "No such problem")
 		return
 	}
-	pc.Data["Detail"] = one
+	pc.Output["Detail"] = one
 
 	if pc.Privilege <= config.PrivilegePU && one.Status == config.StatusReverse { // 如果问题状态为普通用户不可见
 		pc.Err400("Problem "+Pid, "No such problem")
 		return
 	}
 
-	pc.Data["Privilege"] = pc.Privilege
-	pc.Data["Title"] = "Problem — " + Pid
+	pc.Output["Privilege"] = pc.Privilege
+	pc.Output["Title"] = "Problem — " + Pid
 	pc.RenderTemplate("view/layout.tpl", "view/problem_detail.tpl")
 }
 
@@ -132,14 +131,9 @@ func (pc *ProblemController) Detail(Pid string) {
 func (pc *ProblemController) Submit(Pid string) {
 	restweb.Logger.Debug("Problem Submit")
 
-	if pc.Uid == "" { //要求用户登入
-		http.Error(pc.Response, "user login required", 401)
-		return
-	}
-
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
-		http.Error(pc.Response, "args error", 400)
+		pc.Error("args error", 400)
 		return
 	}
 
@@ -152,14 +146,14 @@ func (pc *ProblemController) Submit(Pid string) {
 	problemModel := model.ProblemModel{}
 	pro, err := problemModel.Detail(pid)
 	if err != nil {
-		http.Error(pc.Response, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
-	code := pc.Requset.FormValue("code")
+	code := pc.Input.Get("code")
 
 	one.Code = code
-	one.Length = pc.GetCodeLen(len(pc.Requset.FormValue("code")))
-	one.Language, _ = strconv.Atoi(pc.Requset.FormValue("compiler_id"))
+	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
+	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
 
 	hint := make(map[string]string)
 	errflag := true
@@ -184,7 +178,7 @@ func (pc *ProblemController) Submit(Pid string) {
 	solutionModel := model.SolutionModel{}
 	sid, err := solutionModel.Insert(one)
 	if err != nil {
-		http.Error(pc.Response, err.Error(), 500)
+		pc.Error(err.Error(), 500)
 		return
 	}
 
@@ -200,7 +194,7 @@ func (pc *ProblemController) Submit(Pid string) {
 		restweb.Logger.Debug(reader)
 		response, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			http.Error(pc.Response, "post error", 500)
+			pc.Error("post error", 500)
 		}
 		response.Body.Close()
 	}()

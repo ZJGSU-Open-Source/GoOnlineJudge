@@ -58,10 +58,10 @@ func (rc *ContestRanklist) Download(Cid string) {
 //Home ranklist 列表主页
 func (rc *ContestRanklist) Home(Cid string) {
 	rc.InitContest(Cid)
-	rc.Data["UserList"] = rc.ranklist()
-	rc.Data["IsContestRanklist"] = true
-	rc.Data["Cid"] = rc.Cid
-	rc.Data["ProblemList"] = rc.ContestDetail.List
+	rc.Output["UserList"] = rc.ranklist()
+	rc.Output["IsContestRanklist"] = true
+	rc.Output["Cid"] = rc.Cid
+	rc.Output["ProblemList"] = rc.ContestDetail.List
 	rc.RenderTemplate("view/layout.tpl", "view/contest/ranklist.tpl")
 }
 

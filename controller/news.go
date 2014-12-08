@@ -26,10 +26,10 @@ func (nc NewsController) List() {
 		// http.Error(w, err.Error(), 500)
 		return
 	}
-	nc.Data["News"] = newsList
+	nc.Output["News"] = newsList
 
-	nc.Data["Title"] = "Welcome to ZJGSU Online Judge"
-	nc.Data["IsNews"] = true
+	nc.Output["Title"] = "Welcome to ZJGSU Online Judge"
+	nc.Output["IsNews"] = true
 	nc.RenderTemplate("view/layout.tpl", "view/news_list.tpl")
 }
 
@@ -45,13 +45,13 @@ func (nc NewsController) Detail(Nid string) {
 	if err != nil {
 		http.Error(nc.Response, err.Error(), 500)
 	}
-	nc.Data["Detail"] = one
+	nc.Output["Detail"] = one
 
 	if one.Status == config.StatusReverse {
 		nc.Err400("No such news", "No such news")
 		return
 	}
 
-	nc.Data["Title"] = "News Detail"
+	nc.Output["Title"] = "News Detail"
 	nc.RenderTemplate("view/layout.tpl", "view/news_detail.tpl")
 }

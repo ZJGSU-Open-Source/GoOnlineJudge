@@ -46,9 +46,9 @@ func (pc *ContestProblem) Detail(Cid, Pid string) {
 		return
 	}
 
-	pc.Data["Detail"] = one
-	pc.Data["Pid"] = pid
-	pc.Data["Status"] = pc.ContestDetail.Status
+	pc.Output["Detail"] = one
+	pc.Output["Pid"] = pid
+	pc.Output["Status"] = pc.ContestDetail.Status
 
 	pc.RenderTemplate("view/layout.tpl", "view/contest/problem_detail.tpl")
 }
@@ -84,12 +84,11 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		return
 	}
 
-	r := pc.Requset
 	w := pc.Response
-	code := r.FormValue("code")
+	code := pc.Input.Get("code")
 	one.Code = code
-	one.Length = pc.GetCodeLen(len(r.FormValue("code")))
-	one.Language, _ = strconv.Atoi(r.FormValue("compiler_id"))
+	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
+	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
 
 	hint := make(map[string]string)
 	errflag := true
