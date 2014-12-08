@@ -2,7 +2,6 @@ package class
 
 import (
 	"GoOnlineJudge/config"
-	"net/http"
 	"restweb"
 	"strconv"
 )
@@ -18,33 +17,33 @@ func (ct *Controller) Init() {
 
 	ct.Uid = ct.GetSession("Uid")
 
-	ct.Data["CurrentUser"] = ct.Uid
-	ct.Data["Privilege"] = ct.Privilege
+	ct.Output["CurrentUser"] = ct.Uid
+	ct.Output["Privilege"] = ct.Privilege
 
 	if ct.Uid != "" {
-		ct.Data["IsCurrentUser"] = true
+		ct.Output["IsCurrentUser"] = true
 		var err error
 		ct.Privilege, err = strconv.Atoi(ct.GetSession("Privilege"))
 		if err != nil {
-			http.Error(ct.Response, "args error", 400)
+			ct.Error("args error", 400)
 			return
 		}
 		if ct.Privilege == config.PrivilegeAD {
-			ct.Data["IsShowAdmin"] = true
-			ct.Data["IsAdmin"] = true
-			ct.Data["RejudgePrivilege"] = true
+			ct.Output["IsShowAdmin"] = true
+			ct.Output["IsAdmin"] = true
+			ct.Output["RejudgePrivilege"] = true
 		} else if ct.Privilege == config.PrivilegeTC {
-			ct.Data["IsShowTeacher"] = true
-			ct.Data["IsTeacher"] = true
-			ct.Data["RejudgePrivilege"] = true
+			ct.Output["IsShowTeacher"] = true
+			ct.Output["IsTeacher"] = true
+			ct.Output["RejudgePrivilege"] = true
 		}
 	}
 }
 
 func (ct *Controller) Err400(title string, info string) {
 	restweb.Logger.Info(ct.Requset.RemoteAddr + " " + ct.Uid)
-	ct.Data["Title"] = title
-	ct.Data["Info"] = info
+	ct.Output["Title"] = title
+	ct.Output["Info"] = info
 	ct.RenderTemplate("view/layout.tpl", "view/400.tpl")
 }
 

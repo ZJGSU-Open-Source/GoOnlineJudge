@@ -19,8 +19,8 @@ type UserController struct {
 func (uc *UserController) Signup() {
 	restweb.Logger.Debug("User Sign Up")
 
-	uc.Data["Title"] = "User Sign Up"
-	uc.Data["IsUserSignUp"] = true
+	uc.Output["Title"] = "User Sign Up"
+	uc.Output["IsUserSignUp"] = true
 	uc.RenderTemplate("view/layout.tpl", "view/user_signup.tpl")
 
 }
@@ -31,13 +31,13 @@ func (uc *UserController) Register() {
 	var one model.User
 	userModel := model.UserModel{}
 
-	uid := uc.Requset.FormValue("user[handle]")
-	nick := uc.Requset.FormValue("user[nick]")
-	pwd := uc.Requset.FormValue("user[password]")
-	pwdConfirm := uc.Requset.FormValue("user[confirmPassword]")
-	one.Mail = uc.Requset.FormValue("user[mail]")
-	one.School = uc.Requset.FormValue("user[school]")
-	one.Motto = uc.Requset.FormValue("user[motto]")
+	uid := uc.Input.Get("user[handle]")
+	nick := uc.Input.Get("user[nick]")
+	pwd := uc.Input.Get("user[password]")
+	pwdConfirm := uc.Input.Get("user[confirmPassword]")
+	one.Mail = uc.Input.Get("user[mail]")
+	one.School = uc.Input.Get("user[school]")
+	one.Motto = uc.Input.Get("user[motto]")
 
 	ok := 1
 	hint := make(map[string]string)
@@ -74,7 +74,7 @@ func (uc *UserController) Register() {
 
 		err := userModel.Insert(one)
 		if err != nil {
-			http.Error(uc.Response, err.Error(), 500)
+			uc.Error(err.Error(), 500)
 			return
 		}
 
@@ -92,15 +92,15 @@ func (uc *UserController) Detail(uid string) {
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uid)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 400)
+		uc.Error(err.Error(), 400)
 		return
 	}
-	uc.Data["Detail"] = one
+	uc.Output["Detail"] = one
 
 	solutionModle := model.SolutionModel{}
 	solvedList, err := solutionModle.Achieve(uid)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 400)
+		uc.Error(err.Error(), 400)
 		return
 	}
 
@@ -120,12 +120,12 @@ func (uc *UserController) Detail(uid string) {
 
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
-	uc.Data["List"] = achieveList
-	uc.Data["IpList"] = ips
-	uc.Data["Title"] = "User Detail"
+	uc.Output["List"] = achieveList
+	uc.Output["IpList"] = ips
+	uc.Output["Title"] = "User Detail"
 	if uid != "" && uid == uc.Uid {
-		uc.Data["IsSettings"] = true
-		uc.Data["IsSettingsDetail"] = true
+		uc.Output["IsSettings"] = true
+		uc.Output["IsSettingsDetail"] = true
 	}
 
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
@@ -134,22 +134,18 @@ func (uc *UserController) Detail(uid string) {
 func (uc *UserController) Settings() {
 	restweb.Logger.Debug("User Settings")
 
-	if uc.Uid == "" {
-		uc.Redirect("/sess", http.StatusFound)
-	}
-
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uc.Uid)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 400)
+		uc.Error(err.Error(), 400)
 		return
 	}
-	uc.Data["Detail"] = one
+	uc.Output["Detail"] = one
 
 	solutionModel := model.SolutionModel{}
 	solvedList, err := solutionModel.Achieve(uc.Uid)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 400)
+		uc.Error(err.Error(), 400)
 		return
 	}
 	type IPs struct {
@@ -168,11 +164,11 @@ func (uc *UserController) Settings() {
 
 	achieveList := sort.IntSlice(solvedList)
 	achieveList.Sort()
-	uc.Data["List"] = achieveList
-	uc.Data["IpList"] = ips
-	uc.Data["Title"] = "User Settings"
-	uc.Data["IsSettings"] = true
-	uc.Data["IsSettingsDetail"] = true
+	uc.Output["List"] = achieveList
+	uc.Output["IpList"] = ips
+	uc.Output["Title"] = "User Settings"
+	uc.Output["IsSettings"] = true
+	uc.Output["IsSettingsDetail"] = true
 
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
 }
@@ -180,23 +176,18 @@ func (uc *UserController) Settings() {
 func (uc *UserController) Edit() {
 	restweb.Logger.Debug("User Edit")
 
-	if uc.Uid == "" {
-		uc.Redirect("/sess", http.StatusFound)
-		return
-	}
-
 	uid := uc.Uid
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uid)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 400)
+		uc.Error(err.Error(), 400)
 		return
 	}
-	uc.Data["Detail"] = one
+	uc.Output["Detail"] = one
 
-	uc.Data["Title"] = "User Edit"
-	uc.Data["IsSettings"] = true
-	uc.Data["IsSettingsEdit"] = true
+	uc.Output["Title"] = "User Edit"
+	uc.Output["IsSettings"] = true
+	uc.Output["IsSettingsEdit"] = true
 
 	uc.RenderTemplate("view/layout.tpl", "view/user_edit.tpl")
 }
@@ -205,10 +196,10 @@ func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
 	var one model.User
-	one.Nick = uc.Requset.FormValue("user[nick]")
-	one.Mail = uc.Requset.FormValue("user[mail]")
-	one.School = uc.Requset.FormValue("user[school]")
-	one.Motto = uc.Requset.FormValue("user[motto]")
+	one.Nick = uc.Input.Get("user[nick]")
+	one.Mail = uc.Input.Get("user[mail]")
+	one.School = uc.Input.Get("user[school]")
+	one.Motto = uc.Input.Get("user[motto]")
 
 	if one.Nick == "" {
 		hint := make(map[string]string)
@@ -230,14 +221,9 @@ func (uc *UserController) Update() {
 func (uc *UserController) Pagepassword() {
 	restweb.Logger.Debug("User Password Page")
 
-	if uc.Uid == "" {
-		uc.Redirect("/sess", http.StatusFound)
-		return
-	}
-
-	uc.Data["Title"] = "User Password"
-	uc.Data["IsSettings"] = true
-	uc.Data["IsSettingsPassword"] = true
+	uc.Output["Title"] = "User Password"
+	uc.Output["IsSettings"] = true
+	uc.Output["IsSettingsPassword"] = true
 
 	uc.RenderTemplate("view/layout.tpl", "view/user_password.tpl")
 }
@@ -250,14 +236,14 @@ func (uc *UserController) Password() {
 	hint := make(map[string]string)
 	hint["uid"] = uid
 
-	oldPwd := uc.Requset.FormValue("user[oldPassword]")
-	newPwd := uc.Requset.FormValue("user[newPassword]")
-	confirmPwd := uc.Requset.FormValue("user[confirmPassword]")
+	oldPwd := uc.Input.Get("user[oldPassword]")
+	newPwd := uc.Input.Get("user[newPassword]")
+	confirmPwd := uc.Input.Get("user[confirmPassword]")
 
 	userModel := model.UserModel{}
 	ret, err := userModel.Login(uid, oldPwd)
 	if err != nil {
-		http.Error(uc.Response, err.Error(), 500)
+		uc.Error(err.Error(), 500)
 		return
 	}
 
@@ -274,7 +260,7 @@ func (uc *UserController) Password() {
 	if ok == 1 {
 		err := userModel.Password(uid, newPwd)
 		if err != nil {
-			http.Error(uc.Response, err.Error(), 400)
+			uc.Error(err.Error(), 400)
 			return
 		}
 

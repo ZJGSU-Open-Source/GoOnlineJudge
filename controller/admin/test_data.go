@@ -38,10 +38,10 @@ func (tc *AdminTestdata) List(pid string) {
 		}
 	}
 
-	tc.Data["Files"] = file
-	tc.Data["Pid"] = pid
-	tc.Data["Title"] = "Problem" + pid + " - Test data"
-	tc.Data["IsProblem"] = true
+	tc.Output["Files"] = file
+	tc.Output["Pid"] = pid
+	tc.Output["Title"] = "Problem" + pid + " - Test data"
+	tc.Output["IsProblem"] = true
 
 	tc.RenderTemplate("view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
@@ -82,8 +82,7 @@ func (tc *AdminTestdata) Upload(pid string) {
 func (tc *AdminTestdata) Download(pid string) {
 	restweb.Logger.Debug("Admin Download files")
 
-	args := tc.Requset.URL.Query()
-	filename := args.Get("type")
+	filename := tc.Input.Get("type")
 	file, err := os.Open(config.Datapath + pid + "/" + filename)
 	if err != nil {
 		restweb.Logger.Debug(err)
@@ -105,9 +104,8 @@ func (tc *AdminTestdata) Delete(pid string) {
 		tc.Err400("Warning", "Error Privilege to Delete testdate")
 		return
 	}
-	r := tc.Requset
-	args := r.URL.Query()
-	filetype := args.Get("type")
+
+	filetype := tc.Input.Get("type")
 
 	cmd := exec.Command("rm", config.Datapath+pid+"/"+filetype)
 	err := cmd.Run()

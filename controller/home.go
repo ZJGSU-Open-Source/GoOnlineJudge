@@ -3,7 +3,6 @@ package controller
 import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/model"
-	"net/http"
 	"restweb"
 )
 
@@ -18,12 +17,12 @@ func (hc HomeController) Index() {
 	newsModel := model.NewsModel{}
 	newsList, err := newsModel.List(-1, -1)
 	if err != nil {
-		http.Error(hc.Response, err.Error(), 500)
+		hc.Error(err.Error(), 500)
 		return
 	}
-	hc.Data["News"] = newsList
-	hc.Data["Title"] = "Welcome to ZJGSU Online Judge"
-	hc.Data["IsNews"] = true
+	hc.Output["News"] = newsList
+	hc.Output["Title"] = "Welcome to ZJGSU Online Judge"
+	hc.Output["IsNews"] = true
 
 	hc.RenderTemplate("view/layout.tpl", "view/news_list.tpl")
 }

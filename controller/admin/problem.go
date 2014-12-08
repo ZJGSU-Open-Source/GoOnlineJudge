@@ -36,10 +36,10 @@ type AdminProblem struct {
 // 		pc.Error(err.Error(), 400)
 // 		return
 // 	}
-// 	pc.Data["Detail"] = one
-// 	pc.Data["Title"] = "Admin - Problem Detail"
-// 	pc.Data["IsProblem"] = true
-// 	pc.Data["IsList"] = false
+// 	pc.Output["Detail"] = one
+// 	pc.Output["Title"] = "Admin - Problem Detail"
+// 	pc.Output["IsProblem"] = true
+// 	pc.Output["IsList"] = false
 
 // 	pc.RenderTemplate("view/admin/layout.tpl", "view/problem_detail.tpl")
 // }
@@ -50,10 +50,9 @@ func (pc *AdminProblem) List() {
 	problemModel := model.ProblemModel{}
 	qry := make(map[string]string)
 
-	args := pc.Requset.URL.Query()
-	qry["page"] = args.Get("page")
-	if v := qry["page"]; v == "" { //指定页码
-		qry["page"] = "1"
+	qry["page"] = "1"
+	if v, ok := pc.Input["page"]; ok { //指定页码
+		qry["page"] = v[0]
 	}
 	count, err := problemModel.Count(qry)
 	if err != nil {
@@ -77,7 +76,7 @@ func (pc *AdminProblem) List() {
 	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
 	pageData := pc.GetPage(page, pageCount)
 	for k, v := range pageData {
-		pc.Data[k] = v
+		pc.Output[k] = v
 	}
 
 	proList, err := problemModel.List(qry)
@@ -86,10 +85,10 @@ func (pc *AdminProblem) List() {
 		return
 	}
 
-	pc.Data["Problem"] = proList
-	pc.Data["Title"] = "Admin - Problem List"
-	pc.Data["IsProblem"] = true
-	pc.Data["IsList"] = true
+	pc.Output["Problem"] = proList
+	pc.Output["Title"] = "Admin - Problem List"
+	pc.Output["IsProblem"] = true
+	pc.Output["IsList"] = true
 
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_list.tpl")
 }
@@ -97,15 +96,10 @@ func (pc *AdminProblem) List() {
 func (pc *AdminProblem) Add() {
 	restweb.Logger.Debug("Admin Problem Add")
 
-	if pc.Privilege != config.PrivilegeAD {
-		pc.Err400("Warning", "Error Privilege to Add problem")
-		return
-	}
-
-	pc.Data["Title"] = "Admin - Problem Add"
-	pc.Data["IsProblem"] = true
-	pc.Data["IsAdd"] = true
-	pc.Data["IsEdit"] = true
+	pc.Output["Title"] = "Admin - Problem Add"
+	pc.Output["IsProblem"] = true
+	pc.Output["IsAdd"] = true
+	pc.Output["IsEdit"] = true
 
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_add.tpl")
 }
@@ -113,40 +107,35 @@ func (pc *AdminProblem) Add() {
 func (pc *AdminProblem) Insert() {
 	restweb.Logger.Debug("Admin Problem Insert")
 
-	if pc.Privilege != config.PrivilegeAD {
-		pc.Err400("Warning", "Error Privilege to Insert problem")
-		return
-	}
-
 	one := model.Problem{}
-	one.Title = pc.Requset.FormValue("title")
-	time, err := strconv.Atoi(pc.Requset.FormValue("time"))
+	one.Title = pc.Input.Get("title")
+	time, err := strconv.Atoi(pc.Input.Get("time"))
 	if err != nil {
 		pc.Error("The value 'Time' is neither too short nor too large", 400)
 		return
 	}
 	one.Time = time
-	memory, err := strconv.Atoi(pc.Requset.FormValue("memory"))
+	memory, err := strconv.Atoi(pc.Input.Get("memory"))
 	if err != nil {
 		pc.Error("The value 'Memory' is neither too short nor too large", 400)
 		return
 	}
 	one.Memory = memory
-	if special := pc.Requset.FormValue("special"); special == "" {
+	if special := pc.Input.Get("special"); special == "" {
 		one.Special = 0
 	} else {
 		one.Special = 1
 	}
 
-	in := pc.Requset.FormValue("in")
-	out := pc.Requset.FormValue("out")
-	one.Description = template.HTML(pc.Requset.FormValue("description"))
-	one.Input = template.HTML(pc.Requset.FormValue("input"))
-	one.Output = template.HTML(pc.Requset.FormValue("output"))
+	in := pc.Input.Get("in")
+	out := pc.Input.Get("out")
+	one.Description = template.HTML(pc.Input.Get("description"))
+	one.Input = template.HTML(pc.Input.Get("input"))
+	one.Output = template.HTML(pc.Input.Get("output"))
 	one.In = in
 	one.Out = out
-	one.Source = pc.Requset.FormValue("source")
-	one.Hint = pc.Requset.FormValue("hint")
+	one.Source = pc.Input.Get("source")
+	one.Hint = pc.Input.Get("hint")
 
 	problemModel := model.ProblemModel{}
 	pid, err := problemModel.Insert(one)
@@ -186,11 +175,6 @@ func createfile(path, filename string, context string) {
 func (pc *AdminProblem) Status(Pid string) {
 	restweb.Logger.Debug("Admin Problem Status")
 
-	if pc.Privilege != config.PrivilegeAD {
-		pc.Err400("Warning", "Error Privilege to Change problem status")
-		return
-	}
-
 	pid, err := strconv.Atoi(Pid)
 	if err != nil {
 		pc.Error("args error", 400)
@@ -203,7 +187,7 @@ func (pc *AdminProblem) Status(Pid string) {
 		pc.Error(err.Error(), 400)
 		return
 	}
-	pc.Data["Detail"] = one
+	pc.Output["Detail"] = one
 	var status int
 	switch one.Status {
 	case config.StatusAvailable:
@@ -263,11 +247,11 @@ func (pc *AdminProblem) Edit(Pid string) {
 		return
 	}
 
-	pc.Data["Detail"] = one
-	pc.Data["Title"] = "Admin - Problem Edit"
-	pc.Data["IsProblem"] = true
-	pc.Data["IsList"] = false
-	pc.Data["IsEdit"] = true
+	pc.Output["Detail"] = one
+	pc.Output["Title"] = "Admin - Problem Edit"
+	pc.Output["IsProblem"] = true
+	pc.Output["IsList"] = false
+	pc.Output["IsEdit"] = true
 
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 }
@@ -285,37 +269,36 @@ func (pc *AdminProblem) Update(Pid string) {
 		pc.Error("args error", 400)
 		return
 	}
-	r := pc.Requset
 	one := model.Problem{}
-	one.Title = pc.Requset.FormValue("title")
-	time, err := strconv.Atoi(r.FormValue("time"))
+	one.Title = pc.Input.Get("title")
+	time, err := strconv.Atoi(pc.Input.Get("time"))
 	if err != nil {
 		pc.Error("The value 'Time' is neither too short nor too large", 500)
 		return
 	}
 	one.Time = time
-	memory, err := strconv.Atoi(r.FormValue("memory"))
+	memory, err := strconv.Atoi(pc.Input.Get("memory"))
 	if err != nil {
 		pc.Error("The value 'memory' is neither too short nor too large", 500)
 		return
 	}
 	one.Memory = memory
-	if special := r.FormValue("special"); special == "" {
+	if _, ok := pc.Input["special"]; !ok {
 		one.Special = 0
 	} else {
 		one.Special = 1
 	}
 
-	in := r.FormValue("in")
-	out := r.FormValue("out")
+	in := pc.Input.Get("in")
+	out := pc.Input.Get("out")
 
-	one.Description = template.HTML(r.FormValue("description"))
-	one.Input = template.HTML(r.FormValue("input"))
-	one.Output = template.HTML(r.FormValue("output"))
+	one.Description = template.HTML(pc.Input.Get("description"))
+	one.Input = template.HTML(pc.Input.Get("input"))
+	one.Output = template.HTML(pc.Input.Get("output"))
 	one.In = in
 	one.Out = out
-	one.Source = r.FormValue("source")
-	one.Hint = r.FormValue("hint")
+	one.Source = pc.Input.Get("source")
+	one.Hint = pc.Input.Get("hint")
 
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
@@ -331,9 +314,9 @@ func (pc *AdminProblem) Update(Pid string) {
 }
 
 func (pc *AdminProblem) ImportPage() {
-	pc.Data["Title"] = "Problem Import"
-	pc.Data["IsProblem"] = true
-	pc.Data["IsImport"] = true
+	pc.Output["Title"] = "Problem Import"
+	pc.Output["IsProblem"] = true
+	pc.Output["IsImport"] = true
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_import.tpl")
 }
 

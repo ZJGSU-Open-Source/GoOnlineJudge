@@ -37,11 +37,11 @@ func (c *Contest) InitContest(Cid string) {
 	for k, v := range c.ContestDetail.List {
 		c.Index[v] = k
 	}
-	c.Data["Cid"] = strconv.Itoa(c.Cid)
-	c.Data["Title"] = "Contest Detail " + strconv.Itoa(c.Cid)
-	c.Data["Contest"] = c.ContestDetail.Title
-	c.Data["IsContestDetail"] = true
-	c.Data["IsContest"] = true
+	c.Output["Cid"] = strconv.Itoa(c.Cid)
+	c.Output["Title"] = "Contest Detail " + strconv.Itoa(c.Cid)
+	c.Output["Contest"] = c.ContestDetail.Title
+	c.Output["IsContestDetail"] = true
+	c.Output["IsContest"] = true
 }
 
 func (c *Contest) GetCount(qry map[string]string) (int, error) {
@@ -92,10 +92,10 @@ func (c *Contest) Detail(Cid string) {
 		idx++
 	}
 
-	c.Data["Problem"] = list
-	c.Data["IsContestProblem"] = true
-	c.Data["Start"] = c.ContestDetail.Start
-	c.Data["End"] = c.ContestDetail.End
+	c.Output["Problem"] = list
+	c.Output["IsContestProblem"] = true
+	c.Output["Start"] = c.ContestDetail.Start
+	c.Output["End"] = c.ContestDetail.End
 
 	c.RenderTemplate("view/layout.tpl", "view/contest/problem_list.tpl")
 }

@@ -32,10 +32,10 @@ func (cc *AdminContest) List() {
 		cc.Error(err.Error(), 400)
 	}
 
-	cc.Data["Contest"] = contestList
-	cc.Data["Title"] = "Admin - Contest List"
-	cc.Data["IsContest"] = true
-	cc.Data["IsList"] = true
+	cc.Output["Contest"] = contestList
+	cc.Output["Title"] = "Admin - Contest List"
+	cc.Output["IsContest"] = true
+	cc.Output["IsList"] = true
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
@@ -44,20 +44,20 @@ func (cc *AdminContest) Add() {
 	restweb.Logger.Debug("Admin Contest Add")
 
 	now := time.Now()
-	cc.Data["StartYear"] = now.Year()
-	cc.Data["StartMonth"] = int(now.Month())
-	cc.Data["StartDay"] = int(now.Day())
-	cc.Data["StartHour"] = int(now.Hour())
+	cc.Output["StartYear"] = now.Year()
+	cc.Output["StartMonth"] = int(now.Month())
+	cc.Output["StartDay"] = int(now.Day())
+	cc.Output["StartHour"] = int(now.Hour())
 
 	end := now.Add(5 * time.Hour)
-	cc.Data["EndYear"] = end.Year()
-	cc.Data["EndMonth"] = int(end.Month())
-	cc.Data["EndDay"] = int(end.Day())
-	cc.Data["EndHour"] = int(end.Hour())
+	cc.Output["EndYear"] = end.Year()
+	cc.Output["EndMonth"] = int(end.Month())
+	cc.Output["EndDay"] = int(end.Day())
+	cc.Output["EndHour"] = int(end.Hour())
 
-	cc.Data["Title"] = "Admin - Contest Add"
-	cc.Data["IsContest"] = true
-	cc.Data["IsAdd"] = true
+	cc.Output["Title"] = "Admin - Contest Add"
+	cc.Output["IsContest"] = true
+	cc.Output["IsAdd"] = true
 
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
@@ -67,22 +67,21 @@ func (cc *AdminContest) Insert() {
 	restweb.Logger.Debug("Admin Contest Insert")
 
 	one := model.Contest{}
-	r := cc.Requset
 
-	one.Title = r.FormValue("title")
-	year, err := strconv.Atoi(r.FormValue("startTimeYear"))
-	month, err := strconv.Atoi(r.FormValue("startTimeMonth"))
-	day, err := strconv.Atoi(r.FormValue("startTimeDay"))
-	hour, err := strconv.Atoi(r.FormValue("startTimeHour"))
-	min, err := strconv.Atoi(r.FormValue("startTimeMinute"))
+	one.Title = cc.Input.Get("title")
+	year, err := strconv.Atoi(cc.Input.Get("startTimeYear"))
+	month, err := strconv.Atoi(cc.Input.Get("startTimeMonth"))
+	day, err := strconv.Atoi(cc.Input.Get("startTimeDay"))
+	hour, err := strconv.Atoi(cc.Input.Get("startTimeHour"))
+	min, err := strconv.Atoi(cc.Input.Get("startTimeMinute"))
 	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one.Start = start.Unix()
 
-	year, err = strconv.Atoi(r.FormValue("endTimeYear"))
-	month, err = strconv.Atoi(r.FormValue("endTimeMonth"))
-	day, err = strconv.Atoi(r.FormValue("endTimeDay"))
-	hour, err = strconv.Atoi(r.FormValue("endTimeHour"))
-	min, err = strconv.Atoi(r.FormValue("endTimeMinute"))
+	year, err = strconv.Atoi(cc.Input.Get("endTimeYear"))
+	month, err = strconv.Atoi(cc.Input.Get("endTimeMonth"))
+	day, err = strconv.Atoi(cc.Input.Get("endTimeDay"))
+	hour, err = strconv.Atoi(cc.Input.Get("endTimeHour"))
+	min, err = strconv.Atoi(cc.Input.Get("endTimeMinute"))
 	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one.End = end.Unix()
 
@@ -91,12 +90,12 @@ func (cc *AdminContest) Insert() {
 		return
 	}
 
-	switch r.FormValue("type") {
+	switch cc.Input.Get("type") {
 	case "public":
 		one.Encrypt = config.EncryptPB
-	case "private":
+	case "private": //TODO 设置argument为一个string数组
 		one.Encrypt = config.EncryptPT
-		argument := r.FormValue("userlist")
+		argument := cc.Input.Get("userlist")
 		var cr rune = 13
 		crStr := string(cr)
 		argument = strings.Trim(argument, crStr)
@@ -106,13 +105,13 @@ func (cc *AdminContest) Insert() {
 		one.Argument = argument
 	case "password":
 		one.Encrypt = config.EncryptPW
-		one.Argument = r.FormValue("password")
+		one.Argument = cc.Input.Get("password")
 	default:
 		cc.Error("args error", 400)
 		return
 	}
 
-	problemString := r.FormValue("problemList")
+	problemString := cc.Input.Get("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
 	problemList := strings.Split(problemString, ";")
@@ -255,10 +254,10 @@ func (cc *AdminContest) Edit(Cid string) {
 		one.IsPassword = true
 	}
 
-	cc.Data["Detail"] = one
-	cc.Data["Title"] = "Admin - " + "Contest" + " Edit"
-	cc.Data["IsContest"] = true
-	cc.Data["IsEdit"] = true
+	cc.Output["Detail"] = one
+	cc.Output["Title"] = "Admin - " + "Contest" + " Edit"
+	cc.Output["IsContest"] = true
+	cc.Output["IsEdit"] = true
 
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 }
@@ -273,22 +272,21 @@ func (cc *AdminContest) Update(Cid string) {
 		return
 	}
 
-	r := cc.Requset
 	one := model.Contest{}
-	one.Title = r.FormValue("title")
-	year, _ := strconv.Atoi(r.FormValue("startTimeYear"))
-	month, _ := strconv.Atoi(r.FormValue("startTimeMonth"))
-	day, _ := strconv.Atoi(r.FormValue("startTimeDay"))
-	hour, _ := strconv.Atoi(r.FormValue("startTimeHour"))
-	min, _ := strconv.Atoi(r.FormValue("startTimeMinute"))
+	one.Title = cc.Input.Get("title")
+	year, _ := strconv.Atoi(cc.Input.Get("startTimeYear"))
+	month, _ := strconv.Atoi(cc.Input.Get("startTimeMonth"))
+	day, _ := strconv.Atoi(cc.Input.Get("startTimeDay"))
+	hour, _ := strconv.Atoi(cc.Input.Get("startTimeHour"))
+	min, _ := strconv.Atoi(cc.Input.Get("startTimeMinute"))
 	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one.Start = start.Unix()
 
-	year, _ = strconv.Atoi(r.FormValue("endTimeYear"))
-	month, _ = strconv.Atoi(r.FormValue("endTimeMonth"))
-	day, _ = strconv.Atoi(r.FormValue("endTimeDay"))
-	hour, _ = strconv.Atoi(r.FormValue("endTimeHour"))
-	min, _ = strconv.Atoi(r.FormValue("endTimeMinute"))
+	year, _ = strconv.Atoi(cc.Input.Get("endTimeYear"))
+	month, _ = strconv.Atoi(cc.Input.Get("endTimeMonth"))
+	day, _ = strconv.Atoi(cc.Input.Get("endTimeDay"))
+	hour, _ = strconv.Atoi(cc.Input.Get("endTimeHour"))
+	min, _ = strconv.Atoi(cc.Input.Get("endTimeMinute"))
 	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
 	one.End = end.Unix()
 
@@ -297,13 +295,13 @@ func (cc *AdminContest) Update(Cid string) {
 		return
 	}
 
-	switch r.FormValue("type") {
+	switch cc.Input.Get("type") {
 	case "public":
 		one.Encrypt = config.EncryptPB
 		one.Argument = ""
 	case "private":
 		one.Encrypt = config.EncryptPT
-		argument := r.FormValue("userlist")
+		argument := cc.Input.Get("userlist")
 		var cr rune = 13
 		crStr := string(cr)
 		argument = strings.Trim(argument, crStr)
@@ -313,13 +311,13 @@ func (cc *AdminContest) Update(Cid string) {
 		one.Argument = argument
 	case "password":
 		one.Encrypt = config.EncryptPW
-		one.Argument = r.FormValue("password")
+		one.Argument = cc.Input.Get("password")
 	default:
 		cc.Error("args error", 400)
 		return
 	}
 	restweb.Logger.Debug(one.Argument)
-	problemString := r.FormValue("problemList")
+	problemString := cc.Input.Get("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
 	problemList := strings.Split(problemString, ";")

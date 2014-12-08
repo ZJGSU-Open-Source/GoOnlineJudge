@@ -4,8 +4,8 @@
 <form accept-charset="UTF-8" id="search_form" class="form-inline">
   <span> Search: </span><input id="search" name="search" size="30" type="text" value="{{.SearchValue}}">
   <select id="option" name="option" style="margin-left:10px">
-    <option value="title" {{if .SearchPid}}selected{{end}}>Title</option>
-    <option value="pid" {{if .SearchTitle}}selected{{end}}>ID</option>
+    <option value="title" {{if .SearchTitle}}selected{{end}}>Title</option>
+    <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
     <option value="source" {{if .SearchSource}}selected{{end}}>Source</option>
   </select>
   <input name="commit" type="submit" value="Go" style="margin-left:10px">

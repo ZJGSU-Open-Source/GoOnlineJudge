@@ -18,26 +18,16 @@ type AdminRejudge struct {
 func (pc *AdminRejudge) Index() {
 	restweb.Logger.Debug("Rejudge Page")
 
-	if pc.Privilege < config.PrivilegeTC {
-		pc.Err400("Warning", "Error Privilege to Rejudge problem")
-		return
-	}
-
-	pc.Data["Title"] = "Problem Rejudge"
-	pc.Data["RejudgePrivilege"] = true
-	pc.Data["IsProblem"] = true
-	pc.Data["IsRejudge"] = true
+	pc.Output["Title"] = "Problem Rejudge"
+	pc.Output["RejudgePrivilege"] = true
+	pc.Output["IsProblem"] = true
+	pc.Output["IsRejudge"] = true
 
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/rejudge.tpl")
 }
 
 func (pc *AdminRejudge) Rejudge() {
 	restweb.Logger.Debug("Problem Rejudge")
-
-	if pc.Privilege < config.PrivilegeTC {
-		pc.Err400("Warning", "Error Privilege to Rejudge problem")
-		return
-	}
 
 	args := pc.Requset.URL.Query()
 	types := args.Get("type")
