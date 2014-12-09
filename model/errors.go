@@ -2,8 +2,8 @@ package model
 
 import (
 	"errors"
-	"golog"
 	"os"
+	"restweb/golog"
 )
 
 var (
