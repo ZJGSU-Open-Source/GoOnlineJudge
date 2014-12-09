@@ -90,7 +90,7 @@ func requireContest(ctx *restweb.Context) bool {
 				ctx.Redirect("/sess", http.StatusFound)
 				return true
 			} else {
-				userlist := strings.Split(ContestDetail.Argument.(string), "\n")
+				userlist := strings.Split(ContestDetail.Argument.(string), "\r\n")
 				flag := false
 				for _, user := range userlist {
 					if user == Uid {
