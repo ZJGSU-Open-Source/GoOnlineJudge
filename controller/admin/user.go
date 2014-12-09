@@ -20,12 +20,12 @@ type privilegeUser struct {
 	Index int `json:"index"bson:"index"`
 }
 
-type UserController struct {
+type AdminUser struct {
 	class.Controller
 }
 
-//显示具有特殊权限的用户，url:/admin/user/list
-func (uc *UserController) List() {
+//显示具有特殊权限的用户，url:/admin/users/
+func (uc *AdminUser) List() {
 	restweb.Logger.Debug("Admin Privilege User List")
 
 	if uc.Privilege != config.PrivilegeAD {
@@ -50,8 +50,8 @@ func (uc *UserController) List() {
 	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
-//密码设置页面,url: /admin/user/pagepassword
-func (uc *UserController) Pagepassword() {
+//密码设置页面,url: /admin/users/pagepassword
+func (uc *AdminUser) Pagepassword() {
 	restweb.Logger.Debug("Admin Password Page")
 
 	uc.Output["Title"] = "Admin Password"
@@ -64,7 +64,7 @@ func (uc *UserController) Pagepassword() {
 }
 
 //设置用户密码，url:/admin/user/password, method: POST
-func (uc *UserController) Password() {
+func (uc *AdminUser) Password() {
 	restweb.Logger.Debug("Admin Password")
 
 	ok := 1
@@ -116,7 +116,7 @@ func (uc *UserController) Password() {
 }
 
 // 设置用户权限
-func (uc *UserController) Privilegeset() {
+func (uc *AdminUser) Privilegeset() {
 	restweb.Logger.Debug("User Privilege")
 
 	uid := uc.Input.Get("uid")
@@ -170,7 +170,7 @@ func (uc *UserController) Privilegeset() {
 }
 
 //Generate 生成指定数量的用户账号，/admin/user/generate
-func (uc *UserController) Generate() {
+func (uc *AdminUser) Generate() {
 	r := uc.Requset
 	if r.Method == "GET" {
 		uc.Output["Title"] = "Admin User Generate"

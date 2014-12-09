@@ -28,8 +28,8 @@
 	$('#new_user').submit( function(e) {
 		e.preventDefault();
 		$.ajax({
-			type:'POST',
-			url:'/admin/user/password',
+			type:'PUT',
+			url:'/admin/users/password',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
@@ -55,7 +55,7 @@
 			success: function(response) {
 				//var json = eval('('+response+')');
 				alert("Success");
-				window.location.href='/admin/user/list'
+				window.location.href='/admin/users'
 			}
 		});
 	});
