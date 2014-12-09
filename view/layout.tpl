@@ -55,11 +55,11 @@
                 {{if .IsCurrentUser}}
                   {{if .IsShowAdmin}}<li><a href="/admin/" class="icon icon-material-star">[Admin]</a></li>{{end}}
                   {{if .IsShowTeacher}}<li><a href="/admin/" class="icon icon-material-star-half">[Teacher]</a></li>{{end}}
-                  <li><a href="/user/settings" class="icon icon-material-settings">[{{.CurrentUser}}]</a></li>
+                  <li><a href="/users/settings" class="icon icon-material-settings">[{{.CurrentUser}}]</a></li>
                   <li><a class="user_signout icon icon-material-chevron-right" href="#">[Sign Out]</a></li>
                 {{else}}
                   {{if .IsUserSignIn}}{{else}}<li><a class="icon icon-material-account-circle" href="/sess">[Sign In]</a></li>{{end}}
-                  {{if .IsUserSignUp}}{{else}}<li><a class="icon icon-material-person-add" href="/user/new">[Sign Up]</a></li>{{end}}
+                  {{if .IsUserSignUp}}{{else}}<li><a class="icon icon-material-person-add" href="/users/new">[Sign Up]</a></li>{{end}}
                 {{end}}
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -85,10 +85,10 @@
         {{if .IsSettings}}
         <div class="pinned note" >
         <div class="icon icon-material-add-circle" style="float:right"></div>
-          {{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/user/{{.CurrentUser}}">Detail</a>{{end}}
+          {{if .IsSettingsDetail}}<span>Detail</span>{{else}}<a href="/users/{{.CurrentUser}}">Detail</a>{{end}}
 
           <br/>
-          {{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/user/profile">Edit Info</a>{{end}}
+          {{if .IsSettingsEdit}}<span>Edit Info</span>{{else}}<a href="/users/profile">Edit Info</a>{{end}}
           <br/>
           {{if .IsSettingsPassword}}<span>Password</span>{{else}}<a href="/account">Password</a>{{end}}
         </div>

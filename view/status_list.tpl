@@ -106,7 +106,7 @@
         
           <tr>
             <td>{{.Sid}}</td>
-            <td><a href="/user/{{.Uid}}">{{.Uid}}</a></td>
+            <td><a href="/users/{{.Uid}}">{{.Uid}}</a></td>
             <td><a href="/problems/{{.Pid}}">{{.Pid}}</a></td>
             <td><span class="submitRes-{{.Judge}}" disabled="disabled">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>

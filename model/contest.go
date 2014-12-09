@@ -13,7 +13,7 @@ type Contest struct {
 	Title    string      `json:"title"bson:"title"`
 	Encrypt  int         `json:"encrypt"bson:"encrypt"`
 	Argument interface{} `json:"argument"bson:"argument"`
-	Type     string      `json:"type"bson:"type"` //the type of Contest,acm Contest or normal exercise
+	Creator  string      `json:"creator"bson:"creator"` //who creates the contest
 
 	Start int64 `json:"start"bson:"start"`
 	End   int64 `json:"end"bson:"end"`
@@ -25,7 +25,7 @@ type Contest struct {
 }
 
 var cDetailSelector = bson.M{"_id": 0}
-var cListSelector = bson.M{"_id": 0, "cid": 1, "title": 1, "encrypt": 1, "argument": 1, "start": 1, "end": 1, "status": 1}
+var cListSelector = bson.M{"_id": 0, "cid": 1, "title": 1, "encrypt": 1, "creator": 1, "start": 1, "end": 1, "status": 1}
 
 type ContestModel struct {
 	class.Model
@@ -111,7 +111,6 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 	alt["encrypt"] = ori.Encrypt
 	alt["argument"] = ori.Argument
 	alt["list"] = ori.List
-	alt["type"] = ori.Type
 
 	err := this.OpenDB()
 	if err != nil {

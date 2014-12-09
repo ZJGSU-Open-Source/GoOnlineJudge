@@ -87,7 +87,7 @@
     e.preventDefault();
     $.ajax({
       type:'POST',
-      url:'/contest/{{.Cid}}/problem/{{.Pid}}',
+      url:'/contests/{{.Cid}}/problems/{{.Pid}}',
       data:$(this).serialize(),
       error: function(XMLHttpRequest) {
         if(XMLHttpRequest.status == 401){
@@ -104,7 +104,7 @@
       },
       success: function(result) {
         $('textarea').val('')
-        window.location.href = '/contest/{{.Cid}}/status';
+        window.location.href = '/contests/{{.Cid}}/status';
       }
     });
   });

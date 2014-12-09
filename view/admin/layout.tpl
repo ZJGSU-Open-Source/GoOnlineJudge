@@ -22,11 +22,8 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
-            <a href="/user/settings">[{{.CurrentUser}}]</a>
+            <a href="/users/settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
-          {{else}}
-            {{if .IsUserSignIn}}[Sign In]{{else}}<a href="/sess">[Sign In]</a>{{end}}
-            {{if .IsUserSignUp}}[Sign Up]{{else}}<a href="/user/signup">[Sign Up]</a>{{end}}
           {{end}}
         </div>
         <hr> 
