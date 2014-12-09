@@ -1,7 +1,7 @@
 {{define "content"}}
 <h1>Team Account Generate</h1>
 
-<form accept-charset="UTF-8" id="search_form" action="/admin/user/generate" method="post">
+<form accept-charset="UTF-8" id="search_form" action="/admin/users/generation" method="post">
 <div style="margin:0;padding:0;display:inline">
 	<input name="utf8" type="hidden" value="✓">
 </div>
