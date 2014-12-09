@@ -72,7 +72,7 @@
 			success: function(response) {
 				var json = eval('('+response+')');
 				alert("Success");
-				window.location.href = '/user/'+json.uid;
+				window.location.href = '/users/'+json.uid;
 			}
 		});
 	});

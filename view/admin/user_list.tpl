@@ -13,7 +13,7 @@
 				{{range .}}
 				{{if LargePU .Privilege}}
 					<tr>
-						<td><a href="/user/{{.Uid}}" target="_blank">{{.Uid}}</a></td>
+						<td><a href="/users/{{.Uid}}" target="_blank">{{.Uid}}</a></td>
 						<td>{{ShowPrivilege .Privilege}}</td>
 						<td><a class="admin_user_delete" href="#" data-id="{{.Uid}}">[Delete]</a></td>
 					</tr>

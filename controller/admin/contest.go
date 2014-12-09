@@ -86,9 +86,12 @@ func (cc *AdminContest) Status(Cid string) {
 		cc.Error("args error", 400)
 		return
 	}
-
 	contestModel := model.ContestModel{}
-	one, err := contestModel.Detail(cid)
+	one, _ := contestModel.Detail(cid)
+	if one.Creator != cc.Uid {
+		cc.Error("privilege error", 400)
+		return
+	}
 
 	var status int
 	switch one.Status {
@@ -116,8 +119,13 @@ func (cc *AdminContest) Delete(Cid string) {
 		cc.Error("args error", 400)
 		return
 	}
-
 	contestModel := model.ContestModel{}
+	old, _ := contestModel.Detail(cid)
+	if old.Creator != cc.Uid {
+		cc.Error("privilege error", 400)
+		return
+	}
+
 	err = contestModel.Delete(cid)
 	if err != nil {
 		cc.Error(err.Error(), 400)
@@ -206,10 +214,15 @@ func (cc *AdminContest) Update(Cid string) {
 		cc.Error("args error", 400)
 		return
 	}
+	contestModel := model.ContestModel{}
+	old, _ := contestModel.Detail(cid)
+	if old.Creator != cc.Uid {
+		cc.Error("privilege error", 400)
+		return
+	}
 
 	one := cc.contest()
 
-	contestModel := model.ContestModel{}
 	err = contestModel.Update(cid, one)
 	if err != nil {
 		cc.Error(err.Error(), 400)
@@ -282,5 +295,7 @@ func (cc *AdminContest) contest() (one model.Contest) {
 		list = append(list, pid)
 	}
 	one.List = list
+	one.Creator = cc.Uid
+	restweb.Logger.Debug(one.Creator)
 	return one
 }

@@ -107,35 +107,7 @@ func (pc *AdminProblem) Add() {
 func (pc *AdminProblem) Insert() {
 	restweb.Logger.Debug("Admin Problem Insert")
 
-	one := model.Problem{}
-	one.Title = pc.Input.Get("title")
-	time, err := strconv.Atoi(pc.Input.Get("time"))
-	if err != nil {
-		pc.Error("The value 'Time' is neither too short nor too large", 400)
-		return
-	}
-	one.Time = time
-	memory, err := strconv.Atoi(pc.Input.Get("memory"))
-	if err != nil {
-		pc.Error("The value 'Memory' is neither too short nor too large", 400)
-		return
-	}
-	one.Memory = memory
-	if special := pc.Input.Get("special"); special == "" {
-		one.Special = 0
-	} else {
-		one.Special = 1
-	}
-
-	in := pc.Input.Get("in")
-	out := pc.Input.Get("out")
-	one.Description = template.HTML(pc.Input.Get("description"))
-	one.Input = template.HTML(pc.Input.Get("input"))
-	one.Output = template.HTML(pc.Input.Get("output"))
-	one.In = in
-	one.Out = out
-	one.Source = pc.Input.Get("source")
-	one.Hint = pc.Input.Get("hint")
+	one := pc.problem()
 
 	problemModel := model.ProblemModel{}
 	pid, err := problemModel.Insert(one)
@@ -144,10 +116,10 @@ func (pc *AdminProblem) Insert() {
 		return
 	}
 
-	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
-	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", one.In)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", one.Out)
 
-	pc.Redirect("/admin/problem", http.StatusFound)
+	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
 }
 
 func createfile(path, filename string, context string) {
@@ -221,8 +193,7 @@ func (pc *AdminProblem) Delete(Pid string) {
 	problemModel := model.ProblemModel{}
 	problemModel.Delete(pid)
 
-	//TODO:delete testdata
-
+	os.RemoveAll(config.Datapath + Pid) //delete test data
 	pc.Response.WriteHeader(200)
 }
 
@@ -269,17 +240,31 @@ func (pc *AdminProblem) Update(Pid string) {
 		pc.Error("args error", 400)
 		return
 	}
-	one := model.Problem{}
+	one := pc.problem()
+
+	problemModel := model.ProblemModel{}
+	err = problemModel.Update(pid, one)
+	if err != nil {
+		pc.Error(err.Error(), 500)
+		return
+	}
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", one.In)
+	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", one.Out)
+
+	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
+}
+
+func (pc *AdminProblem) problem() (one model.Problem) {
 	one.Title = pc.Input.Get("title")
 	time, err := strconv.Atoi(pc.Input.Get("time"))
 	if err != nil {
-		pc.Error("The value 'Time' is neither too short nor too large", 500)
+		pc.Error("The value 'Time' is neither too short nor too large", 400)
 		return
 	}
 	one.Time = time
 	memory, err := strconv.Atoi(pc.Input.Get("memory"))
 	if err != nil {
-		pc.Error("The value 'memory' is neither too short nor too large", 500)
+		pc.Error("The value 'Memory' is neither too short nor too large", 400)
 		return
 	}
 	one.Memory = memory
@@ -291,7 +276,6 @@ func (pc *AdminProblem) Update(Pid string) {
 
 	in := pc.Input.Get("in")
 	out := pc.Input.Get("out")
-
 	one.Description = template.HTML(pc.Input.Get("description"))
 	one.Input = template.HTML(pc.Input.Get("input"))
 	one.Output = template.HTML(pc.Input.Get("output"))
@@ -300,17 +284,7 @@ func (pc *AdminProblem) Update(Pid string) {
 	one.Source = pc.Input.Get("source")
 	one.Hint = pc.Input.Get("hint")
 
-	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", in)
-	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", out)
-
-	problemModel := model.ProblemModel{}
-	err = problemModel.Update(pid, one)
-	if err != nil {
-		pc.Error(err.Error(), 500)
-		return
-	}
-
-	pc.Redirect("/problems/"+strconv.Itoa(pid), http.StatusFound)
+	return one
 }
 
 func (pc *AdminProblem) ImportPage() {
