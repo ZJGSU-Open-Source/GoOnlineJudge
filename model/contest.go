@@ -109,7 +109,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 	alt["start"] = ori.Start
 	alt["end"] = ori.End
 	alt["encrypt"] = ori.Encrypt
-	alt["Argument"] = ori.Argument
+	alt["argument"] = ori.Argument
 	alt["list"] = ori.List
 	alt["type"] = ori.Type
 

@@ -66,74 +66,9 @@ func (cc *AdminContest) Add() {
 func (cc *AdminContest) Insert() {
 	restweb.Logger.Debug("Admin Contest Insert")
 
-	one := model.Contest{}
-
-	one.Title = cc.Input.Get("title")
-	year, err := strconv.Atoi(cc.Input.Get("startTimeYear"))
-	month, err := strconv.Atoi(cc.Input.Get("startTimeMonth"))
-	day, err := strconv.Atoi(cc.Input.Get("startTimeDay"))
-	hour, err := strconv.Atoi(cc.Input.Get("startTimeHour"))
-	min, err := strconv.Atoi(cc.Input.Get("startTimeMinute"))
-	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
-	one.Start = start.Unix()
-
-	year, err = strconv.Atoi(cc.Input.Get("endTimeYear"))
-	month, err = strconv.Atoi(cc.Input.Get("endTimeMonth"))
-	day, err = strconv.Atoi(cc.Input.Get("endTimeDay"))
-	hour, err = strconv.Atoi(cc.Input.Get("endTimeHour"))
-	min, err = strconv.Atoi(cc.Input.Get("endTimeMinute"))
-	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
-	one.End = end.Unix()
-
-	if start.After(end) {
-		cc.Error("args error", 400)
-		return
-	}
-
-	switch cc.Input.Get("type") {
-	case "public":
-		one.Encrypt = config.EncryptPB
-	case "private": //TODO 设置argument为一个string数组
-		one.Encrypt = config.EncryptPT
-		argument := cc.Input.Get("userlist")
-		var cr rune = 13
-		crStr := string(cr)
-		argument = strings.Trim(argument, crStr)
-		argument = strings.Trim(argument, "/r/n")
-		argument = strings.Replace(argument, "/r/n", "", -1)
-		argument = strings.Replace(argument, crStr, "/n", -1)
-		one.Argument = argument
-	case "password":
-		one.Encrypt = config.EncryptPW
-		one.Argument = cc.Input.Get("password")
-	default:
-		cc.Error("args error", 400)
-		return
-	}
-
-	problemString := cc.Input.Get("problemList")
-	problemString = strings.Trim(problemString, " ")
-	problemString = strings.Trim(problemString, ";")
-	problemList := strings.Split(problemString, ";")
-	var list []int
-	for _, v := range problemList {
-		pid, err := strconv.Atoi(v)
-		if err != nil {
-			restweb.Logger.Debug(err)
-			continue
-		}
-		problemModel := model.ProblemModel{}
-		_, err = problemModel.Detail(pid) //检查题目是否存在
-		if err != nil {
-			restweb.Logger.Debug(err)
-			continue
-		}
-		list = append(list, pid)
-	}
-	one.List = list
-
+	one := cc.contest()
 	contestModel := model.ContestModel{}
-	err = contestModel.Insert(one)
+	err := contestModel.Insert(one)
 	if err != nil {
 		cc.Error(err.Error(), 500)
 		return
@@ -272,7 +207,19 @@ func (cc *AdminContest) Update(Cid string) {
 		return
 	}
 
-	one := model.Contest{}
+	one := cc.contest()
+
+	contestModel := model.ContestModel{}
+	err = contestModel.Update(cid, one)
+	if err != nil {
+		cc.Error(err.Error(), 400)
+		return
+	}
+	cc.Redirect("/admin/contests", http.StatusFound)
+}
+
+func (cc *AdminContest) contest() (one model.Contest) {
+
 	one.Title = cc.Input.Get("title")
 	year, _ := strconv.Atoi(cc.Input.Get("startTimeYear"))
 	month, _ := strconv.Atoi(cc.Input.Get("startTimeMonth"))
@@ -291,24 +238,22 @@ func (cc *AdminContest) Update(Cid string) {
 	one.End = end.Unix()
 
 	if start.After(end) {
-		cc.Error("cc.Query error", 400)
+		cc.Error("args error", 400)
 		return
 	}
 
 	switch cc.Input.Get("type") {
 	case "public":
 		one.Encrypt = config.EncryptPB
-		one.Argument = ""
-	case "private":
+	case "private": //TODO 设置argument为一个string数组
 		one.Encrypt = config.EncryptPT
 		argument := cc.Input.Get("userlist")
 		var cr rune = 13
 		crStr := string(cr)
 		argument = strings.Trim(argument, crStr)
 		argument = strings.Trim(argument, "\r\n")
-		argument = strings.Replace(argument, "\r\n", "\n", -1)
-		argument = strings.Replace(argument, crStr, "\n", -1)
 		one.Argument = argument
+		restweb.Logger.Debug(one.Argument)
 	case "password":
 		one.Encrypt = config.EncryptPW
 		one.Argument = cc.Input.Get("password")
@@ -316,7 +261,7 @@ func (cc *AdminContest) Update(Cid string) {
 		cc.Error("args error", 400)
 		return
 	}
-	restweb.Logger.Debug(one.Argument)
+
 	problemString := cc.Input.Get("problemList")
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
@@ -337,12 +282,5 @@ func (cc *AdminContest) Update(Cid string) {
 		list = append(list, pid)
 	}
 	one.List = list
-
-	contestModel := model.ContestModel{}
-	err = contestModel.Update(cid, one)
-	if err != nil {
-		cc.Error(err.Error(), 400)
-		return
-	}
-	cc.Redirect("/admin/contests", http.StatusFound)
+	return one
 }
