@@ -2,6 +2,7 @@ package class
 
 import (
 	"GoOnlineJudge/config"
+	"html/template"
 	"io/ioutil"
 	"restweb"
 	"strconv"
@@ -44,8 +45,8 @@ func (ct *Controller) Init() {
 	if err != nil {
 		restweb.Logger.Debug(err)
 	}
-	restweb.Logger.Debug(string(b))
-	ct.Output["Msg"] = string(b)
+
+	ct.Output["Msg"] = template.HTML(string(b))
 }
 
 func (ct *Controller) Err400(title string, info string) {
