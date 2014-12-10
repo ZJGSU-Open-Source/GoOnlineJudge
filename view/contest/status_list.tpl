@@ -45,7 +45,7 @@
       url += 'judge=' + judge + "&";
     }
     if (language > 0)
-      url += 'language=' + language + "&";
+      url += 'language=' + language;
     window.location.href = url;
   });
   </script>
