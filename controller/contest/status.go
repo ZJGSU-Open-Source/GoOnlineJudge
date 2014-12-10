@@ -31,7 +31,9 @@ func (sc *ContestStatus) List(Cid string) {
 	}
 	if v, ok := sc.Input["pid"]; ok {
 		sc.Output["SearchPid"] = v[0]
-		qry["pid"] = v[0]
+		idx, _ := strconv.Atoi(v[0])
+		qry["pid"] = strconv.Itoa(sc.ContestDetail.List[idx])
+		restweb.Logger.Debug(qry["pid"], idx)
 	}
 	if v, ok := sc.Input["judge"]; ok {
 		sc.Output["SearchJudge"+v[0]] = v[0]
