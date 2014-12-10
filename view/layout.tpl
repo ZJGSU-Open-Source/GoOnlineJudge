@@ -65,9 +65,9 @@
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
       </nav>
-      {{if .Notice}}
+      {{if .Msg}}
      <center>
-      <marquee style='width:60%;height:60px' scrollamount=2 direction=left scrolldelay=30 onMouseOver='this.stop()' onMouseOut='this.start()'>123</marquee>
+      <marquee style='width:60%;height:30px' scrollamount=2 direction=left scrolldelay=30 onMouseOver='this.stop()' onMouseOut='this.start()'>{{.Msg}}</marquee>
      </center>
      {{end}}
       <div id="body"> 
