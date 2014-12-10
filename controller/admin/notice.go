@@ -2,27 +2,29 @@ package admin
 
 import (
 	"GoOnlineJudge/class"
+	"html/template"
+	"net/http"
 	"os"
 	"restweb"
 )
 
-type NoticeAdmin struct {
+type AdminNotice struct {
 	class.Controller
 }
 
-func (n *NoticeAdmin) Index() {
+func (n *AdminNotice) Index() {
+	n.Output["Msg"] = string(n.Output["Msg"].(template.HTML))
 	n.RenderTemplate("view/admin/layout.tpl", "view/admin/notice.tpl")
 }
-func (n *NoticeAdmin) Set() {
+func (n *AdminNotice) Edit() {
 	restweb.Logger.Debug("Admin set notice")
 
 	msg := n.Input.Get("msg")
 	file, err := os.Create("view/admin/msg.txt")
 	if err != nil {
-		restweb.Logger.Debug(err)
 		return
 	}
 	defer file.Close()
 	file.Write([]byte(msg))
-	n.Redirect("/admin/notice", 307)
+	n.Redirect("/admin/notice", http.StatusFound)
 }

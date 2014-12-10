@@ -49,6 +49,7 @@ func main() {
 	restweb.RegisterController(admin.AdminRejudge{})
 	restweb.RegisterController(admin.AdminTestdata{})
 	restweb.RegisterController(admin.AdminUser{})
+	restweb.RegisterController(admin.AdminNotice{})
 
 	restweb.RegisterFilters(restweb.ANY, `^/admin`, restweb.Before, requireAdmin)
 	restweb.RegisterFilters(restweb.POST, `^/problems/\d+`, restweb.Before, requireLogin)
