@@ -74,7 +74,8 @@ const (
 
 // 权限分离
 const (
-	AddProblem    = 1 << iota //添加问题
+	AccessAdmin   = 1 << iota //管理员页面
+	AddProblem                //添加问题
 	DeleteProblem             //删除问题
 	AddContest                //添加竞赛
 	DeleteContest             //删除竞赛

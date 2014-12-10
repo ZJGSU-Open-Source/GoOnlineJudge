@@ -73,6 +73,10 @@ func SameID(ID1, ID2 string) bool {
 	return ID1 == ID2
 }
 
+func HasPriv(priv, needpriv int) bool {
+	return priv&needpriv > 0
+}
+
 // initFuncMap 初始化FuncMap
 func initFuncMap() {
 	restweb.AddFuncMap("ShowRatio", ShowRatio)
@@ -84,4 +88,5 @@ func initFuncMap() {
 	restweb.AddFuncMap("LargePU", LargePU)
 	restweb.AddFuncMap("ShowStatus", ShowStatus)
 	restweb.AddFuncMap("ShowSim", ShowSim)
+	restweb.AddFuncMap("HasPriv", HasPriv)
 }

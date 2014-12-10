@@ -13,7 +13,7 @@ type ContestStatus struct {
 	Contest
 }
 
-//TODO : list by arguments like :contest/<cid>/status?uid=vsake&solved=3
+//TODO : list by arguments like :contests/<cid>/status?uid=vsake&judge=3&language=1
 func (sc *ContestStatus) List(Cid string) {
 	restweb.Logger.Debug("Contest Status List")
 
@@ -24,11 +24,22 @@ func (sc *ContestStatus) List(Cid string) {
 	qry["module"] = strconv.Itoa(config.ModuleC)
 	qry["mid"] = Cid
 
-	if uid, ok := sc.Input["uid"]; ok {
-		qry["uid"] = uid[0]
+	// Search
+	if v, ok := sc.Input["uid"]; ok {
+		sc.Output["SearchUid"] = v[0]
+		qry["uid"] = v[0]
 	}
-	if judge, ok := sc.Input["judge"]; ok {
-		qry["judge"] = judge[0]
+	if v, ok := sc.Input["pid"]; ok {
+		sc.Output["SearchPid"] = v[0]
+		qry["pid"] = v[0]
+	}
+	if v, ok := sc.Input["judge"]; ok {
+		sc.Output["SearchJudge"+v[0]] = v[0]
+		qry["judge"] = v[0]
+	}
+	if v, ok := sc.Input["language"]; ok {
+		sc.Output["SearchLanguage"+v[0]] = v[0]
+		qry["language"] = v[0]
 	}
 
 	solutionList, err := solutionModel.List(qry)
