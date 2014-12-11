@@ -26,7 +26,11 @@
             <td>{{ShowGapTime $v.Time}}</td>
             {{with $v.ProblemList}}
             {{range .}}
-            <td>{{if .}}{{if eq .Judge 3}}<span class="ac"> {{ShowGapTime .Time}}/({{.Count}})</span>{{else}}0/({{.Count}}){{end}}{{else}}0/(0){{end}}</td>
+            {{if .}}
+              {{if eq .Judge 3}}<td id="ac"> {{ShowGapTime .Time}}/({{.Count}})</td>
+              {{else}}<td>0/({{.Count}})</td>
+              {{end}}
+            {{else}}<td>0/(0){{end}}</td>
             {{end}}
             {{end}}
           </tr>
