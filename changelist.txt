@@ -1,0 +1,9 @@
+2014-12-11 Version 14.12.11:
+1. Refactor the code in restweb freamwork
+2. Satisfy RESTful API
+3. Fix Contest encrypt bug
+4. Add admin notice
+4. Contest status search support
+5. Fix edit problem time bug
+6. Add install script
+7. Other small bugs fix
