@@ -104,7 +104,8 @@ func (rc *ContestRanklist) ranklist() UserSorter {
 			pro.Count++
 			pro.Time += 20 * 60 //罚时20分钟
 		} else if v.Judge == config.JudgeAC {
-			pro.Time += v.Create - rc.ContestDetail.Start
+			user.Time += pro.Time
+			pro.Time = v.Create - rc.ContestDetail.Start
 			pro.Judge = config.JudgeAC
 			user.Time += pro.Time
 			user.Solved += 1
