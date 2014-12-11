@@ -194,7 +194,7 @@ func (pc *AdminProblem) Delete(Pid string) {
 	problemModel.Delete(pid)
 
 	os.RemoveAll(config.Datapath + Pid) //delete test data
-	pc.Response.WriteHeader(200)
+	pc.W.WriteHeader(200)
 }
 
 func (pc *AdminProblem) Edit(Pid string) {
@@ -295,8 +295,8 @@ func (pc *AdminProblem) ImportPage() {
 }
 
 func (pc *AdminProblem) Import() {
-	pc.Requset.ParseMultipartForm(32 << 20)
-	fhs := pc.Requset.MultipartForm.File["fps.xml"]
+	pc.R.ParseMultipartForm(32 << 20)
+	fhs := pc.R.MultipartForm.File["fps.xml"]
 	file, err := fhs[0].Open()
 	if err != nil {
 		restweb.Logger.Debug(err)
@@ -345,6 +345,7 @@ func (pc *AdminProblem) Import() {
 	pid, err := proModel.Insert(problem)
 	if err != nil {
 		restweb.Logger.Debug(err)
+		return
 	}
 
 	// 建立测试数据文件

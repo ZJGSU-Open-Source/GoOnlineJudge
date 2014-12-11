@@ -47,7 +47,7 @@ func (uc *UserController) Register() {
 	} else {
 		_, err := userModel.Detail(uid)
 		if err != nil && err != model.NotFoundErr {
-			http.Error(uc.Response, err.Error(), 500)
+			http.Error(uc.W, err.Error(), 500)
 			return
 		} else if err == nil {
 			ok, hint["uid"] = 0, "uc handle is currently in use."
@@ -78,11 +78,11 @@ func (uc *UserController) Register() {
 			return
 		}
 
-		uc.Response.WriteHeader(200)
+		uc.W.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
-		uc.Response.WriteHeader(400)
-		uc.Response.Write(b)
+		uc.W.WriteHeader(400)
+		uc.W.Write(b)
 	}
 }
 
@@ -204,17 +204,17 @@ func (uc *UserController) Update() {
 	if one.Nick == "" {
 		hint := make(map[string]string)
 		hint["nick"] = "Nick should not be empty."
-		uc.Response.WriteHeader(400)
+		uc.W.WriteHeader(400)
 		b, _ := json.Marshal(&hint)
-		uc.Response.Write(b)
+		uc.W.Write(b)
 	} else {
 		userModel := model.UserModel{}
 		err := userModel.Update(uc.Uid, one)
 		if err != nil {
-			http.Error(uc.Response, err.Error(), 500)
+			http.Error(uc.W, err.Error(), 500)
 			return
 		}
-		uc.Response.WriteHeader(200)
+		uc.W.WriteHeader(200)
 	}
 }
 
@@ -264,10 +264,10 @@ func (uc *UserController) Password() {
 			return
 		}
 
-		uc.Response.WriteHeader(200)
+		uc.W.WriteHeader(200)
 	} else {
-		uc.Response.WriteHeader(400)
+		uc.W.WriteHeader(400)
 	}
 	b, _ := json.Marshal(&hint)
-	uc.Response.Write(b)
+	uc.W.Write(b)
 }

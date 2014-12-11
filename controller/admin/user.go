@@ -107,12 +107,12 @@ func (uc *AdminUser) Password() {
 			return
 		}
 
-		uc.Response.WriteHeader(200)
+		uc.W.WriteHeader(200)
 	} else {
-		uc.Response.WriteHeader(400)
+		uc.W.WriteHeader(400)
 	}
 	b, _ := json.Marshal(&hint)
-	uc.Response.Write(b)
+	uc.W.Write(b)
 }
 
 // 设置用户权限
@@ -160,18 +160,18 @@ func (uc *AdminUser) Privilegeset() {
 			return
 		}
 
-		uc.Response.WriteHeader(200)
+		uc.W.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
 
-		uc.Response.WriteHeader(400)
-		uc.Response.Write(b)
+		uc.W.WriteHeader(400)
+		uc.W.Write(b)
 	}
 }
 
 //Generate 生成指定数量的用户账号，/admin/user/generate
 func (uc *AdminUser) Generate() {
-	r := uc.Requset
+	r := uc.R
 	if r.Method == "GET" {
 		uc.Output["Title"] = "Admin User Generate"
 		uc.Output["IsUser"] = true
@@ -214,10 +214,10 @@ func (uc *AdminUser) Generate() {
 			nxt++
 		}
 
-		uc.Response.Header().Add("ContentType", "application/octet-stream")
-		uc.Response.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
-		uc.Response.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
-		uc.Response.Write([]byte(accountlist))
+		uc.W.Header().Add("ContentType", "application/octet-stream")
+		uc.W.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
+		uc.W.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
+		uc.W.Write([]byte(accountlist))
 	}
 }
 

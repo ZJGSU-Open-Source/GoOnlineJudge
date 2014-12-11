@@ -54,7 +54,7 @@ func (tc *AdminTestdata) Upload(pid string) {
 		tc.Err400("Warning", "Error Privilege to Update testdate")
 		return
 	}
-	r := tc.Requset
+	r := tc.R
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["testfiles"]
 	os.Mkdir(config.Datapath+pid, os.ModePerm)
@@ -90,10 +90,10 @@ func (tc *AdminTestdata) Download(pid string) {
 	}
 	defer file.Close()
 	finfo, _ := file.Stat()
-	tc.Response.Header().Add("ContentType", "application/octet-stream")
-	tc.Response.Header().Add("Content-disposition", "attachment; filename="+filename)
-	tc.Response.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
-	io.Copy(tc.Response, file)
+	tc.W.Header().Add("ContentType", "application/octet-stream")
+	tc.W.Header().Add("Content-disposition", "attachment; filename="+filename)
+	tc.W.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
+	io.Copy(tc.W, file)
 }
 
 // Delete 删除指定testdata，URL:/admin/testdata/delete?type=<type>
@@ -112,5 +112,5 @@ func (tc *AdminTestdata) Delete(pid string) {
 	if err != nil {
 		restweb.Logger.Debug(err)
 	}
-	tc.Response.WriteHeader(200)
+	tc.W.WriteHeader(200)
 }

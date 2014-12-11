@@ -32,7 +32,7 @@ func (rc *RanklistController) Index() {
 	userModel := model.UserModel{}
 	userList, err := userModel.List(nil)
 	if err != nil {
-		http.Error(rc.Response, err.Error(), 400)
+		http.Error(rc.W, err.Error(), 400)
 		return
 	}
 

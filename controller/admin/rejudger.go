@@ -29,7 +29,7 @@ func (pc *AdminRejudge) Index() {
 func (pc *AdminRejudge) Rejudge() {
 	restweb.Logger.Debug("Problem Rejudge")
 
-	args := pc.Requset.URL.Query()
+	args := pc.R.URL.Query()
 	types := args.Get("type")
 	id, err := strconv.Atoi(args.Get("id"))
 	if err != nil {
@@ -49,8 +49,8 @@ func (pc *AdminRejudge) Rejudge() {
 			hint["info"] = "Problem does not exist!"
 
 			b, _ := json.Marshal(&hint)
-			pc.Response.WriteHeader(400)
-			pc.Response.Write(b)
+			pc.W.WriteHeader(400)
+			pc.W.Write(b)
 
 			return
 		}
@@ -68,12 +68,12 @@ func (pc *AdminRejudge) Rejudge() {
 			one["Memory"] = pro.Memory
 			one["Rejudge"] = true
 			reader, _ := pc.PostReader(&one)
-			response, err := http.Post(config.JudgeHost, "application/json", reader)
+			W, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
 				// http.Error(w, "post error", 500)
 				restweb.Logger.Debug(err)
 			} else {
-				response.Body.Close()
+				W.Body.Close()
 			}
 		}
 	} else if types == "Sid" {
@@ -86,8 +86,8 @@ func (pc *AdminRejudge) Rejudge() {
 
 			hint["info"] = "Solution does not exist!"
 			b, _ := json.Marshal(&hint)
-			pc.Response.WriteHeader(400)
-			pc.Response.Write(b)
+			pc.W.WriteHeader(400)
+			pc.W.Write(b)
 			return
 		}
 
@@ -103,12 +103,12 @@ func (pc *AdminRejudge) Rejudge() {
 		one["Rejudge"] = true
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)
-		response, err := http.Post(config.JudgeHost, "application/json", reader)
+		W, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			pc.Error("post error", 500)
 			return
 		}
-		defer response.Body.Close()
+		defer W.Body.Close()
 	}
-	pc.Response.WriteHeader(200)
+	pc.W.WriteHeader(200)
 }

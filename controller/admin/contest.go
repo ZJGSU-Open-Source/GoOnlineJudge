@@ -131,7 +131,7 @@ func (cc *AdminContest) Delete(Cid string) {
 		cc.Error(err.Error(), 400)
 		return
 	}
-	cc.Response.WriteHeader(200)
+	cc.W.WriteHeader(200)
 }
 
 // 竞赛编辑页面，url:/admin/contests/

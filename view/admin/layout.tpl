@@ -32,7 +32,7 @@
         <ul>
           <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/admin">Home</a>{{end}}</li>
           {{if .IsAdmin}}
-          <li><a href="/admin/notice">Notice</a></li>
+          <li>{{if .IsNotice}}<span>Notice</span>{{else}}<a href="/admin/notice">Notice</a>{{end}}</li>
           <li><a href="/admin/news">News</a></li>
           {{if .IsNews}}
             <div id="psnavi">

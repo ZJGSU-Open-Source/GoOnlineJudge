@@ -84,7 +84,7 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		return
 	}
 
-	w := pc.Response
+	w := pc.W
 	code := pc.Input.Get("code")
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
@@ -129,10 +129,10 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)
-		response, err := http.Post(config.JudgeHost, "application/json", reader)
+		W, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			pc.Error("post error", 500)
 		}
-		response.Body.Close()
+		W.Body.Close()
 	}()
 }
