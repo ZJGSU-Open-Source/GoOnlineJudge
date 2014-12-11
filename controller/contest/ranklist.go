@@ -42,7 +42,7 @@ func (rc *ContestRanklist) Download(Cid string) {
 	file, _ := os.Open(filename)
 	defer file.Close()
 
-	w := rc.Response
+	w := rc.W
 	finfo, _ := file.Stat()
 	w.Header().Set("ContentType", "application/octet-stream")
 	w.Header().Add("Content-disposition", "attachment; filename="+filename)

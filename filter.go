@@ -33,10 +33,10 @@ func requireAdmin(ctx *restweb.Context) bool {
 func requireLogin(ctx *restweb.Context) bool {
 	uid := ctx.GetSession("Uid")
 	if uid == "" {
-		if ctx.Requset.Method == restweb.GET {
+		if ctx.R.Method == restweb.GET {
 			ctx.Redirect("/sess", http.StatusFound)
 		} else {
-			ctx.Response.WriteHeader(http.StatusUnauthorized)
+			ctx.W.WriteHeader(http.StatusUnauthorized)
 		}
 		return true
 	}
@@ -44,7 +44,7 @@ func requireLogin(ctx *restweb.Context) bool {
 }
 
 func requireContest(ctx *restweb.Context) bool {
-	url := ctx.Requset.URL.Path
+	url := ctx.R.URL.Path
 	if restweb.GetAction(url, 2) == "password" {
 		return false
 	}

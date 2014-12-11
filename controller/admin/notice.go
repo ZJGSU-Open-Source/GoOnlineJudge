@@ -13,11 +13,13 @@ type AdminNotice struct {
 }
 
 func (n *AdminNotice) Index() {
+	restweb.Logger.Debug("Admin notice index")
 	n.Output["Msg"] = string(n.Output["Msg"].(template.HTML))
+	n.Output["IsNotice"] = true
 	n.RenderTemplate("view/admin/layout.tpl", "view/admin/notice.tpl")
 }
 func (n *AdminNotice) Edit() {
-	restweb.Logger.Debug("Admin set notice")
+	restweb.Logger.Debug("Admin notice edit")
 
 	msg := n.Input.Get("msg")
 	file, err := os.Create("view/admin/msg.txt")

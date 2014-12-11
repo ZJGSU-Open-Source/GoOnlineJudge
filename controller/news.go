@@ -43,7 +43,7 @@ func (nc NewsController) Detail(Nid string) {
 	newsModel := model.NewsModel{}
 	one, err := newsModel.Detail(nid)
 	if err != nil {
-		http.Error(nc.Response, err.Error(), 500)
+		http.Error(nc.W, err.Error(), 500)
 	}
 	nc.Output["Detail"] = one
 

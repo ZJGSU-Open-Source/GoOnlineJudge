@@ -18,7 +18,7 @@ type ProblemController struct {
 
 // 列出特定数量的问题,URL，/problems?pid=<pid>&titile=<titile>&source=<source>&page=<page>
 func (pc *ProblemController) List() {
-	restweb.Logger.Debug(pc.Requset.RemoteAddr + "visit Problem List")
+	restweb.Logger.Debug(pc.R.RemoteAddr + "visit Problem List")
 
 	qry := make(map[string]string)
 	url := "/problems?"
@@ -167,8 +167,8 @@ func (pc *ProblemController) Submit(Pid string) {
 	}
 	if errflag {
 		b, _ := json.Marshal(&hint)
-		pc.Response.WriteHeader(400)
-		pc.Response.Write(b)
+		pc.W.WriteHeader(400)
+		pc.W.Write(b)
 		return
 	}
 
@@ -182,7 +182,7 @@ func (pc *ProblemController) Submit(Pid string) {
 		return
 	}
 
-	pc.Response.WriteHeader(200)
+	pc.W.WriteHeader(200)
 
 	go func() { //编译运行solution
 		one := make(map[string]interface{})
@@ -192,10 +192,10 @@ func (pc *ProblemController) Submit(Pid string) {
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)
-		response, err := http.Post(config.JudgeHost, "application/json", reader)
+		W, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			pc.Error("post error", 500)
 		}
-		response.Body.Close()
+		W.Body.Close()
 	}()
 }

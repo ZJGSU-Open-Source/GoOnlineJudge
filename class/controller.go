@@ -15,7 +15,7 @@ type Controller struct {
 }
 
 func (ct *Controller) Init() {
-	ct.Response.Header().Set("Content-Type", "text/html")
+	ct.W.Header().Set("Content-Type", "text/html")
 
 	ct.Uid = ct.GetSession("Uid")
 
@@ -50,7 +50,7 @@ func (ct *Controller) Init() {
 }
 
 func (ct *Controller) Err400(title string, info string) {
-	restweb.Logger.Info(ct.Requset.RemoteAddr + " " + ct.Uid)
+	restweb.Logger.Info(ct.R.RemoteAddr + " " + ct.Uid)
 	ct.Output["Title"] = title
 	ct.Output["Info"] = info
 	ct.RenderTemplate("view/layout.tpl", "view/400.tpl")

@@ -96,14 +96,14 @@ func (sc *StatusController) Code() {
 
 	sid, err := strconv.Atoi(sc.Input.Get("sid"))
 	if err != nil {
-		http.Error(sc.Response, "args error", 400)
+		http.Error(sc.W, "args error", 400)
 		return
 	}
 
 	solutionModel := model.SolutionModel{}
 	one, err := solutionModel.Detail(sid)
 	if err != nil {
-		http.Error(sc.Response, err.Error(), 400)
+		http.Error(sc.W, err.Error(), 400)
 		return
 	}
 	if one.Error != "" {

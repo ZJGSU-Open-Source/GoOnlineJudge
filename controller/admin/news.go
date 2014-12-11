@@ -80,7 +80,7 @@ func (nc *AdminNews) Insert() {
 	}
 
 	one := model.News{}
-	one.Title = nc.Requset.FormValue("title")
+	one.Title = nc.R.FormValue("title")
 	one.Content = template.HTML(nc.Input.Get("content"))
 
 	newsModel := model.NewsModel{}
@@ -151,7 +151,7 @@ func (nc *AdminNews) Delete(Nid string) {
 		return
 	}
 
-	nc.Response.WriteHeader(200)
+	nc.W.WriteHeader(200)
 }
 
 func (nc *AdminNews) Edit(Nid string) {

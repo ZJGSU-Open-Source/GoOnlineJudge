@@ -39,16 +39,16 @@ func (s SessController) Post() {
 	}
 
 	if ret.Uid == "" {
-		s.Response.WriteHeader(400)
+		s.W.WriteHeader(400)
 	} else {
 		s.SetSession("Uid", uid)
 		s.SetSession("Privilege", strconv.Itoa(ret.Privilege))
-		s.Response.WriteHeader(200)
+		s.W.WriteHeader(200)
 
-		restweb.Logger.Debug(s.Requset.RemoteAddr)
+		restweb.Logger.Debug(s.R.RemoteAddr)
 		//remoteAddr := r.Header.Get("X-Real-IP") // if you set niginx as reverse proxy
 		//restweb.Logger.Debug(remoteAddr)
-		remoteAddr := strings.Split(s.Requset.RemoteAddr, ":")[0] // otherwise
+		remoteAddr := strings.Split(s.R.RemoteAddr, ":")[0] // otherwise
 		userModel.RecordIP(uid, remoteAddr, time.Now().Unix())
 	}
 }
@@ -57,5 +57,5 @@ func (s SessController) Delete() {
 	restweb.Logger.Debug("User Logout")
 
 	s.DeleteSession()
-	s.Response.WriteHeader(200)
+	s.W.WriteHeader(200)
 }

@@ -21,11 +21,11 @@ func (c *Contest) Password(Cid string) {
 		c.Error("No such page", 400)
 	}
 
-	passwd := c.Requset.FormValue("password")
+	passwd := c.R.FormValue("password")
 	restweb.Logger.Debug(c.ContestDetail.Argument.(string), passwd)
 	if passwd == c.ContestDetail.Argument.(string) {
 		c.SetSession(Cid+"pass", passwd)
-		c.Response.WriteHeader(200)
+		c.W.WriteHeader(200)
 	} else {
 		c.Error("incorrect password", 400)
 	}

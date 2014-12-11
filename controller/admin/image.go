@@ -20,11 +20,11 @@ type image struct {
 	Url   string `json:"url"`
 }
 
-//Upload support kindeditor upload images,the response must return json eg. like {"err":0,"url":"http:...."}
+//Upload support kindeditor upload images,the W must return json eg. like {"err":0,"url":"http:...."}
 func (ic ImageController) Route() {
 	restweb.Logger.Debug("AdminUpload Image")
 
-	r := ic.Requset
+	r := ic.R
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["imgFile"]
 
@@ -54,5 +54,5 @@ func (ic ImageController) Route() {
 	}
 	im := &image{Error: errflag, Url: "/" + path}
 	b, _ := json.Marshal(im)
-	ic.Response.Write(b)
+	ic.W.Write(b)
 }
