@@ -25,14 +25,15 @@ func (pc *ContestProblem) Detail(Cid, Pid string) {
 		pc.Error("args error", 400)
 		return
 	}
+	rpid := pc.ContestDetail.List[pid]
 	problemModel := model.ProblemModel{}
-	one, err := problemModel.Detail(pc.ContestDetail.List[pid])
+	one, err := problemModel.Detail(rpid)
 	if err != nil {
 		pc.Error(err.Error(), 500)
 		return
 	}
 	qry := make(map[string]string)
-	qry["pid"] = Pid
+	qry["pid"] = strconv.Itoa(rpid)
 	qry["action"] = "accept"
 	one.Solve, err = pc.GetCount(qry)
 	if err != nil {
