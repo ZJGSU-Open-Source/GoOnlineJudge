@@ -55,7 +55,7 @@
           <td>
           <center>
               {{range .}}
-                <a href="/problem/{{.}}">{{.}}</a> 
+                <a href="/problems/{{.}}">{{.}}</a> 
               {{end}}            
           </center>
           </td>
