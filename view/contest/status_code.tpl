@@ -12,6 +12,8 @@
       </tbody>
     </table>
     <p class="tip">Double click to view unformatted code.</p>
+    <br />
+	<a href="/contests/{{.Cid}}/problems/{{.Pid}}">Back to problem {{.Pid}}</a>
     <script defer="defer" type="text/javascript">
     //<![CDATA[
       $('.CodeRay .code').dblclick(function() {
