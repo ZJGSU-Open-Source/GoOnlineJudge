@@ -1,3 +1,7 @@
+2014-12-19:
+1.fix url
+2.contest status page
+
 2014-12-11 Version 14.12.11:
 1. Refactor the code in restweb freamwork
 2. Satisfy RESTful API

@@ -39,34 +39,26 @@ func (uc *UserController) Register() {
 	one.School = uc.Input.Get("user[school]")
 	one.Motto = uc.Input.Get("user[motto]")
 
-	ok := 1
-	hint := make(map[string]string)
+	valid := restweb.Validation{}
+	valid.MinSize(uid, 4, "uid")
+	valid.Match(uid, "\\w+", "uid")
 
-	if uid == "" || len(uid) < 4 {
-		ok, hint["uid"] = 0, "Handle should contain at least four characters."
-	} else {
+	if !valid.HasError {
 		_, err := userModel.Detail(uid)
 		if err != nil && err != model.NotFoundErr {
 			http.Error(uc.W, err.Error(), 500)
 			return
-		} else if err == nil {
-			ok, hint["uid"] = 0, "uc handle is currently in use."
+		} else {
+			valid.AppendError("uid", "Handle is currently in use.")
 		}
 	}
 
-	if nick == "" {
-		ok, hint["nick"] = 0, "Nick should not be empty."
-	}
-	if len(pwd) < 6 {
-		ok, hint["pwd"] = 0, "Password should contain at least six characters."
-	}
-	if pwd != pwdConfirm {
-		ok, hint["pwdConfirm"] = 0, "Confirmation mismatched."
-	}
-	if one.Mail != "" {
-		ok, hint["mail"] = 0, "Wrong mail."
-	}
-	if ok == 1 {
+	valid.Required(nick, "nick")
+	valid.MinSize(pwd, 6, "pwd")
+	valid.Equal(pwd, pwdConfirm, "pwdConfirm")
+	valid.Mail(one.Mail, "mail")
+
+	if !valid.HasError {
 		one.Uid = uid
 		one.Nick = nick
 		one.Pwd = pwd
@@ -80,6 +72,7 @@ func (uc *UserController) Register() {
 
 		uc.W.WriteHeader(200)
 	} else {
+		hint := valid.RenderErrMap()
 		b, _ := json.Marshal(&hint)
 		uc.W.WriteHeader(400)
 		uc.W.Write(b)
