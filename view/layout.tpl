@@ -74,7 +74,7 @@
       {{if .IsContestDetail}}
       <div class="pinned note" >
           <div class="icon icon-material-add-circle" style="float:right"></div>
-          {{if .IsContestProblem}}<span>Problem</sapn>{{else}}<a href="/contests/{{.Cid}}">Problem</a>
+          {{if .IsContestProblem}}<span>Problems</sapn>{{else}}<a href="/contests/{{.Cid}}">Problem</a>
           {{end}}
           <br/>
           {{if .IsContestStatus}}<span>Status</sapn>{{else}}<a href="/contests/{{.Cid}}/status">Status</a>{{end}}

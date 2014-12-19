@@ -43,7 +43,7 @@
             </div>
           {{end}}
           {{end}}
-          <li><a href="/admin/problems">Problem</a></li>
+          <li><a href="/admin/problems">Problems</a></li>
           {{if .IsProblem}}
             <div id="psnavi">
               <ul>
@@ -58,7 +58,7 @@
               </ul>
             </div>
           {{end}}
-          <li><a href="/admin/contests/">Contest</a></li>
+          <li><a href="/admin/contests/">Contests</a></li>
           {{if .IsContest}}
             <div id="psnavi">
               <ul>
@@ -68,7 +68,7 @@
             </div>
           {{end}}
           {{if .IsAdmin }}
-          <li><a href="/admin/users">User</a></li>
+          <li><a href="/admin/users">Users</a></li>
           {{if .IsUser}}
             <div id="psnavi">
               <ul>

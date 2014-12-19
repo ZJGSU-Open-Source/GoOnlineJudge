@@ -99,7 +99,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user',
+			url:'/users',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
