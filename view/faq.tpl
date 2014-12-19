@@ -115,9 +115,12 @@ body pre code,body pre tt
 <p><b>为什么我的程序交在这里得到编译错误，而我在自己的机器上已经编译通过了？</b></p>
 <p>本系统所使用的编译器和你在自己机器上使用的可能有区别，请留意几个常见的地方：</p>
 <p><li>本系统运行在 32 位 Linux 系统上，使用的编译器版本和编译参数可以参见编译器帮助</li></p>
+<p><li>Windows平台专有的函数、数据类型、头文件不应使用。如scanf_s(), _tmain(), _TCHAR, Windows.h等。</li></p>
+<p><li>C 代码main函数必须采用int作为返回类型，且返回return 0;.</li><p>
+<p><li>C++ 下 64 位整数的类型是 long long，不要使用 __int64</li></p>
+<p><li>C/C++代码不应包含stdafx.h。</li></p>
 <p><li>Java 代码需使用 Main 作为主类名</li></p>
 <p><li>Visual C++ 6.0 和 Turbo C++ 3.0 （及它们的更低版本）有较多违背 C++ 标准（<a href="http://www.iso.org/iso/iso_catalogue/catalogue_ics/catalogue_detail_ics.htm?ics1=35&ics2=60&ics3=&csnumber=50372" target="new">ISO/IEC 14882</a>）的地方，不要使用它们来判断 C++ 程序语法上是否有问题</li></p>
-<p><li>C++ 下 64 位整数的类型是 long long，不要使用 __int64</li></p>
 <br>
 <p><b>程序的时间和内存占用是如何计算的？</b></p>
 <p>程序的运行时间为程序在所有 CPU 核占用的时间之和，内存占用取程序运行开始到结束占用内存的最大值</p>
