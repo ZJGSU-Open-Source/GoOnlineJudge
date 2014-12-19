@@ -42,8 +42,8 @@ func (uc *UserController) Register() {
 	ok := 1
 	hint := make(map[string]string)
 
-	if uid == "" {
-		ok, hint["uid"] = 0, "Handle should not be empty."
+	if uid == "" || len(uid) < 4 {
+		ok, hint["uid"] = 0, "Handle should contain at least four characters."
 	} else {
 		_, err := userModel.Detail(uid)
 		if err != nil && err != model.NotFoundErr {

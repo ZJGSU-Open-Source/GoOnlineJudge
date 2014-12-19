@@ -50,6 +50,60 @@
   });
   </script>
 
+<div class="pagination">
+  {{$current := .CurrentPage}}
+  {{$url := .URL}}
+  {{if .IsPreviousPage}}
+  <a href="{{$url}}page={{NumSub .CurrentPage 1}}" class="icon icon-material-arrow-back"></a>
+  {{else}}
+  <span class="icon icon-material-arrow-back"></span>
+  {{end}}
+  &nbsp;
+  {{if .IsPageHead}}
+    {{with .PageHeadList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageMid}}
+  ...
+    {{with .PageMidList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+
+  {{if .IsPageTail}}
+  ...
+    {{with .PageTailList}}
+      {{range .}}
+        {{if eq . $current}}
+          <span>{{.}}</span>
+        {{else}}
+          <a href="{{$url}}page={{.}}">{{.}}</a>
+        {{end}}
+      {{end}}
+    {{end}}
+  {{end}}
+  &nbsp;
+   {{if .IsNextPage}}
+  <a href="{{$url}}page={{NumAdd .CurrentPage 1}}" class="icon icon-material-arrow-forward"></a>
+  {{else}}
+  <span class="icon icon-material-arrow-forward"></span>
+  {{end}}
+</div>
+
 <table id="contest_list" class="table table-striped table-hover">
   <thead>
     <tr>

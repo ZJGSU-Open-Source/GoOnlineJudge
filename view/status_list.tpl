@@ -82,6 +82,7 @@
   <span class="icon icon-material-arrow-forward"></span>
   {{end}}
 </div>
+
 <div class="table-responsive">
 <table id="contest_list" class="table table-striped table-hover">
   <thead>
