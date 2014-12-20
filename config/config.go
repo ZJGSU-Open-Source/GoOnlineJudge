@@ -9,7 +9,6 @@ const JudgeHost = "http://127.0.0.1:8888"
 const (
 	ProblemPerPage  = 50
 	ContestPerPage  = 100
-	ExercisePerPage = 100
 	SolutionPerPage = 30
 	UserPerPage     = 50
 )
@@ -46,7 +45,6 @@ const (
 	ModuleNA = 0 //None
 	ModuleP  = 1 //Problem
 	ModuleC  = 2 //Contest
-	ModuleE  = 3 //Exercise
 )
 
 const (

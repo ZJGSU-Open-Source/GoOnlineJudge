@@ -46,7 +46,7 @@
             <div class="col-lg-10">
               <input type="password" class="form-control" id="user_confirmPassword" name="user[confirmPassword]" required placeholder="Confirm Password">
             </div>
-                        <div class="col-lg-10">
+            <div class="col-lg-10">
               <font  id="user_warning_confirmPassword" color="red"></font>              
             </div>
           </div>
@@ -99,7 +99,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/user',
+			url:'/users',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
@@ -126,7 +126,13 @@
 					$('#user_warning_confirmPassword').text(json.pwdConfirm);
 				} else {
 					$('#user_warning_confirmPassword').text('');
-				}				
+				}
+        if(json.mail != null) {
+          $('#user_mail').css({"border-color": "red"});
+          $('#user_warning_mail').text(json.mail);
+        } else {
+          $('#user_warning_mail').text('');
+        }				
 			},
 			success: function() {
 				window.location.href = '/sess';
