@@ -13,7 +13,6 @@ type ContestStatus struct {
 	Contest
 }
 
-//TODO : list by arguments like :contests/<cid>/status?uid=vsake&judge=3&language=1
 func (sc *ContestStatus) List(Cid string) {
 	restweb.Logger.Debug("Contest Status List")
 
@@ -23,25 +22,61 @@ func (sc *ContestStatus) List(Cid string) {
 
 	qry["module"] = strconv.Itoa(config.ModuleC)
 	qry["mid"] = Cid
-
+	searchUrl := ""
 	// Search
 	if v, ok := sc.Input["uid"]; ok {
+		searchUrl += "uid=" + v[0] + "&"
 		sc.Output["SearchUid"] = v[0]
 		qry["uid"] = v[0]
 	}
 	if v, ok := sc.Input["pid"]; ok {
+		searchUrl += "pid=" + v[0] + "&"
 		sc.Output["SearchPid"] = v[0]
 		idx, _ := strconv.Atoi(v[0])
 		qry["pid"] = strconv.Itoa(sc.ContestDetail.List[idx])
 		restweb.Logger.Debug(qry["pid"], idx)
 	}
 	if v, ok := sc.Input["judge"]; ok {
+		searchUrl += "judge=" + v[0] + "&"
 		sc.Output["SearchJudge"+v[0]] = v[0]
 		qry["judge"] = v[0]
 	}
 	if v, ok := sc.Input["language"]; ok {
+		searchUrl += "language=" + v[0] + "&"
 		sc.Output["SearchLanguage"+v[0]] = v[0]
 		qry["language"] = v[0]
+	}
+
+	qry["page"] = "1"
+	if v, ok := sc.Input["page"]; ok {
+		qry["page"] = v[0]
+	}
+
+	sc.Output["URL"] = "/contests/" + Cid + "/status?" + searchUrl
+
+	qry["action"] = "submit"
+	count, err := solutionModel.Count(qry)
+	if err != nil {
+		sc.Error(err.Error(), 400)
+		return
+	}
+	var pageCount = (count-1)/config.SolutionPerPage + 1
+
+	page, err := strconv.Atoi(qry["page"])
+	if err != nil {
+		sc.Error("args error", 400)
+		return
+	}
+	if page > pageCount {
+		sc.Error("args error", 400)
+		return
+	}
+	qry["offset"] = strconv.Itoa((page - 1) * config.SolutionPerPage)
+	qry["limit"] = strconv.Itoa(config.SolutionPerPage)
+
+	pageData := sc.GetPage(page, pageCount)
+	for k, v := range pageData {
+		sc.Output[k] = v
 	}
 
 	solutionList, err := solutionModel.List(qry)

@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>{{.Contest}}</h1>
- <div class="flash alert" id="signin_failed" style="display:none;">Incorrect Password.</div>
+  <div class="flash alert alert-warning" id="signin_failed" style="display:none;">Incorrect Password.</div>
 <form accept-charset="UTF-8" class="" id="pw_contest" method="post" >
 	<div class="field">
     	<label for="password">Password</label><br>
