@@ -2,6 +2,7 @@
 <div id="contestinfo">
 <h1>{{.Contest}}</h1>
 <p>Start Time : {{ShowTime .Start}} &nbsp;&nbsp;End Time : {{ShowTime .End}}</p>
+<p>Current Time : {{ShowTime .Time}}</p>
 </div>
 <table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>

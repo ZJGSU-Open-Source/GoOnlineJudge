@@ -7,6 +7,7 @@ import (
 
 	"restweb"
 	"strconv"
+	"time"
 )
 
 type Contest struct {
@@ -96,6 +97,6 @@ func (c *Contest) Detail(Cid string) {
 	c.Output["IsContestProblem"] = true
 	c.Output["Start"] = c.ContestDetail.Start
 	c.Output["End"] = c.ContestDetail.End
-
+	c.Output["Time"] = time.Now().Unix()
 	c.RenderTemplate("view/layout.tpl", "view/contest/problem_list.tpl")
 }

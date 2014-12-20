@@ -3,6 +3,7 @@ package main
 import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+	"html/template"
 	"net/http"
 	"restweb"
 	"strconv"
@@ -20,11 +21,11 @@ func requireAdmin(ctx *restweb.Context) bool {
 	prv := ctx.GetSession("Privilege")
 	prt, err := strconv.Atoi(prv)
 	if err != nil {
-		ctx.Error("Error occured", http.StatusForbidden)
+		Err400(ctx.W, "Admin", "Error occured")
 		return true
 	}
 	if prt < config.PrivilegeTC {
-		ctx.Error("No privilege", http.StatusForbidden)
+		Err400(ctx.W, "Admin", "No privilege")
 		return true
 	}
 	return false
@@ -74,7 +75,7 @@ func requireContest(ctx *restweb.Context) bool {
 			if ContestDetail.Status == config.StatusReverse {
 				info = "No such contest"
 			}
-			ctx.Error(info, http.StatusForbidden)
+			Err400(ctx.W, "Contest", info)
 			return true
 		} else if ContestDetail.Encrypt == config.EncryptPW {
 			if Uid == "" {
@@ -99,12 +100,21 @@ func requireContest(ctx *restweb.Context) bool {
 					}
 				}
 				if flag == false {
-					ctx.Error(
-						"Sorry, the contest is private and you are not granted to participate in the contest.", http.StatusForbidden)
+					Err400(ctx.W, "Contest",
+						"Sorry, the contest is private and you are not granted to participate in the contest.")
 					return true
 				}
 			}
 		}
 	}
 	return false
+}
+func Err400(w http.ResponseWriter, title string, info string) {
+	Output := make(map[string]interface{})
+	Output["Title"] = title
+	Output["Info"] = info
+	t, err := template.ParseFiles("view/layout.tpl", "view/400.tpl")
+	if err == nil {
+		err = t.Execute(w, Output)
+	}
 }
