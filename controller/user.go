@@ -224,10 +224,10 @@ func (uc *UserController) Pagepassword() {
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 
-	ok := 1
+	valid := restweb.Validation{}
+
 	uid := uc.Uid
-	hint := make(map[string]string)
-	hint["uid"] = uid
+	valid.AppendError("uid", uid)
 
 	oldPwd := uc.Input.Get("user[oldPassword]")
 	newPwd := uc.Input.Get("user[newPassword]")
@@ -241,16 +241,12 @@ func (uc *UserController) Password() {
 	}
 
 	if ret.Uid == "" {
-		ok, hint["oldPassword"] = 0, "Old Password is Incorrect."
+		valid.AppendError("oldPassword", "Old Password is Incorrect.")
 	}
-	if len(newPwd) < 6 {
-		ok, hint["newPassword"] = 0, "Password should contain at least six characters."
-	}
-	if newPwd != confirmPwd {
-		ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
-	}
+	valid.MinSize(newPwd, 6, "newPassword")
+	valid.Equal(newPwd, confirmPwd, "confirmPassword")
 
-	if ok == 1 {
+	if !valid.HasError {
 		err := userModel.Password(uid, newPwd)
 		if err != nil {
 			uc.Error(err.Error(), 400)
@@ -261,6 +257,7 @@ func (uc *UserController) Password() {
 	} else {
 		uc.W.WriteHeader(400)
 	}
+	hint := valid.RenderErrMap()
 	b, _ := json.Marshal(&hint)
 	uc.W.Write(b)
 }
