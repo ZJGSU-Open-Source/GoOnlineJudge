@@ -36,7 +36,7 @@
   </div>
   <script src="/static/js/bootstrap.min.js"></script>
   <script src="/static/material/js/material.min.js"></script>
-  <a href="/user/signup">Register a new account.</a>
+  <a href="/users/new">Register a new account.</a>
   <script type="text/javascript">
   $('#new_user').submit( function(e) {
     e.preventDefault();
