@@ -48,7 +48,7 @@ func (uc *UserController) Register() {
 		if err != nil && err != model.NotFoundErr {
 			http.Error(uc.W, err.Error(), 500)
 			return
-		} else {
+		} else if err == nil {
 			valid.AppendError("uid", "Handle is currently in use.")
 		}
 	}
