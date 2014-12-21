@@ -14,8 +14,9 @@ import (
 
 type ContestProblem struct {
 	Contest
-}
+} //@Controller
 
+//@URL: /contests/(\d+)/problems/(\d+) @method:GET
 func (pc *ContestProblem) Detail(Cid, Pid string) {
 	pc.InitContest(Cid)
 	restweb.Logger.Debug("Contest Problem Detail")
@@ -54,6 +55,7 @@ func (pc *ContestProblem) Detail(Cid, Pid string) {
 	pc.RenderTemplate("view/layout.tpl", "view/contest/problem_detail.tpl")
 }
 
+//@URL: /contests/(\d+)/problems/(\d+) @method: POST
 func (pc *ContestProblem) Submit(Cid, Pid string) {
 	restweb.Logger.Debug("Contest Problem Submit")
 	pc.InitContest(Cid)

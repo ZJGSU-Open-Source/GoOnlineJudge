@@ -13,9 +13,10 @@ import (
 
 type SessController struct {
 	class.Controller
-}
+} //@Controller
 
-func (s SessController) Get() {
+//@URL: /sess @method: GET
+func (s *SessController) Get() {
 	restweb.Logger.Debug("User Login")
 
 	s.Output["Title"] = "User Sign In"
@@ -24,7 +25,8 @@ func (s SessController) Get() {
 	s.RenderTemplate("view/layout.tpl", "view/user_signin.tpl")
 }
 
-func (s SessController) Post() {
+//@URL: /sess @method: POST
+func (s *SessController) Post() {
 	restweb.Logger.Debug("User Login")
 
 	uid := s.Input.Get("user[handle]")
@@ -53,7 +55,8 @@ func (s SessController) Post() {
 	}
 }
 
-func (s SessController) Delete() {
+//@URL: /sess @method: Delete
+func (s *SessController) Delete() {
 	restweb.Logger.Debug("User Logout")
 
 	s.DeleteSession()

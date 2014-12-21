@@ -35,7 +35,14 @@ type Problem struct {
 }
 
 var pDetailSelector = bson.M{"_id": 0}
-var pListSelector = bson.M{"_id": 0, "pid": 1, "title": 1, "source": 1, "solve": 1, "submit": 1, "expire": 1, "status": 1}
+var pListSelector = bson.M{"_id": 0,
+	"pid":    1,
+	"title":  1,
+	"source": 1,
+	"solve":  1,
+	"submit": 1,
+	"expire": 1,
+	"status": 1}
 
 type ProblemModel struct {
 	class.Model

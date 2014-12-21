@@ -7,10 +7,11 @@ import (
 
 type FAQController struct {
 	class.Controller
-}
+} //@Controller
 
 //faq 页面
-func (fc FAQController) Index() {
+//@URL: /faq @method: GET
+func (fc *FAQController) Index() {
 	restweb.Logger.Debug("FAQ Page")
 
 	fc.Output["Title"] = "FAQ"

@@ -16,10 +16,12 @@ type rank struct {
 }
 
 // 排名控件
+
 type RanklistController struct {
 	class.Controller
-}
+} //@Controller
 
+//@URL: /ranklist @method: GET
 func (rc *RanklistController) Index() {
 	restweb.Logger.Debug("Ranklist")
 

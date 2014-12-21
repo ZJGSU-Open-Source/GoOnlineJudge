@@ -109,6 +109,7 @@ func requireContest(ctx *restweb.Context) bool {
 	}
 	return false
 }
+
 func Err400(w http.ResponseWriter, title string, info string) {
 	Output := make(map[string]interface{})
 	Output["Title"] = title
@@ -117,4 +118,14 @@ func Err400(w http.ResponseWriter, title string, info string) {
 	if err == nil {
 		err = t.Execute(w, Output)
 	}
+}
+func init() {
+	restweb.RegisterFilters(restweb.ANY, `^/admin`, restweb.Before, requireAdmin)
+	restweb.RegisterFilters(restweb.POST, `^/problems/\d+`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.ANY, `^/account`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.GET, `^/user/(settings|profile)`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.POST, `^/user/\w+`, restweb.Before, requireLogin)
+	restweb.RegisterFilters(restweb.ANY, `^/contests/\d+`, restweb.Before, requireContest)
+
+	restweb.AddFile("/static/", ".")
 }

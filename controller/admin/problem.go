@@ -19,7 +19,7 @@ import (
 
 type AdminProblem struct {
 	class.Controller
-}
+} //@Controller
 
 // func (pc *AdminProblem) Detail() {
 // 	restweb.Logger.Debug("Admin Problem Detail")
@@ -44,6 +44,7 @@ type AdminProblem struct {
 // 	pc.RenderTemplate("view/admin/layout.tpl", "view/problem_detail.tpl")
 // }
 
+//@URL: /admin/problems/ @method: GET
 func (pc *AdminProblem) List() {
 	restweb.Logger.Debug("Admin Problem List")
 
@@ -93,6 +94,7 @@ func (pc *AdminProblem) List() {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_list.tpl")
 }
 
+//@URL: /admin/problems/new/ @method: GET
 func (pc *AdminProblem) Add() {
 	restweb.Logger.Debug("Admin Problem Add")
 
@@ -104,6 +106,7 @@ func (pc *AdminProblem) Add() {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_add.tpl")
 }
 
+//@URL: /admin/problems/ @method: POST
 func (pc *AdminProblem) Insert() {
 	restweb.Logger.Debug("Admin Problem Insert")
 
@@ -144,6 +147,7 @@ func createfile(path, filename string, context string) {
 	file.WriteString(context)
 }
 
+//@URL: /admin/problems/(\d+)/status/ @method: POST
 func (pc *AdminProblem) Status(Pid string) {
 	restweb.Logger.Debug("Admin Problem Status")
 
@@ -176,6 +180,7 @@ func (pc *AdminProblem) Status(Pid string) {
 	pc.Redirect("/admin/problems", http.StatusFound)
 }
 
+//@URL: /admin/problems/(\d+)/ @method: DELETE
 func (pc *AdminProblem) Delete(Pid string) {
 	restweb.Logger.Debug("Admin Problem Delete")
 
@@ -197,6 +202,7 @@ func (pc *AdminProblem) Delete(Pid string) {
 	pc.W.WriteHeader(200)
 }
 
+//@URL: /admin/problems/(\d+)/ @method: GET
 func (pc *AdminProblem) Edit(Pid string) {
 	restweb.Logger.Debug("Admin Problem Edit")
 
@@ -227,6 +233,7 @@ func (pc *AdminProblem) Edit(Pid string) {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_edit.tpl")
 }
 
+//@URL: /admin/problems/(\d+)/ @method: POST
 func (pc *AdminProblem) Update(Pid string) {
 	restweb.Logger.Debug("Admin Problem Update")
 
@@ -287,6 +294,7 @@ func (pc *AdminProblem) problem() (one model.Problem) {
 	return one
 }
 
+//@URL: /admin/problems/importor/ @method: GET
 func (pc *AdminProblem) ImportPage() {
 	pc.Output["Title"] = "Problem Import"
 	pc.Output["IsProblem"] = true
@@ -294,6 +302,7 @@ func (pc *AdminProblem) ImportPage() {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_import.tpl")
 }
 
+//@URL: /admin/problems/importor/ @method: POST
 func (pc *AdminProblem) Import() {
 	pc.R.ParseMultipartForm(32 << 20)
 	fhs := pc.R.MultipartForm.File["fps.xml"]

@@ -14,8 +14,9 @@ import (
 
 type UserController struct {
 	class.Controller
-}
+} //@Controller
 
+//@URL: /users/new @method: GET
 func (uc *UserController) Signup() {
 	restweb.Logger.Debug("User Sign Up")
 
@@ -25,6 +26,7 @@ func (uc *UserController) Signup() {
 
 }
 
+//@URL: /users @method:POST
 func (uc *UserController) Register() {
 	restweb.Logger.Debug("User Register")
 
@@ -79,6 +81,7 @@ func (uc *UserController) Register() {
 	}
 }
 
+//@URL: /users/(\w+) @method: GET
 func (uc *UserController) Detail(uid string) {
 	restweb.Logger.Debug("User Detail", uid)
 
@@ -124,6 +127,7 @@ func (uc *UserController) Detail(uid string) {
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
 }
 
+//@URL: /users/settings @method: GET
 func (uc *UserController) Settings() {
 	restweb.Logger.Debug("User Settings")
 
@@ -166,6 +170,7 @@ func (uc *UserController) Settings() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
 }
 
+//@URL: /users/profile @method: GET
 func (uc *UserController) Edit() {
 	restweb.Logger.Debug("User Edit")
 
@@ -185,6 +190,7 @@ func (uc *UserController) Edit() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_edit.tpl")
 }
 
+//@URL: /users/profile @method: GET
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
@@ -211,6 +217,7 @@ func (uc *UserController) Update() {
 	}
 }
 
+//@URL: /account @method: GET
 func (uc *UserController) Pagepassword() {
 	restweb.Logger.Debug("User Password Page")
 
@@ -221,6 +228,7 @@ func (uc *UserController) Pagepassword() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_password.tpl")
 }
 
+//@URL: /account @method: POST
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 

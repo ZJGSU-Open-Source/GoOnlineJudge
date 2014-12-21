@@ -15,7 +15,7 @@ type Contest struct {
 	ContestDetail *model.Contest
 	Index         map[int]int
 	class.Controller
-}
+} //@Controller
 
 func (c *Contest) InitContest(Cid string) {
 	c.Init()
@@ -59,6 +59,7 @@ func (c *Contest) GetCount(qry map[string]string) (int, error) {
 	return count, nil
 }
 
+//@URL: /contests/(\d+) @method: GET
 func (c *Contest) Detail(Cid string) {
 	restweb.Logger.Debug("Contest Problem List")
 

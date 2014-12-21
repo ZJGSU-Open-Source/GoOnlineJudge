@@ -10,14 +10,17 @@ import (
 
 type AdminNotice struct {
 	class.Controller
-}
+} //@Controller
 
+//@URL: /admin/notice/ @method: GET
 func (n *AdminNotice) Index() {
 	restweb.Logger.Debug("Admin notice index")
 	n.Output["Msg"] = string(n.Output["Msg"].(template.HTML))
 	n.Output["IsNotice"] = true
 	n.RenderTemplate("view/admin/layout.tpl", "view/admin/notice.tpl")
 }
+
+//@URL: /admin/notice/ @method: POST
 func (n *AdminNotice) Edit() {
 	restweb.Logger.Debug("Admin notice edit")
 
@@ -28,5 +31,5 @@ func (n *AdminNotice) Edit() {
 	}
 	defer file.Close()
 	file.Write([]byte(msg))
-	n.Redirect("/admin/notice", http.StatusFound)
+	n.Redirect("/", http.StatusFound)
 }

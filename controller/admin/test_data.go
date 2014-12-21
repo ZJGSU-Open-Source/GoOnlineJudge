@@ -15,9 +15,10 @@ import (
 
 type AdminTestdata struct {
 	class.Controller
-}
+} //@Controller
 
-// List 列出对应题目的test data，method：GET
+// List 列出对应题目的test data
+//@URL: /admin/testdata/(\d+) @method: GET
 func (tc *AdminTestdata) List(pid string) {
 	restweb.Logger.Debug("Admin testdata list")
 
@@ -46,7 +47,8 @@ func (tc *AdminTestdata) List(pid string) {
 	tc.RenderTemplate("view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
 
-// 上传测试数据,URL /admin/testdata/upload?pid=<pid>，method：POST
+// 上传测试数据
+//@URL: /admin/testdata/(\d+) @method: POST
 func (tc *AdminTestdata) Upload(pid string) {
 	restweb.Logger.Debug("Admin Upload files")
 
@@ -78,7 +80,8 @@ func (tc *AdminTestdata) Upload(pid string) {
 	tc.Redirect("/admin/testdata/"+pid, http.StatusFound)
 }
 
-// Download 下载测试数据,URL:/admin/testdata/download?type=<type>，method:POST
+// Download 下载测试数据
+//@URL: /admin/testdata/(\d+)/file @method: GET
 func (tc *AdminTestdata) Download(pid string) {
 	restweb.Logger.Debug("Admin Download files")
 
@@ -96,7 +99,8 @@ func (tc *AdminTestdata) Download(pid string) {
 	io.Copy(tc.W, file)
 }
 
-// Delete 删除指定testdata，URL:/admin/testdata/delete?type=<type>
+// Delete 删除指定testdata
+//@URL: /admin/testdata/(\d+) @method: DELETE
 func (tc *AdminTestdata) Delete(pid string) {
 	restweb.Logger.Debug("Admin TestData Delete")
 

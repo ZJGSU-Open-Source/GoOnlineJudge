@@ -22,9 +22,10 @@ type privilegeUser struct {
 
 type AdminUser struct {
 	class.Controller
-}
+} //@Controller
 
-//显示具有特殊权限的用户，url:/admin/users/
+//显示具有特殊权限的用户
+//@URL: /admin/users/ @method: GET
 func (uc *AdminUser) List() {
 	restweb.Logger.Debug("Admin Privilege User List")
 
@@ -50,7 +51,8 @@ func (uc *AdminUser) List() {
 	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_list.tpl")
 }
 
-//密码设置页面,url: /admin/users/pagepassword
+//密码设置页面
+//@URL: /admin/users/pagepassword @method: GET
 func (uc *AdminUser) Pagepassword() {
 	restweb.Logger.Debug("Admin Password Page")
 
@@ -63,7 +65,8 @@ func (uc *AdminUser) Pagepassword() {
 	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_password.tpl")
 }
 
-//设置用户密码，url:/admin/user/password, method: POST
+//设置用户密码
+//@URL: /admin/users/password @method: POST
 func (uc *AdminUser) Password() {
 	restweb.Logger.Debug("Admin Password")
 
@@ -116,6 +119,7 @@ func (uc *AdminUser) Password() {
 }
 
 // 设置用户权限
+//@URL: /admin/privilegeset @method: GET
 func (uc *AdminUser) Privilegeset() {
 	restweb.Logger.Debug("User Privilege")
 
@@ -169,56 +173,52 @@ func (uc *AdminUser) Privilegeset() {
 	}
 }
 
-//Generate 生成指定数量的用户账号，/admin/user/generate
+//Generate 生成指定数量的用户账号
+//@URL: /admin/users/generation @method: GET
+func (uc *AdminUser) GeneratePage() {
+	uc.Output["Title"] = "Admin User Generate"
+	uc.Output["IsUser"] = true
+	uc.Output["IsGenerate"] = true
+	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_generate.tpl")
+}
+
+//@URL: /admin/users/generation @method: POST
 func (uc *AdminUser) Generate() {
-	r := uc.R
-	if r.Method == "GET" {
-		uc.Output["Title"] = "Admin User Generate"
-		uc.Output["IsUser"] = true
-		uc.Output["IsGenerate"] = true
-		uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_generate.tpl")
-
-	} else if r.Method == "POST" {
-		prefix := r.FormValue("prefix")
-		module, _ := strconv.Atoi(r.FormValue("module"))
-		module %= 2
-		amount, _ := strconv.Atoi(r.FormValue("amount"))
-		if amount > 100 {
-			amount = 100
-		}
-
-		count := 0
-		tmp := amount
-		for tmp > 0 {
-			tmp /= 10
-			count++
-		}
-
-		format := "%0" + strconv.Itoa(count) + "d"
-		usermodel := &model.UserModel{}
-		accountlist := "Uid \tPassword\n"
-
-		for i, nxt := 0, 1; i < amount; {
-			uid := prefix + fmt.Sprintf(format, nxt)
-			password := RandPassword()
-			restweb.Logger.Debug(uid, password)
-			one := model.User{}
-			one.Uid = uid
-			one.Pwd = password
-			one.Module = module
-			one.Module, _ = strconv.Atoi(r.FormValue("module"))
-			if err := usermodel.Insert(one); err == nil {
-				accountlist += uid + " \t" + password + "\n"
-				i++
-			}
-			nxt++
-		}
-
-		uc.W.Header().Add("ContentType", "application/octet-stream")
-		uc.W.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
-		uc.W.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
-		uc.W.Write([]byte(accountlist))
+	prefix := uc.Input["prefix"][0]
+	module, _ := strconv.Atoi(uc.Input["module"][0])
+	module %= 2
+	amount, _ := strconv.Atoi(uc.Input["amount"][0])
+	if amount > 100 {
+		amount = 100
 	}
+
+	count := 0
+	tmp := amount
+	for tmp > 0 {
+		tmp /= 10
+		count++
+	}
+
+	format := "%0" + strconv.Itoa(count) + "d"
+	usermodel := &model.UserModel{}
+	accountlist := "Uid \tPassword\n"
+
+	for i, nxt := 0, 1; i < amount; {
+		uid := prefix + fmt.Sprintf(format, nxt)
+		password := RandPassword()
+		restweb.Logger.Debug(uid, password)
+		one := model.User{Uid: uid, Pwd: password, Module: module}
+		if err := usermodel.Insert(one); err == nil {
+			accountlist += uid + " \t" + password + "\n"
+			i++
+		}
+		nxt++
+	}
+
+	uc.W.Header().Add("ContentType", "application/octet-stream")
+	uc.W.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
+	uc.W.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
+	uc.W.Write([]byte(accountlist))
 }
 
 //RandPassword 生成随机8位密码

@@ -33,8 +33,16 @@ type User struct {
 }
 
 var uDetailSelector = bson.M{"_id": 0}
-var uListSelector = bson.M{"_id": 0, "uid": 1, "nick": 1, "motto": 1, "privilege": 1,
-	"solve": 1, "submit": 1, "status": 1, "iprecord": 1, "timerecord": 1}
+var uListSelector = bson.M{"_id": 0,
+	"uid":        1,
+	"nick":       1,
+	"motto":      1,
+	"privilege":  1,
+	"solve":      1,
+	"submit":     1,
+	"status":     1,
+	"iprecord":   1,
+	"timerecord": 1}
 
 type UserModel struct {
 	class.Model

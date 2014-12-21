@@ -12,12 +12,14 @@ import (
 )
 
 //新闻控件
+
 type NewsController struct {
 	class.Controller
-}
+} //@Controller
 
 //列出所有新闻
-func (nc NewsController) List() {
+//@URL: /news @method: GET
+func (nc *NewsController) List() {
 	restweb.Logger.Debug("News List")
 
 	newsModel := model.NewsModel{}
@@ -33,7 +35,8 @@ func (nc NewsController) List() {
 	nc.RenderTemplate("view/layout.tpl", "view/news_list.tpl")
 }
 
-func (nc NewsController) Detail(Nid string) {
+//@URL: /news/(\d+) @method: GET
+func (nc *NewsController) Detail(Nid string) {
 	nid, err := strconv.Atoi(Nid) //获取nid
 	if err != nil {
 		// http.Error(w, "args error", 400)

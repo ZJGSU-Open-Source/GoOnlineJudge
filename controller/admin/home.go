@@ -8,9 +8,10 @@ import (
 
 type AdminHome struct {
 	class.Controller
-}
+} //@Controller
 
-func (hc AdminHome) Home() {
+//@URL: /admin/ @method: GET
+func (hc *AdminHome) Home() {
 	restweb.Logger.Debug("Admin Home")
 
 	hc.Output["IsHome"] = true

@@ -8,10 +8,10 @@ import (
 
 type HomeController struct {
 	class.Controller
-}
+} //@Controller
 
-func (hc HomeController) Index() {
-
+//@URL: / @method: GET
+func (hc *HomeController) Index() {
 	restweb.Logger.Debug("Home")
 
 	newsModel := model.NewsModel{}

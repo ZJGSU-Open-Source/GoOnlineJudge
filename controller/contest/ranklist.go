@@ -15,9 +15,10 @@ import (
 
 type ContestRanklist struct {
 	Contest
-}
+} //@Controller
 
 //Download 下载contest排名csv文件
+//@URL: /contests/(\d+)/rankfile @method: GET
 func (rc *ContestRanklist) Download(Cid string) {
 	rc.InitContest(Cid)
 	filename := strconv.Itoa(rc.Cid) + ".csv"
@@ -56,6 +57,7 @@ func (rc *ContestRanklist) Download(Cid string) {
 }
 
 //Home ranklist 列表主页
+//@URL: /contests/(\d+)/ranklist @method: GET
 func (rc *ContestRanklist) Home(Cid string) {
 	rc.InitContest(Cid)
 	rc.Output["UserList"] = rc.ranklist()
