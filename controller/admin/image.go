@@ -11,9 +11,9 @@ import (
 )
 
 //ImageController handles sth. with images
-type ImageController struct {
+type AdminImage struct {
 	class.Controller
-}
+} //@Controller
 
 type image struct {
 	Error int    `json:"error"`
@@ -21,7 +21,8 @@ type image struct {
 }
 
 //Upload support kindeditor upload images,the W must return json eg. like {"err":0,"url":"http:...."}
-func (ic ImageController) Route() {
+//@URL:/admin/images/ @method: POST
+func (ic AdminImage) Post() {
 	restweb.Logger.Debug("AdminUpload Image")
 
 	r := ic.R

@@ -19,9 +19,10 @@ type AdminContest struct {
 	ContestDetail *model.Contest
 	Index         map[int]int
 	class.Controller
-}
+} //@Controller
 
-//列出所有的比赛 url:/admin/contest/list?type=<contest,exercise>
+//列出所有的比赛
+//@URL: /admin/contests/ @method:GET
 func (cc *AdminContest) List() {
 	restweb.Logger.Debug("Contest List")
 
@@ -39,7 +40,8 @@ func (cc *AdminContest) List() {
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_list.tpl")
 }
 
-// 添加比赛页面 url:/admin/contest/add?type=<contest,exercise>
+// 添加比赛页面
+//@URL: /admin/contests/new @method: GET
 func (cc *AdminContest) Add() {
 	restweb.Logger.Debug("Admin Contest Add")
 
@@ -62,7 +64,8 @@ func (cc *AdminContest) Add() {
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_add.tpl")
 }
 
-// 插入比赛 url:/admin/contest/insert?type=<contest,exercise>
+// 插入比赛
+//@URL:/admin/contests/ @method:POST
 func (cc *AdminContest) Insert() {
 	restweb.Logger.Debug("Admin Contest Insert")
 
@@ -77,7 +80,8 @@ func (cc *AdminContest) Insert() {
 	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
 }
 
-//更改contest状态 url:/admin/contest/status/
+//更改contest状态
+//@URL:/admin/contests/status/ @method:POST
 func (cc *AdminContest) Status(Cid string) {
 	restweb.Logger.Debug("Admin Contest Status")
 
@@ -110,7 +114,8 @@ func (cc *AdminContest) Status(Cid string) {
 	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
 }
 
-//删除竞赛 url:/admin/contest/delete/，method:POST
+//删除竞赛
+//@URL: /admin/contests/delete/ @method:POST
 func (cc *AdminContest) Delete(Cid string) {
 	restweb.Logger.Debug("Admin Contest Delete")
 
@@ -134,7 +139,8 @@ func (cc *AdminContest) Delete(Cid string) {
 	cc.W.WriteHeader(200)
 }
 
-// 竞赛编辑页面，url:/admin/contests/
+// 竞赛编辑页面，
+//@URL:/admin/contests/(\d+)/ @method:GET
 func (cc *AdminContest) Edit(Cid string) {
 	restweb.Logger.Debug("Admin Contest Edit")
 
@@ -205,7 +211,8 @@ func (cc *AdminContest) Edit(Cid string) {
 	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_edit.tpl")
 }
 
-// 更新竞赛，url:/admin/contest/update/，method:POST
+// 更新竞赛
+//@URL:/admin/contests/(\d+)/ @method:POST
 func (cc *AdminContest) Update(Cid string) {
 	restweb.Logger.Debug("Admin Contest Update")
 

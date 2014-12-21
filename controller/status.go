@@ -11,10 +11,10 @@ import (
 
 type StatusController struct {
 	class.Controller
-}
+} //@Controller
 
-func (sc StatusController) List() {
-
+//@URL: /status @method: GET
+func (sc *StatusController) List() {
 	restweb.Logger.Debug("Status List")
 
 	searchUrl := ""
@@ -91,6 +91,7 @@ func (sc StatusController) List() {
 	sc.RenderTemplate("view/layout.tpl", "view/status_list.tpl")
 }
 
+//@URL: /status/code @method: GET
 func (sc *StatusController) Code() {
 	restweb.Logger.Debug("Status Code")
 

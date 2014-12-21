@@ -25,7 +25,14 @@ type Contest struct {
 }
 
 var cDetailSelector = bson.M{"_id": 0}
-var cListSelector = bson.M{"_id": 0, "cid": 1, "title": 1, "encrypt": 1, "creator": 1, "start": 1, "end": 1, "status": 1}
+var cListSelector = bson.M{"_id": 0,
+	"cid":     1,
+	"title":   1,
+	"encrypt": 1,
+	"creator": 1,
+	"start":   1,
+	"end":     1,
+	"status":  1}
 
 type ContestModel struct {
 	class.Model
@@ -168,7 +175,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 	return nil
 }
 
-//列出由参数args指定所有问题，参数args应该包括type:<type>,offset:<offset>,limit:<limit>,pid:<pid>,title:<title>/之一
+//列出由参数args指定所有问题，参数args应该包括offset:<offset>,limit:<limit>,pid:<pid>,title:<title>之一
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
 	logger.Debug("Server ContestModel List")
 
@@ -224,9 +231,6 @@ func (this *ContestModel) CheckQuery(args map[string]string) (query bson.M, err 
 	}
 	if v, ok := args["title"]; ok {
 		query["title"] = bson.M{"$regex": bson.RegEx{v, "i"}}
-	}
-	if v, ok := args["type"]; ok {
-		query["type"] = v
 	}
 	return
 }

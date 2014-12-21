@@ -13,9 +13,10 @@ import (
 )
 
 //news新闻控件
+
 type AdminNews struct {
 	class.Controller
-}
+} //@Controller
 
 // //新闻详细信息
 // func (nc *AdminNews) Detail() {
@@ -43,6 +44,7 @@ type AdminNews struct {
 // }
 
 // 列出所有新闻
+//@URL: /admin/news/ @method: GET
 func (nc *AdminNews) List() {
 	restweb.Logger.Debug("Admin News List")
 
@@ -59,6 +61,7 @@ func (nc *AdminNews) List() {
 	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_list.tpl")
 }
 
+//@URL: /admin/news/new/ @method: GET
 func (nc *AdminNews) Add() {
 	restweb.Logger.Debug("Admin News Add")
 
@@ -71,6 +74,7 @@ func (nc *AdminNews) Add() {
 
 }
 
+//@URL: /admin/news/ @method:POST
 func (nc *AdminNews) Insert() {
 	restweb.Logger.Debug("Admin News Insert")
 
@@ -93,6 +97,7 @@ func (nc *AdminNews) Insert() {
 	nc.Redirect("/admin/news", http.StatusFound)
 }
 
+//@URL: /admin/news/(\d+)/status/ @method: POST
 func (nc *AdminNews) Status(Nid string) {
 	restweb.Logger.Debug("Admin News Status")
 
@@ -130,6 +135,7 @@ func (nc *AdminNews) Status(Nid string) {
 }
 
 // 删除指定新闻
+//@URL: /admin/news/(\d+)/ @method: DELETE
 func (nc *AdminNews) Delete(Nid string) {
 	restweb.Logger.Debug("Admin News Delete")
 
@@ -154,6 +160,7 @@ func (nc *AdminNews) Delete(Nid string) {
 	nc.W.WriteHeader(200)
 }
 
+//@URL: /admin/news/(\d+)/ @method: GET
 func (nc *AdminNews) Edit(Nid string) {
 	restweb.Logger.Debug("Admin News Edit")
 
@@ -179,6 +186,7 @@ func (nc *AdminNews) Edit(Nid string) {
 	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_edit.tpl")
 }
 
+//@URL: /admin/news/(\d+)/ @method: POST
 func (nc *AdminNews) Update(Nid string) {
 	restweb.Logger.Debug("Admin News Update")
 

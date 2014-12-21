@@ -5,6 +5,7 @@ import (
 	"restweb"
 )
 
+//@URL: /contests/(\d+)/PasswordPage @method: GET
 func (c *Contest) PasswordPage(Cid string) {
 	c.InitContest(Cid)
 	restweb.Logger.Debug("herehr")
@@ -14,6 +15,7 @@ func (c *Contest) PasswordPage(Cid string) {
 	c.RenderTemplate("view/layout.tpl", "view/contest/passwd.tpl")
 }
 
+//@URL: /contests/(\d+)/PasswordPage @method: POST
 func (c *Contest) Password(Cid string) {
 	c.InitContest(Cid)
 

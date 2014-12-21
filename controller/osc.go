@@ -7,9 +7,10 @@ import (
 
 type OSCController struct {
 	class.Controller
-}
+} //@Controller
 
-func (oc OSCController) Index() {
+//@URL: /osc @method: GET
+func (oc *OSCController) Index() {
 	restweb.Logger.Debug("OSC Page")
 
 	oc.Output["Title"] = "ZJGSU OSC"

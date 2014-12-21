@@ -14,9 +14,10 @@ import (
 // 问题控件
 type ProblemController struct {
 	class.Controller
-}
+} //@Controller
 
-// 列出特定数量的问题,URL，/problems?pid=<pid>&titile=<titile>&source=<source>&page=<page>
+// 列出特定数量的问题?pid=<pid>&titile=<titile>&source=<source>&page=<page>
+//@URL:/problems @method:GET
 func (pc *ProblemController) List() {
 	restweb.Logger.Debug(pc.R.RemoteAddr + "visit Problem List")
 
@@ -99,7 +100,8 @@ func (pc *ProblemController) List() {
 	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl")
 }
 
-//列出某问题的详细信息，URL，/probliems/<pid>
+//列出某问题的详细信息
+//@URL: /problems/(\d+) @method: GET
 func (pc *ProblemController) Detail(Pid string) {
 	restweb.Logger.Debug("Problem Detail")
 
@@ -127,7 +129,8 @@ func (pc *ProblemController) Detail(Pid string) {
 	pc.RenderTemplate("view/layout.tpl", "view/problem_detail.tpl")
 }
 
-//提交某一问题的solution， URL /problems/<pid>，method POST
+//提交某一问题的solution
+//@URL: /problems/(\d+) @method: POST
 func (pc *ProblemController) Submit(Pid string) {
 	restweb.Logger.Debug("Problem Submit")
 

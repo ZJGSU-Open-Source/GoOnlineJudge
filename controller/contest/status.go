@@ -11,8 +11,9 @@ import (
 
 type ContestStatus struct {
 	Contest
-}
+} //@Controller
 
+//@URL: /contests/(\d+)/status @method: GET
 func (sc *ContestStatus) List(Cid string) {
 	restweb.Logger.Debug("Contest Status List")
 
@@ -97,6 +98,7 @@ func (sc *ContestStatus) List(Cid string) {
 	sc.RenderTemplate("view/layout.tpl", "view/contest/status_list.tpl")
 }
 
+//@URL: /contests/(\d+)/status/(\d+)/code @method:GET
 func (sc *ContestStatus) Code(Cid string, Sid string) {
 	restweb.Logger.Debug("Status Code")
 

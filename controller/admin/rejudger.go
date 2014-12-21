@@ -13,8 +13,9 @@ import (
 
 type AdminRejudge struct {
 	class.Controller
-}
+} //@Controller
 
+//@URL: /admin/rejudger/ @method: GET
 func (pc *AdminRejudge) Index() {
 	restweb.Logger.Debug("Rejudge Page")
 
@@ -26,6 +27,7 @@ func (pc *AdminRejudge) Index() {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/rejudge.tpl")
 }
 
+//@URL: /admin/rejudge/ @method: POST
 func (pc *AdminRejudge) Rejudge() {
 	restweb.Logger.Debug("Problem Rejudge")
 

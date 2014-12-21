@@ -9,9 +9,10 @@ import (
 type ContestController struct {
 	class.Controller
 	Type string
-}
+} //@Controller
 
-func (c ContestController) Index() {
+//@URL: /contests @method: GET
+func (c *ContestController) Index() {
 	restweb.Logger.Debug("Contest List")
 
 	CModel := model.ContestModel{}
