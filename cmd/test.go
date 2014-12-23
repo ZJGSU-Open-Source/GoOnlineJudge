@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"go/ast"
+	"go/build"
 	"go/format"
 	"go/parser"
 	"go/token"
@@ -13,6 +14,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	//"time"
 )
 
 type ControllerInfo struct {
@@ -32,14 +34,17 @@ var RouterInfos []RouterInfo
 
 func main() {
 	defer func() {
-		os.Remove("../main.go")
-		os.Remove("../config/router.conf")
+		//time.Sleep(1 * time.Second)
+		log.Println("here")
+		// os.Remove("main.go")
+		// os.Remove("config/router.conf")
 	}()
 	filepath.Walk("../controller", walkFn)
 	generateMain()
 	generateRouter()
 	os.Chdir("../")
 	run()
+
 }
 
 func walkFn(path string, info os.FileInfo, err error) error {
@@ -57,7 +62,12 @@ func walkFn(path string, info os.FileInfo, err error) error {
 	for _, v := range pkgs {
 		pkg = v
 	}
-	walkAstFiles(fset, path, pkg)
+
+	goPath := build.Default.GOPATH
+
+	wd, _ := os.Getwd()
+	wd = wd[:len(wd)-4]
+	walkAstFiles(fset, wd[len(goPath+"/src/"):]+path[2:], pkg)
 
 	return nil
 }

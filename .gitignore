@@ -3,6 +3,7 @@ GoOnlineJudge
 RunServer
 compiler
 runner
+test
 # log file
 log
 ce.txt
