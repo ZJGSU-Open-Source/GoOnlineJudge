@@ -119,6 +119,7 @@ func Err400(w http.ResponseWriter, title string, info string) {
 		err = t.Execute(w, Output)
 	}
 }
+
 func init() {
 	restweb.RegisterFilters(restweb.ANY, `^/admin`, restweb.Before, requireAdmin)
 	restweb.RegisterFilters(restweb.POST, `^/problems/\d+`, restweb.Before, requireLogin)
