@@ -72,10 +72,10 @@ cd ../RunServer/
 
 ##Run
 ```bash
-cd $GOPATH/src/
-restweb run GoOnlineJudge &
-cd GoOnlineJudge/
+cd $GOPATH/src/GoOnlineJudge
 ./RunServer&
+cd ../
+restweb run GoOnlineJudge &
 ```
 Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
