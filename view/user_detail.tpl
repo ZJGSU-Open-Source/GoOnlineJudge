@@ -19,6 +19,10 @@
           <th>Motto</th>
           <td>{{.Motto}}</td>
         </tr>
+         <tr>
+          <th>School</th>
+          <td>{{.School}}</td>
+        </tr>
         <tr>
           <th>Problems Submitted</th>
           <td><a href="/status?uid={{.Uid}}">{{.Submit}}</a></td>

@@ -127,9 +127,9 @@ func (uc *UserController) Detail(uid string) {
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
 }
 
-//@URL: /users/settings @method: GET
+//@URL: /settings @method: GET
 func (uc *UserController) Settings() {
-	restweb.Logger.Debug("User Settings")
+	restweb.Logger.Debug("User Settings xx", uc.Uid)
 
 	userModel := model.UserModel{}
 	one, err := userModel.Detail(uc.Uid)
@@ -170,7 +170,7 @@ func (uc *UserController) Settings() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
 }
 
-//@URL: /users/profile @method: GET
+//@URL: /profile @method: GET
 func (uc *UserController) Edit() {
 	restweb.Logger.Debug("User Edit")
 
@@ -190,7 +190,7 @@ func (uc *UserController) Edit() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_edit.tpl")
 }
 
-//@URL: /users/profile @method: GET
+//@URL: /users/profile @method: POST
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
