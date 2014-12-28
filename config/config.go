@@ -72,19 +72,31 @@ const (
 
 // 权限分离
 const (
-	AccessAdmin   = 1 << iota //管理员页面
-	AddProblem                //添加问题
-	DeleteProblem             //删除问题
-	AddContest                //添加竞赛
-	DeleteContest             //删除竞赛
-	AddNews                   //添加新闻
-	DeleteNews                //删除新闻
-	Testcase                  //测试数据管理
-	ReJudge                   //重判
-	ViewCode                  //查看代码
-	ViewSim                   //查看相似度
-	viewReverse               //查看保留问题、新闻、竞赛
-	UseControl                //用户控制
-	GenerateUse               //生成用户
-	Notice                    //通知消息
+	AccessAdmin = 1 << iota //管理员页面
+	ViewReverse             //查看保留问题、新闻、竞赛
+	Notice                  //通知消息
+
+	AddProblem    //添加问题
+	DeleteProblem //删除问题
+	Testcase      //测试数据管理
+	ReJudge       //重判
+
+	AddContest    //添加竞赛
+	DeleteContest //删除竞赛
+	AddNews       //添加新闻
+	DeleteNews    //删除新闻
+
+	ViewCode //查看代码
+	ViewSim  //查看相似度
+
+	UserControl  //用户控制
+	GenerateUser //生成用户
+)
+
+const (
+	ProFull  = AddProblem | DeleteProblem | Testcase | ReJudge
+	ConFull  = AddContest | DeleteContest
+	NewsFull = AddNews | DeleteNews
+	CodeFull = ViewCode | ViewSim
+	UserFull = UserControl | GenerateUser
 )

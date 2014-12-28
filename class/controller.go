@@ -130,3 +130,12 @@ func (ct *Controller) GetCodeLen(strLen int) (codeLen int) {
 	codeLen = strLen
 	return
 }
+
+func importPrvi(priv string) int {
+	if priv == "Admin" {
+		return config.ProFull | config.ConFull | config.NewsFull | config.AccessAdmin | config.Notice | config.UserFull | config.CodeFull | config.ViewReverse
+	} else if priv == "Teacher" {
+		return config.CodeFull | config.AddContest | config.ReJudge | config.GenerateUser | config.AccessAdmin
+	}
+	return 0
+}

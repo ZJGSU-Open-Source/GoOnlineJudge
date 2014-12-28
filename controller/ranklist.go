@@ -16,7 +16,6 @@ type rank struct {
 }
 
 // 排名控件
-
 type RanklistController struct {
 	class.Controller
 } //@Controller
