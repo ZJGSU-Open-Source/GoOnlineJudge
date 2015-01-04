@@ -44,7 +44,7 @@ func (s *SessController) Post() {
 	} else {
 		s.SetSession("Uid", uid)
 		s.SetSession("Privilege", strconv.Itoa(ret.Privilege))
-		s.W.WriteHeader(200)
+		s.W.WriteHeader(201)
 
 		remoteAddr := s.R.Header.Get("X-Real-IP") // if you set niginx as reverse proxy
 		// remoteAddr := strings.Split(s.R.RemoteAddr, ":")[0] // otherwise

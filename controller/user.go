@@ -72,7 +72,8 @@ func (uc *UserController) Register() {
 			return
 		}
 
-		uc.W.WriteHeader(200)
+		uc.W.Header().Add("Location", "/users/"+uid)
+		uc.W.WriteHeader(201)
 	} else {
 		hint := valid.RenderErrMap()
 		b, _ := json.Marshal(&hint)
@@ -190,7 +191,7 @@ func (uc *UserController) Edit() {
 	uc.RenderTemplate("view/layout.tpl", "view/user_edit.tpl")
 }
 
-//@URL: /users/profile @method: POST
+//@URL: /profile @method: POST
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
