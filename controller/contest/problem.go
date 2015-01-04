@@ -122,7 +122,7 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		return
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(201)
 
 	go func() {
 		one := make(map[string]interface{})

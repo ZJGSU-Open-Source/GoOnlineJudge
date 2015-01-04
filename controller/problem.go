@@ -185,7 +185,7 @@ func (pc *ProblemController) Submit(Pid string) {
 		return
 	}
 
-	pc.W.WriteHeader(200)
+	pc.W.WriteHeader(201)
 
 	go func() { //编译运行solution
 		one := make(map[string]interface{})

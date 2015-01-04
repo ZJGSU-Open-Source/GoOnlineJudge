@@ -64,8 +64,7 @@ Make sure you have these directories in your $GOPATH/src:
 Now, it's time for compilation.
 ```bash
 cd $GOPATH/src/
-cd GoOnlineJudge/	
-go build			
+restweb build GoOnlineJudge/	
 cd ../RunServer/
 ./make.sh
 ```
