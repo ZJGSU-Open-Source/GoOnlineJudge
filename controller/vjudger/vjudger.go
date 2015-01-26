@@ -1,16 +1,25 @@
 package vjudger
 
+import (
+	"time"
+)
+
 type User struct {
-	Uid       string
-	Vid       int
-	OJ        string
-	Result    int
-	CE        string
-	Code      string
-	Time      int64
-	Mem       int64
-	Lang      int
-	ErrorCode int
+	Uid string
+	Sid int
+	Vid int
+
+	OJ     string
+	Result int
+	CE     string
+	Code   string
+	Time   int
+	Mem    int
+	Lang   int
+	Length int
+
+	ErrorCode  int
+	SubmitTime time.Time
 }
 
 type Vjudger interface {
