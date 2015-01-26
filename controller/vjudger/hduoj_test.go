@@ -1,8 +1,9 @@
 package vjudger
 
 import (
+	"log"
 	"testing"
-	"time"
+	// "time"
 )
 
 func Test_HDU(t *testing.T) {
@@ -25,6 +26,5 @@ int main(){
 	if err != nil {
 		t.Error(err)
 	}
-	time.Sleep(5 * time.Second)
-	Judge(u)
+	log.Println(*u)
 }
