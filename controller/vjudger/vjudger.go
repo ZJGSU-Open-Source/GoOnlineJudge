@@ -22,6 +22,8 @@ type User struct {
 	SubmitTime time.Time
 }
 
+const MAX_WaitTime = 120
+
 type Vjudger interface {
 	Init(*User) error
 	Login(*User) error
