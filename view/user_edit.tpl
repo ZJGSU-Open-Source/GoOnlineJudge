@@ -58,7 +58,7 @@
 		e.preventDefault();
 		$.ajax({
 			type:'POST',
-			url:'/users/profile',
+			url:'/profile',
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');	
