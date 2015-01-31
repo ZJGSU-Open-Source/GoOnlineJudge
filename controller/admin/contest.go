@@ -81,7 +81,7 @@ func (cc *AdminContest) Insert() {
 }
 
 //更改contest状态
-//@URL:/admin/contests/status/ @method:POST
+//@URL:/admin/contests/(\d+)/status/ @method:POST
 func (cc *AdminContest) Status(Cid string) {
 	restweb.Logger.Debug("Admin Contest Status")
 
@@ -115,7 +115,7 @@ func (cc *AdminContest) Status(Cid string) {
 }
 
 //删除竞赛
-//@URL: /admin/contests/delete/ @method:POST
+//@URL: /admin/contests/(\d+)/delete/ @method:POST
 func (cc *AdminContest) Delete(Cid string) {
 	restweb.Logger.Debug("Admin Contest Delete")
 

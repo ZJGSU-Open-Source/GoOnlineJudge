@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>Admin - Contest Add</h1>
-<form accept-charset="UTF-8" class="" id="new_contest" method="post" action="/admin/contests/new">
+<form accept-charset="UTF-8" class="" id="new_contest" method="post" action="/admin/contests">
 	<div style="margin:0;padding:0;display:inline">
     	<input name="utf8" type="hidden" value="✓">
     </div>
