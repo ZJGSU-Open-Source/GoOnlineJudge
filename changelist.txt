@@ -1,3 +1,7 @@
+2015-02-01:
+1. Digital password generator
+2. Record user's last use language
+
 2015-01-31:
 1. Fix url
 2. Contest status page

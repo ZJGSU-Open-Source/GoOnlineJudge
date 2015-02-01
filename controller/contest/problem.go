@@ -48,6 +48,7 @@ func (pc *ContestProblem) Detail(Cid, Pid string) {
 		return
 	}
 
+	pc.Output["Compiler_id"] = pc.GetSession("Compiler_id")
 	pc.Output["Detail"] = one
 	pc.Output["Pid"] = pid
 	pc.Output["Status"] = pc.ContestDetail.Status
@@ -92,6 +93,7 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
 	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
+	pc.SetSession("Compiler_id", pc.Input.Get("compiler_id"))
 
 	hint := make(map[string]string)
 	errflag := true
@@ -132,10 +134,9 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)
-		W, err := http.Post(config.JudgeHost, "application/json", reader)
+		_, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			pc.Error("post error", 500)
+			restweb.Logger.Debug("sid[", sid, "] submit post error")
 		}
-		W.Body.Close()
 	}()
 }

@@ -1,4 +1,5 @@
 {{define "content"}}
+{{$compiler_id := .Comiler_id}}
   {{with .Detail}}
     <h1 style="text-align: center">{{.Title}}</h1>
     <div id="problemInfo" class="rfloat" title="Problem Information">
@@ -51,9 +52,9 @@
     <div class="field">
       <label for="compiler_id">Compiler</label><br>
       <select id="compiler_id" name="compiler_id">
-        <option value="1" selected="selected">C</option>
-        <option value="2">C++</option>
-        <option value="3">Java</option>
+        <option value="1" {{if eq $compiler_id "1"}}selected="selected"{{end}}>C</option>
+        <option value="2" {{if eq $compiler_id "2"}}selected="selected"{{end}}>C++</option>
+        <option value="3" {{if eq $compiler_id "3"}}selected="selected"{{end}}>Java</option>
       </select>
       <font  id="warning" color="red"></font>
     </div>

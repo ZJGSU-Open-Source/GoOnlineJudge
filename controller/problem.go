@@ -124,6 +124,7 @@ func (pc *ProblemController) Detail(Pid string) {
 		return
 	}
 
+	pc.Output["Compiler_id"] = pc.GetSession("Compiler_id")
 	pc.Output["Privilege"] = pc.Privilege
 	pc.Output["Title"] = "Problem — " + Pid
 	pc.RenderTemplate("view/layout.tpl", "view/problem_detail.tpl")
@@ -157,6 +158,7 @@ func (pc *ProblemController) Submit(Pid string) {
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
 	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
+	pc.SetSession("Compiler_id", pc.Input.Get("compiler_id")) //or set cookie?
 
 	hint := make(map[string]string)
 	errflag := true
@@ -195,10 +197,9 @@ func (pc *ProblemController) Submit(Pid string) {
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)
-		W, err := http.Post(config.JudgeHost, "application/json", reader)
+		_, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			pc.Error("post error", 500)
+			restweb.Logger.Debug("sid[", sid, "] submit post error")
 		}
-		W.Body.Close()
 	}()
 }
