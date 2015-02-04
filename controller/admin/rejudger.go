@@ -27,7 +27,7 @@ func (pc *AdminRejudge) Index() {
 	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/rejudge.tpl")
 }
 
-//@URL: /admin/rejudge/ @method: POST
+//@URL: /admin/rejudger/ @method: POST
 func (pc *AdminRejudge) Rejudge() {
 	restweb.Logger.Debug("Problem Rejudge")
 
@@ -70,12 +70,10 @@ func (pc *AdminRejudge) Rejudge() {
 			one["Memory"] = pro.Memory
 			one["Rejudge"] = true
 			reader, _ := pc.PostReader(&one)
-			W, err := http.Post(config.JudgeHost, "application/json", reader)
+			_, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
 				// http.Error(w, "post error", 500)
 				restweb.Logger.Debug(err)
-			} else {
-				W.Body.Close()
 			}
 		}
 	} else if types == "Sid" {
@@ -104,13 +102,11 @@ func (pc *AdminRejudge) Rejudge() {
 		one["Memory"] = pro.Memory
 		one["Rejudge"] = true
 		reader, _ := pc.PostReader(&one)
-		restweb.Logger.Debug(reader)
-		W, err := http.Post(config.JudgeHost, "application/json", reader)
+		_, err = http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			pc.Error("post error", 500)
+			restweb.Logger.Debug("Sid[", sid, "] rejudger post error.")
 			return
 		}
-		defer W.Body.Close()
 	}
 	pc.W.WriteHeader(200)
 }
