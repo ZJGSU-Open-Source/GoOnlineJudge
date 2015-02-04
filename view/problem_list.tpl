@@ -72,6 +72,8 @@
       <th class="header">ID</th>
       <th class="header">Title</th>
       <th class="header">Ratio(Solve/Submit)</th>
+      <th class="header">OJ</th>
+      <th class="header">VPID</th>
     </tr>
   </thead>
   <tbody>
@@ -86,6 +88,8 @@
               <td>{{.Pid}}</td>
               <td><a href="/problems/{{.Pid}}">{{.Title}}</a></td>
               <td>{{ShowRatio .Solve .Submit}} (<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)</td>
+              <td>{{.ROJ}}</td>
+              <td>{{.RPid}}</td>
             </tr>
           {{/*end*/}}
         {{end}}

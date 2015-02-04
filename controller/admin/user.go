@@ -7,12 +7,11 @@ import (
 
 	"restweb"
 
-	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
+	"math/rand"
 	"strconv"
+	"time"
 )
 
 type privilegeUser struct {
@@ -215,7 +214,7 @@ func (uc *AdminUser) Generate() {
 		nxt++
 	}
 
-	uc.W.Header().Add("ContentType", "application/octet-stream")
+	uc.W.Header().Set("ContentType", "application/octet-stream")
 	uc.W.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
 	uc.W.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
 	uc.W.Write([]byte(accountlist))
@@ -223,9 +222,7 @@ func (uc *AdminUser) Generate() {
 
 //RandPassword 生成随机8位密码
 func RandPassword() string {
-	b := make([]byte, 8)
-	if _, err := io.ReadFull(rand.Reader, b); err != nil {
-		return ""
-	}
-	return base64.URLEncoding.EncodeToString(b)[:8]
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	n := r.Int63()
+	return fmt.Sprintf("%08d", n%100000000)
 }
