@@ -25,7 +25,7 @@ type Solution struct {
 	Mid    int `json:"mid"bson:"mid"`
 
 	Code  string `json:"code"bson:"code"`
-	Error string `json:"error"bson:"error"` //compiler error
+	Error string `json:"error"bson:"error"` //compiler error info
 
 	Status    int   `json:"status"bson:"status"`
 	Create    int64 `json:"create"bson:"create"`
