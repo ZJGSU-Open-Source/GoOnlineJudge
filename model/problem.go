@@ -1,7 +1,6 @@
 package model
 
 import (
-	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -125,7 +124,6 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 
 	one.Solve = 0
 	one.Submit = 0
-	one.Status = config.StatusReverse
 	one.Create = this.GetTime()
 	one.Expire = one.Create
 	one.Pid, err = this.GetID("Problem")

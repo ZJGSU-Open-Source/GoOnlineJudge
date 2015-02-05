@@ -19,6 +19,8 @@ type HDUJudger struct {
 	titleRx   *regexp.Regexp
 	resLimtRx *regexp.Regexp
 	ctxRx     *regexp.Regexp
+	srcRx     *regexp.Regexp
+	hintRx    *regexp.Regexp
 }
 
 var hdulogger *log.Logger
@@ -37,6 +39,12 @@ func (h *HDUJudger) Init() {
 
 	testPat := `(?s)<div style="font-family:Courier New,Courier,monospace;">(.*?)</??div`
 	h.testRx = regexp.MustCompile(testPat)
+
+	srcPat := `<a href="/search.php\?field=problem&key=.*?&source=1&searchmode=source"> (.*?) </div>`
+	h.srcRx = regexp.MustCompile(srcPat)
+
+	hintPat := `(?s)<i>Hint</i></div>(.*?)</div>`
+	h.hintRx = regexp.MustCompile(hintPat)
 }
 
 func (h *HDUJudger) GetProblemPage(pid string) (string, error) {
@@ -58,6 +66,7 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 	pro := model.Problem{}
 	pro.RPid, _ = strconv.Atoi(pid)
 	pro.ROJ = "HDU"
+	pro.Status = StatusAvailable
 
 	titleMatch := h.titleRx.FindStringSubmatch(html)
 	if len(titleMatch) < 1 {
@@ -94,6 +103,16 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 	}
 	pro.In = test[0][1]
 	pro.Out = test[1][1]
+
+	src := h.srcRx.FindStringSubmatch(html)
+	if len(src) > 1 {
+		pro.Source = src[1]
+	}
+
+	hint := h.hintRx.FindStringSubmatch(html)
+	if len(hint) > 1 {
+		pro.Hint = hint[1]
+	}
 
 	proModel := &model.ProblemModel{}
 	proModel.Insert(pro)

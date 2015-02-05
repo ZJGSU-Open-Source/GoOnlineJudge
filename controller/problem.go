@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"net/http"
 	"restweb"
@@ -188,7 +189,6 @@ func (pc *ProblemController) Submit(Pid string) {
 	}
 
 	pc.W.WriteHeader(201)
-
 	go func() { //编译运行solution
 		one := make(map[string]interface{})
 		one["Sid"] = sid
