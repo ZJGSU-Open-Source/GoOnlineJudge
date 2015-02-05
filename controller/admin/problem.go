@@ -290,6 +290,7 @@ func (pc *AdminProblem) problem() (one model.Problem) {
 	one.Out = out
 	one.Source = pc.Input.Get("source")
 	one.Hint = pc.Input.Get("hint")
+	one.Status = config.StatusReverse
 
 	return one
 }
