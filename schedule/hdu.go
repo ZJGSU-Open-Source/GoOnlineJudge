@@ -40,7 +40,7 @@ func (h *HDUJudger) Init() {
 	testPat := `(?s)<div style="font-family:Courier New,Courier,monospace;">(.*?)</??div`
 	h.testRx = regexp.MustCompile(testPat)
 
-	srcPat := `<a href="/search.php\?field=problem&key=.*?&source=1&searchmode=source"> (.*?) </div>`
+	srcPat := `<a href="/search.php\?field=problem&key=.*?&source=1&searchmode=source"> (.*?) </a>`
 	h.srcRx = regexp.MustCompile(srcPat)
 
 	hintPat := `(?s)<i>Hint</i></div>(.*?)</div>`
@@ -59,6 +59,13 @@ func (h *HDUJudger) GetProblemPage(pid string) (string, error) {
 }
 func (h *HDUJudger) IsExist(page string) bool {
 	return strings.Index(page, "No such problem") < 0
+}
+func (h *HDUJudger) ReplaceImg(text string) string {
+	text = strings.Replace(text, `<img src=/data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
+	text = strings.Replace(text, `<img src=data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
+	text = strings.Replace(text, `<img src=../../../data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
+	text = strings.Replace(text, `<img src=../../data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
+	return text
 }
 
 func (h *HDUJudger) SetDetail(pid string, html string) error {
@@ -85,6 +92,7 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 		return ErrMatchFailed
 	}
 	pro.Time, _ = strconv.Atoi(resMatch[1])
+	pro.Time /= 1000 //ms -> s
 	pro.Memory, _ = strconv.Atoi(resMatch[2])
 
 	cxtMatch := h.ctxRx.FindAllStringSubmatch(html, 3)
@@ -92,9 +100,9 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 		log.Println("ctx match error, hdu pid is", pid)
 		return ErrMatchFailed
 	}
-	pro.Description = template.HTML(cxtMatch[0][1])
-	pro.Input = template.HTML(cxtMatch[1][1])
-	pro.Output = template.HTML(cxtMatch[2][1])
+	pro.Description = template.HTML(h.ReplaceImg(cxtMatch[0][1]))
+	pro.Input = template.HTML(h.ReplaceImg(cxtMatch[1][1]))
+	pro.Output = template.HTML(h.ReplaceImg(cxtMatch[2][1]))
 
 	test := h.testRx.FindAllStringSubmatch(html, 2)
 	if len(test) < 2 {
