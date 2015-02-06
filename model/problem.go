@@ -131,6 +131,10 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 		return 0, IDErr
 	}
 
+	if one.RPid == 0 {
+		one.RPid = one.Pid
+	}
+
 	err = this.DB.C("Problem").Insert(&one)
 	if err != nil {
 		return 0, OpErr
