@@ -291,6 +291,7 @@ func (pc *AdminProblem) problem() (one model.Problem) {
 	one.Source = pc.Input.Get("source")
 	one.Hint = pc.Input.Get("hint")
 	one.Status = config.StatusReverse
+	one.ROJ = "ZJGSU"
 
 	return one
 }
@@ -351,6 +352,7 @@ func (pc *AdminProblem) Import() {
 			}
 		}
 	}
+	problem.ROJ = "ZJGSU"
 	proModel := model.ProblemModel{}
 	pid, err := proModel.Insert(problem)
 	if err != nil {

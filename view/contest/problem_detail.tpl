@@ -1,5 +1,5 @@
 {{define "content"}}
-{{$compiler_id := .Comiler_id}}
+{{$compiler_id := .Compiler_id}}
   {{with .Detail}}
     <h1 style="text-align: center">{{.Title}}</h1>
     <div id="problemInfo" class="rfloat" title="Problem Information">
