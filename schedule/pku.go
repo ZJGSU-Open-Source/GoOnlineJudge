@@ -62,8 +62,11 @@ func (h *PKUJudger) IsExist(page string) bool {
 }
 func (h *PKUJudger) ReplaceImg(text string) string {
 
-	text = strings.Replace(text, `<img src=`, `<img src=http://poj.org/`, -1)
-	text = strings.Replace(text, `<img src="`, `<img src="http://poj.org/`, -1)
+	if strings.Index(text, `<img src="`) >= 0 {
+		text = strings.Replace(text, `<img src="`, `<img src="http://poj.org/`, -1)
+	} else {
+		text = strings.Replace(text, `<img src=`, `<img src=http://poj.org/`, -1)
+	}
 	text = strings.Replace(text, `<IMG src="`, `<img src="http://poj.org/`, -1)
 
 	return text

@@ -112,7 +112,7 @@
             <td><span class="submitRes-{{.Judge}}" disabled="disabled">{{ShowJudge .Judge}}</span></td>
             <td>{{.Time}}MS</td>
             <td>{{.Memory}}KB</td>
-            <td>{{ShowLanguage .Language}}{{if or (eq $uid .Uid) (LargePU $privilege)}}<a href="/status/code?sid={{.Sid}}">[view]</a>{{end}}</td>
+            <td>{{ShowLanguage .Language}}{{if or (or (eq $uid .Uid) (LargePU $privilege)) .Share}}<a href="/status/code?sid={{.Sid}}">[view]</a>{{end}}</td>
             <td>{{.Length}}B</td>
             <td>{{ShowTime .Create}}</td>
           </tr>

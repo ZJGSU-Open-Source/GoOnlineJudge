@@ -82,7 +82,7 @@ func (uc *UserController) Register() {
 	}
 }
 
-//@URL: /users/(\w+) @method: GET
+//@URL: /users/(.+) @method: GET
 func (uc *UserController) Detail(uid string) {
 	restweb.Logger.Debug("User Detail", uid)
 

@@ -27,6 +27,7 @@ type Solution struct {
 	Code  string `json:"code"bson:"code"`
 	Error string `json:"error"bson:"error"` //compiler error info
 
+	Share     bool  `json:"share"bson:"share"` //share code
 	Status    int   `json:"status"bson:"status"`
 	Create    int64 `json:"create"bson:"create"`
 	Sim       int   `json:"sim"bson:"sim"`
@@ -46,6 +47,7 @@ var sListSelector = bson.M{"_id": 0,
 	"length":    1,
 	"language":  1,
 	"create":    1,
+	"share":     1,
 	"status":    1,
 	"sim":       1,
 	"sim_s_id":  1,
