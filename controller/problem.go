@@ -158,6 +158,9 @@ func (pc *ProblemController) Submit(Pid string) {
 
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
+	one.Share, _ = strconv.ParseBool(pc.Input.Get("share"))
+	restweb.Logger.Debug(pc.Input.Get("share"))
+	restweb.Logger.Debug(one.Share)
 	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
 	pc.SetSession("Compiler_id", pc.Input.Get("compiler_id")) //or set cookie?
 

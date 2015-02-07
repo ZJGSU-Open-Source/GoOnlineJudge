@@ -14,7 +14,7 @@ func init() {
 	hdulogger = log.New(hduLogfile, "[Hdu]", log.Ldate|log.Ltime)
 	hdu := &HDUJudger{}
 	hdu.Init()
-	go hdu.GetProblems()
+	hdu.GetProblems()
 
 	PKULogfile, err := os.Create("log/pku.log")
 	if err != nil {

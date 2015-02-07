@@ -130,6 +130,9 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 func (h *HDUJudger) GetProblems() {
 	vidsModel := &model.VIdsModel{}
 	StartId, _ := vidsModel.GetLastID("HDU")
+	if StartId < 1000 {
+		StartId = 999
+	}
 	errCnt := 0
 	lastId := StartId
 	for i := 1; ; i++ {
