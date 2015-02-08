@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -45,6 +46,13 @@ func (h *HDUJudger) Init() {
 
 	hintPat := `(?s)<i>Hint</i></div>(.*?)</div>`
 	h.hintRx = regexp.MustCompile(hintPat)
+
+	hduLogfile, err := os.Create("log/hdu.log")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	hdulogger = log.New(hduLogfile, "[Hdu]", log.Ldate|log.Ltime)
 }
 
 func (h *HDUJudger) GetProblemPage(pid string) (string, error) {
@@ -119,7 +127,7 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 
 	hint := h.hintRx.FindStringSubmatch(html)
 	if len(hint) > 1 {
-		pro.Hint = hint[1]
+		pro.Hint = template.HTML(hint[1])
 	}
 
 	proModel := &model.ProblemModel{}
@@ -127,10 +135,12 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 	return nil
 }
 
-func (h *HDUJudger) GetProblems() {
+func (h *HDUJudger) GetProblems() error {
 	vidsModel := &model.VIdsModel{}
-	StartId, _ := vidsModel.GetLastID("HDU")
-	if StartId < 1000 {
+	StartId, err := vidsModel.GetLastID("HDU")
+	if err == model.DBErr {
+		return err
+	} else if StartId < 1000 {
 		StartId = 999
 	}
 	errCnt := 0
@@ -138,9 +148,9 @@ func (h *HDUJudger) GetProblems() {
 	for i := 1; ; i++ {
 		pid := strconv.Itoa(StartId + i)
 		page, err := h.GetProblemPage(pid)
-		if err != nil {
+		if err != nil { //offline
 			hdulogger.Println("pid["+pid+"]: ", err, ".")
-			return
+			return err
 		}
 		cpage, err := iconv.ConvertString(page, "gb2312", "utf-8")
 		if err != nil { //Although getting error, continue proccess it.
@@ -161,10 +171,11 @@ func (h *HDUJudger) GetProblems() {
 			errCnt++
 		}
 
-		if errCnt >= 100 { //If "not exist" repeat 100 times, terminate it.
+		if errCnt >= 100 { //If "not exist" continuously repeat 100 times, terminate it.
 			break
 		}
 	}
 	vidsModel.SetLastID("HDU", lastId)
 	hdulogger.Println("import terminated. Last pid is ", lastId, ".")
+	return nil
 }
