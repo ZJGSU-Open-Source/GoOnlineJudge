@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -45,6 +46,13 @@ func (h *PKUJudger) Init() {
 
 	hintPat := `(?s)<p class="pst">Hint</p><div class="ptx" lang=".*?">(.*?)</div>`
 	h.hintRx = regexp.MustCompile(hintPat)
+
+	PKULogfile, err := os.Create("log/pku.log")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	PKUlogger = log.New(PKULogfile, "[PKU]", log.Ldate|log.Ltime)
 }
 
 func (h *PKUJudger) GetProblemPage(pid string) (string, error) {
@@ -123,7 +131,7 @@ func (h *PKUJudger) SetDetail(pid string, html string) error {
 
 	hint := h.hintRx.FindStringSubmatch(html)
 	if len(hint) > 1 {
-		pro.Hint = hint[1]
+		pro.Hint = template.HTML(hint[1])
 	}
 
 	proModel := &model.ProblemModel{}
@@ -131,10 +139,12 @@ func (h *PKUJudger) SetDetail(pid string, html string) error {
 	return nil
 }
 
-func (h *PKUJudger) GetProblems() {
+func (h *PKUJudger) GetProblems() error {
 	vidsModel := &model.VIdsModel{}
-	StartId, _ := vidsModel.GetLastID("PKU")
-	if StartId < 1000 {
+	StartId, err := vidsModel.GetLastID("PKU")
+	if err == model.DBErr {
+		return err
+	} else if StartId < 1000 {
 		StartId = 999
 	}
 	errCnt := 0
@@ -142,11 +152,10 @@ func (h *PKUJudger) GetProblems() {
 	for i := 1; ; i++ {
 		pid := strconv.Itoa(StartId + i)
 		page, err := h.GetProblemPage(pid)
-		if err != nil {
+		if err != nil { //offline
 			PKUlogger.Println("pid["+pid+"]: ", err, ".")
-			return
+			return err
 		}
-		log.Println("handling")
 		if h.IsExist(page) {
 			err := h.SetDetail(pid, page)
 			if err != nil {
@@ -161,9 +170,10 @@ func (h *PKUJudger) GetProblems() {
 			errCnt++
 		}
 
-		if errCnt >= 100 { //If "not exist" repeat 100 times, terminate it.
+		if errCnt >= 100 { //If "not exist" continuously repeat 100 times, terminate it.
 			break
 		}
 	}
 	PKUlogger.Println("import terminated. Last pid is ", lastId, ".")
+	return nil
 }

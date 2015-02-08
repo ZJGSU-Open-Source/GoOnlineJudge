@@ -289,7 +289,7 @@ func (pc *AdminProblem) problem() (one model.Problem) {
 	one.In = in
 	one.Out = out
 	one.Source = pc.Input.Get("source")
-	one.Hint = pc.Input.Get("hint")
+	one.Hint = template.HTML(pc.Input.Get("hint"))
 	one.Status = config.StatusReverse
 	one.ROJ = "ZJGSU"
 

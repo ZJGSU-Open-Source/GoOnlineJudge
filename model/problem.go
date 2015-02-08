@@ -23,7 +23,7 @@ type Problem struct {
 	Input       template.HTML `json:"input"bson:"input"xml:"input"`
 	Output      template.HTML `json:"output"bson:"output"xml:"output"`
 	Source      string        `json:"source"bson:"source"xml:"source"`
-	Hint        string        `json:"hint"bson:"hint"xml:"hint"`
+	Hint        template.HTML `json:"hint"bson:"hint"xml:"hint"`
 
 	In  string `json:"in"bson:"in"xml:"sample_input"`
 	Out string `json:"out"bson:"out"xml:"sample_output"`
