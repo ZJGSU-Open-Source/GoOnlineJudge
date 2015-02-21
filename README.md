@@ -85,3 +85,7 @@ Because that running web server at 80 port requires administrator privileges and
 
 #Contribute
 Please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ZJGSU-Open-Source/goonlinejudge/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
