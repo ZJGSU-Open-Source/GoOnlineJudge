@@ -5,7 +5,8 @@ compiler
 runner
 test
 # log file
-log
+hdu.log
+pku.log
 ce.txt
 log.txt
 sim
