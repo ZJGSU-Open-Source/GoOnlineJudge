@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"encoding/json"
 	"net/http"
 	"restweb"
@@ -157,6 +158,9 @@ func (pc *ProblemController) Submit(Pid string) {
 
 	one.Code = code
 	one.Length = pc.GetCodeLen(len(pc.Input.Get("code")))
+	one.Share, _ = strconv.ParseBool(pc.Input.Get("share"))
+	restweb.Logger.Debug(pc.Input.Get("share"))
+	restweb.Logger.Debug(one.Share)
 	one.Language, _ = strconv.Atoi(pc.Input.Get("compiler_id"))
 	pc.SetSession("Compiler_id", pc.Input.Get("compiler_id")) //or set cookie?
 
@@ -188,12 +192,11 @@ func (pc *ProblemController) Submit(Pid string) {
 	}
 
 	pc.W.WriteHeader(201)
-
 	go func() { //编译运行solution
 		one := make(map[string]interface{})
 		one["Sid"] = sid
-		one["Time"] = pro.Time
-		one["Memory"] = pro.Memory
+		one["Pid"] = pro.RPid
+		one["OJ"] = pro.ROJ
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)

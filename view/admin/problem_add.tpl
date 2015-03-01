@@ -1,6 +1,6 @@
 {{define "content"}}
 <h1>Admin - Problem Add</h1>
-<form accept-charset="UTF-8" class="new_problem" id="new_problem" method="post" action="/admin/problems/new">
+<form accept-charset="UTF-8" class="new_problem" id="new_problem" method="post" action="/admin/problems/">
     <div style="margin:0;padding:0;display:inline">
       <input name="utf8" type="hidden" value="✓">
     </div>
@@ -21,10 +21,6 @@
       <input id="problem_source" name="source" size="60" type="text">
     </div>
     <div class="field">
-      <label for="problem_hint">Hint</label><br>
-      <input id="problem_hint" name="hint" size="60" type="text">
-    </div>
-    <div class="field">
       <label for="problem_special">Special Judge</label><br>
       <input id="problem_special" name="special" type="checkbox" value="1">
     </div>
@@ -36,9 +32,13 @@
       <label for="problem_input">Input</label><br>
       <input id="problem_input" name="input" type="text">
     </div>
-    <div class="field">
+     <div class="field">
       <label for="problem_output">Output</label><br>
       <input id="problem_output" name="output" type="text">
+    </div>
+    <div class="field">
+      <label for="problem_hint">Hint</label><br>
+      <input id="problem_hint" name="hint" type="text">
     </div>
     <div class="field">
       <label for="problem_in">Sample Input</label><br>
@@ -72,6 +72,7 @@ KindEditor.ready(function(K) {
     window.editor = K.create('#problem_description', options);
     window.editor = K.create('#problem_input', options);
     window.editor = K.create('#problem_output', options);
+    window.editor = K.create('#problem_hint', options);
 });
 </script>
 {{end}}

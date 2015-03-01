@@ -129,8 +129,8 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 	go func() {
 		one := make(map[string]interface{})
 		one["Sid"] = sid
-		one["Time"] = pro.Time
-		one["Memory"] = pro.Memory
+		one["Pid"] = pro.RPid
+		one["OJ"] = pro.ROJ
 		one["Rejudge"] = false
 		reader, _ := pc.PostReader(&one)
 		restweb.Logger.Debug(reader)

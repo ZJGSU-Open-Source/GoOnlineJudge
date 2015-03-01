@@ -1,18 +1,36 @@
 package schedule
 
 import (
-	"log"
-	"os"
+	"time"
 )
 
+type RemoteOJInterface interface {
+	Init()
+	GetProblems() error
+}
+
+var ROJs = []RemoteOJInterface{&HDUJudger{}, &PKUJudger{}}
+
 func init() {
-	hduLogfile, err := os.Create("log/hdu.log")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	hdulogger = log.New(hduLogfile, "[Hdu]", log.Ldate|log.Ltime)
-	hdu := &HDUJudger{}
-	hdu.Init()
-	go hdu.GetProblems()
+	go func() {
+		for _, oj := range ROJs {
+			oj.Init()
+		}
+		for {
+			errCnt := 0
+			for _, oj := range ROJs {
+			again:
+				if err := oj.GetProblems(); err != nil {
+					errCnt++
+					if errCnt > 5 {
+						continue
+					}
+					time.Sleep(10 * time.Second)
+					goto again
+				}
+			}
+			time.Sleep(7 * 24 * time.Hour) //update per week
+		}
+	}()
+
 }

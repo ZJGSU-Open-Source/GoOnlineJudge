@@ -1,7 +1,6 @@
 package model
 
 import (
-	"GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -24,7 +23,7 @@ type Problem struct {
 	Input       template.HTML `json:"input"bson:"input"xml:"input"`
 	Output      template.HTML `json:"output"bson:"output"xml:"output"`
 	Source      string        `json:"source"bson:"source"xml:"source"`
-	Hint        string        `json:"hint"bson:"hint"xml:"hint"`
+	Hint        template.HTML `json:"hint"bson:"hint"xml:"hint"`
 
 	In  string `json:"in"bson:"in"xml:"sample_input"`
 	Out string `json:"out"bson:"out"xml:"sample_output"`
@@ -125,12 +124,15 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 
 	one.Solve = 0
 	one.Submit = 0
-	one.Status = config.StatusReverse
 	one.Create = this.GetTime()
 	one.Expire = one.Create
 	one.Pid, err = this.GetID("Problem")
 	if err != nil {
 		return 0, IDErr
+	}
+
+	if one.RPid == 0 {
+		one.RPid = one.Pid
 	}
 
 	err = this.DB.C("Problem").Insert(&one)

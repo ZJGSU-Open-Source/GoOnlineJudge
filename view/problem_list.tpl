@@ -7,6 +7,7 @@
     <option value="title" {{if .SearchTitle}}selected{{end}}>Title</option>
     <option value="pid" {{if .SearchPid}}selected{{end}}>ID</option>
     <option value="source" {{if .SearchSource}}selected{{end}}>Source</option>
+    <option value="page">Page</option>
   </select>
   <input name="commit" type="submit" value="Go" style="margin-left:10px">
 </form>
