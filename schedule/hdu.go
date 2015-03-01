@@ -164,6 +164,7 @@ func (h *HDUJudger) GetProblems() error {
 				hdulogger.Println("pid["+pid+"]: ", "import error.")
 			} else {
 				lastId = StartId + i
+				vidsModel.SetLastID("HDU", lastId)
 			}
 			errCnt = 0
 		} else {
@@ -175,7 +176,7 @@ func (h *HDUJudger) GetProblems() error {
 			break
 		}
 	}
-	vidsModel.SetLastID("HDU", lastId)
+
 	hdulogger.Println("import terminated. Last pid is ", lastId, ".")
 	return nil
 }

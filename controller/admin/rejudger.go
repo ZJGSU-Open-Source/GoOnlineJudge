@@ -66,8 +66,8 @@ func (pc *AdminRejudge) Rejudge() {
 			sid := list[i].Sid
 			time.Sleep(1 * time.Second)
 			one["Sid"] = sid
-			one["Time"] = pro.Time
-			one["Memory"] = pro.Memory
+			one["Pid"] = pro.RPid
+			one["OJ"] = pro.ROJ
 			one["Rejudge"] = true
 			reader, _ := pc.PostReader(&one)
 			_, err := http.Post(config.JudgeHost, "application/json", reader)
@@ -98,8 +98,8 @@ func (pc *AdminRejudge) Rejudge() {
 			return
 		}
 		one["Sid"] = sid
-		one["Time"] = pro.Time
-		one["Memory"] = pro.Memory
+		one["Pid"] = pro.RPid
+		one["OJ"] = pro.ROJ
 		one["Rejudge"] = true
 		reader, _ := pc.PostReader(&one)
 		_, err = http.Post(config.JudgeHost, "application/json", reader)
