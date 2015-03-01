@@ -124,6 +124,9 @@ func (sc *ContestStatus) Code(Cid string, Sid string) {
 		sc.Output["Privilege"] = sc.Privilege
 		sc.Output["Title"] = "View Code"
 		sc.Output["IsCode"] = true
+		sc.Output["Pid"] = sc.Index[one.Pid]
 		sc.RenderTemplate("view/layout.tpl", "view/contest/status_code.tpl")
+	} else {
+		sc.Err400("Warning", "You can't see it!")
 	}
 }

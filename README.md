@@ -34,7 +34,9 @@ Then you can download our source code.
 #Get our code from Github
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
+git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
+go get github.com/djimenez/iconv-go
 ```
 Those source codes file should be in your $GOPATH/src. 
 ```bash
@@ -63,6 +65,9 @@ Make sure you have these directories in your $GOPATH/src:
 
 Now, it's time for compilation.
 ```bash
+cd $GOPATH/src/restweb
+cd restweb
+go install
 cd $GOPATH/src/
 restweb build GoOnlineJudge/	
 cd ../RunServer/
@@ -79,6 +84,9 @@ restweb run GoOnlineJudge &
 Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
 #Notice
+
+You should run mongodb first, then our oj.
+
 If you want to visit it at 80 port, we suggest you install [nginx](http://nginx.org/) as a reverse proxy and run nginx at 80 port. 
 
 Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.

@@ -111,7 +111,7 @@ func (sc *StatusController) Code() {
 		one.Code = one.Code + "\n/*\n" + one.Error + "*/\n"
 	}
 
-	if one.Uid == sc.Uid || sc.Privilege > config.PrivilegePU {
+	if one.Uid == sc.Uid || sc.Privilege > config.PrivilegePU || one.Share {
 		sc.Output["Solution"] = one
 		sc.Output["Title"] = "View Code"
 		sc.Output["IsCode"] = true

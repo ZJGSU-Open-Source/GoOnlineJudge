@@ -1,6 +1,5 @@
 {{define "content"}}
 <h1>{{.Title}}</h1>
-  {{if or (eq .CurrentUser .Solution.Uid) (LargePU .Privilege)}}
   {{with .Solution}}
     <textarea id="sourceCode" name="sourceCode" readonly="readonly" style="display: none;">{{.Code}}</textarea>
     <table class="CodeRay">
@@ -13,6 +12,7 @@
     </table>
     <p class="tip">Double click to view unformatted code.</p>
     <br />
+  {{end}}
 	<a href="/contests/{{.Cid}}/problems/{{.Pid}}">Back to problem {{.Pid}}</a>
     <script defer="defer" type="text/javascript">
     //<![CDATA[
@@ -24,7 +24,4 @@
       $('#sourceCode').blur(function(){$('.CodeRay').show(); $('#sourceCode').hide();}).hide();
     //]]>
     </script>
-  {{end}}
-  {{else}}<div class="flash notice">You can't see it</div>
-  {{end}}
 {{end}}

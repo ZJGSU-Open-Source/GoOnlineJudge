@@ -2,7 +2,6 @@ package schedule
 
 import (
 	"GoOnlineJudge/model"
-	iconv "github.com/djimenez/iconv-go"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -14,7 +13,7 @@ import (
 	"time"
 )
 
-type HDUJudger struct {
+type PKUJudger struct {
 	client    *http.Client
 	testRx    *regexp.Regexp
 	titleRx   *regexp.Regexp
@@ -24,39 +23,40 @@ type HDUJudger struct {
 	hintRx    *regexp.Regexp
 }
 
-var hdulogger *log.Logger
+var PKUlogger *log.Logger
 
-func (h *HDUJudger) Init() {
+func (h *PKUJudger) Init() {
 	h.client = &http.Client{Timeout: time.Second * 10}
 
-	titlePat := `<h1 style='color:#1A5CC8'>(.*?)</h1>`
+	titlePat := `<div class="ptt" lang=".*?">(.*?)</div>`
+
 	h.titleRx = regexp.MustCompile(titlePat)
 
-	resLimtPat := `Time Limit: \d+/(\d+) MS \(Java/Others\)&nbsp;&nbsp;&nbsp;&nbsp;Memory Limit: \d+/(\d+) K \(Java/Others\)<br>`
+	resLimtPat := `<td><b>Time Limit:</b> (\d+)MS</td><td width="10px"></td><td><b>Memory Limit:</b> (\d+)K</td>`
 	h.resLimtRx = regexp.MustCompile(resLimtPat)
 
-	ctxPat := `(?s)<div class=panel_content>(.*?)</div><div class=panel_bottom>`
+	ctxPat := `(?s)<div class="ptx" lang=".*?">(.*?)</div><p class="pst">`
 	h.ctxRx = regexp.MustCompile(ctxPat)
 
-	testPat := `(?s)<div style="font-family:Courier New,Courier,monospace;">(.*?)</??div`
+	testPat := `(?s)<pre class="sio">(.*?)</pre>`
 	h.testRx = regexp.MustCompile(testPat)
 
-	srcPat := `<a href="/search.php\?field=problem&key=.*?&source=1&searchmode=source"> (.*?) </a>`
+	srcPat := `<a href="searchproblem?field=source&key=.*?">(.*?)</a>`
 	h.srcRx = regexp.MustCompile(srcPat)
 
-	hintPat := `(?s)<i>Hint</i></div>(.*?)</div>`
+	hintPat := `(?s)<p class="pst">Hint</p><div class="ptx" lang=".*?">(.*?)</div>`
 	h.hintRx = regexp.MustCompile(hintPat)
 
-	hduLogfile, err := os.Create("log/hdu.log")
+	PKULogfile, err := os.Create("log/pku.log")
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	hdulogger = log.New(hduLogfile, "[Hdu]", log.Ldate|log.Ltime)
+	PKUlogger = log.New(PKULogfile, "[PKU]", log.Ldate|log.Ltime)
 }
 
-func (h *HDUJudger) GetProblemPage(pid string) (string, error) {
-	resp, err := h.client.Get("http://acm.hdu.edu.cn/showproblem.php?pid=" + pid)
+func (h *PKUJudger) GetProblemPage(pid string) (string, error) {
+	resp, err := h.client.Get("http://poj.org/problem?id=" + pid)
 	if err != nil {
 		return "", ErrConnectFailed
 	}
@@ -65,22 +65,26 @@ func (h *HDUJudger) GetProblemPage(pid string) (string, error) {
 	return html, nil
 
 }
-func (h *HDUJudger) IsExist(page string) bool {
-	return strings.Index(page, "No such problem") < 0
+func (h *PKUJudger) IsExist(page string) bool {
+	return strings.Index(page, "Can not find problem") < 0
 }
-func (h *HDUJudger) ReplaceImg(text string) string {
-	text = strings.Replace(text, `<img src=/data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
-	text = strings.Replace(text, `<img src=data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
-	text = strings.Replace(text, `<img src=../../../data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
-	text = strings.Replace(text, `<img src=../../data/images/`, `<img src=http://acm.hdu.edu.cn/data/images/`, -1)
+func (h *PKUJudger) ReplaceImg(text string) string {
+
+	if strings.Index(text, `<img src="`) >= 0 {
+		text = strings.Replace(text, `<img src="`, `<img src="http://poj.org/`, -1)
+	} else {
+		text = strings.Replace(text, `<img src=`, `<img src=http://poj.org/`, -1)
+	}
+	text = strings.Replace(text, `<IMG src="`, `<img src="http://poj.org/`, -1)
+
 	return text
 }
 
-func (h *HDUJudger) SetDetail(pid string, html string) error {
+func (h *PKUJudger) SetDetail(pid string, html string) error {
 	log.Println(pid)
 	pro := model.Problem{}
 	pro.RPid, _ = strconv.Atoi(pid)
-	pro.ROJ = "HDU"
+	pro.ROJ = "PKU"
 	pro.Status = StatusAvailable
 
 	titleMatch := h.titleRx.FindStringSubmatch(html)
@@ -105,7 +109,7 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 
 	cxtMatch := h.ctxRx.FindAllStringSubmatch(html, 3)
 	if len(cxtMatch) < 3 {
-		log.Println("ctx match error, hdu pid is", pid)
+		log.Println("ctx match error, PKU pid is", pid)
 		return ErrMatchFailed
 	}
 	pro.Description = template.HTML(h.ReplaceImg(cxtMatch[0][1]))
@@ -114,7 +118,7 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 
 	test := h.testRx.FindAllStringSubmatch(html, 2)
 	if len(test) < 2 {
-		log.Println("test data error, hdu pid is", pid)
+		log.Println("test data error, PKU pid is", pid)
 		return ErrMatchFailed
 	}
 	pro.In = test[0][1]
@@ -135,9 +139,9 @@ func (h *HDUJudger) SetDetail(pid string, html string) error {
 	return nil
 }
 
-func (h *HDUJudger) GetProblems() error {
+func (h *PKUJudger) GetProblems() error {
 	vidsModel := &model.VIdsModel{}
-	StartId, err := vidsModel.GetLastID("HDU")
+	StartId, err := vidsModel.GetLastID("PKU")
 	if err == model.DBErr {
 		return err
 	} else if StartId < 1000 {
@@ -149,25 +153,20 @@ func (h *HDUJudger) GetProblems() error {
 		pid := strconv.Itoa(StartId + i)
 		page, err := h.GetProblemPage(pid)
 		if err != nil { //offline
-			hdulogger.Println("pid["+pid+"]: ", err, ".")
+			PKUlogger.Println("pid["+pid+"]: ", err, ".")
 			return err
 		}
-		cpage, err := iconv.ConvertString(page, "gb2312", "utf-8")
-		if err != nil { //Although getting error, continue proccess it.
-			hdulogger.Println("pid["+pid+"]: ", "encode convert error.")
-			cpage = page
-		}
-
-		if h.IsExist(cpage) {
-			err := h.SetDetail(pid, cpage)
+		if h.IsExist(page) {
+			err := h.SetDetail(pid, page)
 			if err != nil {
-				hdulogger.Println("pid["+pid+"]: ", "import error.")
+				PKUlogger.Println("pid["+pid+"]: ", "import error.")
 			} else {
 				lastId = StartId + i
+				vidsModel.SetLastID("PKU", lastId)
 			}
 			errCnt = 0
 		} else {
-			hdulogger.Println("pid["+pid+"]: ", "not exist.")
+			PKUlogger.Println("pid["+pid+"]: ", "not exist.")
 			errCnt++
 		}
 
@@ -175,7 +174,6 @@ func (h *HDUJudger) GetProblems() error {
 			break
 		}
 	}
-	vidsModel.SetLastID("HDU", lastId)
-	hdulogger.Println("import terminated. Last pid is ", lastId, ".")
+	PKUlogger.Println("import terminated. Last pid is ", lastId, ".")
 	return nil
 }
