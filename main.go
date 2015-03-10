@@ -7,7 +7,7 @@ import (
 	"GoOnlineJudge/controller"
 	"GoOnlineJudge/controller/admin"
 	"GoOnlineJudge/controller/contest"
-	_ "GoOnlineJudge/schedule"
+	//_ "GoOnlineJudge/schedule"
 )
 
 func main() {
