@@ -2,7 +2,6 @@ package schedule
 
 import (
 	"GoOnlineJudge/model"
-	iconv "github.com/djimenez/iconv-go"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -12,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	iconv "github.com/djimenez/iconv-go"
 )
 
 type HDUJudger struct {
