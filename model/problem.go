@@ -131,7 +131,7 @@ func (this *ProblemModel) Insert(one Problem) (int, error) {
 		return 0, IDErr
 	}
 
-	if one.RPid == 0 {
+	if one.RPid == 0 || one.ROJ == "ZJGSU" {
 		one.RPid = one.Pid
 	}
 
