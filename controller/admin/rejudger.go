@@ -69,7 +69,7 @@ func (pc *AdminRejudge) Rejudge() {
 			one["Pid"] = pro.RPid
 			one["OJ"] = pro.ROJ
 			one["Rejudge"] = true
-			reader, _ := pc.PostReader(&one)
+			reader, _ := pc.JsonReader(&one)
 			_, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
 				// http.Error(w, "post error", 500)
@@ -101,7 +101,7 @@ func (pc *AdminRejudge) Rejudge() {
 		one["Pid"] = pro.RPid
 		one["OJ"] = pro.ROJ
 		one["Rejudge"] = true
-		reader, _ := pc.PostReader(&one)
+		reader, _ := pc.JsonReader(&one)
 		_, err = http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
 			restweb.Logger.Debug("Sid[", sid, "] rejudger post error.")
