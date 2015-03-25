@@ -132,7 +132,7 @@ func (pc *ContestProblem) Submit(Cid, Pid string) {
 		one["Pid"] = pro.RPid
 		one["OJ"] = pro.ROJ
 		one["Rejudge"] = false
-		reader, _ := pc.PostReader(&one)
+		reader, _ := pc.JsonReader(&one)
 		restweb.Logger.Debug(reader)
 		_, err := http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
