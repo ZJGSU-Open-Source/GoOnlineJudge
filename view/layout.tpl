@@ -17,7 +17,8 @@
       <script src="/static/js/jquery.min.js" type="text/javascript"></script>
       <script src="/static/js/action.js" type="text/javascript"></script>
       <script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
-      <script type="text/javascript" src="/static/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+      <!-- // <script type="text/javascript" src="/static/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
       {{if .IsCode}}
       <link href="/static/prettify/prettify.css" rel="stylesheet" type="text/css" />
       <script src="/static/prettify/prettify.js" type="text/javascript"></script>
