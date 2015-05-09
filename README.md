@@ -150,12 +150,16 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
 ##Maintainers
 memelee
+
 sakeven
+
 clarkzjw
+
 rex-zed
 
 ##Contributions
 We are open for all kinds of pull requests!
+
 Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
 
 ##License
