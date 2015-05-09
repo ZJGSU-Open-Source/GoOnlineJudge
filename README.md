@@ -5,14 +5,14 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 [**Demo**](http://acm.zjgsu.edu.cn)
 
 ##Contents
-+ [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Installation)
-	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Prerequisites)
-	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Quick_Start)
-	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Manual_Installation)
-	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Tips)
-+ [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Maintainers)
-+ [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#Contributions)
-+ [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#License)
++ [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
+	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
+	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
+	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
+	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
++ [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#maintainers)
++ [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#contributions)
++ [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
 
 ##Installation
 ###Prerequisites
