@@ -163,4 +163,4 @@ We are open for all kinds of pull requests!
 Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
 
 ##License
-See [LICENSE](LICENSE.md)
+See [LICENSE](LICENSE)
