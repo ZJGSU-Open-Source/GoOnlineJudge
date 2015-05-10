@@ -129,7 +129,7 @@ cd ../RunServer/
 ####Run
 Start MongoDB
 ```bash
-mongod -port 8090 --dbpath /home/acm/Data
+mongod --dbpath /home/acm/Data --logpath /home/acm/Data/mongo.log
 ```
 Start OJ
 ```bash
@@ -149,18 +149,18 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 + If you want to visit OJ at 80 port, [nginx](http://nginx.org), the HTTP and reverse proxy server is recommended.
 
 ##Maintainers
-memelee
++ memelee
 
-sakeven
++ sakeven
 
-clarkzjw
++ clarkzjw
 
-rex-zed
++ rex-zed
 
 ##Contributions
-We are open for all kinds of pull requests!
++ We are open for all kinds of pull requests!
 
-Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
++ Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
 
 ##License
 See [LICENSE](LICENSE)

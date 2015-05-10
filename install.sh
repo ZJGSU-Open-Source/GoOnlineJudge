@@ -53,7 +53,7 @@ echo ----------
 echo
 
 # Run MongoDB, GoOnlineJudge, RunServer
-mongod --fork --logpath /home/acm/Data/mongo.log -port 8090 --dbpath /home/acm/Data
+mongod --dbpath /home/acm/Data --logpath /home/acm/Data/mongo.log
 cd $GOPATH/src
 restweb run GoOnlineJudge &
 cd $GOPATH/src/GoOnlineJudge
