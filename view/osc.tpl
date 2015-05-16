@@ -45,15 +45,13 @@
 <h2>加入我们</h2>
 <h3>邮件列表</h3>
 <ul>
-<li><p>邮件列表是开源社区最主要的交流方式，你可以通过 <a href="https://groups.google.com/d/forum/zjgsu_osc" target="_blank">https://groups.google.com/d/forum/zjgsu_osc</a> (需要科学上网)访问邮件列表的内容，围观大家的讨论。</p>
+<li><p>邮件列表是开源社区最主要的交流方式之一，你可以通过 <a href="https://groups.google.com/d/forum/zjgsu_osc" target="_blank">https://groups.google.com/d/forum/zjgsu_osc</a> 访问邮件列表的存档，围观大家的讨论。</p>
 </li>
 <li><p>加入开源社区邮件列表的方法很简单：<br>发送任意内容邮件至 <a href="mailto:zjgsu_osc+subscribe@googlegroups.com" target="_blank">zjgsu_osc+subscribe@googlegroups.com</a> 即可完成订阅，收到大家讨论的邮件，并参与讨论。</p>
 </li>
 <li><p>加入邮件列表后发帖的方法也很简单，直接向 <a href="mailto:zjgsu_osc@googlegroups.com" target="_blank">zjgsu_osc@googlegroups.com</a> 发邮件就行了，Google Groups 会帮您转发给所有加入邮件列表的人。新人发布主题时需要审核，请耐心等待。</p>
 </li>
-<li><p><a href="http://192.157.221.58/mediawiki/%E9%82%AE%E4%BB%B6%E5%88%97%E8%A1%A8" target="_blank">这里</a>有一份邮件列表使用的详细指南。</p>
-</li>
-<li>当邮件列表每天的邮件量很大时，有会话整理功能的邮箱才是明智的选择。推荐使用gmail，不推荐使用163等国内的邮箱。</li>
+<li>当邮件列表每天的邮件量很大时，有会话整理功能的邮箱才是明智的选择。推荐使用Gmail。</li>
 </ul>
 <h3>要求</h3>
 <p>浙江工商大学在校学生，不管你是大一的新生，甚至是研究生，博士生，只要你热爱开源文化，愿意为开源社区贡献力量，我们欢迎你们！</p>
@@ -61,6 +59,6 @@
 <p>长期有效</p>
 <h3>联系方式</h3>
 <ul>
-<p><a href="http://192.157.221.58/mediawiki/%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC" target="_blank">联系我们</a></p>
+<p><a href="mailto:zjgsu.osc@gmail.com" target="_blank">Email: zjgsu.osc@gmail.com</a></p>
 </ul>
 {{end}}
