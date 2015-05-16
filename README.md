@@ -1,51 +1,103 @@
 #GoOnlineJudge
-##Desciption
-GoOnlineJudge is a web server for ZJGSU.  
-It requires Ubuntu 14.04, go1.3 and mongodb v2.4.9.
-##Install
-In order to install our online judge, you should install go1.3, mongodb, and mgo.
-###Dependences
-+ go1.3 is a complier for go.You can get it from [golang.org](http://golang.org)
 
-+ [mongodb](http://www.mongodb.org/) is is an open-source document database, and the leading NoSQL database.  
+GoOnlineJudge is an ACM/ICPC online judge platform.
+
+[**Demo**](http://acm.zjgsu.edu.cn)
+
+##Contents
++ [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
+	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
+	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
+	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
+	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
++ [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#maintainers)
++ [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#contributions)
++ [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
+
+##Installation
+###Prerequisites
+**Disclaimer**:
+GoOnlineJudge works best on Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
+
++ Linux-based **x86** operating system (Ubuntu 14.04 is **recommended**)
++ `wget` or `curl` should be installed
+
+### Quick Start
+GoOnlineJudge is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
+
+####via curl
 ```bash
-sudo apt-get install mongodb
+curl -L https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
 ```
 
-+ [mgo](http://gopkg.in/mgo.v2) is a go driver for mongodb to support communication between go and mongodb. 
+####via wget
 ```bash
-go get gopkg.in/mgo.v2
-```
-You can get an api documentation from [godoc](http://godoc.org/gopkg.in/mgo.v2)
-
-+ Also you should have C/C++ compiler g++ installed to support cpp source code compilation.
-```bash
-sudo apt-get install build-essential
+wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
 ```
 
-+ flex is required for the code similarity test
-```bash
-sudo apt-get install flex
-```
+###Manual Installation
+####Dependences
++ Go
+  + GoOnlineJudge is mainly written in Go. 
+  + Get Go from [golang.org](http://golang.org)
 
-###Compile
-Then you can download our source code.
++ MongoDB
+  + MongoDB is a cross-platform document-oriented databases.
+  + Get MongoDB from [MongoDB.org](https://www.mongodb.org/)
+
++ mgo.v2
+  + mgo.v2 offers a rich MongoDB driver for Go.
+  + Get mgo.v2 via
+  ```
+  go get gopkg.in/mgo.v2
+  ```
+  + API documentation is available on [godoc](http://godoc.org/gopkg.in/mgo.v2)
+
++ [flex](http://flex.sourceforge.net/)
+  + flex is the lexical analyzer used in [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer).
+  + Get flex via
+  ```bash
+  sudo apt-get install flex
+  ```
+
++ [SIM](http://www.dickgrune.com/Programs/similarity_tester/)
+  + SIM is a software and text similarity tester. It's used in RunServer.
+  + Get SIM from http://www.dickgrune.com/Programs/similarity_tester.
+
++ [GCC](https://gcc.gnu.org/)
+  + The GNU compiler Collection.
+  + Get GCC from [GNU](https://gcc.gnu.org) or via
+  ```bash
+  sudo apt-get install build-essential
+  ``` 
+
++ iconv-go
+  + iconv-go provides iconv support for Go.
+  + Get iconv-go via
+  ```
+  go get github.com/djimenez/iconv-go
+  ```
+
+####Install
+
+Obtain latest version via `git`, source codes will be in your $GOPATH/src. 
 ```bash
-#Get our code from Github
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
 git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
-go get github.com/djimenez/iconv-go
 ```
-Those source codes file should be in your $GOPATH/src. 
+
 ```bash
 #directory for problem set
 mkdir ProblemData
+
 #directory for running user's code
 mkdir run
+
 #directory for log
 mkdir log
+
 #configure
 cd $GOPATH/src/RunServer
 vim Cjudger/config.h
@@ -74,26 +126,41 @@ cd ../RunServer/
 ./make.sh
 ```
 
-##Run
+####Run
+Start MongoDB
+```bash
+mongod --dbpath /home/acm/Data --logpath /home/acm/Data/mongo.log
+```
+Start OJ
 ```bash
 cd $GOPATH/src/GoOnlineJudge
 ./RunServer&
 cd ../
 restweb run GoOnlineJudge &
 ```
-Now,you can visit [http://127.0.0.1:8080](http://127.0.0.1:8080).
+Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
-#Notice
+####Tips
 
-You should run mongodb first, then our oj.
++ You should always run MongoDB first then followed by OJ.
 
-If you want to visit it at 80 port, we suggest you install [nginx](http://nginx.org/) as a reverse proxy and run nginx at 80 port. 
++ Running web server at 80 port requires administrator privileges. For security reasons, do **not** run our OJ at 80 port.
 
-Because that running web server at 80 port requires administrator privileges and in order to protect your OS, don't run our oj at 80 port.
++ If you want to visit OJ at 80 port, [nginx](http://nginx.org), the HTTP and reverse proxy server is recommended.
 
-#Contribute
-Please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
+##Maintainers
++ memelee
 
++ sakeven
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ZJGSU-Open-Source/goonlinejudge/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
++ clarkzjw
 
++ rex-zed
+
+##Contributions
++ We are open for all kinds of pull requests!
+
++ Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
+
+##License
+See [LICENSE](LICENSE)
