@@ -18,6 +18,7 @@
 {{end}}
 </div>
 <div class="col-md-4">
+<span>Check every 10 minutes</span>
 	<table id="problem_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>

@@ -1,3 +1,6 @@
+2015-04-24:
+1. support show remote oj status 
+
 2015-03-01:
 1. Digital password generator
 2. Record user's last use language

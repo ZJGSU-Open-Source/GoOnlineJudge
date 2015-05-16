@@ -13,7 +13,7 @@ type RemoteOJInterface interface {
     GetProblems() error
 }
 
-var ROJs = []RemoteOJInterface{&HDUJudger{}, &PKUJudger{}}
+var ROJs = []RemoteOJInterface{&PKUJudger{}}
 
 func init() {
     go func() {
@@ -51,7 +51,7 @@ func init() {
                     ojModel.Update(status)
                 }
             }
-            time.Sleep(1 * time.Minute)
+            time.Sleep(10 * time.Minute)
         }
     }()
 }
