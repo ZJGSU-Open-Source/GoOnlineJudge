@@ -22,7 +22,7 @@
         </div>
         <div id="headerInfo" class="rfloat">
           {{if .IsCurrentUser}}
-            <a href="/users/settings">[{{.CurrentUser}}]</a>
+            <a href="/settings">[{{.CurrentUser}}]</a>
             <a class="user_signout" href="#">[Sign Out]</a>
           {{end}}
         </div>
