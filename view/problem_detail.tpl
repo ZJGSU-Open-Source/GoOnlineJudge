@@ -65,9 +65,6 @@
       <font  id="warning" color="red"></font>
     </div>
     <div class="field">
-    <label><input name="share" type="checkbox" value="1" checked="checked" /> Share code </label>
-    </div>
-    <div class="field">
       <div class="rfloat">
         <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
         Use advanced editor

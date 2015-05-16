@@ -19,6 +19,13 @@
 		              <input type="text" class="form-control" id="user_nick" name="user[nick]" value="{{.Nick}}" required>
 		            </div>
 		          </div>
+		         <div class="form-group">
+		            <label for="user_showcode" class="col-lg-2 control-label">Share Code<font color="red"></font></label>
+		            <div class="col-lg-10">
+		              <input type="checkbox" class="form-control" id="user_sharecode" name="user[share_code]" value="true" 
+		              {{if .ShareCode}} checked="checked" {{end}}>
+		            </div>
+		          </div>
 				<div class="form-group">
 		            <label for="user_mail" class="col-lg-2 control-label">Email</label>
 		            <div class="col-lg-10">

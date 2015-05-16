@@ -39,7 +39,7 @@ $('#search_form').submit( function(e) {
 	var type = $('#type').val();
 	$.ajax({
 		type:'POST',
-		url:'/admin/users/privilegeset?type='+type+'&uid='+user,
+		url:'/admin/privilegeset?type='+type+'&uid='+user,
 		data:$(this).serialize(),
 		error:function(response){
 			var json = eval('('+response.responseText+')');
@@ -60,8 +60,8 @@ $('.admin_user_delete').on('click', function() {
 	var ret = confirm('Delete the user '+uid+'?');
 	if (ret == true) {
 		$.ajax({
-			type: 'Post',
-			url: '/admin/users/privilegeset?type='+'PU'+'&uid=' + uid,
+			type: 'POST',
+			url: '/admin/privilegeset?type='+'PU'+'&uid=' + uid,
 			data:$(this).serialize(),
 			error: function(response) {
 				var json = eval('('+response.responseText+')');
