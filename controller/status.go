@@ -45,13 +45,13 @@ func (sc *StatusController) List() {
 	sc.RenderJson()
 }
 
-//@URL: /api/status/code?sid={sid} @method: GET
+//@URL: /api/status/code @method: GET
 func (sc *StatusController) Code() {
 	restweb.Logger.Debug("Status Code")
 
 	sid, err := strconv.Atoi(sc.Input.Get("sid"))
 	if err != nil {
-		sc.Error("args error", 400)
+		http.Error(sc.W, "args error", 400)
 		return
 	}
 
