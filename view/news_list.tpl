@@ -32,7 +32,7 @@
     <tr>
       <td>{{.Name}}</td>
       <td>{{if eq .Status 0}} 
-      		<span class="submitRes-3"><strong>ok</strong></span>
+      		<span class="submitRes-3"><strong>Ok</strong></span>
       		{{else}}
       		<span class="submitRes-4"> <strong>Unavailable</strong></span>
       		{{end}}
