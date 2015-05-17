@@ -51,7 +51,7 @@ func (sc *StatusController) Code() {
 
 	sid, err := strconv.Atoi(sc.Input.Get("sid"))
 	if err != nil {
-		http.Error(sc.W, "args error", 400)
+		sc.Error("args error", 400)
 		return
 	}
 

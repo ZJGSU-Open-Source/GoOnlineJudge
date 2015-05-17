@@ -105,24 +105,18 @@ func (uc *UserController) Edit() {
 	uc.RenderJson()
 }
 
-//@URL: /api/profile @method: PUT
+//@URL: /api/profile @method: POST
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
 	var one model.User
-
-	in := struct {
-		Handle    string
-		Nick      string
-		Mail      string
-		School    string
-		Motto     string
-		ShareCode string
-	}{}
-	if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
-		sc.Error(err.Error(), http.StatusBadRequest)
-		return
-	}
+	one.Nick = uc.Input.Get("user[nick]")
+	one.Mail = uc.Input.Get("user[mail]")
+	one.School = uc.Input.Get("user[school]")
+	one.Motto = uc.Input.Get("user[motto]")
+	one.ShareCode, _ = strconv.ParseBool(uc.Input.Get("user[share_code]"))
+	restweb.Logger.Debug(uc.Input.Get("user[share_code]"))
+	restweb.Logger.Debug(one.ShareCode)
 
 	if one.Nick == "" {
 		hint := make(map[string]string)
@@ -141,7 +135,7 @@ func (uc *UserController) Update() {
 	}
 }
 
-//@URL: /api/account @method: PUT
+//@URL: /api/account @method: POST
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 
