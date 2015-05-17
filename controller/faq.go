@@ -10,7 +10,7 @@ type FAQController struct {
 } //@Controller
 
 //faq 页面
-//@URL: /faq @method: GET
+//@URL: /api/faq @method: GET
 func (fc *FAQController) Index() {
 	restweb.Logger.Debug("FAQ Page")
 

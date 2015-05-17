@@ -9,7 +9,7 @@ type OSCController struct {
 	class.Controller
 } //@Controller
 
-//@URL: /osc @method: GET
+//@URL: /api/osc @method: GET
 func (oc *OSCController) Index() {
 	restweb.Logger.Debug("OSC Page")
 
