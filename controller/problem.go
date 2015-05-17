@@ -20,6 +20,7 @@ type ProblemController struct {
 // 列出特定数量的问题?pid=<pid>&titile=<titile>&source=<source>&page=<page>
 //@URL:/api/problems @method:GET
 func (pc *ProblemController) List() {
+
 	restweb.Logger.Debug(pc.R.RemoteAddr + "visit Problem List")
 
 	qry := make(map[string]string)
@@ -52,7 +53,6 @@ func (pc *ProblemController) List() {
 //列出某问题的详细信息
 //@URL: /api/problems/(\d+) @method: GET
 func (pc *ProblemController) Detail(Pid string) {
-
 	restweb.Logger.Debug("Problem Detail")
 
 	pid, err := strconv.Atoi(Pid)
@@ -74,6 +74,7 @@ func (pc *ProblemController) Detail(Pid string) {
 //提交某一问题的solution
 //@URL: /api/problems/(\d+) @method: POST
 func (pc *ProblemController) Submit(Pid string) {
+
 	restweb.Logger.Debug("Problem Submit")
 
 	in := struct {

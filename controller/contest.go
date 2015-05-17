@@ -24,4 +24,5 @@ func (c *ContestController) Index() {
 
 	c.Output["Contest"] = conetestList
 	c.RenderJson()
+
 }
