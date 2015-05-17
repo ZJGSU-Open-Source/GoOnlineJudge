@@ -11,7 +11,7 @@ type ContestController struct {
 	Type string
 } //@Controller
 
-//@URL: /contests @method: GET
+//@URL: /api/contests @method: GET
 func (c *ContestController) Index() {
 	restweb.Logger.Debug("Contest List")
 
@@ -23,9 +23,5 @@ func (c *ContestController) Index() {
 	}
 
 	c.Output["Contest"] = conetestList
-	c.Output["Time"] = restweb.GetTime()
-	c.Output["Title"] = "Contest List"
-	c.Output["IsContest"] = true
-	c.Output["Privilege"] = c.Privilege
-	c.RenderTemplate("view/layout.tpl", "view/contest_list.tpl")
+	c.RenderJson()
 }

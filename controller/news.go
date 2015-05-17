@@ -18,7 +18,7 @@ type NewsController struct {
 } //@Controller
 
 //列出所有新闻
-//@URL: /news @method: GET
+//@URL: /api/news @method: GET
 func (nc *NewsController) List() {
 	restweb.Logger.Debug("News List")
 
@@ -29,13 +29,10 @@ func (nc *NewsController) List() {
 		return
 	}
 	nc.Output["News"] = newsList
-
-	nc.Output["Title"] = "Welcome to ZJGSU Online Judge"
-	nc.Output["IsNews"] = true
-	nc.RenderTemplate("view/layout.tpl", "view/news_list.tpl")
+	nc.RenderJson()
 }
 
-//@URL: /news/(\d+) @method: GET
+//@URL: /api/news/(\d+) @method: GET
 func (nc *NewsController) Detail(Nid string) {
 	nid, err := strconv.Atoi(Nid) //获取nid
 	if err != nil {
@@ -54,7 +51,5 @@ func (nc *NewsController) Detail(Nid string) {
 		nc.Err400("No such news", "No such news")
 		return
 	}
-
-	nc.Output["Title"] = "News Detail"
-	nc.RenderTemplate("view/layout.tpl", "view/news_detail.tpl")
+	nc.RenderJson()
 }

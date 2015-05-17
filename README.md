@@ -4,6 +4,10 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 
 [**Demo**](http://acm.zjgsu.edu.cn)
 
+##API
+
+This branch is an api server of GoOnlineJudge.
+
 ##Contents
 + [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
 	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
