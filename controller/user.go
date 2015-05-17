@@ -17,17 +17,7 @@ type UserController struct {
 	class.Controller
 } //@Controller
 
-//@URL: /users/new @method: GET
-func (uc *UserController) Signup() {
-	restweb.Logger.Debug("User Sign Up")
-
-	uc.Output["Title"] = "User Sign Up"
-	uc.Output["IsUserSignUp"] = true
-	uc.RenderTemplate("view/layout.tpl", "view/user_signup.tpl")
-
-}
-
-//@URL: /users @method:POST
+//@URL: /api/users @method:POST
 func (uc *UserController) Register() {
 	restweb.Logger.Debug("User Register")
 
@@ -83,8 +73,9 @@ func (uc *UserController) Register() {
 	}
 }
 
-//@URL: /users/(.+) @method: GET
+//@URL: /api/users/(.+) @method: GET
 func (uc *UserController) Detail(uid string) {
+
 	restweb.Logger.Debug("User Detail", uid)
 
 	userModel := model.UserModel{}
@@ -119,59 +110,10 @@ func (uc *UserController) Detail(uid string) {
 	achieveList.Sort()
 	uc.Output["List"] = achieveList
 	uc.Output["IpList"] = ips
-	uc.Output["Title"] = "User Detail"
-	if uid != "" && uid == uc.Uid {
-		uc.Output["IsSettings"] = true
-		uc.Output["IsSettingsDetail"] = true
-	}
-
-	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
+	uc.RenderJson()
 }
 
-//@URL: /settings @method: GET
-func (uc *UserController) Settings() {
-	restweb.Logger.Debug("User Settings xx", uc.Uid)
-
-	userModel := model.UserModel{}
-	one, err := userModel.Detail(uc.Uid)
-	if err != nil {
-		uc.Error(err.Error(), 400)
-		return
-	}
-	uc.Output["Detail"] = one
-
-	solutionModel := model.SolutionModel{}
-	solvedList, err := solutionModel.Achieve(uc.Uid)
-	if err != nil {
-		uc.Error(err.Error(), 400)
-		return
-	}
-	type IPs struct {
-		Time int64
-		IP   string
-	}
-	var ips []IPs
-	ipo := IPs{}
-
-	for i, lenth := 0, len(one.IPRecord); i < lenth; i++ {
-		ipo.Time = one.TimeRecord[i]
-		ipo.IP = one.IPRecord[i]
-		ips = append(ips, ipo)
-		restweb.Logger.Debug(ips[i].IP)
-	}
-
-	achieveList := sort.IntSlice(solvedList)
-	achieveList.Sort()
-	uc.Output["List"] = achieveList
-	uc.Output["IpList"] = ips
-	uc.Output["Title"] = "User Settings"
-	uc.Output["IsSettings"] = true
-	uc.Output["IsSettingsDetail"] = true
-
-	uc.RenderTemplate("view/layout.tpl", "view/user_detail.tpl")
-}
-
-//@URL: /profile @method: GET
+//@URL: /api/profile @method: GET
 func (uc *UserController) Edit() {
 	restweb.Logger.Debug("User Edit")
 
@@ -184,14 +126,10 @@ func (uc *UserController) Edit() {
 	}
 	uc.Output["Detail"] = one
 
-	uc.Output["Title"] = "User Edit"
-	uc.Output["IsSettings"] = true
-	uc.Output["IsSettingsEdit"] = true
-
-	uc.RenderTemplate("view/layout.tpl", "view/user_edit.tpl")
+	uc.RenderJson()
 }
 
-//@URL: /profile @method: POST
+//@URL: /api/profile @method: POST
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
@@ -221,18 +159,7 @@ func (uc *UserController) Update() {
 	}
 }
 
-//@URL: /account @method: GET
-func (uc *UserController) Pagepassword() {
-	restweb.Logger.Debug("User Password Page")
-
-	uc.Output["Title"] = "User Password"
-	uc.Output["IsSettings"] = true
-	uc.Output["IsSettingsPassword"] = true
-
-	uc.RenderTemplate("view/layout.tpl", "view/user_password.tpl")
-}
-
-//@URL: /account @method: POST
+//@URL: /api/account @method: POST
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 
