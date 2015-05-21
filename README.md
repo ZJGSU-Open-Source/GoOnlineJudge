@@ -62,7 +62,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
 
 + [SIM](http://www.dickgrune.com/Programs/similarity_tester/)
   + SIM is a software and text similarity tester. It's used in RunServer.
-  + Get SIM from http://www.dickgrune.com/Programs/similarity_tester.
+  + SIM is shipped along with RunServer.
 
 + [GCC](https://gcc.gnu.org/)
   + The GNU compiler Collection.
@@ -89,14 +89,17 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```
 
 ```bash
+#directory for MongoDB Data
+mkdir $GOPATH/Data
+
 #directory for problem set
-mkdir ProblemData
+mkdir $GOPATH/ProblemData
 
 #directory for running user's code
-mkdir run
+mkdir $GOPATH/run
 
 #directory for log
-mkdir log
+mkdir $GOPATH/log
 
 #configure
 cd $GOPATH/src/RunServer
@@ -107,6 +110,7 @@ Set variable `oj_home` equals to`$GOPATH/src`, make sure use absolute path to re
 
 Make sure you have these directories in your $GOPATH/src:
 
+	github.com/
 	GoOnlineJudge/
 	RunServer/
 	gopkg.in/
@@ -122,14 +126,14 @@ cd restweb
 go install
 cd $GOPATH/src/
 restweb build GoOnlineJudge/	
-cd ../RunServer/
+cd $GOPATH/RunServer/
 ./make.sh
 ```
 
 ####Run
 Start MongoDB
 ```bash
-mongod --dbpath /home/acm/Data --logpath /home/acm/Data/mongo.log
+mongod --dbpath $GOPATH/Data --logpath $GOPATH/Data/mongo.log
 ```
 Start OJ
 ```bash
