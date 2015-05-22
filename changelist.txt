@@ -1,5 +1,9 @@
+2015-05-22:
+1. Support record user share code
+2. Fix add admin bug
+
 2015-04-24:
-1. support show remote oj status 
+1. Support show remote oj status 
 
 2015-03-01:
 1. Digital password generator
