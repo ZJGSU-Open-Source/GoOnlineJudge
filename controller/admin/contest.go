@@ -22,7 +22,7 @@ type AdminContest struct {
 } //@Controller
 
 //列出所有的比赛
-//@URL: /admin/contests/ @method:GET
+//@URL: /api/admin/contests/ @method:GET
 func (cc *AdminContest) List() {
 	restweb.Logger.Debug("Contest List")
 
@@ -34,38 +34,11 @@ func (cc *AdminContest) List() {
 	}
 
 	cc.Output["Contest"] = contestList
-	cc.Output["Title"] = "Admin - Contest List"
-	cc.Output["IsContest"] = true
-	cc.Output["IsList"] = true
-	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_list.tpl")
-}
-
-// 添加比赛页面
-//@URL: /admin/contests/new @method: GET
-func (cc *AdminContest) Add() {
-	restweb.Logger.Debug("Admin Contest Add")
-
-	now := time.Now()
-	cc.Output["StartYear"] = now.Year()
-	cc.Output["StartMonth"] = int(now.Month())
-	cc.Output["StartDay"] = int(now.Day())
-	cc.Output["StartHour"] = int(now.Hour())
-
-	end := now.Add(5 * time.Hour)
-	cc.Output["EndYear"] = end.Year()
-	cc.Output["EndMonth"] = int(end.Month())
-	cc.Output["EndDay"] = int(end.Day())
-	cc.Output["EndHour"] = int(end.Hour())
-
-	cc.Output["Title"] = "Admin - Contest Add"
-	cc.Output["IsContest"] = true
-	cc.Output["IsAdd"] = true
-
-	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_add.tpl")
+	cc.RenderJson()
 }
 
 // 插入比赛
-//@URL:/admin/contests/ @method:POST
+//@URL:/api/admin/contests/ @method:POST
 func (cc *AdminContest) Insert() {
 	restweb.Logger.Debug("Admin Contest Insert")
 
@@ -77,11 +50,11 @@ func (cc *AdminContest) Insert() {
 		return
 	}
 
-	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
+	cc.W.WriteHeader(201)
 }
 
 //更改contest状态
-//@URL:/admin/contests/(\d+)/status/ @method:POST
+//@URL:/api/admin/contests/:cid/status/ @method:PUT
 func (cc *AdminContest) Status(Cid string) {
 	restweb.Logger.Debug("Admin Contest Status")
 
@@ -111,11 +84,11 @@ func (cc *AdminContest) Status(Cid string) {
 		return
 	}
 
-	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
+	cc.W.WriteHeader(200)
 }
 
 //删除竞赛
-//@URL: /admin/contests/(\d+)/delete/ @method:POST
+//@URL: /api/admin/contests/(\d+)/ @method:DELETE
 func (cc *AdminContest) Delete(Cid string) {
 	restweb.Logger.Debug("Admin Contest Delete")
 
@@ -126,10 +99,6 @@ func (cc *AdminContest) Delete(Cid string) {
 	}
 	contestModel := model.ContestModel{}
 	old, _ := contestModel.Detail(cid)
-	if old.Creator != cc.Uid {
-		cc.Error("privilege error", 400)
-		return
-	}
 
 	err = contestModel.Delete(cid)
 	if err != nil {
@@ -139,80 +108,8 @@ func (cc *AdminContest) Delete(Cid string) {
 	cc.W.WriteHeader(200)
 }
 
-// 竞赛编辑页面，
-//@URL:/admin/contests/(\d+)/ @method:GET
-func (cc *AdminContest) Edit(Cid string) {
-	restweb.Logger.Debug("Admin Contest Edit")
-
-	cid, err := strconv.Atoi(Cid)
-	if err != nil {
-		cc.Error("args error", 400)
-		return
-	}
-
-	var one struct {
-		*model.Contest
-		StartTimeYear   int
-		StartTimeMonth  int
-		StartTimeDay    int
-		StartTimeHour   int
-		StartTimeMinute int
-		EndTimeYear     int
-		EndTimeMonth    int
-		EndTimeDay      int
-		EndTimeHour     int
-		EndTimeMinute   int
-		ProblemList     string
-		IsPublic        bool
-		IsPrivate       bool
-		IsPassword      bool
-	}
-	contestModel := model.ContestModel{}
-	one.Contest, err = contestModel.Detail(cid)
-	if err != nil {
-		cc.Error(err.Error(), 400)
-		return
-	}
-
-	start := time.Unix(one.Start, 0).Local()
-	one.StartTimeYear = start.Year()
-	one.StartTimeMonth = int(start.Month())
-	one.StartTimeDay = start.Day()
-	one.StartTimeHour = start.Hour()
-	one.StartTimeMinute = start.Minute()
-
-	end := time.Unix(one.End, 0).Local()
-	one.EndTimeYear = end.Year()
-	one.EndTimeMonth = int(end.Month())
-	one.EndTimeDay = end.Day()
-	one.EndTimeHour = end.Hour()
-	one.EndTimeMinute = end.Minute()
-	one.ProblemList = ""
-	for _, v := range one.List {
-		one.ProblemList += strconv.Itoa(v) + ";"
-	}
-	one.IsPublic = false
-	one.IsPrivate = false
-	one.IsPassword = false
-	switch one.Encrypt {
-	case config.EncryptPB:
-		one.IsPublic = true
-	case config.EncryptPT:
-		one.IsPrivate = true
-	case config.EncryptPW:
-		one.IsPassword = true
-	}
-
-	cc.Output["Detail"] = one
-	cc.Output["Title"] = "Admin - " + "Contest" + " Edit"
-	cc.Output["IsContest"] = true
-	cc.Output["IsEdit"] = true
-
-	cc.RenderTemplate("view/admin/layout.tpl", "view/admin/contest_edit.tpl")
-}
-
 // 更新竞赛
-//@URL:/admin/contests/(\d+)/ @method:POST
+//@URL:/api/admin/contests/(\d+)/ @method:PUT
 func (cc *AdminContest) Update(Cid string) {
 	restweb.Logger.Debug("Admin Contest Update")
 
@@ -235,7 +132,7 @@ func (cc *AdminContest) Update(Cid string) {
 		cc.Error(err.Error(), 400)
 		return
 	}
-	cc.Redirect("/admin/contests", http.StatusFound)
+	cc.W.WriteHeader(200)
 }
 
 func (cc *AdminContest) contest() (one model.Contest) {

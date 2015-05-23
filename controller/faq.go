@@ -14,7 +14,5 @@ type FAQController struct {
 func (fc *FAQController) Index() {
 	restweb.Logger.Debug("FAQ Page")
 
-	fc.Output["Title"] = "FAQ"
-	fc.Output["IsFAQ"] = true
 	fc.RenderTemplate("view/layout.tpl", "view/faq.tpl")
 }

@@ -44,7 +44,7 @@ type AdminNews struct {
 // }
 
 // 列出所有新闻
-//@URL: /admin/news/ @method: GET
+//@URL: /api/admin/news/ @method: GET
 func (nc *AdminNews) List() {
 	restweb.Logger.Debug("Admin News List")
 
@@ -55,23 +55,7 @@ func (nc *AdminNews) List() {
 		return
 	}
 	nc.Output["News"] = newlist
-	nc.Output["Title"] = "Admin - News List"
-	nc.Output["IsNews"] = true
-	nc.Output["IsList"] = true
-	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_list.tpl")
-}
-
-//@URL: /admin/news/new/ @method: GET
-func (nc *AdminNews) Add() {
-	restweb.Logger.Debug("Admin News Add")
-
-	nc.Output["Title"] = "Admin - News Add"
-	nc.Output["IsNews"] = true
-	nc.Output["IsAdd"] = true
-	nc.Output["IsEdit"] = true
-
-	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_add.tpl")
-
+	nc.RenderJson()
 }
 
 //@URL: /admin/news/ @method:POST
@@ -94,10 +78,10 @@ func (nc *AdminNews) Insert() {
 		return
 	}
 
-	nc.Redirect("/admin/news", http.StatusFound)
+	nc.W.WriteHeader(201)
 }
 
-//@URL: /admin/news/(\d+)/status/ @method: POST
+//@URL: /admin/news/(\d+)/status/ @method: PUT
 func (nc *AdminNews) Status(Nid string) {
 	restweb.Logger.Debug("Admin News Status")
 
@@ -131,7 +115,7 @@ func (nc *AdminNews) Status(Nid string) {
 		nc.Error(err.Error(), 400)
 		return
 	}
-	nc.Redirect("/admin/news", http.StatusFound)
+	nc.W.WriteHeader(200)
 }
 
 // 删除指定新闻
@@ -160,40 +144,9 @@ func (nc *AdminNews) Delete(Nid string) {
 	nc.W.WriteHeader(200)
 }
 
-//@URL: /admin/news/(\d+)/ @method: GET
-func (nc *AdminNews) Edit(Nid string) {
-	restweb.Logger.Debug("Admin News Edit")
-
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		nc.Error("args error", 400)
-		return
-	}
-
-	newsModel := model.NewsModel{}
-	one, err := newsModel.Detail(nid)
-	nc.Output["Detail"] = one
-	if err != nil {
-		nc.Error(err.Error(), 400)
-		return
-	}
-
-	nc.Output["Title"] = "Admin - News Edit"
-	nc.Output["IsNews"] = true
-	nc.Output["IsList"] = false
-	nc.Output["IsEdit"] = true
-
-	nc.RenderTemplate("view/admin/layout.tpl", "view/admin/news_edit.tpl")
-}
-
-//@URL: /admin/news/(\d+)/ @method: POST
+//@URL: /admin/news/(\d+)/ @method: PUT
 func (nc *AdminNews) Update(Nid string) {
 	restweb.Logger.Debug("Admin News Update")
-
-	if nc.Privilege != config.PrivilegeAD {
-		nc.Err400("Warning", "Error Privilege to Update news")
-		return
-	}
 
 	nid, err := strconv.Atoi(Nid)
 	if err != nil {
@@ -210,7 +163,6 @@ func (nc *AdminNews) Update(Nid string) {
 	if err != nil {
 		nc.Error(err.Error(), 500)
 		return
-	} else {
-		nc.Redirect("/admin/news", http.StatusFound)
 	}
+	nc.W.WriteHeader(200)
 }

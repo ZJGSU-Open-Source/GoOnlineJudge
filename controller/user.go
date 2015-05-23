@@ -24,53 +24,29 @@ func (uc *UserController) Register() {
 	var one model.User
 	userModel := model.UserModel{}
 
-	uid := uc.Input.Get("user[handle]")
-	nick := uc.Input.Get("user[nick]")
-	pwd := uc.Input.Get("user[password]")
-	pwdConfirm := uc.Input.Get("user[confirmPassword]")
-	one.Mail = uc.Input.Get("user[mail]")
-	one.School = uc.Input.Get("user[school]")
-	one.Motto = uc.Input.Get("user[motto]")
-
-	valid := restweb.Validation{}
-	valid.MinSize(uid, 4, "uid")
-	valid.Match(uid, "\\w+", "uid")
-
-	if !valid.HasError {
-		_, err := userModel.Detail(uid)
-		if err != nil && err != model.NotFoundErr {
-			http.Error(uc.W, err.Error(), 500)
-			return
-		} else if err == nil {
-			valid.AppendError("uid", "Handle is currently in use.")
-		}
+	in := struct {
+		Handle   string
+		Nick     string
+		Password string
+		Mail     string
+		School   string
+		Motto    string
+	}{}
+	if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
+		sc.Error(err.Error(), http.StatusBadRequest)
+		return
 	}
 
-	valid.Required(nick, "nick")
-	valid.MinSize(pwd, 6, "pwd")
-	valid.Equal(pwd, pwdConfirm, "pwdConfirm")
-	valid.Mail(one.Mail, "mail")
+	one.Privilege = config.PrivilegePU
 
-	if !valid.HasError {
-		one.Uid = uid
-		one.Nick = nick
-		one.Pwd = pwd
-		one.Privilege = config.PrivilegePU
-
-		err := userModel.Insert(one)
-		if err != nil {
-			uc.Error(err.Error(), 500)
-			return
-		}
-
-		uc.W.Header().Add("Location", "/users/"+uid)
-		uc.W.WriteHeader(201)
-	} else {
-		hint := valid.RenderErrMap()
-		b, _ := json.Marshal(&hint)
-		uc.W.WriteHeader(400)
-		uc.W.Write(b)
+	err := userModel.Insert(one)
+	if err != nil {
+		uc.Error(err.Error(), 500)
+		return
 	}
+
+	uc.W.Header().Add("Location", "/users/"+uid)
+	uc.W.WriteHeader(201)
 }
 
 //@URL: /api/users/(.+) @method: GET
@@ -129,18 +105,24 @@ func (uc *UserController) Edit() {
 	uc.RenderJson()
 }
 
-//@URL: /api/profile @method: POST
+//@URL: /api/profile @method: PUT
 func (uc *UserController) Update() {
 	restweb.Logger.Debug("User Update")
 
 	var one model.User
-	one.Nick = uc.Input.Get("user[nick]")
-	one.Mail = uc.Input.Get("user[mail]")
-	one.School = uc.Input.Get("user[school]")
-	one.Motto = uc.Input.Get("user[motto]")
-	one.ShareCode, _ = strconv.ParseBool(uc.Input.Get("user[share_code]"))
-	restweb.Logger.Debug(uc.Input.Get("user[share_code]"))
-	restweb.Logger.Debug(one.ShareCode)
+
+	in := struct {
+		Handle    string
+		Nick      string
+		Mail      string
+		School    string
+		Motto     string
+		ShareCode string
+	}{}
+	if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
+		sc.Error(err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	if one.Nick == "" {
 		hint := make(map[string]string)
@@ -159,7 +141,7 @@ func (uc *UserController) Update() {
 	}
 }
 
-//@URL: /api/account @method: POST
+//@URL: /api/account @method: PUT
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 

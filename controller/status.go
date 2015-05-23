@@ -45,7 +45,7 @@ func (sc *StatusController) List() {
 	sc.RenderJson()
 }
 
-//@URL: /api/status/code @method: GET
+//@URL: /api/status/code?sid={sid} @method: GET
 func (sc *StatusController) Code() {
 	restweb.Logger.Debug("Status Code")
 
