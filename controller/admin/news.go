@@ -46,6 +46,7 @@ type AdminNews struct {
 // 列出所有新闻
 //@URL: /api/admin/news/ @method: GET
 func (nc *AdminNews) List() {
+
 	restweb.Logger.Debug("Admin News List")
 
 	newsModel := model.NewsModel{}
@@ -83,6 +84,7 @@ func (nc *AdminNews) Insert() {
 
 //@URL: /admin/news/(\d+)/status/ @method: PUT
 func (nc *AdminNews) Status(Nid string) {
+
 	restweb.Logger.Debug("Admin News Status")
 
 	if nc.Privilege != config.PrivilegeAD {
@@ -121,6 +123,7 @@ func (nc *AdminNews) Status(Nid string) {
 // 删除指定新闻
 //@URL: /admin/news/(\d+)/ @method: DELETE
 func (nc *AdminNews) Delete(Nid string) {
+
 	restweb.Logger.Debug("Admin News Delete")
 
 	if nc.Privilege != config.PrivilegeAD {
@@ -146,6 +149,7 @@ func (nc *AdminNews) Delete(Nid string) {
 
 //@URL: /admin/news/(\d+)/ @method: PUT
 func (nc *AdminNews) Update(Nid string) {
+
 	restweb.Logger.Debug("Admin News Update")
 
 	nid, err := strconv.Atoi(Nid)

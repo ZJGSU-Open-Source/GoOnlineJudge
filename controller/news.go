@@ -43,12 +43,12 @@ func (nc *NewsController) Detail(Nid string) {
 	newsModel := model.NewsModel{}
 	one, err := newsModel.Detail(nid)
 	if err != nil {
-		http.Error(nc.W, err.Error(), 500)
+		http.Error(nc.W, err.Error(), 404)
 	}
 	nc.Output["Detail"] = one
 
 	if one.Status == config.StatusReverse {
-		nc.Err400("No such news", "No such news")
+		nc.Error("No such resource", 404)
 		return
 	}
 	nc.RenderJson()

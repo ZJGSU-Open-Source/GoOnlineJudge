@@ -19,6 +19,7 @@ type UserController struct {
 
 //@URL: /api/users @method:POST
 func (uc *UserController) Register() {
+
 	restweb.Logger.Debug("User Register")
 
 	var one model.User
@@ -105,18 +106,25 @@ func (uc *UserController) Edit() {
 	uc.RenderJson()
 }
 
-//@URL: /api/profile @method: POST
+//@URL: /api/profile @method: PUT
 func (uc *UserController) Update() {
+
 	restweb.Logger.Debug("User Update")
 
 	var one model.User
-	one.Nick = uc.Input.Get("user[nick]")
-	one.Mail = uc.Input.Get("user[mail]")
-	one.School = uc.Input.Get("user[school]")
-	one.Motto = uc.Input.Get("user[motto]")
-	one.ShareCode, _ = strconv.ParseBool(uc.Input.Get("user[share_code]"))
-	restweb.Logger.Debug(uc.Input.Get("user[share_code]"))
-	restweb.Logger.Debug(one.ShareCode)
+
+	in := struct {
+		Handle    string
+		Nick      string
+		Mail      string
+		School    string
+		Motto     string
+		ShareCode string
+	}{}
+	if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
+		sc.Error(err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	if one.Nick == "" {
 		hint := make(map[string]string)
@@ -135,7 +143,7 @@ func (uc *UserController) Update() {
 	}
 }
 
-//@URL: /api/account @method: POST
+//@URL: /api/account @method: PUT
 func (uc *UserController) Password() {
 	restweb.Logger.Debug("User Password")
 

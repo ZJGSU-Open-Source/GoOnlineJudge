@@ -51,11 +51,13 @@ func (cc *AdminContest) Insert() {
 	}
 
 	cc.W.WriteHeader(201)
+
 }
 
 //更改contest状态
 //@URL:/api/admin/contests/:cid/status/ @method:PUT
 func (cc *AdminContest) Status(Cid string) {
+
 	restweb.Logger.Debug("Admin Contest Status")
 
 	cid, err := strconv.Atoi(Cid)
@@ -90,6 +92,7 @@ func (cc *AdminContest) Status(Cid string) {
 //删除竞赛
 //@URL: /api/admin/contests/(\d+)/ @method:DELETE
 func (cc *AdminContest) Delete(Cid string) {
+
 	restweb.Logger.Debug("Admin Contest Delete")
 
 	cid, err := strconv.Atoi(Cid)
@@ -111,6 +114,7 @@ func (cc *AdminContest) Delete(Cid string) {
 // 更新竞赛
 //@URL:/api/admin/contests/(\d+)/ @method:PUT
 func (cc *AdminContest) Update(Cid string) {
+
 	restweb.Logger.Debug("Admin Contest Update")
 
 	cid, err := strconv.Atoi(Cid)
