@@ -4,6 +4,7 @@ RunServer
 compiler
 runner
 test
+
 # log file
 hdu.log
 pku.log
@@ -11,6 +12,7 @@ ce.txt
 log.txt
 sim
 oj_status_log
+
 #################
 ## Eclipse
 #################
@@ -83,12 +85,12 @@ build/
 *.tlh
 *.tmp
 *.tmp_proj
-*.log
+#/*.log
 *.vspscc
 *.vssscc
 .builds
 *.pidb
-*.log
+#*.log
 *.scc
 
 # Visual C++ cache files

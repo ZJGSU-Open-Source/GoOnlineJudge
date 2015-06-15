@@ -93,13 +93,14 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 mkdir $GOPATH/Data
 
 #directory for problem set
-mkdir $GOPATH/ProblemData
+mkdir $GOPATH/src/ProblemData
 
 #directory for running user's code
-mkdir $GOPATH/run
+mkdir $GOPATH/src/run
 
 #directory for log
-mkdir $GOPATH/log
+mkdir $GOPATH/src/log
+mkdir $GOPATH/src/GoOnlineJudge/log
 
 #configure
 cd $GOPATH/src/RunServer
@@ -126,7 +127,7 @@ cd restweb
 go install
 cd $GOPATH/src/
 restweb build GoOnlineJudge/	
-cd $GOPATH/RunServer/
+cd $GOPATH/src/RunServer/
 ./make.sh
 ```
 
