@@ -17,13 +17,10 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
-
-+ Linux-based **x86** operating system (Ubuntu 14.04 is **recommended**)
-+ `wget` or `curl` should be installed
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
 
 ### Quick Start
-GoOnlineJudge is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
+GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
 
 ####via curl
 ```bash
@@ -55,7 +52,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
 
 + [flex](http://flex.sourceforge.net/)
   + flex is the lexical analyzer used in [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer).
-  + Get flex via
+  + Get flex using following command if you are running Ubuntu.
   ```bash
   sudo apt-get install flex
   ```
@@ -66,7 +63,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
 
 + [GCC](https://gcc.gnu.org/)
   + The GNU compiler Collection.
-  + Get GCC from [GNU](https://gcc.gnu.org) or via
+  + Get GCC from [GNU](https://gcc.gnu.org) or using following command if you are running Ubuntu
   ```bash
   sudo apt-get install build-essential
   ``` 
@@ -93,13 +90,13 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 mkdir $GOPATH/Data
 
 #directory for problem set
-mkdir $GOPATH/ProblemData
+mkdir $GOPATH/src/ProblemData
 
 #directory for running user's code
-mkdir $GOPATH/run
+mkdir $GOPATH/src/run
 
 #directory for log
-mkdir $GOPATH/log
+mkdir $GOPATH/src/log
 
 #configure
 cd $GOPATH/src/RunServer
@@ -126,15 +123,16 @@ cd restweb
 go install
 cd $GOPATH/src/
 restweb build GoOnlineJudge/	
-cd $GOPATH/RunServer/
+cd $GOPATH/src/RunServer/
 ./make.sh
 ```
 
 ####Run
 Start MongoDB
 ```bash
-mongod --dbpath $GOPATH/Data --logpath $GOPATH/Data/mongo.log
+mongod --dbpath <Path-for-your-$GOPATH>/Data --logpath <Path-for-your-$GOPATH>/Data/mongo.log
 ```
+
 Start OJ
 ```bash
 cd $GOPATH/src/GoOnlineJudge
