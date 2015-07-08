@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -99,6 +98,8 @@ func (m *Model) OpenDB() error {
 	}
 
 	conn += fmt.Sprintf("%s:%s/%s", host, port, instance)
+
+	fmt.Println(conn)
 
 	var err error
 
