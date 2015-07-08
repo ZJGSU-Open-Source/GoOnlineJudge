@@ -119,7 +119,6 @@ func (pc *AdminProblem) Insert() {
 		return
 	}
 
-	restweb.Logger.Debug(config.Datapath + strconv.Itoa(pid))
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.in", one.In)
 	createfile(config.Datapath+strconv.Itoa(pid), "sample.out", one.Out)
 
