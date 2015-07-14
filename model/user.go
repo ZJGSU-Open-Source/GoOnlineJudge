@@ -262,7 +262,6 @@ func (this *UserModel) Insert(one User) error {
     }
     defer this.CloseDB()
 
-    one.Privilege = config.PrivilegePU
     one.Solve = 0
     one.Submit = 0
     one.Status = config.StatusAvailable

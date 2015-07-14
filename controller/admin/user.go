@@ -207,6 +207,7 @@ func (uc *AdminUser) Generate() {
         password := RandPassword()
         restweb.Logger.Debug(uid, password)
         one := model.User{Uid: uid, Pwd: password, Module: module}
+        one.Privilege = config.PrivilegePU
         if err := usermodel.Insert(one); err == nil {
             accountlist += uid + " \t" + password + "\n"
             i++
