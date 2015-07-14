@@ -1,8 +1,15 @@
 package config
 
+import (
+    "os"
+)
+
 //server
 const CookieExpires = 1800
-const Datapath = "../ProblemData/"
+
+var OJ_home = os.Getenv("OJ_HOME")
+var Datapath = OJ_home + "/ProblemData/"
+
 const JudgeHost = "http://127.0.0.1:8888"
 
 //CONSTANT
