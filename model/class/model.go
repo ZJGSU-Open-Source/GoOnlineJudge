@@ -84,7 +84,6 @@ func Config() {
 	}
 
 	instance = os.Getenv("MONGODB_INSTANCE_NAME")
-
 	if len(instance) == 0 {
 		instance = "oj"
 	}
@@ -108,6 +107,7 @@ func (m *Model) OpenDB() error {
 
 	m.Session, err = mgo.Dial(conn)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 

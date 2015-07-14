@@ -2,8 +2,6 @@ package class
 
 import (
 	"GoOnlineJudge/config"
-	"html/template"
-	"io/ioutil"
 	"restweb"
 	"strconv"
 )
@@ -40,13 +38,6 @@ func (ct *Controller) Init() {
 			ct.Output["RejudgePrivilege"] = true
 		}
 	}
-
-	b, err := ioutil.ReadFile("view/admin/msg.txt")
-	if err != nil {
-		restweb.Logger.Debug(err)
-	}
-
-	ct.Output["Msg"] = template.HTML(string(b))
 }
 
 func (ct *Controller) Err400(title string, info string) {

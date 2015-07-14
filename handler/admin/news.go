@@ -18,31 +18,6 @@ type AdminNews struct {
 	class.Controller
 } //@Controller
 
-// //新闻详细信息
-// func (nc *AdminNews) Detail() {
-// 	restweb.Logger.Debug("Admin News Detail")
-
-// 	nid, err := strconv.Atoi(r.URL.Query().Get("nid"))
-// 	if err != nil {
-// 		nc.Error("args error", 400)
-// 		return
-// 	}
-
-// 	newsModel := model.NewsModel{}
-// 	one, err := newsModel.Detail(nid)
-// 	if err != nil {
-// 		nc.Error("load error", 400)
-// 		return
-// 	}
-// 	nc.Output["Detail"] = one
-
-// 	nc.Output["Title"] = "Admin - News Detail"
-// 	nc.Output["IsNews"] = true
-// 	nc.Output["IsList"] = false
-
-// 	nc.RenderTemplate("view/admin/layout.tpl", "view/news_detail.tpl")
-// }
-
 // 列出所有新闻
 //@URL: /api/admin/news/ @method: GET
 func (nc *AdminNews) List() {

@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"GoOnlineJudge/class"
@@ -141,6 +141,7 @@ func (uc *UserController) Update() {
 		}
 		uc.W.WriteHeader(200)
 	}
+
 }
 
 //@URL: /api/account @method: PUT

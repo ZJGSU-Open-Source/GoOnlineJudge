@@ -60,4 +60,5 @@ func (m *migrateModel) Get() (*migrate, error) {
 	}
 
 	return list[0], nil
+
 }

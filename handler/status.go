@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"GoOnlineJudge/class"
@@ -17,21 +17,22 @@ type StatusController struct {
 
 //@URL: /api/status @method: GET
 func (sc *StatusController) List() {
-	restweb.Logger.Debug("Status List")
-	in := struct {
-		Uid      string
-		Pid      string
-		Language int
-		Judge    int
-		Module   int
-		Offset   int
-		Limit    int
-	}{}
 
-	if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
-		sc.Error(err.Error(), http.StatusBadRequest)
-		return
-	}
+	restweb.Logger.Debug("Status List")
+	// in := struct {
+	//     Uid      string
+	//     Pid      string
+	//     Language int
+	//     Judge    int
+	//     Module   int
+	//     Offset   int
+	//     Limit    int
+	// }{}
+
+	// if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
+	//     sc.Error(err.Error(), http.StatusBadRequest)
+	//     return
+	// }
 	qry := make(map[string]string)
 	solutionModel := &model.SolutionModel{}
 
@@ -45,7 +46,7 @@ func (sc *StatusController) List() {
 	sc.RenderJson()
 }
 
-//@URL: /api/status/code?sid={sid} @method: GET
+//@URL: /api/status/sid={sid}/code @method: GET
 func (sc *StatusController) Code() {
 	restweb.Logger.Debug("Status Code")
 

@@ -5,9 +5,8 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 
-	"restweb"
-
 	"net/http"
+	"restweb"
 	"strconv"
 	"strings"
 	"time"
@@ -101,7 +100,7 @@ func (cc *AdminContest) Delete(Cid string) {
 		return
 	}
 	contestModel := model.ContestModel{}
-	old, _ := contestModel.Detail(cid)
+	contestModel.Detail(cid)
 
 	err = contestModel.Delete(cid)
 	if err != nil {

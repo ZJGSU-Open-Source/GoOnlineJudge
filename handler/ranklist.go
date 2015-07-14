@@ -1,4 +1,4 @@
-package controller
+package handler
 
 import (
 	"GoOnlineJudge/class"
@@ -24,16 +24,17 @@ type RanklistController struct {
 
 //@URL: /api/ranklist @method: GET
 func (rc *RanklistController) Index() {
+
 	restweb.Logger.Debug("Ranklist")
 
-	in := struct {
-		Offset int
-		Limit  int
-	}{}
-	if err := json.NewDecoder(rc.R.Body).Decode(&in); err != nil {
-		rc.Error(err.Error(), http.StatusBadRequest)
-		return
-	}
+	// in := struct {
+	//     Offset int
+	//     Limit  int
+	// }{}
+	// if err := json.NewDecoder(rc.R.Body).Decode(&in); err != nil {
+	//     rc.Error(err.Error(), http.StatusBadRequest)
+	//     return
+	// }
 	userModel := model.UserModel{}
 
 	qry := make(map[string]string)
@@ -48,7 +49,7 @@ func (rc *RanklistController) Index() {
 	for i, one := range userList {
 		list[i].User = *one
 		if one.Status == config.StatusAvailable {
-			list[count-1].Index = count + in.Offset*in.Limit
+			list[count-1].Index = count //+ in.Offset*in.Limit
 			count += 1
 		}
 	}

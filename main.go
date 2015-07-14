@@ -1,42 +1,41 @@
 package main
 
 import (
-	"log"
-	"restweb"
+	// "log"
+	"net/http"
 
-	_ "GoOnlineJudge/schedule"
+	"github.com/zenazn/goji/web"
 
-	"GoOnlineJudge/controller"
-	"GoOnlineJudge/controller/admin"
-	"GoOnlineJudge/controller/contest"
+	// _ "GoOnlineJudge/schedule"
+
+	"GoOnlineJudge/handler"
 )
 
 func main() {
 
-	restweb.RegisterController(&controller.FAQController{})
-	restweb.RegisterController(&controller.HomeController{})
-	restweb.RegisterController(&controller.NewsController{})
-	restweb.RegisterController(&controller.OSCController{})
-	restweb.RegisterController(&controller.ProblemController{})
-	restweb.RegisterController(&controller.SessController{})
-	restweb.RegisterController(&controller.ContestController{})
-	restweb.RegisterController(&controller.RanklistController{})
-	restweb.RegisterController(&controller.StatusController{})
-	restweb.RegisterController(&controller.UserController{})
-	restweb.RegisterController(&admin.AdminNews{})
-	restweb.RegisterController(&admin.AdminRejudge{})
-	restweb.RegisterController(&admin.AdminUser{})
-	restweb.RegisterController(&admin.AdminContest{})
-	restweb.RegisterController(&admin.AdminHome{})
-	restweb.RegisterController(&admin.AdminImage{})
-	restweb.RegisterController(&admin.AdminNotice{})
-	restweb.RegisterController(&admin.AdminProblem{})
-	restweb.RegisterController(&admin.AdminTestdata{})
-	restweb.RegisterController(&contest.ContestRanklist{})
-	restweb.RegisterController(&contest.ContestStatus{})
-	restweb.RegisterController(&contest.Contest{})
-	restweb.RegisterController(&contest.ContestProblem{})
+	http.Handle("/api/", router())
+	panic(http.ListenAndServe(":8080", nil))
+}
 
-	restweb.AddFile("/static/", ".")
-	log.Fatal(restweb.Run())
+func router() *web.Mux {
+	mux := web.New()
+	mux.Use(SetUser)
+
+	mux.Get("/api/problems", handler.ListProblems)
+	mux.Get("/api/problems/:pid", handler.GetProblem)
+
+	return mux
+}
+
+func SetUser(c *web.C, h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		var ctx = context.FromC(*c)
+		var user = session.GetUser(ctx, r)
+		if user != nil && user.ID != 0 {
+			UserToC(c, user)
+		}
+		h.ServeHTTP(w, r)
+	}
+	return http.HandlerFunc(fn)
+
 }
