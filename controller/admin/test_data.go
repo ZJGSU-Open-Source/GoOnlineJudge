@@ -28,6 +28,7 @@ func (tc *AdminTestdata) List(pid string) {
 
     files, err := dir.Readdir(-1)
     if err != nil {
+        restweb.Logger.Debug(config.Datapath + pid)
         restweb.Logger.Debug(err)
         tc.Error("Problem Id error", 500)
         return
