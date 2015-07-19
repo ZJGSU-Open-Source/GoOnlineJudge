@@ -17,6 +17,7 @@ mkdir -p /home/acm/go/src /home/acm/go/pkg /home/acm/go/bin
 # Set environment variables for Golang.
 export GOROOT=/home/acm/goroot
 export GOPATH=/home/acm/go
+export OJ_HOME=$GOPATH/src
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # Install MongoDB.
@@ -28,9 +29,9 @@ mkdir -p $GOPATH/Data
 rm -rf /var/lib/apt/lists/*
 
 # Get OJ Source Code
-mkdir -p $GOPATH/src/ProblemData
-mkdir -p $GOPATH/src/run
-mkdir -p $GOPATH/src/log
+mkdir -p $OJ_HOME/ProblemData
+mkdir -p $OJ_HOME/run
+mkdir -p $OJ_HOME/log
 go get gopkg.in/mgo.v2
 go get github.com/djimenez/iconv-go
 git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
@@ -39,12 +40,12 @@ git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 
 # Build OJ
-cd $GOPATH/src/restweb
+cd $OJ_HOME/restweb
 cd restweb
 go install
-cd $GOPATH/src
+cd $OJ_HOME
 restweb build GoOnlineJudge
-cd $GOPATH/src/RunServer
+cd $OJ_HOME/RunServer
 ./make.sh
 
 echo
@@ -55,7 +56,7 @@ echo
 
 # Run MongoDB, GoOnlineJudge, RunServer
 mongod --dbpath /home/acm/go/Data --logpath /home/acm/go/Data/mongo.log
-cd $GOPATH/src
+cd $OJ_HOME/
 restweb run GoOnlineJudge &
 cd $GOPATH/src/GoOnlineJudge
-./RunServer &
+RunServer &

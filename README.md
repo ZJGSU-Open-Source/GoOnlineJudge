@@ -17,7 +17,9 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
+
+If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Quick Start
 GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
@@ -86,44 +88,45 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```
 
 ```bash
+# Set $OJ_HOME variable
+export OJ_HOME=$GOPATH/src
+
 #directory for MongoDB Data
 mkdir $GOPATH/Data
 
 #directory for problem set
-mkdir $GOPATH/src/ProblemData
+mkdir $OJ_HOME/ProblemData
 
 #directory for running user's code
-mkdir $GOPATH/src/run
+mkdir $OJ_HOME/run
 
 #directory for log
-mkdir $GOPATH/src/log
-
-#configure
-cd $GOPATH/src/RunServer
-vim Cjudger/config.h
-```
-
-Set variable `oj_home` equals to`$GOPATH/src`, make sure use absolute path to replace `$GOPATH`
+mkdir $OJ_HOME/log
 
 Make sure you have these directories in your $GOPATH/src:
 
-	github.com/
-	GoOnlineJudge/
-	RunServer/
-	gopkg.in/
-	ProblemData/
-	run/
-	log/
-	restweb/
+```
+➜  src  tree -d -L 1 
+.
+├── github.com
+├── GoOnlineJudge
+├── gopkg.in
+├── log
+├── ProblemData
+├── restweb
+├── run
+├── RunServer
+└── vjudger
+```
 
 Now, it's time for compilation.
 ```bash
-cd $GOPATH/src/restweb
+cd $OJ_HOME/restweb
 cd restweb
 go install
-cd $GOPATH/src/
+cd $OJ_HOME/
 restweb build GoOnlineJudge/	
-cd $GOPATH/src/RunServer/
+cd $OJ_HOME/RunServer/
 ./make.sh
 ```
 
@@ -135,10 +138,9 @@ mongod --dbpath <Path-for-your-$GOPATH>/Data --logpath <Path-for-your-$GOPATH>/D
 
 Start OJ
 ```bash
-cd $GOPATH/src/GoOnlineJudge
-./RunServer&
-cd ../
+cd $OJ_HOME/
 restweb run GoOnlineJudge &
+RunServer &
 ```
 Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
