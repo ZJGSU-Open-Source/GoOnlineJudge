@@ -104,14 +104,15 @@ mkdir $OJ_HOME/run
 
 #directory for log
 mkdir $OJ_HOME/log
+```
 
 Make sure you have these directories in your $GOPATH/src:
 
-	github.com/
-	GoOnlineJudge/
-	RunServer/
-	gopkg.in/
-	restweb/
+  github.com/
+  GoOnlineJudge/
+  RunServer/
+  gopkg.in/
+  restweb/
 
 And these directories in your $OJ_HOME:
 
