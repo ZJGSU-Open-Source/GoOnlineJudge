@@ -22,7 +22,7 @@
       },
       success: function() {
       	$('#signin_failed').css('display', 'none');
-        window.location.href = "contests/{{.Cid}}";
+        window.location.href = "/contests/{{.Cid}}";
       }
     });
   });

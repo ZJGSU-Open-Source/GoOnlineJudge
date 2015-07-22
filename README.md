@@ -17,7 +17,9 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them.
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
+
+If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Quick Start
 GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
@@ -86,11 +88,13 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```
 
 ```bash
-
+# Set $OJ_HOME variable
 export OJ_HOME="yourself oj home"
 
+export PATH=$PATH:$GOPATH/bin
+
 #directory for MongoDB Data
-mkdir $GOPATH/Data
+mkdir $OJ_HOME/Data
 
 #directory for problem set
 mkdir $OJ_HOME/ProblemData
@@ -118,24 +122,17 @@ And these directories in your $OJ_HOME:
 Now, it's time for compilation.
 ```bash
 cd $GOPATH/src/restweb
-cd restweb
 go install
-cd $GOPATH/src/
-restweb build GoOnlineJudge/	
-cd $GOPATH/src/RunServer/
+cd $GOPATH/src
+restweb build GoOnlineJudge
+cd $GOPATH/src/RunServer
 ./make.sh
-```
-
-####Run
-Start MongoDB
-```bash
-mongod --dbpath <Path-for-your-$GOPATH>/Data --logpath <Path-for-your-$GOPATH>/Data/mongo.log
 ```
 
 Start OJ
 ```bash
 RunServer&
-cd $GOPATH/src/
+cd $GOPATH/src
 restweb run GoOnlineJudge &
 ```
 Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
