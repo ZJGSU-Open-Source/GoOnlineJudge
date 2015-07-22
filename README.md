@@ -86,24 +86,20 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```
 
 ```bash
+
+export OJ_HOME="yourself oj home"
+
 #directory for MongoDB Data
 mkdir $GOPATH/Data
 
 #directory for problem set
-mkdir $GOPATH/src/ProblemData
+mkdir $OJ_HOME/ProblemData
 
 #directory for running user's code
-mkdir $GOPATH/src/run
+mkdir $OJ_HOME/run
 
 #directory for log
-mkdir $GOPATH/src/log
-
-#configure
-cd $GOPATH/src/RunServer
-vim Cjudger/config.h
-```
-
-Set variable `oj_home` equals to`$GOPATH/src`, make sure use absolute path to replace `$GOPATH`
+mkdir $OJ_HOME/log
 
 Make sure you have these directories in your $GOPATH/src:
 
@@ -111,10 +107,13 @@ Make sure you have these directories in your $GOPATH/src:
 	GoOnlineJudge/
 	RunServer/
 	gopkg.in/
-	ProblemData/
-	run/
-	log/
 	restweb/
+
+And these directories in your $OJ_HOME:
+
+  ProblemData/
+  run/
+  log/
 
 Now, it's time for compilation.
 ```bash
@@ -135,9 +134,8 @@ mongod --dbpath <Path-for-your-$GOPATH>/Data --logpath <Path-for-your-$GOPATH>/D
 
 Start OJ
 ```bash
-cd $GOPATH/src/GoOnlineJudge
-./RunServer&
-cd ../
+RunServer&
+cd $GOPATH/src/
 restweb run GoOnlineJudge &
 ```
 Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
