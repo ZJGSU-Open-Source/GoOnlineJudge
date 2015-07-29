@@ -59,7 +59,7 @@
                   {{if .IsShowAdmin}}<li><a href="/admin/" class="icon icon-material-star">[Admin]</a></li>{{end}}
                   {{if .IsShowTeacher}}<li><a href="/admin/" class="icon icon-material-star-half">[Teacher]</a></li>{{end}}
                   <li><a href="/settings" class="icon icon-material-settings">[{{.CurrentUser}}]</a></li>
-                  <li><a class="user_signout icon icon-material-chevron-right" href="#">[Sign Out]</a></li>
+                  <li><a class="user_signout icon icon-material-chevron-right" href="#"><span id="signout">[Sign Out]</span></a></li>
                 {{else}}
                   {{if .IsUserSignIn}}{{else}}<li><a class="icon icon-material-account-circle" href="/sess">[Sign In]</a></li>{{end}}
                   {{if .IsUserSignUp}}{{else}}<li><a class="icon icon-material-person-add" href="/users/new">[Sign Up]</a></li>{{end}}
