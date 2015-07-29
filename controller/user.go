@@ -239,7 +239,7 @@ func (uc *UserController) Password() {
     valid := restweb.Validation{}
 
     uid := uc.Uid
-    valid.AppendError("uid", uid)
+    // valid.AppendError("uid", uid)
 
     oldPwd := uc.Input.Get("user[oldPassword]")
     newPwd := uc.Input.Get("user[newPassword]")
