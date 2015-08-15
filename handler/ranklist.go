@@ -1,58 +1,49 @@
 package handler
 
 import (
-	"GoOnlineJudge/class"
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model"
+    // "GoOnlineJudge/class"
+    "GoOnlineJudge/config"
+    "GoOnlineJudge/model"
 
-	"restweb"
+    "github.com/zenazn/goji/web"
 
-	"encoding/json"
-	"net/http"
+    "encoding/json"
+    "net/http"
 )
 
 // 排名
 type rank struct {
-	model.User
-	Index int `json:"index"bson:"index"`
+    model.User
+    Index int `json:"index"bson:"index"`
 }
 
-// 排名控件
-type RanklistController struct {
-	class.Controller
-} //@Controller
-
 //@URL: /api/ranklist @method: GET
-func (rc *RanklistController) Index() {
+func Ranklist(c web.C, w http.ResponseWriter, r *http.Request) {
+    r.ParseForm()
 
-	restweb.Logger.Debug("Ranklist")
+    qry := make(map[string]string)
+    if v := r.FormValue("offset"); len(v) > 0 {
+        qry["offset"] = v
+    }
+    if v := r.FormValue("limit"); len(v) > 0 {
+        qry["limit"] = v
+    }
 
-	// in := struct {
-	//     Offset int
-	//     Limit  int
-	// }{}
-	// if err := json.NewDecoder(rc.R.Body).Decode(&in); err != nil {
-	//     rc.Error(err.Error(), http.StatusBadRequest)
-	//     return
-	// }
-	userModel := model.UserModel{}
+    userModel := model.UserModel{}
+    userList, err := userModel.List(qry)
+    if err != nil {
 
-	qry := make(map[string]string)
+    }
 
-	userList, err := userModel.List(qry)
-	if err != nil {
+    list := make([]rank, len(userList), len(userList))
+    count := 1
+    for i, one := range userList {
+        list[i].User = *one
+        if one.Status == config.StatusAvailable {
+            list[count-1].Index = count //+ in.Offset*in.Limit
+            count += 1
+        }
+    }
 
-	}
-
-	list := make([]rank, len(userList), len(userList))
-	count := 1
-	for i, one := range userList {
-		list[i].User = *one
-		if one.Status == config.StatusAvailable {
-			list[count-1].Index = count //+ in.Offset*in.Limit
-			count += 1
-		}
-	}
-	rc.Output["User"] = list
-	rc.RenderJson()
+    json.NewEncoder(w).Encode(list)
 }

@@ -1,55 +1,51 @@
 package handler
 
 import (
-	"GoOnlineJudge/class"
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model"
+    "GoOnlineJudge/config"
+    "GoOnlineJudge/model"
+    "github.com/zenazn/goji/web"
 
-	"restweb"
-
-	"net/http"
-	"strconv"
+    "encoding/json"
+    "net/http"
+    "strconv"
 )
-
-//新闻控件
-
-type NewsController struct {
-	class.Controller
-} //@Controller
 
 //列出所有新闻
 //@URL: /api/news @method: GET
-func (nc *NewsController) List() {
-	restweb.Logger.Debug("News List")
+func ListNews(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	newsModel := model.NewsModel{}
-	newsList, err := newsModel.List(-1, -1)
-	if err != nil {
-		// http.Error(w, err.Error(), 500)
-		return
-	}
-	nc.Output["News"] = newsList
-	nc.RenderJson()
+    newsModel := model.NewsModel{}
+    newsList, err := newsModel.List(-1, -1)
+    if err != nil {
+        http.Error(w, err.Error(), 500)
+        return
+    }
+
+    json.NewEncoder(w).Encode(newsList)
 }
 
-//@URL: /api/news/(\d+) @method: GET
-func (nc *NewsController) Detail(Nid string) {
-	nid, err := strconv.Atoi(Nid) //获取nid
-	if err != nil {
-		// http.Error(w, "args error", 400)
-		return
-	}
+//@URL: /api/news/:nid @method: GET
+func GetNews(c web.C, w http.ResponseWriter, r *http.Request) {
+    var (
+        Nid = c.URLParams["nid"]
+    )
 
-	newsModel := model.NewsModel{}
-	one, err := newsModel.Detail(nid)
-	if err != nil {
-		http.Error(nc.W, err.Error(), 404)
-	}
-	nc.Output["Detail"] = one
+    nid, err := strconv.Atoi(Nid) //获取nid
+    if err != nil {
+        http.Error(w, "args error", 400)
+        return
+    }
 
-	if one.Status == config.StatusReverse {
-		nc.Error("No such resource", 404)
-		return
-	}
-	nc.RenderJson()
+    newsModel := model.NewsModel{}
+    one, err := newsModel.Detail(nid)
+    if err != nil {
+        http.Error(w, err.Error(), 404)
+    }
+
+    if one.Status == config.StatusReverse {
+        w.WriteHeader(404)
+        return
+    }
+
+    json.NewEncoder(w).Encode(one)
 }

@@ -1,71 +1,79 @@
 package handler
 
 import (
-	"GoOnlineJudge/class"
-	// "GoOnlineJudge/config"
-	"GoOnlineJudge/model"
-	"restweb"
 
-	"encoding/json"
-	"net/http"
-	"strconv"
+    // "GoOnlineJudge/config"
+    "GoOnlineJudge/model"
+    "github.com/zenazn/goji/web"
+    "restweb"
+
+    "encoding/json"
+    "net/http"
+    "strconv"
 )
 
-type StatusController struct {
-	class.Controller
-} //@Controller
-
 //@URL: /api/status @method: GET
-func (sc *StatusController) List() {
+func StatusList(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	restweb.Logger.Debug("Status List")
-	// in := struct {
-	//     Uid      string
-	//     Pid      string
-	//     Language int
-	//     Judge    int
-	//     Module   int
-	//     Offset   int
-	//     Limit    int
-	// }{}
+    r.ParseForm()
 
-	// if err := json.NewDecoder(sc.R.Body).Decode(&in); err != nil {
-	//     sc.Error(err.Error(), http.StatusBadRequest)
-	//     return
-	// }
-	qry := make(map[string]string)
-	solutionModel := &model.SolutionModel{}
+    qry := make(map[string]string)
 
-	list, err := solutionModel.List(qry)
-	if err != nil {
-		sc.Error(err.Error(), 500)
-		return
-	}
+    if v := r.FormValue("pid"); len(v) > 0 {
+        qry["pid"] = v
+    }
+    if v := r.FormValue("uid"); len(v) > 0 {
+        qry["uid"] = v
+    }
+    if v := r.FormValue("language"); len(v) > 0 {
+        qry["language"] = v
+    }
+    if v := r.FormValue("offset"); len(v) > 0 {
+        qry["offset"] = v
+    }
+    if v := r.FormValue("limit"); len(v) > 0 {
+        qry["limit"] = v
+    }
+    if v := r.FormValue("judge"); len(v) > 0 {
+        qry["judge"] = v
+    }
+    if v := r.FormValue("module"); len(v) > 0 {
+        qry["module"] = v
+    }
 
-	sc.Output["Solution"] = list
-	sc.RenderJson()
+    solutionModel := &model.SolutionModel{}
+
+    list, err := solutionModel.List(qry)
+    if err != nil {
+        w.WriteHeader(500)
+        return
+    }
+
+    json.NewEncoder(w).Encode(list)
 }
 
-//@URL: /api/status/sid={sid}/code @method: GET
-func (sc *StatusController) Code() {
-	restweb.Logger.Debug("Status Code")
+//@URL: /api/status/:sid/code @method: GET
+func GetCode(c web.C, w http.ResponseWriter, r *http.Request) {
+    restweb.Logger.Debug("Status Code")
+    var (
+        Sid = c.URLParams["sid"]
+    )
 
-	sid, err := strconv.Atoi(sc.Input.Get("sid"))
-	if err != nil {
-		sc.Error("args error", 400)
-		return
-	}
+    sid, err := strconv.Atoi(Sid)
+    if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
 
-	solutionModel := model.SolutionModel{}
-	one, err := solutionModel.Detail(sid)
-	if err != nil {
-		sc.Error(err.Error(), 400)
-		return
-	}
-	if one.Error != "" {
-		one.Code = one.Code + "\n/*\n" + one.Error + "*/\n"
-	}
+    solutionModel := model.SolutionModel{}
+    one, err := solutionModel.Detail(sid)
+    if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
+    if one.Error != "" {
+        one.Code = one.Code + "\n/*\n" + one.Error + "*/\n"
+    }
 
-	sc.Output["Solution"] = one
-	sc.RenderJson()
+    json.NewEncoder(w).Encode(one)
 }

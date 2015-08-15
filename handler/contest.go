@@ -1,28 +1,22 @@
 package handler
 
 import (
-	"GoOnlineJudge/class"
-	"GoOnlineJudge/model"
-	"restweb"
+    "GoOnlineJudge/model"
+    "github.com/zenazn/goji/web"
+
+    "encoding/json"
+    "net/http"
 )
 
-type ContestController struct {
-	class.Controller
-	Type string
-} //@Controller
-
 //@URL: /api/contests @method: GET
-func (c *ContestController) Index() {
-	restweb.Logger.Debug("Contest List")
+func ContestList(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	CModel := model.ContestModel{}
-	conetestList, err := CModel.List(nil)
-	if err != nil {
-		c.Error(err.Error(), 500)
-		return
-	}
+    CModel := model.ContestModel{}
+    conetestList, err := CModel.List(nil)
+    if err != nil {
+        w.WriteHeader(500)
+        return
+    }
 
-	c.Output["Contest"] = conetestList
-	c.RenderJson()
-
+    json.NewEncoder(w).Encode(conetestList)
 }

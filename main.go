@@ -1,41 +1,49 @@
 package main
 
 import (
-	// "log"
-	"net/http"
+    "log"
+    "net/http"
 
-	"github.com/zenazn/goji/web"
+    "github.com/zenazn/goji/web"
 
-	// _ "GoOnlineJudge/schedule"
+    // _ "GoOnlineJudge/schedule"
 
-	"GoOnlineJudge/handler"
+    "GoOnlineJudge/handler"
+    "GoOnlineJudge/middleware"
 )
 
 func main() {
 
-	http.Handle("/api/", router())
-	panic(http.ListenAndServe(":8080", nil))
+    http.Handle("/api/", router())
+    log.Println("Start server on port :8080...")
+    panic(http.ListenAndServe(":8080", nil))
 }
 
 func router() *web.Mux {
-	mux := web.New()
-	mux.Use(SetUser)
+    mux := web.New()
+    // mux.Use(SetUser)
 
-	mux.Get("/api/problems", handler.ListProblems)
-	mux.Get("/api/problems/:pid", handler.GetProblem)
+    mux.Get("/api/problems", handler.ListProblems)
+    mux.Get("/api/problems/:pid", handler.GetProblem)
+    mux.Post("/api/problems/:pid/solutions", handler.PostSolution)
 
-	return mux
-}
+    mux.Get("/api/ranklist", handler.Ranklist)
 
-func SetUser(c *web.C, h http.Handler) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		var ctx = context.FromC(*c)
-		var user = session.GetUser(ctx, r)
-		if user != nil && user.ID != 0 {
-			UserToC(c, user)
-		}
-		h.ServeHTTP(w, r)
-	}
-	return http.HandlerFunc(fn)
+    mux.Get("/api/status", handler.StatusList)
+    mux.Get("/api/status/:sid/code", handler.GetCode)
 
+    mux.Get("/api/news", handler.ListNews)
+    mux.Get("/api/news/:nid", handler.GetNews)
+
+    mux.Get("/api/contests", handler.ContestList)
+
+    mux.Get("/api/profile", handler.GetProfile)
+    mux.Post("/api/users", handler.PostUser)
+    mux.Get("/api/users/:user", handler.GetUser)
+
+    mux.Post("/api/sess", handler.PostSess)
+    mux.Delete("/api/sess", handler.DeleteSess)
+    mux.Use(middleware.SetUser)
+
+    return mux
 }
