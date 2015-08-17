@@ -1,59 +1,59 @@
 package admin
 
 import (
-	"GoOnlineJudge/class"
+    "GoOnlineJudge/config"
+    "GoOnlineJudge/middleware"
 
-	"restweb"
+    "github.com/zenazn/goji/web"
 
-	"encoding/json"
-	"io"
-	"os"
+    "encoding/json"
+    "io"
+    "net/http"
+    "os"
 )
 
-//ImageController handles sth. with images
-type AdminImage struct {
-	class.Controller
-} //@Controller
-
 type image struct {
-	Error int    `json:"error"`
-	Url   string `json:"url"`
+    Error int    `json:"error"`
+    Url   string `json:"url"`
 }
 
 //Upload support kindeditor upload images,the W must return json eg. like {"err":0,"url":"http:...."}
 //@URL:/admin/images/ @method: POST
-func (ic AdminImage) Post() {
-	restweb.Logger.Debug("AdminUpload Image")
+func PostImage(c web.C, w http.ResponseWriter, r *http.Request) {
+    var (
+        user = middleware.ToUser(c)
+    )
 
-	r := ic.R
-	r.ParseMultipartForm(32 << 20)
-	fhs := r.MultipartForm.File["imgFile"]
+    if user.Privilege != config.PrivilegeAD {
+        w.WriteHeader(http.StatusForbidden)
+        return
+    }
 
-	var path string
-	var errflag int
+    r.ParseMultipartForm(32 << 20)
+    fhs := r.MultipartForm.File["imgFile"]
 
-	for _, fheader := range fhs {
-		filename := fheader.Filename
-		restweb.Logger.Debug(filename)
-		file, err := fheader.Open()
-		if err != nil {
-			restweb.Logger.Debug(err)
-			errflag++
-			break
-		}
-		defer file.Close()
-		//保存文件
-		path = "static/img/" + filename
-		f, err := os.Create(path)
-		if err != nil {
-			restweb.Logger.Debug(err)
-			errflag++
-			break
-		}
-		defer f.Close()
-		io.Copy(f, file)
-	}
-	im := &image{Error: errflag, Url: "/" + path}
-	b, _ := json.Marshal(im)
-	ic.W.Write(b)
+    var path string
+    var errflag int
+
+    for _, fheader := range fhs {
+        filename := fheader.Filename
+        file, err := fheader.Open()
+        if err != nil {
+            errflag++
+            break
+        }
+        defer file.Close()
+        //保存文件
+        path = "static/img/" + filename
+        f, err := os.Create(path)
+        if err != nil {
+            errflag++
+            break
+        }
+        defer f.Close()
+        io.Copy(f, file)
+    }
+    im := &image{Error: errflag, Url: "/" + path}
+    b, _ := json.Marshal(im)
+    w.Write(b)
 }

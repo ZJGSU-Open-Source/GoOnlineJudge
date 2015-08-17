@@ -1,147 +1,142 @@
 package admin
 
 import (
-	"GoOnlineJudge/class"
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model"
+    "GoOnlineJudge/config"
+    "GoOnlineJudge/middleware"
+    "GoOnlineJudge/model"
+    "github.com/zenazn/goji/web"
 
-	"restweb"
-
-	"html/template"
-	"net/http"
-	"strconv"
+    "html/template"
+    "net/http"
+    "strconv"
 )
 
-//news新闻控件
+//@URL: /news @method:POST
+func PostNews(c web.C, w http.ResponseWriter, r *http.Request) {
+    var (
+        user = middleware.ToUser(c)
+    )
 
-type AdminNews struct {
-	class.Controller
-} //@Controller
+    if user.Privilege != config.PrivilegeAD {
+        w.WriteHeader(http.StatusForbidden)
+        return
+    }
 
-// 列出所有新闻
-//@URL: /api/admin/news/ @method: GET
-func (nc *AdminNews) List() {
+    one := model.News{}
+    one.Title = r.FormValue("title")
+    one.Content = template.HTML(r.FormValue("content"))
 
-	restweb.Logger.Debug("Admin News List")
+    newsModel := model.NewsModel{}
+    err := newsModel.Insert(one)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
 
-	newsModel := model.NewsModel{}
-	newlist, err := newsModel.List(-1, -1)
-	if err != nil {
-		nc.Error(err.Error(), 500)
-		return
-	}
-	nc.Output["News"] = newlist
-	nc.RenderJson()
+    w.WriteHeader(201)
 }
 
-//@URL: /admin/news/ @method:POST
-func (nc *AdminNews) Insert() {
-	restweb.Logger.Debug("Admin News Insert")
+//@URL: /news/:nid/status @method: PUT
+func NewsStatus(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	if nc.Privilege != config.PrivilegeAD {
-		nc.Err400("Warning", "Error Privilege to Insert news")
-		return
-	}
+    var (
+        Nid  = c.URLParams["nid"]
+        user = middleware.ToUser(c)
+    )
 
-	one := model.News{}
-	one.Title = nc.R.FormValue("title")
-	one.Content = template.HTML(nc.Input.Get("content"))
+    if user.Privilege != config.PrivilegeAD {
+        w.WriteHeader(http.StatusForbidden)
+        return
+    }
 
-	newsModel := model.NewsModel{}
-	err := newsModel.Insert(one)
-	if err != nil {
-		nc.Error(err.Error(), 500)
-		return
-	}
+    nid, err := strconv.Atoi(Nid)
+    if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
 
-	nc.W.WriteHeader(201)
-}
+    newsModle := model.NewsModel{}
+    one, err := newsModle.Detail(nid)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
 
-//@URL: /admin/news/(\d+)/status/ @method: PUT
-func (nc *AdminNews) Status(Nid string) {
+    var status int
+    switch one.Status {
+    case config.StatusAvailable:
+        status = config.StatusReverse
+    default:
+        status = config.StatusAvailable
+    }
 
-	restweb.Logger.Debug("Admin News Status")
+    err = newsModle.Status(nid, status)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
 
-	if nc.Privilege != config.PrivilegeAD {
-		nc.Err400("Warning", "Error Privilege to change news status")
-		return
-	}
-
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		nc.Error("args error", 400)
-		return
-	}
-
-	newsModle := model.NewsModel{}
-	one, err := newsModle.Detail(nid)
-	if err != nil {
-		nc.Error(err.Error(), 400)
-		return
-	}
-	var status int
-	switch one.Status {
-	case config.StatusAvailable:
-		status = config.StatusReverse
-	default:
-		status = config.StatusAvailable
-	}
-
-	err = newsModle.Status(nid, status)
-	if err != nil {
-		nc.Error(err.Error(), 400)
-		return
-	}
-	nc.W.WriteHeader(200)
+    w.WriteHeader(200)
 }
 
 // 删除指定新闻
-//@URL: /admin/news/(\d+)/ @method: DELETE
-func (nc *AdminNews) Delete(Nid string) {
+//@URL: /news/:nid @method: DELETE
+func DeleteNews(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	restweb.Logger.Debug("Admin News Delete")
+    var (
+        Nid  = c.URLParams["nid"]
+        user = middleware.ToUser(c)
+    )
 
-	if nc.Privilege != config.PrivilegeAD {
-		nc.Err400("Warning", "Error Privilege to Delete news")
-		return
-	}
+    if user.Privilege != config.PrivilegeAD {
+        w.WriteHeader(http.StatusForbidden)
+        return
+    }
 
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		nc.Error("args error", 400)
-		return
-	}
+    nid, err := strconv.Atoi(Nid)
+    if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
 
-	newsModel := model.NewsModel{}
-	err = newsModel.Delete(nid)
-	if err != nil {
-		nc.Error(err.Error(), 400)
-		return
-	}
+    newsModel := model.NewsModel{}
+    err = newsModel.Delete(nid)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
 
-	nc.W.WriteHeader(200)
+    w.WriteHeader(200)
 }
 
 //@URL: /admin/news/(\d+)/ @method: PUT
-func (nc *AdminNews) Update(Nid string) {
+func PutNews(c web.C, w http.ResponseWriter, r *http.Request) {
+    var (
+        Nid  = c.URLParams["nid"]
+        user = middleware.ToUser(c)
+    )
 
-	restweb.Logger.Debug("Admin News Update")
+    if user.Privilege != config.PrivilegeAD {
+        w.WriteHeader(http.StatusForbidden)
+        return
+    }
 
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		nc.Error("args error", 400)
-		return
-	}
+    nid, err := strconv.Atoi(Nid)
+    if err != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
 
-	one := model.News{}
-	newsModel := model.NewsModel{}
-	one.Title = nc.Input.Get("title")
-	one.Content = template.HTML(nc.Input.Get("content"))
+    one := model.News{}
+    newsModel := model.NewsModel{}
+    one.Title = r.FormValue("title")
+    one.Content = template.HTML(r.FormValue("content"))
 
-	err = newsModel.Update(nid, one)
-	if err != nil {
-		nc.Error(err.Error(), 500)
-		return
-	}
-	nc.W.WriteHeader(200)
+    err = newsModel.Update(nid, one)
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+
+    w.WriteHeader(200)
 }
