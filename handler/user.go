@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/middleware"
 	"GoOnlineJudge/model"
+
 	"github.com/zenazn/goji/web"
 
 	"encoding/json"

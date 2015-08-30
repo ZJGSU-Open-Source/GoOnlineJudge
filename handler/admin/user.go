@@ -1,15 +1,16 @@
 package admin
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/middleware"
 	"GoOnlineJudge/model"
 
-	"restweb"
+	"github.com/zenazn/goji/web"
 
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -19,111 +20,89 @@ type privilegeUser struct {
 	Index int `json:"index"bson:"index"`
 }
 
-type AdminUser struct {
-	class.Controller
-} //@Controller
-
 //显示具有特殊权限的用户
 //@URL: /admin/users/ @method: GET
-func (uc *AdminUser) List() {
-	restweb.Logger.Debug("Admin Privilege User List")
-
-	if uc.Privilege != config.PrivilegeAD {
-		restweb.Logger.Info(uc.Uid + " try to visit Admin page")
-		uc.Output["Title"] = "Warning"
-		uc.Output["Info"] = "You are not admin!"
-		uc.RenderTemplate("view/layout.tpl", "view/400.tpl")
+func ListUsers(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		user = middleware.ToUser(c)
+	)
+	if user.Privilege != config.PrivilegeAD {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
 	userModel := model.UserModel{}
 	userlist, err := userModel.List(nil)
 	if err != nil {
-		uc.Error(err.Error(), 500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	uc.Output["User"] = userlist
-	uc.Output["Title"] = "Privilege User List"
-	uc.Output["IsUser"] = true
-	uc.Output["IsList"] = true
-	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_list.tpl")
+	json.NewEncoder(w).Encode(userlist)
 }
 
-//密码设置页面
-//@URL: /admin/users/pagepassword @method: GET
-func (uc *AdminUser) Pagepassword() {
-	restweb.Logger.Debug("Admin Password Page")
+// //设置用户密码
+// //@URL: /admin/users/password @method: POST
+// func Password(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	uc.Output["Title"] = "Admin Password"
-	uc.Output["IsSettings"] = true
-	uc.Output["IsSettingsPassword"] = true
-	uc.Output["IsUser"] = true
-	uc.Output["IsPwd"] = true
+//     ok := 1
+//     hint := make(map[string]string)
+//     data := make(map[string]string)
 
-	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_password.tpl")
-}
+//     // data["userHandle"] = r.FormValue("user[Handle]")
+//     // data["newPassword"] = uc.Input.Get("user[newPassword]")
+//     // data["confirmPassword"] = uc.Input.Get("user[confirmPassword]")
 
-//设置用户密码
-//@URL: /admin/users/password @method: POST
-func (uc *AdminUser) Password() {
-	restweb.Logger.Debug("Admin Password")
+//     uid := uc.Input.Get("user[Handle]")
 
-	ok := 1
-	hint := make(map[string]string)
-	data := make(map[string]string)
+//     if uid == "" {
+//         ok, hint["uid"] = 0, "Handle should not be empty"
+//     } else {
+//         userModel := model.UserModel{}
+//         _, err := userModel.Detail(uid)
+//         if err == model.NotFoundErr {
+//             w.WriteHeader(http.StatusNotFound)
+//             return
+//         } else if err != nil {
+//             w.WriteHeader(http.StatusInternalServerError)
+//             return
+//         }
 
-	data["userHandle"] = uc.Input.Get("user[Handle]")
-	data["newPassword"] = uc.Input.Get("user[newPassword]")
-	data["confirmPassword"] = uc.Input.Get("user[confirmPassword]")
+//     }
 
-	uid := uc.Input.Get("user[Handle]")
+//     if len(data["newPassword"]) < 6 {
+//         ok, hint["newPassword"] = 0, "Password should contain at least six characters."
+//     }
+//     if data["newPassword"] != data["confirmPassword"] {
+//         ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
+//     }
 
-	if uid == "" {
-		ok, hint["uid"] = 0, "Handle should not be empty"
-	} else {
-		userModel := model.UserModel{}
-		_, err := userModel.Detail(uid)
-		if err == model.NotFoundErr {
-			ok, hint["uid"] = 0, "uc handle does not exist!"
-		} else if err != nil {
-			uc.Error(err.Error(), 400)
-			return
-		}
+//     if ok == 1 {
+//         pwd := data["newPassword"]
+//         userModel := model.UserModel{}
+//         err := userModel.Password(uid, pwd)
+//         if err != nil {
+//             w.WriteHeader(http.StatusInternalServerError)
+//             return
+//         }
 
-	}
-
-	if len(data["newPassword"]) < 6 {
-		ok, hint["newPassword"] = 0, "Password should contain at least six characters."
-	}
-	if data["newPassword"] != data["confirmPassword"] {
-		ok, hint["confirmPassword"] = 0, "Confirmation mismatched."
-	}
-
-	if ok == 1 {
-		pwd := data["newPassword"]
-		userModel := model.UserModel{}
-		err := userModel.Password(uid, pwd)
-		if err != nil {
-			uc.Error(err.Error(), 400)
-			return
-		}
-
-		uc.W.WriteHeader(200)
-	} else {
-		uc.W.WriteHeader(400)
-	}
-	b, _ := json.Marshal(&hint)
-	uc.W.Write(b)
-}
+//         w.WriteHeader(200)
+//     } else {
+//         w.WriteHeader(400)
+//     }
+//     b, _ := json.Marshal(&hint)
+//     uc.W.Write(b)
+// }
 
 // 设置用户权限
 //@URL: /admin/privilegeset @method: POST
-func (uc *AdminUser) Privilegeset() {
-	restweb.Logger.Debug("User Privilege")
+func Privilegeset(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		user = middleware.ToUser(c)
+	)
 
-	uid := uc.Input.Get("uid")
-	privilegeStr := uc.Input.Get("type")
+	uid := r.Form.Get("uid")
+	privilegeStr := r.Form.Get("type")
 
 	privilege := config.PrivilegeNA
 	switch privilegeStr {
@@ -134,7 +113,7 @@ func (uc *AdminUser) Privilegeset() {
 	case "PU":
 		privilege = config.PrivilegePU
 	default:
-		uc.Error("args error", 400)
+		w.WriteHeader(http.StatusBadRequest)
 	}
 
 	ok := 1
@@ -142,15 +121,15 @@ func (uc *AdminUser) Privilegeset() {
 
 	if uid == "" {
 		ok, hint["hint"] = 0, "Handle should not be empty."
-	} else if uid == uc.Uid {
+	} else if uid == user.Uid {
 		ok, hint["hint"] = 0, "You cannot delete yourself!"
 	} else {
 		userModel := model.UserModel{}
 		_, err := userModel.Detail(uid)
 		if err == model.NotFoundErr {
-			ok, hint["hint"] = 0, "uc handle does not exist!"
+			w.WriteHeader(http.StatusNotFound)
 		} else if err != nil {
-			uc.Error(err.Error(), 400)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 	}
@@ -159,34 +138,25 @@ func (uc *AdminUser) Privilegeset() {
 		userModel := model.UserModel{}
 		err := userModel.Privilege(uid, privilege)
 		if err != nil {
-			uc.Error(err.Error(), 400)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		uc.W.WriteHeader(200)
+		w.WriteHeader(200)
 	} else {
 		b, _ := json.Marshal(&hint)
 
-		uc.W.WriteHeader(400)
-		uc.W.Write(b)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(b)
 	}
 }
 
-//Generate 生成指定数量的用户账号
-//@URL: /admin/users/generation @method: GET
-func (uc *AdminUser) GeneratePage() {
-	uc.Output["Title"] = "Admin User Generate"
-	uc.Output["IsUser"] = true
-	uc.Output["IsGenerate"] = true
-	uc.RenderTemplate("view/admin/layout.tpl", "view/admin/user_generate.tpl")
-}
-
 //@URL: /admin/users/generation @method: POST
-func (uc *AdminUser) Generate() {
-	prefix := uc.Input["prefix"][0]
-	module, _ := strconv.Atoi(uc.Input["module"][0])
+func Generate(c web.C, w http.ResponseWriter, r *http.Request) {
+	prefix := r.Form.Get("prefix")
+	module, _ := strconv.Atoi(r.Form.Get("module"))
 	module %= 2
-	amount, _ := strconv.Atoi(uc.Input["amount"][0])
+	amount, _ := strconv.Atoi(r.Form.Get("amount"))
 	if amount > 100 {
 		amount = 100
 	}
@@ -205,7 +175,7 @@ func (uc *AdminUser) Generate() {
 	for i, nxt := 0, 1; i < amount; {
 		uid := prefix + fmt.Sprintf(format, nxt)
 		password := RandPassword()
-		restweb.Logger.Debug(uid, password)
+
 		one := model.User{Uid: uid, Pwd: password, Module: module}
 		one.Privilege = config.PrivilegePU
 		if err := usermodel.Insert(one); err == nil {
@@ -215,10 +185,10 @@ func (uc *AdminUser) Generate() {
 		nxt++
 	}
 
-	uc.W.Header().Set("ContentType", "application/octet-stream")
-	uc.W.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
-	uc.W.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
-	uc.W.Write([]byte(accountlist))
+	w.Header().Set("ContentType", "application/octet-stream")
+	w.Header().Add("Content-disposition", "attachment; filename=accountlist.txt")
+	w.Header().Add("Content-Length", strconv.Itoa(len(accountlist)))
+	w.Write([]byte(accountlist))
 }
 
 //RandPassword 生成随机8位密码

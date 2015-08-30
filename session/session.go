@@ -30,6 +30,10 @@ func SetSession(sid string, key string, value string) {
 
 func GetSession(sid string, key string) string {
 	sess := SessionManager.GetSession(sid)
+	if sess == nil {
+		return ""
+	}
+
 	return sess.Get(key)
 }
 

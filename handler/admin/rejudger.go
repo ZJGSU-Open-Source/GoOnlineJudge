@@ -1,41 +1,27 @@
 package admin
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
+	"github.com/zenazn/goji/web"
+
 	"encoding/json"
+	"io"
 	"net/http"
-	"restweb"
 	"strconv"
+	"strings"
 	"time"
 )
 
-type AdminRejudge struct {
-	class.Controller
-} //@Controller
+//@URL: /api/admin/rejudger @method: POST
+func Rejudge(c web.C, w http.ResponseWriter, r *http.Request) {
 
-//@URL: /admin/rejudger/ @method: GET
-func (pc *AdminRejudge) Index() {
-	restweb.Logger.Debug("Rejudge Page")
-
-	pc.Output["Title"] = "Problem Rejudge"
-	pc.Output["RejudgePrivilege"] = true
-	pc.Output["IsProblem"] = true
-	pc.Output["IsRejudge"] = true
-
-	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/rejudge.tpl")
-}
-
-//@URL: /admin/rejudger/ @method: POST
-func (pc *AdminRejudge) Rejudge() {
-	restweb.Logger.Debug("Problem Rejudge")
-
-	args := pc.R.URL.Query()
+	args := r.URL.Query()
 	types := args.Get("type")
 	id, err := strconv.Atoi(args.Get("id"))
 	if err != nil {
-		pc.Error("args error", 400)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -47,12 +33,11 @@ func (pc *AdminRejudge) Rejudge() {
 		proModel := model.ProblemModel{}
 		pro, err := proModel.Detail(pid)
 		if err != nil {
-			restweb.Logger.Debug(err)
 			hint["info"] = "Problem does not exist!"
 
 			b, _ := json.Marshal(&hint)
-			pc.W.WriteHeader(400)
-			pc.W.Write(b)
+			w.WriteHeader(400)
+			w.Write(b)
 
 			return
 		}
@@ -69,11 +54,10 @@ func (pc *AdminRejudge) Rejudge() {
 			one["Pid"] = pro.RPid
 			one["OJ"] = pro.ROJ
 			one["Rejudge"] = true
-			reader, _ := pc.JsonReader(&one)
+			reader, _ := JsonReader(&one)
 			_, err := http.Post(config.JudgeHost, "application/json", reader)
 			if err != nil {
-				// http.Error(w, "post error", 500)
-				restweb.Logger.Debug(err)
+				// restweb.Logger.Debug(err)
 			}
 		}
 	} else if types == "Sid" {
@@ -82,31 +66,39 @@ func (pc *AdminRejudge) Rejudge() {
 		solutionModel := model.SolutionModel{}
 		sol, err := solutionModel.Detail(sid)
 		if err != nil {
-			restweb.Logger.Debug(err)
 
 			hint["info"] = "Solution does not exist!"
 			b, _ := json.Marshal(&hint)
-			pc.W.WriteHeader(400)
-			pc.W.Write(b)
+			w.WriteHeader(404)
+			w.Write(b)
 			return
 		}
 
 		problemModel := model.ProblemModel{}
 		pro, err := problemModel.Detail(sol.Pid)
 		if err != nil {
-			pc.Error(err.Error(), 500)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		one["Sid"] = sid
 		one["Pid"] = pro.RPid
 		one["OJ"] = pro.ROJ
 		one["Rejudge"] = true
-		reader, _ := pc.JsonReader(&one)
+		reader, _ := JsonReader(&one)
 		_, err = http.Post(config.JudgeHost, "application/json", reader)
 		if err != nil {
-			restweb.Logger.Debug("Sid[", sid, "] rejudger post error.")
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 	}
-	pc.W.WriteHeader(200)
+	w.WriteHeader(200)
+}
+
+func JsonReader(i interface{}) (r io.Reader, err error) {
+	b, err := json.Marshal(i)
+	if err != nil {
+		return
+	}
+	r = strings.NewReader(string(b))
+	return
 }

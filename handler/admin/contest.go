@@ -20,11 +20,6 @@ func PostContest(c web.C, w http.ResponseWriter, r *http.Request) {
 		user = middleware.ToUser(c)
 	)
 
-	if user.Privilege != config.PrivilegeAD || user.Privilege != config.PrivilegeTC {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
 	one := contest(user, r)
 	contestModel := model.ContestModel{}
 	err := contestModel.Insert(one)
@@ -41,22 +36,10 @@ func PostContest(c web.C, w http.ResponseWriter, r *http.Request) {
 //@URL:/api/contests/:cid/status/ @method:PUT
 func StatusContest(c web.C, w http.ResponseWriter, r *http.Request) {
 	var (
-		Cid  = c.URLParams["cid"]
+		one  = middleware.ToContest(c)
 		user = middleware.ToUser(c)
 	)
 
-	if user.Privilege != config.PrivilegeAD || user.Privilege != config.PrivilegeTC {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
-	cid, err := strconv.Atoi(Cid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	contestModel := model.ContestModel{}
-	one, _ := contestModel.Detail(cid)
 	if one.Creator != user.Uid {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -70,7 +53,8 @@ func StatusContest(c web.C, w http.ResponseWriter, r *http.Request) {
 		status = config.StatusAvailable
 	}
 
-	err = contestModel.Status(cid, status)
+	contestModel := model.ContestModel{}
+	err := contestModel.Status(one.Cid, status)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -83,24 +67,17 @@ func StatusContest(c web.C, w http.ResponseWriter, r *http.Request) {
 //@URL: /api/contests/:cid/ @method:DELETE
 func DeleteContest(c web.C, w http.ResponseWriter, r *http.Request) {
 	var (
-		Cid  = c.URLParams["cid"]
-		user = middleware.ToUser(c)
+		contest = middleware.ToContest(c)
+		user    = middleware.ToUser(c)
 	)
 
-	if user.Privilege != config.PrivilegeAD || user.Privilege != config.PrivilegeTC {
+	if contest.Creator != user.Uid || user.Privilege != config.PrivilegeAD {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
-	cid, err := strconv.Atoi(Cid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 	contestModel := model.ContestModel{}
-	contestModel.Detail(cid)
-
-	err = contestModel.Delete(cid)
+	err := contestModel.Delete(contest.Cid)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -113,30 +90,19 @@ func DeleteContest(c web.C, w http.ResponseWriter, r *http.Request) {
 //@URL:/api/contests/:cid @method:PUT
 func PutContest(c web.C, w http.ResponseWriter, r *http.Request) {
 	var (
-		Cid  = c.URLParams["cid"]
+		old  = middleware.ToContest(c)
 		user = middleware.ToUser(c)
 	)
 
-	if user.Privilege != config.PrivilegeAD || user.Privilege != config.PrivilegeTC {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
-
-	cid, err := strconv.Atoi(Cid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	contestModel := model.ContestModel{}
-	old, _ := contestModel.Detail(cid)
 	if old.Creator != user.Uid {
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
 	one := contest(user, r)
 
-	err = contestModel.Update(cid, one)
+	contestModel := model.ContestModel{}
+	err := contestModel.Update(one.Cid, one)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

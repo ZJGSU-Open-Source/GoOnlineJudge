@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"GoOnlineJudge/model"
+	"GoOnlineJudge/config"
 	"GoOnlineJudge/session"
 
 	"github.com/zenazn/goji/web"
@@ -20,25 +20,21 @@ func SetUser(c *web.C, h http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func UserToC(c *web.C, user *model.User) {
-	if c.Env == nil {
-		c.Env = make(map[interface{}]interface{})
+// RequireUserAdmin is a middleware function that verifies
+// there is a currently authenticated user stored in
+// the context with ADMIN privilege.
+func RequireUserAdmin(c *web.C, h http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		var user = ToUser(*c)
+		switch {
+		case user == nil:
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		case user != nil && (user.Privilege != config.PrivilegeAD && user.Privilege != config.PrivilegeTC):
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+		h.ServeHTTP(w, r)
 	}
-
-	c.Env["user"] = user
-}
-
-// ToUser returns the User from the current
-// request context. If the User does not exist
-// a nil value is returned.
-func ToUser(c web.C) *model.User {
-	var v = c.Env["user"]
-	if v == nil {
-		return nil
-	}
-	u, ok := v.(*model.User)
-	if !ok {
-		return nil
-	}
-	return u
+	return http.HandlerFunc(fn)
 }

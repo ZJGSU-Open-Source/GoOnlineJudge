@@ -1,10 +1,10 @@
 package admin
 
 import (
-	"GoOnlineJudge/class"
 	"GoOnlineJudge/config"
+	"GoOnlineJudge/middleware"
 
-	"restweb"
+	"github.com/zenazn/goji/web"
 
 	"io"
 	"net/http"
@@ -13,14 +13,12 @@ import (
 	"strconv"
 )
 
-type AdminTestdata struct {
-	class.Controller
-} //@Controller
-
 // List 列出对应题目的test data
-//@URL: /admin/testdata/(\d+) @method: GET
-func (tc *AdminTestdata) List(pid string) {
-	restweb.Logger.Debug("Admin testdata list")
+//@URL: /api/admin/testdata/:pid @method: GET
+func ListTestdata(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		pid = c.URLParams["pid"]
+	)
 
 	file := []string{}
 	dir, err := os.Open(config.Datapath + pid)
@@ -28,9 +26,7 @@ func (tc *AdminTestdata) List(pid string) {
 
 	files, err := dir.Readdir(-1)
 	if err != nil {
-		restweb.Logger.Debug(config.Datapath + pid)
-		restweb.Logger.Debug(err)
-		tc.Error("Problem Id error", 500)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	} else {
 		for _, fi := range files {
@@ -40,24 +36,21 @@ func (tc *AdminTestdata) List(pid string) {
 		}
 	}
 
-	tc.Output["Files"] = file
-	tc.Output["Pid"] = pid
-	tc.Output["Title"] = "Problem" + pid + " - Test data"
-	tc.Output["IsProblem"] = true
-
-	tc.RenderTemplate("view/admin/layout.tpl", "view/admin/test_data.tpl")
 }
 
 // 上传测试数据
-//@URL: /admin/testdata/(\d+) @method: POST
-func (tc *AdminTestdata) Upload(pid string) {
-	restweb.Logger.Debug("Admin Upload files")
+//@URL: /admin/testdata/:pid @method: POST
+func UploadTestdata(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		pid  = c.URLParams["pid"]
+		user = middleware.ToUser(c)
+	)
 
-	if tc.Privilege != config.PrivilegeAD {
-		tc.Err400("Warning", "Error Privilege to Update testdate")
+	if user.Privilege != config.PrivilegeAD {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	r := tc.R
+
 	r.ParseMultipartForm(32 << 20)
 	fhs := r.MultipartForm.File["testfiles"]
 	os.Mkdir(config.Datapath+pid, os.ModePerm)
@@ -65,57 +58,62 @@ func (tc *AdminTestdata) Upload(pid string) {
 		filename := fheader.Filename
 		file, err := fheader.Open()
 		if err != nil {
-			restweb.Logger.Debug(err)
 			return
 		}
 		defer file.Close()
 		//保存文件
 		f, err := os.Create(config.Datapath + pid + "/" + filename)
 		if err != nil {
-			restweb.Logger.Debug(err)
 			return
 		}
 		defer f.Close()
 		io.Copy(f, file)
 	}
-	tc.Redirect("/admin/testdata/"+pid, http.StatusFound)
+
+	w.WriteHeader(http.StatusCreated)
 }
 
 // Download 下载测试数据
-//@URL: /admin/testdata/(\d+)/file @method: GET
-func (tc *AdminTestdata) Download(pid string) {
-	restweb.Logger.Debug("Admin Download files")
+//@URL: /admin/testdata/:pid/file @method: GET
+func DownloadTestdata(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		pid = c.URLParams["pid"]
+	)
 
-	filename := tc.Input.Get("type")
+	filename := r.URL.Query().Get("type")
 	file, err := os.Open(config.Datapath + pid + "/" + filename)
 	if err != nil {
-		restweb.Logger.Debug(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	defer file.Close()
+
 	finfo, _ := file.Stat()
-	tc.W.Header().Add("ContentType", "application/octet-stream")
-	tc.W.Header().Add("Content-disposition", "attachment; filename="+filename)
-	tc.W.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
-	io.Copy(tc.W, file)
+	w.Header().Add("ContentType", "application/octet-stream")
+	w.Header().Add("Content-disposition", "attachment; filename="+filename)
+	w.Header().Add("Content-Length", strconv.Itoa(int(finfo.Size())))
+	io.Copy(w, file)
 }
 
 // Delete 删除指定testdata
-//@URL: /admin/testdata/(\d+) @method: DELETE
-func (tc *AdminTestdata) Delete(pid string) {
-	restweb.Logger.Debug("Admin TestData Delete")
+//@URL: /api/admin/testdata/:pid @method: DELETE
+func Delete(c web.C, w http.ResponseWriter, r *http.Request) {
+	var (
+		pid  = c.URLParams["pid"]
+		user = middleware.ToUser(c)
+	)
 
-	if tc.Privilege != config.PrivilegeAD {
-		tc.Err400("Warning", "Error Privilege to Delete testdate")
+	if user.Privilege != config.PrivilegeAD {
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
-	filetype := tc.Input.Get("type")
+	filetype := r.URL.Query().Get("type")
 
 	cmd := exec.Command("rm", config.Datapath+pid+"/"+filetype)
 	err := cmd.Run()
 	if err != nil {
-		restweb.Logger.Debug(err)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
-	tc.W.WriteHeader(200)
+
 }

@@ -8,7 +8,6 @@ import (
 
 	"html/template"
 	"net/http"
-	"strconv"
 )
 
 //@URL: /news @method:POST
@@ -40,7 +39,7 @@ func PostNews(c web.C, w http.ResponseWriter, r *http.Request) {
 func NewsStatus(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	var (
-		Nid  = c.URLParams["nid"]
+		news = middleware.ToNews(c)
 		user = middleware.ToUser(c)
 	)
 
@@ -49,28 +48,16 @@ func NewsStatus(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	newsModle := model.NewsModel{}
-	one, err := newsModle.Detail(nid)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
 	var status int
-	switch one.Status {
+	switch news.Status {
 	case config.StatusAvailable:
 		status = config.StatusReverse
 	default:
 		status = config.StatusAvailable
 	}
 
-	err = newsModle.Status(nid, status)
+	newsModle := model.NewsModel{}
+	err := newsModle.Status(news.Nid, status)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -84,7 +71,7 @@ func NewsStatus(c web.C, w http.ResponseWriter, r *http.Request) {
 func DeleteNews(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	var (
-		Nid  = c.URLParams["nid"]
+		news = middleware.ToNews(c)
 		user = middleware.ToUser(c)
 	)
 
@@ -93,14 +80,8 @@ func DeleteNews(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	newsModel := model.NewsModel{}
-	err = newsModel.Delete(nid)
+	err := newsModel.Delete(news.Nid)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -112,7 +93,7 @@ func DeleteNews(c web.C, w http.ResponseWriter, r *http.Request) {
 //@URL: /admin/news/(\d+)/ @method: PUT
 func PutNews(c web.C, w http.ResponseWriter, r *http.Request) {
 	var (
-		Nid  = c.URLParams["nid"]
+		news = middleware.ToNews(c)
 		user = middleware.ToUser(c)
 	)
 
@@ -121,18 +102,12 @@ func PutNews(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nid, err := strconv.Atoi(Nid)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	one := model.News{}
 	newsModel := model.NewsModel{}
 	one.Title = r.FormValue("title")
 	one.Content = template.HTML(r.FormValue("content"))
 
-	err = newsModel.Update(nid, one)
+	err := newsModel.Update(news.Nid, one)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
