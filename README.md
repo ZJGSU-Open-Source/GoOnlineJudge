@@ -6,6 +6,7 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 
 ##Contents
 + [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
+	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
 	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
 	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
 	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
@@ -20,6 +21,26 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
 
 If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
+
+### Docker
+
+```bash
+docker build -t oj .
+docker run docker run --link your_mongo:mongodb -d -p 80:8080 oj
+```
+
+If you installed mongodb on your host os, use script like this:
+```bash
+cat > env_file << EOF
+MONGODB_USERNAME=test
+MONGODB_PASSWORD=password
+MONGODB_PORT_27017_TCP_ADDR=192.168.1.1
+MONGODB_PORT_27017_TCP_PORT=27017
+MONGODB_INSTANCE_NAME=test
+EOF
+
+docker run --env-file env_file －d -p 80:8080 oj
+```
 
 ### Quick Start
 GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
