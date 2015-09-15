@@ -7,10 +7,8 @@ import (
 //server
 const CookieExpires = 1800
 
-var OJ_home = os.Getenv("OJ_HOME")
-var Datapath = OJ_home + "/ProblemData/"
-
-const JudgeHost = "http://127.0.0.1:8888"
+var Datapath = os.Getenv("DATA_PATH")
+var JudgeHost = os.Getenv("JUDGE_HOST")
 
 //CONSTANT
 const (
