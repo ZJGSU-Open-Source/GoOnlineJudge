@@ -26,7 +26,7 @@ If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.
 
 ```bash
 docker build -t oj .
-docker run --link your_mongo:mongodb -e ["DATA_PATH=your_data_path","JUDGE_HOST=your_judge_host"] -v your_data_path:your_data_path -d -p 80:8080 oj
+docker run --link your_mongo:mongodb --name oj -e ["DATA_PATH=your_data_path","JUDGE_HOST=your_judge_host"] -v your_data_path:your_data_path -d -p 80:8080 oj
 ```
 
 If you installed mongodb on your host os, use script like this:
@@ -41,7 +41,7 @@ DATA_PATH=your_data_path
 JUDGE_HOST=your_judge_host
 EOF
 
-docker run --env-file env_file -v your_data_path:your_data_path －d -p 80:8080 oj
+docker run --env-file env_file --name oj -v your_data_path:your_data_path -d -p 80:8080 oj
 ```
 
 ### Quick Start
