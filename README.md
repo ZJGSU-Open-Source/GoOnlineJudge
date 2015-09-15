@@ -26,7 +26,7 @@ If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.
 
 ```bash
 docker build -t oj .
-docker run docker run --link your_mongo:mongodb -d -p 80:8080 oj
+docker run --link your_mongo:mongodb -e ["DATA_PATH=your_data_path","JUDGE_HOST=your_judge_host"] -v your_data_path:your_data_path -d -p 80:8080 oj
 ```
 
 If you installed mongodb on your host os, use script like this:
@@ -37,9 +37,11 @@ MONGODB_PASSWORD=password
 MONGODB_PORT_27017_TCP_ADDR=192.168.1.1
 MONGODB_PORT_27017_TCP_PORT=27017
 MONGODB_INSTANCE_NAME=test
+DATA_PATH=your_data_path
+JUDGE_HOST=your_judge_host
 EOF
 
-docker run --env-file env_file －d -p 80:8080 oj
+docker run --env-file env_file -v your_data_path:your_data_path －d -p 80:8080 oj
 ```
 
 ### Quick Start

@@ -17,7 +17,7 @@ var (
 	NotFoundErr = errors.New("Not Found")
 
 	//更新错误
-	OpErr = errors.New("Operat Error")
+	OpErr = errors.New("Operate Error")
 
 	//ID生成错误
 	IDErr = errors.New("Get ID Error")

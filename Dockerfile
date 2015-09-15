@@ -5,7 +5,6 @@ ENV OJ_HOME $GOPATH/src
 
 WORKDIR $GOPATH/src/
 
-RUN mkdir -p $OJ_HOME/ProblemData
 RUN mkdir -p $OJ_HOME/log
 
 ADD . $GOPATH/src/GoOnlineJudge

@@ -61,48 +61,54 @@ func (this *Model) EncryptPassword(str string) (pwd string, err error) {
 }
 
 var (
-	username string
-	password string
-	host     string
-	port     string
-	instance string
+	conn string // mongo url
 )
 
 func Config() {
 
-	username = os.Getenv("MONGODB_USERNAME")
-	password = os.Getenv("MONGODB_PASSWORD")
-	host = os.Getenv("MONGODB_PORT_27017_TCP_ADDR")
+	username := os.Getenv("MONGODB_USERNAME")
+	password := os.Getenv("MONGODB_PASSWORD")
+	host := os.Getenv("MONGODB_PORT_27017_TCP_ADDR")
 
 	if len(host) == 0 {
 		host = "localhost"
 	}
 
-	port = os.Getenv("MONGODB_PORT_27017_TCP_PORT")
+	port := os.Getenv("MONGODB_PORT_27017_TCP_PORT")
 	if len(port) == 0 {
 		port = "27017"
 	}
 
-	instance = os.Getenv("MONGODB_INSTANCE_NAME")
-
+	instance := os.Getenv("MONGODB_INSTANCE_NAME")
 	if len(instance) == 0 {
 		instance = "oj"
 	}
-}
 
-func (m *Model) OpenDB() error {
-	conn := ""
+	conn = ""
 	if len(username) > 0 {
 		conn += username
 
 		if len(password) > 0 {
 			conn += ":" + password
 		}
-
 		conn += "@"
 	}
 
 	conn += fmt.Sprintf("%s:%s/%s", host, port, instance)
+
+	// Blow is test connection.
+	sess, err := mgo.Dial(conn)
+	if err != nil {
+		panic(err)
+	}
+	defer sess.Close()
+
+	if err := sess.Ping(); err != nil {
+		panic(err)
+	}
+}
+
+func (m *Model) OpenDB() error {
 
 	var err error
 
@@ -111,6 +117,6 @@ func (m *Model) OpenDB() error {
 		return err
 	}
 
-	m.DB = m.Session.DB(instance)
+	m.DB = m.Session.DB("")
 	return nil
 }
