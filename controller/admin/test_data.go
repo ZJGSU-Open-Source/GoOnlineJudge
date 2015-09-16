@@ -23,12 +23,12 @@ func (tc *AdminTestdata) List(pid string) {
 	restweb.Logger.Debug("Admin testdata list")
 
 	file := []string{}
-	dir, err := os.Open(config.Datapath + pid)
+	dir, err := os.Open(config.Datapath + "/" + pid)
 	defer dir.Close()
 
 	files, err := dir.Readdir(-1)
 	if err != nil {
-		restweb.Logger.Debug(config.Datapath + pid)
+		restweb.Logger.Debug(config.Datapath + "/" + pid)
 		restweb.Logger.Debug(err)
 		tc.Error("Problem Id error", 500)
 		return
@@ -70,7 +70,7 @@ func (tc *AdminTestdata) Upload(pid string) {
 		}
 		defer file.Close()
 		//保存文件
-		f, err := os.Create(config.Datapath + pid + "/" + filename)
+		f, err := os.Create(config.Datapath + "/" + pid + "/" + filename)
 		if err != nil {
 			restweb.Logger.Debug(err)
 			return
@@ -87,7 +87,7 @@ func (tc *AdminTestdata) Download(pid string) {
 	restweb.Logger.Debug("Admin Download files")
 
 	filename := tc.Input.Get("type")
-	file, err := os.Open(config.Datapath + pid + "/" + filename)
+	file, err := os.Open(config.Datapath + "/" + pid + "/" + filename)
 	if err != nil {
 		restweb.Logger.Debug(err)
 		return
@@ -112,7 +112,7 @@ func (tc *AdminTestdata) Delete(pid string) {
 
 	filetype := tc.Input.Get("type")
 
-	cmd := exec.Command("rm", config.Datapath+pid+"/"+filetype)
+	cmd := exec.Command("rm", config.Datapath+"/"+pid+"/"+filetype)
 	err := cmd.Run()
 	if err != nil {
 		restweb.Logger.Debug(err)
