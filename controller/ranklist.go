@@ -82,5 +82,5 @@ func (rc *RanklistController) Index() {
 	rc.Output["User"] = list
 	rc.Output["Title"] = "Ranklist"
 	rc.Output["IsRanklist"] = true
-	rc.RenderTemplate("view/layout.tpl", "view/ranklist.tpl")
+	rc.RenderTemplate("view/layout.tpl", "view/ranklist.tpl", "view/pagination.tpl")
 }

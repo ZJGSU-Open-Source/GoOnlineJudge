@@ -95,7 +95,7 @@ func (sc *ContestStatus) List(Cid string) {
 	sc.Output["Privilege"] = sc.Privilege
 	sc.Output["Uid"] = sc.Uid
 
-	sc.RenderTemplate("view/layout.tpl", "view/contest/status_list.tpl")
+	sc.RenderTemplate("view/layout.tpl", "view/contest/status_list.tpl", "view/pagination.tpl")
 }
 
 //@URL: /contests/(\d+)/status/(\d+)/code @method:GET

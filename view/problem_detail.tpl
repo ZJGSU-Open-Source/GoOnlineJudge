@@ -2,148 +2,103 @@
 {{$privilege := .Privilege}}
 {{$compiler_id := .Compiler_id}}
 {{with .Detail}}
-  <h1 style="text-align: center" class="page-header">{{.Title}}</h1>
-  <div id="problemInfo" class="rfloat" title="Problem Information">
-    <div class="limit">
-      <div class="key">Time Limit</div>
-      <div class="value">{{.Time}}s<br></div>
+<div class="p-proDetail mdl-grid">
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--4-col-phone mdl-shadow--2dp J_list">
+    <div class="go-title-area border mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+      <div class="title">{{.Title}}</div>
     </div>
-    <div class="limit">
-      <div class="key">Memory Limit</div>
-      <div class="value">{{.Memory}}KB<br></div>
-    </div>
-    <div class="checker">
-      <div class="key">Judge Program</div>
-      <div class="value">
-        <span>{{ShowSpecial .Special}}</span>
+    <div class="info mdl-shadow--2dp mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--hide-desktop" style="float: right;">
+      <div>Time Limit</div>
+      <div>{{.Time}}s</div>
+      <div>Memory Limit</div>
+      <div>{{.Memory}}KB</div>
+      <div>Judge Program</div>
+      <div>{{ShowSpecial .Special}}</div>
+      <div>Ratio(Solve/Submit)</div>
+      <div>
+        {{ShowRatio .Solve .Submit}}(<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)
       </div>
     </div>
-    <div class="checker">
-      <div class="key">Ratio(Solve/Submit)</div>
-      <div class="value">
-        <span>{{ShowRatio .Solve .Submit}}(<a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a>/<a href="/status?pid={{.Pid}}">{{.Submit}}</a>)</span>
+    <div class="item mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+      <div class="tip">Description:</div>
+      <section class="text">{{.Description}}</section>
+
+      <div class="tip">Input:</div>
+      <section class="text">{{.Input}}</section>
+
+      <div class="tip">Output:</div>
+      <section class="text">{{.Output}}</section>
+
+      <div class="tip">Sample Input:</div>
+      <section class="code mdl-shadow--2dp">{{.In}}</section>
+
+      <div class="tip">Sample Output:</div>
+      <section class="code mdl-shadow--2dp">{{.Out}}</section>
+      {{if .Hint}}
+        <div class="tip">Hint:</div>
+        <section class="text">{{.Hint}}</section>
+      {{end}}
+      {{if .Source}}
+        <div class="tip">Source:</div>
+        <a class="btn mdl-button mdl-js-button mdl-js-ripple-effect" href="/problems?source={{.Source}}">{{.Source}}</a>
+      {{end}}
+    </div>
+
+    <div class="btn-area mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored J_extend" >Submit</button>
+    </div>
+
+    <div class="J_submission" style="display: none;">
+      <form accept-charset="UTF-8" id="problem_submit" data-id="{{.Pid}}">
+        <input name="utf8" type="hidden" value="✓">
+
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
+            <div class="go-select-title">Compiler</div>
+            <select id="compiler_id" name="compiler_id" class="go-select">
+              <option value="1" {{if eq $compiler_id "1"}}selected="selected"{{end}}>C</option>
+              <option value="2" {{if eq $compiler_id "2"}}selected="selected"{{end}}>C++</option>
+              <option value="3" {{if eq $compiler_id "3"}}selected="selected"{{end}}>Java</option>
+            </select>
+          </div>
+          <label class="check-area mdl-cell mdl-cell--4-col mdl-cell--3-col-phone mdl-grid">
+            <i class="material-icons J_label">check_box</i>
+            <div class="text">Use advanced editor</div>
+            <input checked id="advanced_editor" name="advanced_editor" type="checkbox" value="1" hidden />
+          </label>
+          <div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+            <textarea id="code" name="code" class="textarea"></textarea>
+          </div>
+        </div>
+        <div class="btn-area mdl-cell mdl-cell--1-col mdl-cell--2-col-phone">
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">Submit</button>
+        </div>     
+      </form>
+    </div>
+
+  </div>
+
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone mdl-cell--hide-phone mdl-cell--hide-tablet">
+    <div class="info mdl-shadow--2dp J_static">
+      <div>Time Limit</div>
+      <div>{{.Time}}s</div>
+      <div>Memory Limit</div>
+      <div>{{.Memory}}KB</div>
+      <div>Judge Program</div>
+      <div>{{ShowSpecial .Special}}</div>
+      <div>Ratio(Solve/Submit)</div>
+      <div>
+        {{ShowRatio .Solve .Submit}}(
+        <a href="/status?pid={{.Pid}}&judge=3">{{.Solve}}</a> / 
+        <a href="/status?pid={{.Pid}}">{{.Submit}}</a> )
       </div>
     </div>
   </div>
-  <div id="problemContent">
-    <div class="problemIteam">Description:</div>
-    <p>{{.Description}}</p>
-    <div class="problemIteam">Input:</div>
-    <p>{{.Input}}</p>
-    <div class="problemIteam">Output:</div>
-    <p>{{.Output}}</p>
-    <div class="problemIteam">Sample Input:</div>
-    <pre class="sample">{{.In}}</pre>
-    <div class="problemIteam">Sample Output:</div>
-    <pre class="sample">{{.Out}}</pre>
-    {{if .Hint}}
-      <div class="problemIteam">Hint:</div>
-      <p>{{.Hint}}</p>
-    {{end}}
-    {{if .Source}}
-      <div class="problemIteam">Source:</div>
-      <p><a href="/problems?source={{.Source}}">{{.Source}}</a></p>
-    {{end}}
-  </div>
-  <hr>
 
-  <a href="#" id="submission_link" onclick="show_submission(); return false;">Submit</a>
-  <script src="/static/js/codemirror.js" type="text/javascript"></script>
-  <div id="submission" style="display: none;">
-  <form accept-charset="UTF-8" id="problem_submit">
-    <div style="margin:0;padding:0;display:inline">
-      <input name="utf8" type="hidden" value="✓">
-    </div>
-    <div class="field">
-      <label for="compiler_id">Compiler</label>
-      <select id="compiler_id" name="compiler_id">
-        <option value="1" {{if eq $compiler_id "1"}}selected="selected"{{end}}>C</option>
-        <option value="2" {{if eq $compiler_id "2"}}selected="selected"{{end}}>C++</option>
-        <option value="3" {{if eq $compiler_id "3"}}selected="selected"{{end}}>Java</option>
+</div>
 
-      </select>
-      <font  id="warning" color="red"></font>
-    </div>
-    <div class="field">
-      <div class="rfloat">
-        <input checked="checked" id="advanced_editor" name="advanced_editor" onchange="toggle_editor()" onclick="toggle_editor()" type="checkbox" value="1" />
-        Use advanced editor
-    </div>     
-     <label for="code">Code</label>
-      <textarea id="code" name="code" autofocus=""></textarea>
-    </div>
-    <div class="actions">
-      <input class="btn btn-info" name="submit" type="submit" value="Submit">
-    </div>
-  </form>
-  </div>
-
-  <script type="text/javascript">
-  var editor;
-  function show_submission() {
-    $('#submission').show();
-    $('#submission_link').hide();
-    editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-      lineNumbers: true,
-    }); 
-    $('#code').blur(function(){editor.setValue($('#code').val());});
-    $('#compiler_id').change(set_mode);
-    set_mode();
-    toggle_editor();
-  };
-  $('#problem_submit').submit(function(e) {
-    $('#code').val(editor.getValue());
-    e.preventDefault();
-    $.ajax({
-      type:'POST',
-      url:'/problems/{{.Pid}}',
-      data:$(this).serialize(),
-      error: function(XMLHttpRequest) {
-        if(XMLHttpRequest.status == 401){
-          alert('Please Sign In.');
-          window.location.href = '/sess';
-        }else {
-          var json = eval('('+XMLHttpRequest.responseText+')');
-          if(json.info != null) {
-            $('#warning').text(json.info);
-          } else {
-            $('#warning').text('');
-          }
-        }
-      },
-      success: function(result) {
-        $('textarea').val('')
-        window.location.href = '/status';
-      }
-    });
-  });
-  function toggle_editor() {
-    var cm=$('.CodeMirror'), c=$('#code');
-    if($('#advanced_editor').prop('checked')) {
-      cm.show();
-      editor.setValue(c.val());
-      c.hide();
-    } else {
-      c.val(editor.getValue()).show();
-      cm.hide();
-    };
-    return true;
-  }
-  function set_mode() {
-    var compiler=$('#compiler_id option:selected').text();
-    var modes=[ 
-    'Javascript', 'Haskell', 'Lua', 'Pascal', 'Python', 'Ruby', 'Scheme', 'Smalltalk', 'Clojure',
-    ['PHP', 'text/x-php'],
-    ['C', 'text/x-csrc'],
-    ['C++', 'text/x-c++src'],
-    ['Java', 'text/x-java'],
-    ['', 'text/plain'] ];
-    for(var i=0;i!=modes.length;++i){
-      var n=modes[i], m=modes[i];
-      if($.isArray(n)) { m=n[1]; n=n[0]; }
-      if(compiler.indexOf(n)>=0){editor.setOption('mode',m.toLowerCase());break;}
-    }
-  };
-  </script>
+<link rel="stylesheet" href="/static/css/codemirror.css">
+<script src="/static/js/codemirror.js" type="text/javascript"></script>
 {{end}}
 {{end}}

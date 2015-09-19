@@ -98,7 +98,7 @@ func (pc *ProblemController) List() {
 	pc.Output["Time"] = restweb.GetTime()
 	pc.Output["Title"] = "Problem List"
 	pc.Output["IsProblem"] = true
-	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl")
+	pc.RenderTemplate("view/layout.tpl", "view/problem_list.tpl", "view/pagination.tpl")
 }
 
 //列出某问题的详细信息

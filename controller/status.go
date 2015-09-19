@@ -88,7 +88,7 @@ func (sc *StatusController) List() {
 	sc.Output["Privilege"] = sc.Privilege
 	sc.Output["Uid"] = sc.Uid
 
-	sc.RenderTemplate("view/layout.tpl", "view/status_list.tpl")
+	sc.RenderTemplate("view/layout.tpl", "view/status_list.tpl", "view/pagination.tpl")
 }
 
 //@URL: /status/code @method: GET

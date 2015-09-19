@@ -91,7 +91,7 @@ func (pc *AdminProblem) List() {
 	pc.Output["IsProblem"] = true
 	pc.Output["IsList"] = true
 
-	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_list.tpl")
+	pc.RenderTemplate("view/admin/layout.tpl", "view/admin/problem_list.tpl", "view/pagination.tpl")
 }
 
 //@URL: /admin/problems/new/ @method: GET

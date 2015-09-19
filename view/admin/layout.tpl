@@ -1,114 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="ico" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/static/favicon.ico" mce_href="/static/favicon.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
     <title>{{.Title}}</title>
-    <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
-   
-    <script src="/static/js/jquery.min.js" type="text/javascript"></script>
-    <script src="/static/js/action.js" type="text/javascript"></script>
-    {{if .IsEdit}}
-      <script src="/static/kindeditor/kindeditor-min.js" type="text/javascript"></script>
-      <script src="/static/kindeditor/lang/en.js" type="text/javascript"></script>
-    {{end}}
+
+    <link rel="stylesheet" href="/static/css/fonts.css">
+    <link rel="stylesheet" href="/static/css/material.css">
+    <link rel="stylesheet" href="/static/css/GoOnlineJudge.css">
+    
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/material.js"></script>
+    
   </head>
   <body>
-    <div class="container">
-      <div id="pageHeader">
-        <div id="logo" class="lfloat">
-          <a href="/"><img alt="Logo" src="/static/img/logo.png" /></a>
-        </div>
-        <div id="headerInfo" class="rfloat">
-          {{if .IsCurrentUser}}
-            <a href="/settings">[{{.CurrentUser}}]</a>
-            <a class="user_signout" href="#">[Sign Out]</a>
-          {{end}}
-        </div>
-        <hr> 
-        </div>
-        <div id="navibar" class="span-3">
-        <ul>
-          <li>{{if .IsHome}}<span>Home</span>{{else}}<a href="/admin">Home</a>{{end}}</li>
-          {{if .IsAdmin}}
-          <li>{{if .IsNotice}}<span>Notice</span>{{else}}<a href="/admin/notice">Notice</a>{{end}}</li>
-          <li><a href="/admin/news">News</a></li>
-          {{if .IsNews}}
-            <div id="psnavi">
-              <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/news">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/news/new">Add</a>{{end}}</li>
-              </ul>
-            </div>
-          {{end}}
-          {{end}}
-          <li><a href="/admin/problems">Problems</a></li>
-          {{if .IsProblem}}
-            <div id="psnavi">
-              <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/problems">List</a>{{end}}</li>
-                {{if .IsAdmin}}
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/problems/new">Add</a>{{end}}</li>
-                <li>{{if .IsImport}}<span>Import</sapn>{{else}}<a href="/admin/problems/importor">Import</a>{{end}}</li>
-                {{end}}
-                {{if .RejudgePrivilege}}
-                <li>{{if .IsRejudge}}<span>Rejudge</span>{{else}}<a href="/admin/rejudger">Rejudge</a>{{end}}</li>
-                {{end}}
-              </ul>
-            </div>
-          {{end}}
-          <li><a href="/admin/contests/">Contests</a></li>
-          {{if .IsContest}}
-            <div id="psnavi">
-              <ul>
-                <li>{{if .IsList}}<span>List</sapn>{{else}}<a href="/admin/contests/">List</a>{{end}}</li>
-                <li>{{if .IsAdd}}<span>Add</sapn>{{else}}<a href="/admin/contests/new">Add</a>{{end}}</li>
-              </ul>
-            </div>
-          {{end}}
-          {{if .IsAdmin }}
-          <li><a href="/admin/users">Users</a></li>
-          {{if .IsUser}}
-            <div id="psnavi">
-              <ul>
-                <li>{{if .IsList}}<span>Privilege</sapn>{{else}}<a href="/admin/users">Privilege</a>{{end}}</li>
-                <li>{{if .IsPwd}}<span>Password</sapn>{{else}}<a href="/admin/users/pagepassword">Password</a>{{end}}</li>
-                <li>{{if .IsGenerate}}<span>Generate</sapn>{{else}}<a href="/admin/users/generation">Generate</a>{{end}}</li>
-              </ul>
-            </div>
-            {{end}}
-          {{end}}
-        </ul>
-      </div>
-      <div id="body" class="span-22 last">
-        {{template "content" .}}
-      </div>
-      <div id="pageFooter" class="center">
-        <hr class="nomarginbottom">
-        <div id="footerContainer">
-         <div class="center">ZJGSU Online Judge Version 15.05.22 @ <a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">Github</a></div>
-          <div class="center">Copyright &copy; 2013-2015 ZJGSU ACM Club</div>
-          <div class="center">Developer: <a href="https://github.com/memelee" target="_blank">@memelee</a> <a href="https://github.com/sakeven" target="_blank">@sakeven</a> <a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a> <a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a></div>
-        </div>
-      </div>
-    </div>
-    <script type="text/javascript">
-    $('.user_signout').on('click', function(e) {
-      e.preventDefault();
-      $.ajax({
-        type:'DELETE',
-        url:'/sess',
-        data:$(this).serialize(),
-        error: function() {
-          alert('Sign Out Failed.');
-        },
-        success: function() {
-          window.location.href = '/sess';
-        }
-      });
-    });
-    </script>
-  </body>
-</html>
 
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">
+            <a href="/" class="mdl-color-text--white">ZJGSU Online Judge</a>
+          </span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation. We hide it in small screens. -->
+          <nav class="mdl-navigation mdl-layout--large-screen-only">
+            <a class="mdl-navigation__link" href="/">Home</a>
+            <a class="mdl-navigation__link" href="/admin">Admin</a>
+            <a class="mdl-navigation__link" href="/admin/notice">Notice</a>
+            <a class="mdl-navigation__link" href="/admin/news">News</a>
+            <a class="mdl-navigation__link" href="/admin/problems">Problems</a>
+            <a class="mdl-navigation__link" href="/admin/contests">Contests</a>
+            <a class="mdl-navigation__link" href="/admin/users">Users</a>
+            {{if .IsCurrentUser}}
+            <a class="mdl-navigation__link" href="/settings">[{{.CurrentUser}}]</a>
+            <a class="mdl-navigation__link J_signout" href="#">[Sign Out]</a>
+          {{end}}
+          </nav>
+        </div>
+      </header>
+      <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">ZJGSU OJ</span>
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="/">Home</a>
+          <a class="mdl-navigation__link" href="/admin">Admin</a>
+          <a class="mdl-navigation__link" href="/admin/notice">Notice</a>
+          <a class="mdl-navigation__link" href="/admin/news">News</a>
+          <a class="mdl-navigation__link" href="/admin/problems">Problems</a>
+          <a class="mdl-navigation__link" href="/admin/contests/">Contests</a>
+          <a class="mdl-navigation__link" href="/admin/users">Users</a>
+          <div class="mdl-layout--small-screen-only">
+            {{if .IsCurrentUser}}
+              {{if .IsShowAdmin}}<a href="/admin/" class="mdl-navigation__link">[Admin]</a>{{end}}
+              {{if .IsShowTeacher}}<a href="/admin/" class="mdl-navigation__link">[Teacher]</a>{{end}}
+              <a href="/settings" class="mdl-navigation__link">[{{.CurrentUser}}]</a>
+              <a href="#" class="mdl-navigation__link J_signout">[Sign Out]</a>
+            {{else}}
+              {{if .IsUserSignIn}}{{else}}<a href="/sess" class="mdl-navigation__link">[Sign In]</a>{{end}}
+              {{if .IsUserSignUp}}{{else}}<a href="/users/new" class="mdl-navigation__link">[Sign Up]</a>{{end}}
+            {{end}}
+          </div>
+        </nav>
+      </div>
+
+      <main class="mdl-layout__content J_main">
+        
+        <div class="page-content"><!-- Your content goes here -->
+          {{template "content" .}}
+          
+        </div>
+
+        
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer__middle-section">
+
+            <div class="mdl-mega-footer__drop-down-section">
+              <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+              <h1 class="mdl-mega-footer__heading">FAQ</h1>
+              <ul class="mdl-mega-footer__link-list">
+                <li><a href="/faq">Q&A</a></li>
+              </ul>
+            </div>
+            <div class="mdl-mega-footer__drop-down-section">
+              <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+              <h1 class="mdl-mega-footer__heading">About Us</h1>
+              <ul class="mdl-mega-footer__link-list">
+                <li><a href="/osc">OSC</a></li>
+                <li><a href="https://github.com/ZJGSU-Open-Source/GoOnlineJudge" target="_blank">GitHub</a></li>
+              </ul>
+            </div>
+            <div class="mdl-mega-footer__drop-down-section">
+              <input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked>
+              <h1 class="mdl-mega-footer__heading">Developer</h1>
+              <ul class="mdl-mega-footer__link-list">
+                <li><a href="https://github.com/memelee" target="_blank">@memelee</a></li>
+                <li><a href="https://github.com/sakeven" target="_blank">@sakeven</a></li>
+                <li><a href="https://github.com/JinweiClarkChao" target="_blank">@JinweiClarkChao</a></li>
+                <li><a href="https://github.com/rex-zsd" target="_blank">@rex-zsd</a></li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="mdl-mega-footer__bottom-section">
+            <div class="mdl-logo">ZJGSU Online Judge Version 15.05.22</div>
+            <ul class="mdl-mega-footer__link-list">
+              <li><a href="#">Copyright © 2013-2015 ZJGSU ACM Club</a></li>
+            </ul>
+          </div>
+
+        </footer>
+      </main>
+      <div class="warn J_warn"></div>
+    </div>
+  </body>
+  <script src="/static/js/GoOnlineJudge.js"></script>
+</html>

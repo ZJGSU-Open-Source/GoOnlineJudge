@@ -1,40 +1,41 @@
 {{define "content"}}
-<h1>Admin - News Edit</h1>
-{{with .Detail}}
-<form accept-charset="UTF-8" class="new_news" id="new_news" method="post" action="/admin/news/{{.Nid}}">
-    <div style="margin:0;padding:0;display:inline">
-      <input name="utf8" type="hidden" value="✓">
-    </div>   
-    <div class="field">
-    	<label for="news_title">Title</label><br>
-    	<input id="news_title" name="title" size="60" type="text" value="{{.Title}}">
-    </div>
-    <div class="field">
-    	<label for="news_content">Content</label><br>
-    	<textarea id="news_content" name="content" style="width:640px;height:200px;">{{.Content}}</textarea> 
-    <div class="actions">
-      <input name="commit" type="submit" value="Submit">
-    </div>
-</form>
-{{end}}
-<script>
-var options = {
-    height: '250px',
-    langType : 'en',
-    items: [
-        'source', '|', 'undo', 'redo', '|', 
-        'preview', 'code', 'cut', 'copy', 'paste', 'plainpaste', 'wordpaste', '|', 
-        'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 
-        'insertorderedlist', 'insertunorderedlist', 'subscript', 'superscript', 
-        'clearhtml', '|', 'fullscreen', '/', 'formatblock', 'fontname', 'fontsize', '|', 
-        'forecolor', 'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 
-        'removeformat', '|', 'image', 'table', 'hr', 
-        'emoticons', 'baidumap', 'link', 'unlink', '|', 'about'
-    ]
-}
+<div class="p-adminNews mdl-grid">
 
-KindEditor.ready(function(K) {
-    window.editor = K.create('#news_content', options);
-});
-</script>
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--4-col-phone">
+    <div class="m-link J_static mdl-shadow--2dp">
+      <div class="link">
+        <a href="/admin/news">List</a>
+      </div>
+      <div class="link">
+        <a href="/admin/news/new">Add</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--6-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp mdl-grid">
+    {{with .Detail}}
+    <form accept-charset="UTF-8" class="mdl-cell mdl-cell--12-col mdl-cell--4-col-phone" action="/admin/news/{{.Nid}}" method="post">
+      <div class="go-title-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <div class="title">News Edit</div>
+      </div>
+      <input name="utf8" type="hidden" value="✓">
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="title" name="title" value="{{.Title}}" />
+        <label class="mdl-textfield__label" for="title">Title</label>
+        <span class="mdl-textfield__error">请输入标题</span>
+      </div>
+      <textarea id="J_content" name="content" hidden>{{.Content}}</textarea>
+      <div class="loading J_load">编辑器加载中...</div>
+      <div class="btn-area">
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" type="submit">submit</button>
+      </div>
+    </form>
+    {{end}}
+  </div>
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+</div>
+<script src="/static/kindeditor/kindeditor.js" type="text/javascript"></script>
+<script src="/static/kindeditor/lang/zh_CN.js" type="text/javascript"></script>
 {{end}}
+

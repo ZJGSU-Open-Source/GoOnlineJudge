@@ -1,69 +1,110 @@
 {{define "content"}}
-<h1>Admin - Contest Edit</h1>
 {{with .Detail}}
-<form accept-charset="UTF-8" class="" id="new_contest" method="post" action="/admin/contests/{{.Cid}}">
-	<div style="margin:0;padding:0;display:inline">
-    	<input name="utf8" type="hidden" value="✓">
+<div class="p-adminConAdd mdl-grid">
+
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--4-col-phone">
+    <div class="m-link J_static mdl-shadow--2dp">
+      <div class="link">
+        <a href="/admin/contests">List</a>
+      </div>
+      <div class="link">
+        <a href="/admin/contests/new">Add</a>
+      </div>
     </div>
-    <div class="field">
-    	<label for="content_title">Title</label><br>
-    	<input id="content_title" name="title" size="60" style="width:640px" type="text" value="{{.Title}}">
-    </div>
-    <div class="field">
-    	<label for="content_type" value="Public">Contest Type</label><br>
-    	<select id="content_type" name="type" onchange="show(); return false;">
-    		<option value="public" {{if .IsPublic}}selected{{end}}>Public</option>
-    		<option value="private" {{if .IsPrivate}}selected{{end}}>Private</option>
-    		<option value="password" {{if .IsPassword}}selected{{end}}>Password</option>
-    	</select>
-    </div>
-    <div class="field" id="passwd_field" {{if not .IsPassword}}style="display: none;"{{end}}>
-      <label for="password">Password</label><br>
-      <input id="password" name="password" size="20" type="text" {{if .IsPassword}}value="{{.Argument}}"{{end}} />
-    </div>
-    <div class="field">
-      <label for="content_startTimeYear">Start Time[Year-Month-Day Hour:Minute]</label><br>
-      <input id="content_startTimeYear" name="startTimeYear" size="4" type="number" max="2100" min="2014" value="{{.StartTimeYear}}">-
-      <input id="content_startTimeMonth" name="startTimeMonth" size="4" type="number" max="12" min="1" value="{{.StartTimeMonth}}">-
-      <input id="content_startTimeDay" name="startTimeDay" size="4" type="number" max="31" min="1" value="{{.StartTimeDay}}">   
-      <input id="content_startTimeHour" name="startTimeHour" size="4" type="number" max="23" min="0" value="{{.StartTimeHour}}">:
-      <input id="content_startTimeMinute" name="startTimeMinute" size="4" type="number" max="59" min="0" value="{{.StartTimeMinute}}">:
-    </div>
-    <div class="field">
-      <label for="content_endTimeYear">End Time[Year-Month-Day Hour:Minute]</label><br>
-      <input id="content_endTimeYear" name="endTimeYear" size="4" type="number" max="2100" min="2014" value="{{.EndTimeYear}}">-
-      <input id="content_endTimeMonth" name="endTimeMonth" size="4" type="number" max="12" min="1" value="{{.EndTimeMonth}}">-
-      <input id="content_endTimeDay" name="endTimeDay" size="4" type="number" max="31" min="1"  value="{{.EndTimeDay}}">   
-      <input id="content_endTimeHour" name="endTimeHour" size="4" type="number" max="23" min="0" value="{{.EndTimeHour}}">:
-      <input id="content_endTimeMinute" name="endTimeMinute" size="4" type="number" max="59" min="0" value="{{.EndTimeMinute}}">:
-    </div>
-    <div class="field">
-    	<label for="content_problemList">Problem List[Please using ";" split each problem.]</label><br>
-    	<input id="content_problemList" name="problemList" size="100" type="text" style="width:640px" value="{{.ProblemList}}">
-    </div>
-    <div class="field" id="userlist_field" {{if not .IsPrivate}}style="display: none;"{{end}}>
-      <label for="userlist">User List</label><br>
-      <textarea id="userlist" name="userlist" style="width:630px;height:200px;">{{if .IsPrivate}}{{.Argument}}{{end}}</textarea> 
-    </div>
-    <div class="actions">
-      <input name="commit" type="submit" value="Submit">
-    </div>
-</form>
-<script type="text/javascript">
-function show() {
-    if($('select').val() == "password"){
-      $('#userlist_field').hide();
-      $('#passwd_field').show();
-    }
-    else if($('select').val() == "private"){
-      $('#userlist_field').show();
-      $('#passwd_field').hide();
-    }
-    else if($('select').val() == "public"){
-      $('#userlist_field').hide();
-      $('#passwd_field').hide();
-    }
-  };
-  </script>
+  </div>
+
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--6-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp mdl-grid J_list">
+
+      <div class="go-title-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <div class="title">Contest Add</div>
+      </div>
+      <input name="utf8" type="hidden" value="✓">
+
+      <div class="mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="title" name="title" value="{{.Title}}"/>
+          <label class="mdl-textfield__label" for="title">Title</label>
+        </div>
+      </div>
+      
+      <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="J_start" value="{{.StartTimeYear}}/{{.StartTimeMonth}}/{{.StartTimeDay}} {{.StartTimeHour}}:{{.StartTimeMinute}}" readonly />
+          <label class="mdl-textfield__label" for="J_start">Start Date</label>
+        </div>
+      </div>
+
+      <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="J_end" value="{{.EndTimeYear}}/{{.EndTimeMonth}}/{{.EndTimeDay}} {{.EndTimeHour}}:{{.EndTimeMinute}}" readonly />
+          <label class="mdl-textfield__label" for="J_end">End Date</label>
+        </div>
+      </div>
+
+      <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone">
+        <div class="go-select-title">Contest Type</div>
+        <select id="J_type" name="type" class="go-select">
+          <option value="public" {{if .IsPublic}}selected{{end}}>Public</option>
+          <option value="private" {{if .IsPrivate}}selected{{end}}>Private</option>
+          <option value="password" {{if .IsPassword}}selected{{end}}>Password</option>
+        </select>
+      </div>
+      
+
+      <div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label J_passwdArea"  {{if not .IsPassword}}hidden{{end}}>
+          <input class="mdl-textfield__input" id="password" name="password" type="text" value="{{.Argument}}">
+          <label class="mdl-textfield__label" for="password">Password</label>
+        </div>
+      </div>
+      
+      <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">
+        <div class="group">
+          <div class="icon-area">
+            <i class="material-icons" id="tt1">error_outline</i>
+            <div class="mdl-tooltip" for="tt1">
+              可单题或多题输入<br>
+              多题输入请用任意非数字字符分割题号<br>
+              输入后按回车即可录入题目<br>
+              点击标签中的×可删除题目<br>
+              可拖动标签为题目重新排序
+            </div>
+          </div>
+          
+          <div class="input-area">
+            <div class="mdl-textfield mdl-js-textfield">
+              <input class="mdl-textfield__input J_proInput" type="text" id="problem"  value="{{.ProblemList}}"/>
+              <label class="mdl-textfield__label" for="problem">Problem Id</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="J_proList" style="display: none">
+          <div class="item J_pro">
+            problem
+            <div class="item-del J_del">×</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-phone">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label J_privateArea" {{if not .IsPrivate}}hidden{{end}}>
+          <textarea class="mdl-textfield__input textarea" name="userlist" type="text" id="sample5">{{.Argument}}</textarea>
+          <label class="mdl-textfield__label" for="sample5">User List</label>
+        </div>
+      </div>
+
+      <div class="btn-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored J_submit" type="submit">submit</button>
+      </div>
+
+  </div>
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone"></div>
+</div>
+<link rel="stylesheet" href="/static/css/mobiscroll.css">
+<script src="/static/js/mobiscroll.js"></script>
+<script src="/static/js/jquery.dragsort-0.5.2.js"></script>
 {{end}}
 {{end}}

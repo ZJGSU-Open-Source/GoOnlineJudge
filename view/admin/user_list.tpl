@@ -1,81 +1,72 @@
 {{define "content"}}
-<h1>Admin - Privilege User List</h1>
-<table id="contest_list">
-	<thead>
-		<tr>
-		    <th class="header">Uid</th>
-		    <th class="header">Privilege</th>
-		    <th class="header">Delete</th>
-		</tr>
-	</thead>
-		<tbody>
-			{{with .User}}
-				{{range .}}
-				{{if LargePU .Privilege}}
-					<tr>
-						<td><a href="/users/{{.Uid}}" target="_blank">{{.Uid}}</a></td>
-						<td>{{ShowPrivilege .Privilege}}</td>
-						<td><a class="admin_user_delete" href="#" data-id="{{.Uid}}">[Delete]</a></td>
-					</tr>
-				{{end}}
-				{{end}}
-			{{end}}
-		</tbody>
-</table>
+<div class="p-adminUserList mdl-grid">
 
-<form accept-charset="UTF-8" id="search_form">
-Add Admin: <input id="user" name="user" size="20" type="text" required>
-<select id="type" name="type">
-<option value="TC">Teacher</option>
-<option value="Admin">Admin</option>
-</select>
-<input name="commit" type="submit" value="Add">
-</form>
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--4-col-phone">
+    <div class="m-link J_static mdl-shadow--2dp">
+      <div class="link current">
+        <a>Privilege</a>
+      </div>
+      <div class="link">
+        <a href="/admin/users/pagepassword">Password</a>
+      </div>
+      <div class="link">
+        <a href="/admin/users/generation">Generate</a>
+      </div>
+    </div>
+  </div>
 
-<script type="text/javascript">
-$('#search_form').submit( function(e) {
-	e.preventDefault();
-	var user = $('#user').val();
-	var type = $('#type').val();
-	$.ajax({
-		type:'POST',
-		url:'/admin/privilegeset?type='+type+'&uid='+user,
-		data:$(this).serialize(),
-		error:function(response){
-			var json = eval('('+response.responseText+')');
-			if(json.hint != null) {
-				alert(json.hint);
-			}
-		},
-		success:function(response){
-			window.location.reload();
-		}
-	});
-});
-</script>
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--6-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp J_list">
 
-<script type="text/javascript">
-$('.admin_user_delete').on('click', function() {
-	var uid = $(this).data("id");
-	var ret = confirm('Delete the user '+uid+'?');
-	if (ret == true) {
-		$.ajax({
-			type: 'POST',
-			url: '/admin/privilegeset?type='+'PU'+'&uid=' + uid,
-			data:$(this).serialize(),
-			error: function(response) {
-				var json = eval('('+response.responseText+')');
-				if (json.hint != null) {
-					alert(json.hint);
-				} else {
-					alert('failed!');
-				}
-			},
-			success: function(response) {
-				window.location.reload();
-			}
-		});
-	}
-});
-</script>
+    <form accept-charset="UTF-8" class="J_addForm">
+      <div class="mdl-grid">
+
+        <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-phone">
+          <div class="go-select-title">user type</div>
+          <select name="type" class="go-select">
+            <option value="TC">Teacher</option>
+						<option value="Admin">Admin</option>
+          </select>
+        </div>
+
+        <div class="mdl-cell mdl-cell--2-col mdl-cell--2-col-phone">
+          <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+		        <input class="mdl-textfield__input" type="text" id="user_handle" name="uid"/>
+		        <label class="mdl-textfield__label" for="user_handle">Handle</label>
+		      </div>
+        </div>
+
+        <div class="btn-area">
+        	<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored J_submit" type="submit">Add User</button>
+        </div>
+				
+      </div>
+    </form>
+    
+    <div class="table-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone mdl-shadow--2dp">
+      <table class="go-table text-center">
+        <thead>
+          <tr>
+            <th>Uid</th>
+				    <th>Privilege</th>
+				    <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+        	{{with .User}}
+					{{range .}}
+					{{if LargePU .Privilege}}
+						<tr>
+							<td><a href="/users/{{.Uid}}">{{.Uid}}</a></td>
+							<td>{{ShowPrivilege .Privilege}}</td>
+							<td><a class="J_delete" href="#" data-id="{{.Uid}}">Delete</a></td>
+						</tr>
+					{{end}}
+					{{end}}
+					{{end}}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
 {{end}}

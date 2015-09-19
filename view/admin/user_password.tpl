@@ -1,63 +1,41 @@
 {{define "content"}}
-	<h1 class="compact">Edit Password</h1>
-	<form accept-charset="UTF-8" class="new_user" id="new_user">
-		<div style="margin:0;padding:0;display:inline">
-			<input name="utf8" type="hidden" value="✓">
-		</div>
-		<div class="field">
-			<label for="user_Handle">User Handle</label><font color="red">*</font>
-			<font id="user_warning_Handle" color="red"></font><br>
-			<input id="user_Handle" name="user[Handle]" size="30" type="text">
-		</div>	
-		<div class="field">
-			<label for="user_newPassword">New Password</label><font color="red">*</font>
-			<font id="user_warning_newPassword" color="red"></font><br>
-			<input id="user_newPassword" name="user[newPassword]" size="30" type="password" placeholder="at least six characters.">
-		</div>	
-		<div class="field">
-			<label for="user_confirmPassword">Confirm Password</label><font color="red">*</font>
-			<font id="user_warning_confirmPassword" color="red"></font><br>
-			<input id="user_confirmPassword" name="user[confirmPassword]" size="30" type="password">	
-		</div>		
-		<div class="actions">
-	  		<input name="user_password" type="submit" value="Edit">
-		</div>
-	</form>
-
-	<script type="text/javascript">
-	$('#new_user').submit( function(e) {
-		e.preventDefault();
-		$.ajax({
-			type:'PUT',
-			url:'/admin/users/password',
-			data:$(this).serialize(),
-			error: function(response) {
-				var json = eval('('+response.responseText+')');
-				if(json.uid != null) {
-					$('#user_Handle').css({"border-color": "red"});
-					$('#user_warning_Handle').text(json.uid);
-				} else {
-					$('#user_warning_Handle').text('');
-				}
-				if(json.newPassword != null) {
-					$('#user_newPassword').css({"border-color": "red"});
-					$('#user_warning_newPassword').text(json.newPassword);
-				} else {
-					$('#user_warning_newPassword').text('');
-				}
-				if(json.confirmPassword != null) {
-					$('#user_confirmPassword').css({"border-color": "red"});
-					$('#user_warning_confirmPassword').text(json.confirmPassword);
-				} else {
-					$('#user_warning_confirmPassword').text('');
-				}	
-			},
-			success: function(response) {
-				//var json = eval('('+response+')');
-				alert("Success");
-				window.location.href='/admin/users'
-			}
-		});
-	});
-	</script>
+<div class="p-signin mdl-grid">
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--1-col-tablet mdl-cell--4-col-phone">
+    <div class="m-link J_static mdl-shadow--2dp">
+      <div class="link">
+        <a href="/admin/users">Privilege</a>
+      </div>
+      <div class="link current">
+        <a>Password</a>
+      </div>
+      <div class="link">
+        <a href="/admin/users/generation">Generate</a>
+      </div>
+    </div>
+  </div>
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--6-col-tablet mdl-cell--4-col-phone mdl-shadow--2dp mdl-grid">
+    <form accept-charset="UTF-8" class="J_addForm mdl-cell mdl-cell--12-col mdl-cell--4-col-phone" method="post">
+      <div class="go-title-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <div class="title">Edit Password</div>
+      </div>
+      <input name="utf8" type="hidden" value="✓">
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_handle" name="user[Handle]"/>
+        <label class="mdl-textfield__label" for="user_handle">Handle</label>
+      </div>
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="password" id="user_password" name="user[newPassword]"/>
+        <label class="mdl-textfield__label" for="user_password">New Password</label>
+      </div>
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="password" id="user_password" name="user[confirmPassword]"/>
+        <label class="mdl-textfield__label" for="user_password">New Password</label>
+      </div>
+      <div class="btn-area mdl-cell--12-col mdl-cell--4-col-phone">
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored J_submit" type="submit">submit</button>
+      </div>
+    </form>
+  </div>
+</div>
 {{end}}

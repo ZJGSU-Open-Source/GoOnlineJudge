@@ -1,82 +1,58 @@
 {{define "content"}}
-{{with .Detail}}
-	<div class="row">
-	    <div class="col-lg-6">
-			<form accept-charset="UTF-8" class="new_user form-horizontal" id="new_user">
-				<legend>Edit Info</legend>
-				<div style="margin:0;padding:0;display:inline">
-					<input name="utf8" type="hidden" value="✓">
-				</div>
-				<div class="form-group">
-		            <label for="user_handle" class="col-lg-2 control-label">Handle</label>
-		            <div class="col-lg-10">
-		              <input type="text" class="form-control" id="user_handle" name="user[handle]" value="{{.Uid}}" readonly autofocus>
-		            </div>
-		         </div>
-		         <div class="form-group">
-		            <label for="user_nick" class="col-lg-2 control-label">Nick<font color="red">*</font></label>
-		            <div class="col-lg-10">
-		              <input type="text" class="form-control" id="user_nick" name="user[nick]" value="{{.Nick}}" required>
-		            </div>
-		          </div>
-		         <div class="form-group">
-		            <label for="user_showcode" class="col-lg-2 control-label">Share Code<font color="red"></font></label>
-		            <div class="col-lg-10">
-		              <input type="checkbox" class="form-control" id="user_sharecode" name="user[share_code]" value="true" 
-		              {{if .ShareCode}} checked="checked" {{end}}>
-		            </div>
-		          </div>
-				<div class="form-group">
-		            <label for="user_mail" class="col-lg-2 control-label">Email</label>
-		            <div class="col-lg-10">
-		              <input type="email" class="form-control" id="user_mail" name="user[mail]" value="{{.Mail}}" >
-		            </div>
-		         </div>
-
-				<div class="form-group">
-		            <label for="user_school" class="col-lg-2 control-label">School</label>
-		            <div class="col-lg-10">
-		              <input type="text" class="form-control" id="user_school" name="user[school]" value="{{.School}}">
-		            </div>
-		        </div>
-
-				<div class="form-group">
-		            <label for="user_motto" class="col-lg-2 control-label">Motto</label>
-		            <div class="col-lg-10">
-		              <input type="text" class="form-control" id="user_motto" name="user[motto]" value="{{.Motto}}">
-		            </div>
-		        </div>
-				<div class="form-group">
-		            <div class="col-lg-10 col-lg-offset-5">
-		              <div class="actions">
-		                <input class="btn btn-info" name="user_signup" type="submit" value="Edit">
-		               </div>
-		            </div>
-		          </div>  
-					
-			</form>
-		</div>
-	</div>
-	<script src="/static/js/bootstrap.min.js"></script>
-  	<script src="/static/material/js/material.min.js"></script>
-	{{end}}
-	<script type="text/javascript">
-	$('#new_user').submit( function(e) {
-		e.preventDefault();
-		$.ajax({
-			type:'POST',
-			url:'/profile',
-			data:$(this).serialize(),
-			error: function(response) {
-				var json = eval('('+response.responseText+')');	
-				if(json.nick != null) {
-					$('#user_nick').css({"border-color": "red"});
-				} 		
-			},
-			success: function(result) {
-				window.location.href = '/users/'+{{.CurrentUser}};
-			}
-		});
-	});
-	</script>
+<div class="p-user-edit mdl-grid">
+  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
+    <div class="m-link J_static mdl-shadow--2dp">
+      <div class="link">
+        <a href="/settings">Detail</a>
+      </div>
+      <div class="link current">
+        <a>Edit Info</a>
+      </div>
+      <div class="link">
+        <a href="/account">Password</a>
+      </div>
+    </div>
+  </div>
+  <div class="page mdl-cell mdl-cell--8-col mdl-cell--4-col-phone mdl-shadow--2dp mdl-grid">
+    <form accept-charset="UTF-8" class="J_addForm mdl-cell mdl-cell--12-col mdl-cell--4-col-phone" action="/profile" method="post">
+    {{with .Detail}}
+      <div class="go-title-area mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
+        <div class="title">Edit Info</div>
+      </div>
+      <input name="utf8" type="hidden" value="✓">
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_handle" name="user[handle]"  value="{{.Uid}}" readonly="true" />
+        <label class="mdl-textfield__label" for="user_handle">Handle</label>
+      </div>
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_handle" name="user[nick]" value="{{.Nick}}"/>
+        <label class="mdl-textfield__label" for="user_handle">Nick</label>
+      </div>
+      <div class="check-area">
+      	<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-2">
+			  <input type="checkbox" id="checkbox-2" class="mdl-checkbox__input" name="user[share_code]" value="true" {{if .ShareCode}} checked="checked" {{end}}/>
+			  <span class="mdl-checkbox__label">Share Code</span>
+			</label>
+      </div>
+      
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_password" name="user[mail]" value="{{.Mail}}" />
+        <label class="mdl-textfield__label" for="user_password">Email</label>
+      </div>
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_handle" name="user[school]" value="{{.School}}"/>
+        <label class="mdl-textfield__label" for="user_handle">School</label>
+      </div>
+      <div class="contain-center mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="user_handle" name="user[motto]" value="{{.Motto}}"/>
+        <label class="mdl-textfield__label" for="user_handle">Motto</label>
+      </div>
+      <div class="btn-area mdl-cell--12-col mdl-cell--4-col-phone">
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored J_submit" type="submit">edit</button>
+      </div>
+      {{end}}
+    </form>
+  </div>
+</div>
 {{end}}
