@@ -642,6 +642,24 @@ if( /^\/contests\/(\d+)$/.test(PATH) ) {
   setInterval(handleTime, 1000);
 
 }
+if( /^\/contests\/(\d+)\/status\/(\d+)\/code$/.test(PATH) ) {
+	var codeNode = $('.J_code');
+	var sourceNode = $('.J_source');
+	var flag = true;
+
+	codeNode.on('dblclick', function(){
+		codeNode.hide();
+			if( flag ){
+				sourceNode.height(codeNode.height());
+				falg = !flag;
+			}
+		sourceNode.show();
+	});
+	sourceNode.on('blur', function(){
+		codeNode.show();
+		sourceNode.hide();
+	});
+}
 if( /^\/contests\/(\d+)\/status$/.test(PATH) ) {
   
   $('#search_form').submit( function(e) {
@@ -665,24 +683,6 @@ if( /^\/contests\/(\d+)\/status$/.test(PATH) ) {
   });
 }
 
-if( /^\/contests\/(\d+)\/status\/(\d+)\/code$/.test(PATH) ) {
-	var codeNode = $('.J_code');
-	var sourceNode = $('.J_source');
-	var flag = true;
-
-	codeNode.on('dblclick', function(){
-		codeNode.hide();
-			if( flag ){
-				sourceNode.height(codeNode.height());
-				falg = !flag;
-			}
-		sourceNode.show();
-	});
-	sourceNode.on('blur', function(){
-		codeNode.show();
-		sourceNode.hide();
-	});
-}
 if( /^\/problems\/(\d+)$/.test(PATH) ){
   var editor;
   var extendNode = $('.J_extend');
@@ -872,6 +872,9 @@ if( PATH == '/account' ){
 		}
 		else if( !newPassWd || newPassWd=='' ){
 			warning('请输入新密码');
+		}
+		else if( newPassWd.length < 6 ){
+			warning('新密码不得小于6位');	
 		}
 		else if( !confirmPassWd || confirmPassWd=='' ){
 			warning('请再次输入密码');
