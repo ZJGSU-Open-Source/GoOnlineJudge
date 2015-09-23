@@ -94,7 +94,7 @@ func (pc *ProblemController) List() {
 	restweb.Logger.Debug(len(problemList))
 
 	solutionModel := &model.SolutionModel{}
-	achieve, _ := solutionModel.Achieve(pc.Uid)
+	achieve, _ := solutionModel.Achieve(pc.Uid, config.ModuleP)
 	for _, p := range problemList {
 		p.Flag = config.FlagNA
 		for _, i := range achieve {

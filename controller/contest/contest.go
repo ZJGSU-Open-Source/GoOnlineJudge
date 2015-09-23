@@ -67,7 +67,7 @@ func (c *Contest) Detail(Cid string) {
 	list := make([]*model.Problem, len(c.ContestDetail.List))
 	idx := 0
 	solutionModel := &model.SolutionModel{}
-	achieve, _ := solutionModel.Achieve(c.Uid)
+	achieve, _ := solutionModel.Achieve(c.Uid, config.ModuleC)
 
 	for _, v := range c.ContestDetail.List {
 		problemModel := model.ProblemModel{}

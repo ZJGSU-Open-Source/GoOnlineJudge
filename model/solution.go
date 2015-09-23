@@ -220,7 +220,7 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 }
 
 // 获取指定uid，judge状态为AC的solutions的相异的pid
-func (this *SolutionModel) Achieve(uid string) ([]int, error) {
+func (this *SolutionModel) Achieve(uid string, module int) ([]int, error) {
 	logger.Debug("Server SolutionModel Achieve")
 
 	err := this.OpenDB()
@@ -230,7 +230,7 @@ func (this *SolutionModel) Achieve(uid string) ([]int, error) {
 	defer this.CloseDB()
 
 	var list []int
-	err = this.DB.C("Solution").Find(bson.M{"uid": uid, "judge": config.JudgeAC}).Sort("pid").Distinct("pid", &list)
+	err = this.DB.C("Solution").Find(bson.M{"uid": uid, "judge": config.JudgeAC, "module": module}).Sort("pid").Distinct("pid", &list)
 	if err != nil {
 		return nil, OpErr
 	}
