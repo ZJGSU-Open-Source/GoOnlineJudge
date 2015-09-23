@@ -77,8 +77,18 @@ func HasPriv(priv, needpriv int) bool {
 	return priv&needpriv > 0
 }
 
+func ShowErrFlag(flag uint8) bool {
+	return flag == config.FLagER
+}
+
+func ShowACFlag(flag uint8) bool {
+	return flag == config.FLagAC
+}
+
 // initFuncMap 初始化FuncMap
 func initFuncMap() {
+	restweb.AddFuncMap("ShowErrFlag", ShowErrFlag)
+	restweb.AddFuncMap("ShowACFlag", ShowACFlag)
 	restweb.AddFuncMap("ShowRatio", ShowRatio)
 	restweb.AddFuncMap("ShowSpecial", ShowSpecial)
 	restweb.AddFuncMap("ShowJudge", ShowJudge)

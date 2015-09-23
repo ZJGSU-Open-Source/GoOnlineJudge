@@ -66,6 +66,9 @@ func (c *Contest) Detail(Cid string) {
 	c.InitContest(Cid)
 	list := make([]*model.Problem, len(c.ContestDetail.List))
 	idx := 0
+	solutionModel := &model.SolutionModel{}
+	achieve, _ := solutionModel.Achieve(c.Uid)
+
 	for _, v := range c.ContestDetail.List {
 		problemModel := model.ProblemModel{}
 		one, err := problemModel.Detail(v)
@@ -88,6 +91,25 @@ func (c *Contest) Detail(Cid string) {
 		if err != nil {
 			restweb.Logger.Debug(err)
 			continue
+		}
+
+		one.Flag = config.FlagNA
+		for _, i := range achieve {
+			if one.Pid == i {
+				one.Flag = config.FLagAC
+				break
+			}
+		}
+
+		if one.Flag == config.FlagNA {
+			args := make(map[string]string)
+			args["pid"] = strconv.Itoa(one.Pid)
+			args["module"] = strconv.Itoa(config.ModuleP)
+			args["uid"] = c.Uid
+			l, _ := solutionModel.List(args)
+			if len(l) > 0 {
+				one.Flag = config.FLagER
+			}
 		}
 
 		list[idx] = one
