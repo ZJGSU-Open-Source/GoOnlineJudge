@@ -93,6 +93,28 @@ func (pc *ProblemController) List() {
 	}
 	restweb.Logger.Debug(len(problemList))
 
+	solutionModel := &model.SolutionModel{}
+	achieve, _ := solutionModel.Achieve(pc.Uid, config.ModuleP, config.ModuleP)
+	for _, p := range problemList {
+		p.Flag = config.FlagNA
+		for _, i := range achieve {
+			if p.Pid == i {
+				p.Flag = config.FLagAC
+				break
+			}
+		}
+		if p.Flag == config.FlagNA {
+			args := make(map[string]string)
+			args["pid"] = strconv.Itoa(p.Pid)
+			args["module"] = strconv.Itoa(config.ModuleP)
+			args["uid"] = pc.Uid
+			l, _ := solutionModel.List(args)
+			if len(l) > 0 {
+				p.Flag = config.FLagER
+			}
+		}
+	}
+
 	pc.Output["Problem"] = problemList
 	pc.Output["Privilege"] = pc.Privilege
 	pc.Output["Time"] = restweb.GetTime()
@@ -146,7 +168,7 @@ func (pc *ProblemController) Submit(Pid string) {
 	one.Pid = pid
 	one.Uid = pc.Uid
 	one.Module = config.ModuleP
-	one.Mid = config.ModuleP
+	one.Mid = config.ModuleP // Todo use pid as mid
 
 	problemModel := model.ProblemModel{}
 	pro, err := problemModel.Detail(pid)

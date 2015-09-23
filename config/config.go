@@ -40,6 +40,11 @@ const (
 )
 
 const (
+	FlagNA = uint8(iota) // None
+	FLagAC
+	FLagER
+)
+const (
 	LanguageNA   = 0 //None
 	LanguageC    = 1 //C
 	LanguageCPP  = 2 //C++
