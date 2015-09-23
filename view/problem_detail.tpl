@@ -73,7 +73,7 @@
       <textarea id="code" name="code" autofocus=""></textarea>
     </div>
     <div class="actions">
-      <input class="btn btn-info" name="submit" type="submit" value="Submit">
+      <input name="submit" type="submit" value="Submit">
     </div>
   </form>
   </div>
