@@ -107,7 +107,7 @@ func (c *Contest) Detail(Cid string) {
 			args["module"] = strconv.Itoa(config.ModuleC)
 			args["mid"] = strconv.Itoa(c.Cid)
 			args["uid"] = c.Uid
-			l, err := solutionModel.List(args)
+			l, _ := solutionModel.List(args)
 			if len(l) > 0 {
 				one.Flag = config.FLagER
 			}
