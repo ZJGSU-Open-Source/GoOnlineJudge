@@ -96,7 +96,7 @@ func (uc *UserController) Detail(uid string) {
 	uc.Output["Detail"] = one
 
 	solutionModle := model.SolutionModel{}
-	solvedList, err := solutionModle.Achieve(uid, config.ModuleP)
+	solvedList, err := solutionModle.Achieve(uid, config.ModuleP, config.ModuleP)
 	if err != nil {
 		uc.Error(err.Error(), 400)
 		return
@@ -141,7 +141,7 @@ func (uc *UserController) Settings() {
 	uc.Output["Detail"] = one
 
 	solutionModel := model.SolutionModel{}
-	solvedList, err := solutionModel.Achieve(uc.Uid, config.ModuleP)
+	solvedList, err := solutionModel.Achieve(uc.Uid, config.ModuleP, config.ModuleP)
 	if err != nil {
 		uc.Error(err.Error(), 400)
 		return

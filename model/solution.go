@@ -220,7 +220,7 @@ func (this *SolutionModel) Count(args map[string]string) (int, error) {
 }
 
 // 获取指定uid，judge状态为AC的solutions的相异的pid
-func (this *SolutionModel) Achieve(uid string, module int) ([]int, error) {
+func (this *SolutionModel) Achieve(uid string, module int, mid int) ([]int, error) {
 	logger.Debug("Server SolutionModel Achieve")
 
 	err := this.OpenDB()
@@ -229,8 +229,15 @@ func (this *SolutionModel) Achieve(uid string, module int) ([]int, error) {
 	}
 	defer this.CloseDB()
 
+	var filter bson.M
+	if module != config.ModuleP {
+		filter = bson.M{"uid": uid, "judge": config.JudgeAC, "module": module, "mid": mid}
+	} else {
+		filter = bson.M{"uid": uid, "judge": config.JudgeAC, "module": module}
+	}
+
 	var list []int
-	err = this.DB.C("Solution").Find(bson.M{"uid": uid, "judge": config.JudgeAC, "module": module}).Sort("pid").Distinct("pid", &list)
+	err = this.DB.C("Solution").Find(filter).Sort("pid").Distinct("pid", &list)
 	if err != nil {
 		return nil, OpErr
 	}
@@ -303,14 +310,6 @@ func (this *SolutionModel) CheckQuery(args map[string]string) (query bson.M, err
 			return
 		}
 		query["pid"] = pid
-	}
-	if v, ok := args["cid"]; ok {
-		var cid int
-		cid, err = strconv.Atoi(v)
-		if err != nil {
-			return
-		}
-		query["cid"] = cid
 	}
 	if v, ok := args["uid"]; ok {
 		query["uid"] = v

@@ -94,7 +94,7 @@ func (pc *ProblemController) List() {
 	restweb.Logger.Debug(len(problemList))
 
 	solutionModel := &model.SolutionModel{}
-	achieve, _ := solutionModel.Achieve(pc.Uid, config.ModuleP)
+	achieve, _ := solutionModel.Achieve(pc.Uid, config.ModuleP, config.ModuleP)
 	for _, p := range problemList {
 		p.Flag = config.FlagNA
 		for _, i := range achieve {
@@ -168,7 +168,7 @@ func (pc *ProblemController) Submit(Pid string) {
 	one.Pid = pid
 	one.Uid = pc.Uid
 	one.Module = config.ModuleP
-	one.Mid = config.ModuleP
+	one.Mid = config.ModuleP // Todo use pid as mid
 
 	problemModel := model.ProblemModel{}
 	pro, err := problemModel.Detail(pid)
