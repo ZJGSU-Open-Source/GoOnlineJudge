@@ -60,6 +60,8 @@
     <tr>
       <th class="header">ID</th>
       <th class="header">Title</th>
+      <th class="header">OJ</th>
+      <th class="header">VPID</th>
       {{if $isAdmin}}
       <th class="header">Status</th>
       <th class="header">Delete</th>
@@ -74,6 +76,8 @@
         <tr>
           <td>{{.Pid}}</td>
           <td><a href="/problems/{{.Pid}}">{{.Title}}</a></td>
+          <td>{{.ROJ}}</td>
+          <td>{{.RPid}}</td>
           {{if $isAdmin}}
           <td><a class="problem_status" href="#" data-id="{{.Pid}}">[{{if ShowStatus .Status}}Available{{else}}Reserved{{end}}]</a></td>
           <td><a class="problem_delete" href="#" data-id="{{.Pid}}">[Delete]</a></td>

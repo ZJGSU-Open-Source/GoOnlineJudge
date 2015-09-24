@@ -12,6 +12,7 @@ type Problem struct {
 	Pid  int    `json:"pid"bson:"pid"`
 	RPid int    `json:"rpid"bson:"rpid"` //remote problem id
 	ROJ  string `json:"roj"bson:"roj"`
+	Flag uint8  `json:"-"`
 
 	Time    int    `json:"time"bson:"time"xml:"time_limit"`
 	Memory  int    `json:"memory"bson:"memory"xml:"memory_limit"`

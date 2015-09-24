@@ -7,6 +7,7 @@ import (
 	"restweb"
 
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -46,8 +47,8 @@ func (s *SessController) Post() {
 		s.SetSession("Privilege", strconv.Itoa(ret.Privilege))
 		s.W.WriteHeader(201)
 
-		remoteAddr := s.R.Header.Get("X-Real-IP") // if you set niginx as reverse proxy
-		// remoteAddr := strings.Split(s.R.RemoteAddr, ":")[0] // otherwise
+		// remoteAddr := s.R.Header.Get("X-Real-IP")           // if you set niginx as reverse proxy
+		remoteAddr := strings.Split(s.R.RemoteAddr, ":")[0] // otherwise
 		userModel.RecordIP(uid, remoteAddr, time.Now().Unix())
 	}
 }

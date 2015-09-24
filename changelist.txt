@@ -1,3 +1,9 @@
+2015-09-24:
+1. Contest ranklist scroll
+2. Docker contianerize
+3. Add problem solve flag
+4. Fix some bugs
+
 2015-05-22:
 1. Support record user share code
 2. Fix add admin bug

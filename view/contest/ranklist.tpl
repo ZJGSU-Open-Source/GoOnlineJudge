@@ -2,6 +2,7 @@
 {{$cid := .Cid}}
 <h1 style="text-align:center">Contest RankList -- {{.Contest}}</h1>
 <h5><a href="/contests/{{.Cid}}/rankfile">Export ranklist</a></h5>
+<div style="overflow:scroll; overflow-y:hidden;">
 <table id="contest_list" class="table table-bordered table-striped table-hover">
   <thead>
     <tr>
@@ -38,4 +39,5 @@
     {{end}}
   </tbody>
 </table>
+</div>
 {{end}}

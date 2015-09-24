@@ -5,6 +5,7 @@ import (
 	"restweb"
 
 	"strconv"
+	"time"
 )
 
 var specialArr = []string{"Standard", "Special"}
@@ -77,8 +78,25 @@ func HasPriv(priv, needpriv int) bool {
 	return priv&needpriv > 0
 }
 
+func ShowErrFlag(flag uint8) bool {
+	return flag == config.FLagER
+}
+
+func ShowACFlag(flag uint8) bool {
+	return flag == config.FLagAC
+}
+
+// ShowTime 将unixtime转换为北京时间
+func ShowTime(unixtime int64) string {
+
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	return time.Unix(unixtime, 0).In(loc).Format("2006-01-02 15:04:05")
+}
+
 // initFuncMap 初始化FuncMap
 func initFuncMap() {
+	restweb.AddFuncMap("ShowErrFlag", ShowErrFlag)
+	restweb.AddFuncMap("ShowACFlag", ShowACFlag)
 	restweb.AddFuncMap("ShowRatio", ShowRatio)
 	restweb.AddFuncMap("ShowSpecial", ShowSpecial)
 	restweb.AddFuncMap("ShowJudge", ShowJudge)
@@ -89,4 +107,5 @@ func initFuncMap() {
 	restweb.AddFuncMap("ShowStatus", ShowStatus)
 	restweb.AddFuncMap("ShowSim", ShowSim)
 	restweb.AddFuncMap("HasPriv", HasPriv)
+	restweb.AddFuncMap("ShowTime", ShowTime)
 }
