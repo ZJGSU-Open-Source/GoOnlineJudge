@@ -4,16 +4,14 @@
 <h2 class="page-header">News List</h2>
 <div class="col-md-8">
 {{with .News}}
-
-	{{range .}}
-		{{if ShowStatus .Status}}
-
+	{{range $idx, $news := .}}
 			<p class="news">
-				<span class="flag"></span>
-				<span class="date">{{.Create}}</span>		
-				<br><a href="/news/{{.Nid}}">{{.Title}}</a>
+        {{if eq $idx 0}}<span class="flag">Latest!</span>{{end}}
+        <span class="date">{{$news.Create}}</span>
+				<br>
+        <a href="/news/{{.Nid}}">{{$news.Title}}</a>
+
 			</p>
-		{{end}}
 	{{end}}
 {{end}}
 </div>
