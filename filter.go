@@ -3,6 +3,7 @@ package main
 import (
 	"GoOnlineJudge/config"
 	"GoOnlineJudge/model"
+
 	"html/template"
 	"net/http"
 	"restweb"
@@ -127,6 +128,7 @@ func init() {
 	restweb.RegisterFilters(restweb.GET, `^/(settings|profile)`, restweb.Before, requireLogin)
 	restweb.RegisterFilters(restweb.POST, `^/users/\w+`, restweb.Before, requireLogin)
 	restweb.RegisterFilters(restweb.ANY, `^/contests/\d+`, restweb.Before, requireContest)
+	restweb.RegisterFilters(restweb.ANY, `^/links`, restweb.Before, requireLogin)
 
 	restweb.AddFile("/static/", ".")
 }

@@ -1,4 +1,4 @@
-package controller
+package linkshare
 
 import (
 	"GoOnlineJudge/class"
@@ -51,8 +51,30 @@ func (nc *LinkShareController) Detail(Lid string) {
 	if err != nil {
 		http.Error(nc.W, err.Error(), 500)
 	}
-	nc.Output["Detail"] = one
 
+	nc.Output["Detail"] = one
 	nc.Output["Title"] = "News Detail"
 	nc.RenderTemplate("view/layout.tpl", "view/links_detail.tpl")
+}
+
+//@URL: /links @method: POST
+func (l *LinkShareController) Add() {
+	restweb.Logger.Debug("Links Add")
+
+	one := model.Link{}
+
+	one.Link = l.Input.Get("link")
+	one.Title = l.Input.Get("title")
+	one.Uid = l.Uid
+
+	linkModel := &model.LinkModel{}
+	_, err := linkModel.Insert(one)
+	if err != nil {
+		http.Error(l.W, err.Error(), 500)
+	}
+
+	// l.Output["Title"] = "News Detail"
+	// l.Output["Detail"] = one
+	// l.RenderTemplate("view/layout.tpl", "view/links_detail.tpl")
+	l.Redirect("/links", http.StatusFound)
 }
