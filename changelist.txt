@@ -1,3 +1,8 @@
+2015-09-25:
+1. Fix pagefooter
+2. Change flag color
+3. Add links share hidden page
+
 2015-09-24:
 1. Contest ranklist scroll
 2. Docker contianerize

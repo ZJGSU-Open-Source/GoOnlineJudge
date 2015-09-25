@@ -86,9 +86,9 @@
           {{/*if ShowExpire .Expire $time*/}}
             <tr>
               <td>
-              {{if ShowACFlag .Flag}} <span class="icon icon-material-check"></span>
+              {{if ShowACFlag .Flag}} <span class="submitRes-3 icon-material-check"></span>
               {{else if ShowErrFlag .Flag}}
-              <span class="icon icon-material-clear"></span>
+              <span class="submitRes-4 icon-material-clear"></span>
               {{end}}
               </td>
               <td>{{.Pid}}</td>

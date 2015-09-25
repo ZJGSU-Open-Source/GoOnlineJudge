@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/config"
 	"restweb"
 
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -93,6 +94,23 @@ func ShowTime(unixtime int64) string {
 	return time.Unix(unixtime, 0).In(loc).Format("2006-01-02 15:04:05")
 }
 
+func ShowHost(rawurl string) string {
+	parsed, err := url.Parse(rawurl)
+	if err != nil {
+		return ""
+	}
+
+	return parsed.Host
+}
+
+func ShowHostUrl(rawurl string) string {
+	parsed, err := url.Parse(rawurl)
+	if err != nil {
+		return ""
+	}
+	return parsed.Scheme + "://" + parsed.Host
+}
+
 // initFuncMap 初始化FuncMap
 func initFuncMap() {
 	restweb.AddFuncMap("ShowErrFlag", ShowErrFlag)
@@ -108,4 +126,7 @@ func initFuncMap() {
 	restweb.AddFuncMap("ShowSim", ShowSim)
 	restweb.AddFuncMap("HasPriv", HasPriv)
 	restweb.AddFuncMap("ShowTime", ShowTime)
+	restweb.AddFuncMap("ShowHost", ShowHost)
+	restweb.AddFuncMap("ShowHostUrl", ShowHostUrl)
+
 }
