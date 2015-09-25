@@ -5,6 +5,7 @@ import (
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
 	"html/template"
 )
 
@@ -31,7 +32,7 @@ type NewsModel struct {
 
 // 获取指定nid的news
 func (this *NewsModel) Detail(nid int) (*News, error) {
-	logger.Debug("Server NewsModel Detail")
+	logger.Println("Server NewsModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -51,7 +52,7 @@ func (this *NewsModel) Detail(nid int) (*News, error) {
 
 // 删除指定nid的news
 func (this *NewsModel) Delete(nid int) error {
-	logger.Debug("Server NewsModel Delete")
+	logger.Println("Server NewsModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -71,7 +72,7 @@ func (this *NewsModel) Delete(nid int) error {
 
 // 插入一个新的news，不能指定status和create
 func (this *NewsModel) Insert(one News) error {
-	logger.Debug("Server NewsModel Insert")
+	logger.Println("Server NewsModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -96,7 +97,7 @@ func (this *NewsModel) Insert(one News) error {
 
 // 更新指定nid的news
 func (this *NewsModel) Update(nid int, ori News) error {
-	logger.Debug("Server NewsModel Update")
+	logger.Println("Server NewsModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -120,7 +121,7 @@ func (this *NewsModel) Update(nid int, ori News) error {
 
 // 更新指定的news的status
 func (this *NewsModel) Status(nid, status int) error {
-	logger.Debug("Server NewsModel Status")
+	logger.Println("Server NewsModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -140,7 +141,7 @@ func (this *NewsModel) Status(nid, status int) error {
 
 // 列出由offset，limit指定的news
 func (this *NewsModel) List(offset, limit int) ([]*News, error) {
-	logger.Debug("Server NewsModel List")
+	logger.Println("Server NewsModel List")
 
 	err := this.OpenDB()
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	// "GoOnlineJudge/config"
 	"GoOnlineJudge/model"
 	"github.com/zenazn/goji/web"
-	"restweb"
 
 	"encoding/json"
 	"net/http"
@@ -52,9 +51,9 @@ func StatusList(c web.C, w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(list)
 }
 
-//@URL: /api/status/:sid/code @method: GET
+//@URL: /api/status/:sid @method: GET
 func GetCode(c web.C, w http.ResponseWriter, r *http.Request) {
-	restweb.Logger.Debug("Status Code")
+
 	var (
 		Sid = c.URLParams["sid"]
 	)

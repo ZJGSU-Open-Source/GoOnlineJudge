@@ -2,8 +2,8 @@ package model
 
 import (
 	"errors"
+	"log"
 	"os"
-	"restweb/golog"
 )
 
 var (
@@ -31,8 +31,8 @@ var (
 	ExistErr = errors.New("Id has existed")
 )
 
-var logger *golog.Log
+var logger *log.Logger
 
 func init() {
-	logger = golog.NewLog(os.Stdout, golog.Ldebug|golog.Linfo)
+	logger = log.New(os.Stdout, "", log.Ltime|log.Lshortfile)
 }

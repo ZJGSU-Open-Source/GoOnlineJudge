@@ -30,7 +30,7 @@ func router() *web.Mux {
 	mux.Get("/api/ranklist", handler.Ranklist)
 
 	mux.Get("/api/status", handler.StatusList)
-	mux.Get("/api/status/:sid/code", handler.GetCode)
+	mux.Get("/api/:sid", handler.GetCode)
 
 	mux.Get("/api/news", handler.ListNews)
 	mux.Get("/api/news/:nid", handler.GetNews)

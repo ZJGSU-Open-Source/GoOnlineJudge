@@ -4,6 +4,7 @@ import (
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
 	"html/template"
 	"strconv"
 )

@@ -5,6 +5,7 @@ import (
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
 	"strconv"
 )
 
@@ -40,7 +41,7 @@ type ContestModel struct {
 
 // 参数cid，返回指定cid的contest
 func (this *ContestModel) Detail(cid int) (*Contest, error) {
-	logger.Debug("Server ContestModel Detail")
+	logger.Println("Server ContestModel Detail")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -59,7 +60,7 @@ func (this *ContestModel) Detail(cid int) (*Contest, error) {
 
 // 删除指定cid的contest
 func (this *ContestModel) Delete(cid int) error {
-	logger.Debug("Server ContestModel Delete")
+	logger.Println("Server ContestModel Delete")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -79,7 +80,7 @@ func (this *ContestModel) Delete(cid int) error {
 
 // 插入新的contest，不能指定cid，statu，和create
 func (this *ContestModel) Insert(one Contest) error {
-	logger.Debug("Server ContestModel Insert")
+	logger.Println("Server ContestModel Insert")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -109,7 +110,7 @@ func (this *ContestModel) Insert(one Contest) error {
 
 // 更新指定cid的contest
 func (this *ContestModel) Update(cid int, ori Contest) error {
-	logger.Debug("Server ContestModel Update")
+	logger.Println("Server ContestModel Update")
 
 	alt := make(map[string]interface{})
 	alt["title"] = ori.Title
@@ -137,7 +138,7 @@ func (this *ContestModel) Update(cid int, ori Contest) error {
 
 // 更新指定cid的contest的状态，更新状态由参数status指定
 func (this *ContestModel) Status(cid, status int) error {
-	logger.Debug("Server ContestModel Status")
+	logger.Println("Server ContestModel Status")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -157,7 +158,7 @@ func (this *ContestModel) Status(cid, status int) error {
 
 // 更新指定cid的contest的问题列表
 func (this *ContestModel) Push(cid int, list []int) error {
-	logger.Debug("Server ContestModel Push")
+	logger.Println("Server ContestModel Push")
 
 	err := this.OpenDB()
 	if err != nil {
@@ -177,7 +178,7 @@ func (this *ContestModel) Push(cid int, list []int) error {
 
 //列出由参数args指定所有问题，参数args应该包括offset:<offset>,limit:<limit>,pid:<pid>,title:<title>之一
 func (this *ContestModel) List(args map[string]string) ([]*Contest, error) {
-	logger.Debug("Server ContestModel List")
+	logger.Println("Server ContestModel List")
 
 	query, err := this.CheckQuery(args)
 	if err != nil {

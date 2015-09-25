@@ -79,7 +79,7 @@ func GetProblem(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 //提交某一问题的solution
-//@URL: /api/problems/:id @method: POST
+//@URL: /api/problems/:id/solutions @method: POST
 func PostSolution(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	var (
