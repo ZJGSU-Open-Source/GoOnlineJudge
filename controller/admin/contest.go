@@ -65,11 +65,23 @@ func (cc *AdminContest) Add() {
 }
 
 // 插入比赛
-//@URL:/admin/contests/ @method:POST
+//@URL: /contests/ @method:POST
 func (cc *AdminContest) Insert() {
 	restweb.Logger.Debug("Admin Contest Insert")
 
+	if cc.Uid == "" {
+		cc.Redirect("/sess", http.StatusFound) //重定向到竞赛列表页
+		return
+	}
+
 	one := cc.contest()
+
+	if cc.Privilege == config.PrivilegePU {
+		one.Status = config.StatusAvailable
+	} else {
+		one.Status = config.StatusReverse
+	}
+
 	contestModel := model.ContestModel{}
 	err := contestModel.Insert(one)
 	if err != nil {
@@ -77,6 +89,10 @@ func (cc *AdminContest) Insert() {
 		return
 	}
 
+	if cc.Privilege == config.PrivilegePU {
+		cc.Redirect("/contests", http.StatusFound) //重定向到竞赛列表页
+		return
+	}
 	cc.Redirect("/admin/contests", http.StatusFound) //重定向到竞赛列表页
 }
 

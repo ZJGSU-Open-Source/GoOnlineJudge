@@ -1,10 +1,11 @@
 package model
 
 import (
-	"GoOnlineJudge/config"
+	// "GoOnlineJudge/config"
 	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
 	"strconv"
 )
 
@@ -86,8 +87,6 @@ func (this *ContestModel) Insert(one Contest) error {
 		return DBErr
 	}
 	defer this.CloseDB()
-
-	one.Status = config.StatusReverse
 
 	one.Create = this.GetTime()
 	one.Cid, err = this.GetID("Contest")
