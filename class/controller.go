@@ -10,14 +10,16 @@ import (
 
 type Controller struct {
 	restweb.Controller
-	Uid       string
-	Privilege int
+	Uid         string
+	AccessToken string
+	Privilege   int
 }
 
 func (ct *Controller) Init() {
 	ct.W.Header().Set("Content-Type", "text/html")
 
 	ct.Uid = ct.GetSession("Uid")
+	ct.AccessToken = ct.GetSession("AccessToken")
 
 	ct.Output["CurrentUser"] = ct.Uid
 	ct.Output["Privilege"] = ct.Privilege
@@ -56,70 +58,15 @@ func (ct *Controller) Err400(title string, info string) {
 	ct.RenderTemplate("view/layout.tpl", "view/400.tpl")
 }
 
-func (ct *Controller) GetPage(page int, pageCount int) (ret map[string]interface{}) {
+func (ct *Controller) GetPage(page int, tail bool) (ret map[string]interface{}) {
 	ret = make(map[string]interface{})
+
 	if page > 1 {
 		ret["IsPreviousPage"] = true
 	}
-	if page < pageCount {
+
+	if !tail {
 		ret["IsNextPage"] = true
-	}
-
-	var firstBlock bool = (page-config.PageMidLimit > config.PageHeadLimit+1)
-	var secondBlock bool = (page+config.PageMidLimit < pageCount-config.PageTailLimit)
-
-	if firstBlock && secondBlock {
-		ret["IsPageHead"] = true
-		s1 := make([]int, 0, 0)
-		for i := 1; i <= config.PageHeadLimit; i++ {
-			s1 = append(s1, i)
-		}
-		ret["PageHeadList"] = s1
-		ret["IsPageMid"] = true
-		s2 := make([]int, 0, 0)
-		for i := page - config.PageMidLimit; i <= page+config.PageMidLimit; i++ {
-			s2 = append(s2, i)
-		}
-		ret["PageMidList"] = s2
-		ret["IsPageTail"] = true
-		s3 := make([]int, 0, 0)
-		for i := pageCount - config.PageTailLimit + 1; i <= pageCount; i++ {
-			s3 = append(s3, i)
-		}
-		ret["PageTailList"] = s3
-	} else if !firstBlock && !secondBlock {
-		ret["IsPageHead"] = true
-		s := make([]int, 0, 0)
-		for i := 1; i <= pageCount; i++ {
-			s = append(s, i)
-		}
-		ret["PageHeadList"] = s
-	} else if firstBlock && !secondBlock {
-		ret["IsPageHead"] = true
-		s1 := make([]int, 0, 0)
-		for i := 1; i <= config.PageHeadLimit; i++ {
-			s1 = append(s1, i)
-		}
-		ret["PageHeadList"] = s1
-		ret["IsPageMid"] = true
-		s2 := make([]int, 0, 0)
-		for i := page - config.PageMidLimit; i <= pageCount; i++ {
-			s2 = append(s2, i)
-		}
-		ret["PageMidList"] = s2
-	} else {
-		ret["IsPageHead"] = true
-		s1 := make([]int, 0, 0)
-		for i := 1; i <= page+config.PageMidLimit; i++ {
-			s1 = append(s1, i)
-		}
-		ret["PageHeadList"] = s1
-		ret["IsPageTail"] = true
-		s2 := make([]int, 0, 0)
-		for i := pageCount - config.PageTailLimit + 1; i <= pageCount; i++ {
-			s2 = append(s2, i)
-		}
-		ret["PageTailList"] = s2
 	}
 
 	ret["CurrentPage"] = int(page)

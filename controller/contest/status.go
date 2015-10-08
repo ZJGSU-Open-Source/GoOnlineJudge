@@ -77,7 +77,7 @@ func (sc *ContestStatus) List(Cid string) {
 	qry["offset"] = strconv.Itoa((page - 1) * config.SolutionPerPage)
 	qry["limit"] = strconv.Itoa(config.SolutionPerPage)
 
-	pageData := sc.GetPage(page, pageCount)
+	pageData := sc.GetPage(page, page >= pageCount)
 	for k, v := range pageData {
 		sc.Output[k] = v
 	}

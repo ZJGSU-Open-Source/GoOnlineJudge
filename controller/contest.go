@@ -15,14 +15,12 @@ type ContestController struct {
 func (c *ContestController) Index() {
 	restweb.Logger.Debug("Contest List")
 
-	CModel := model.ContestModel{}
-	conetestList, err := CModel.List(nil)
-	if err != nil {
-		c.Error(err.Error(), 500)
-		return
-	}
+	var contestList []*model.Contest
 
-	c.Output["Contest"] = conetestList
+	req, _ := apiClient.NewRequest("GET", "/contests", "", nil)
+	apiClient.Do(req, &contestList)
+
+	c.Output["Contest"] = contestList
 	c.Output["Time"] = restweb.GetTime()
 	c.Output["Title"] = "Contest List"
 	c.Output["IsContest"] = true

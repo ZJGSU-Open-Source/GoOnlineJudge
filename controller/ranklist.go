@@ -56,7 +56,7 @@ func (rc *RanklistController) Index() {
 		return
 	}
 
-	pageData := rc.GetPage(page, pageCount)
+	pageData := rc.GetPage(page, page >= pageCount)
 	for k, v := range pageData {
 		rc.Output[k] = v
 	}

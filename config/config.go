@@ -9,6 +9,7 @@ const CookieExpires = 1800
 
 var Datapath = os.Getenv("DATA_PATH")
 var JudgeHost = os.Getenv("JUDGE_HOST")
+var APIHost = os.Getenv("API_HOST")
 
 //CONSTANT
 const (

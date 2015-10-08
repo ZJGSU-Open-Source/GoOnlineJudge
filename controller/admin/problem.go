@@ -75,7 +75,7 @@ func (pc *AdminProblem) List() {
 
 	qry["offset"] = strconv.Itoa((page - 1) * config.ProblemPerPage) //偏移位置
 	qry["limit"] = strconv.Itoa(config.ProblemPerPage)               //每页问题数量
-	pageData := pc.GetPage(page, pageCount)
+	pageData := pc.GetPage(page, page >= pageCount)
 	for k, v := range pageData {
 		pc.Output[k] = v
 	}
