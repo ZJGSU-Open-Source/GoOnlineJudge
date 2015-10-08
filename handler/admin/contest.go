@@ -1,12 +1,14 @@
 package admin
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/middleware"
-	"GoOnlineJudge/model"
+	"ojapi/config"
+	"ojapi/middleware"
+	"ojapi/model"
 
 	"github.com/zenazn/goji/web"
 
+	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
@@ -20,9 +22,14 @@ func PostContest(c web.C, w http.ResponseWriter, r *http.Request) {
 		user = middleware.ToUser(c)
 	)
 
-	one := contest(user, r)
+	one, err := contest(user, r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	contestModel := model.ContestModel{}
-	err := contestModel.Insert(one)
+	err = contestModel.Insert(*one)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -99,10 +106,14 @@ func PutContest(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	one := contest(user, r)
+	one, err := contest(user, r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	contestModel := model.ContestModel{}
-	err := contestModel.Update(one.Cid, one)
+	err = contestModel.Update(one.Cid, *one)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -110,48 +121,43 @@ func PutContest(c web.C, w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(200)
 }
 
-func contest(user *model.User, r *http.Request) (one model.Contest) {
+func contest(user *model.User, r *http.Request) (one *model.Contest, err error) {
 
-	one.Title = r.FormValue("title")
-	year, _ := strconv.Atoi(r.FormValue("startTimeYear"))
-	month, _ := strconv.Atoi(r.FormValue("startTimeMonth"))
-	day, _ := strconv.Atoi(r.FormValue("startTimeDay"))
-	hour, _ := strconv.Atoi(r.FormValue("startTimeHour"))
-	min, _ := strconv.Atoi(r.FormValue("startTimeMinute"))
-	start := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
-	one.Start = start.Unix()
-
-	year, _ = strconv.Atoi(r.FormValue("endTimeYear"))
-	month, _ = strconv.Atoi(r.FormValue("endTimeMonth"))
-	day, _ = strconv.Atoi(r.FormValue("endTimeDay"))
-	hour, _ = strconv.Atoi(r.FormValue("endTimeHour"))
-	min, _ = strconv.Atoi(r.FormValue("endTimeMinute"))
-	end := time.Date(year, time.Month(month), day, hour, min, 0, 0, time.Local)
-	one.End = end.Unix()
-
-	if start.After(end) {
-		return
+	in := struct {
+		Title       string
+		Start       int64
+		End         int64
+		Type        string
+		Password    string
+		Userlist    string
+		ProblemList string
+	}{}
+	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+		return nil, errors.New("Bad json payload")
 	}
 
-	switch r.FormValue("type") {
+	one.Title = in.Title
+	one.Start = in.Start
+	one.End = in.End
+
+	if time.Unix(one.Start, 0).After(time.Unix(one.End, 0)) {
+		return nil, errors.New("Bad start or end time")
+	}
+
+	switch in.Type {
 	case "public":
 		one.Encrypt = config.EncryptPB
 	case "private": //TODO 设置argument为一个string数组
 		one.Encrypt = config.EncryptPT
-		argument := r.FormValue("userlist")
-		var cr rune = 13
-		crStr := string(cr)
-		argument = strings.Trim(argument, crStr)
-		argument = strings.Trim(argument, "\r\n")
-		one.Argument = argument
+		one.Argument = in.Userlist
 	case "password":
 		one.Encrypt = config.EncryptPW
-		one.Argument = r.FormValue("password")
+		one.Argument = in.Password
 	default:
-		return
+		return nil, errors.New("Bad contest time")
 	}
 
-	problemString := r.FormValue("problemList")
+	problemString := in.ProblemList
 	problemString = strings.Trim(problemString, " ")
 	problemString = strings.Trim(problemString, ";")
 	problemList := strings.Split(problemString, ";")
@@ -170,5 +176,5 @@ func contest(user *model.User, r *http.Request) (one model.Contest) {
 	}
 	one.List = list
 	one.Creator = user.Uid
-	return one
+	return one, nil
 }

@@ -1,9 +1,9 @@
 package model
 
 import (
-	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"ojapi/model/class"
 )
 
 type OJStatus struct {

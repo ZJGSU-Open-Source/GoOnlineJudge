@@ -1,10 +1,10 @@
 package model
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model/class"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"ojapi/config"
+	"ojapi/model/class"
 
 	"strconv"
 	"time"

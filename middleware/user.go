@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/session"
+	"ojapi/config"
+	"ojapi/session"
 
 	"github.com/zenazn/goji/web"
 )

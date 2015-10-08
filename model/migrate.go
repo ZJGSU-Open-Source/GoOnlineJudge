@@ -1,7 +1,7 @@
 package model
 
 import (
-	"GoOnlineJudge/config"
+	"ojapi/config"
 )
 
 func init() {

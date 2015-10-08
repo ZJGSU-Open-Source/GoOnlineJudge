@@ -1,8 +1,8 @@
 package admin
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/middleware"
+	"ojapi/config"
+	"ojapi/middleware"
 
 	"github.com/zenazn/goji/web"
 

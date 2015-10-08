@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/middleware"
-	"GoOnlineJudge/model"
+	"ojapi/config"
+	"ojapi/middleware"
+	"ojapi/model"
 
 	"github.com/zenazn/goji/web"
 

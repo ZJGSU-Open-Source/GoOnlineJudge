@@ -34,7 +34,7 @@ mkdir -p $OJ_HOME/run
 mkdir -p $OJ_HOME/log
 go get gopkg.in/mgo.v2
 go get github.com/djimenez/iconv-go
-git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
+git clone https://github.com/ZJGSU-Open-Source/ojapi.git $GOPATH/src/ojapi
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
 git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
@@ -44,7 +44,7 @@ cd $OJ_HOME/restweb
 cd restweb
 go install
 cd $OJ_HOME
-restweb build GoOnlineJudge
+restweb build ojapi
 cd $OJ_HOME/RunServer
 ./make.sh
 
@@ -54,9 +54,9 @@ echo installed.
 echo ----------
 echo
 
-# Run MongoDB, GoOnlineJudge, RunServer
+# Run MongoDB, ojapi, RunServer
 mongod --dbpath /home/acm/go/Data --logpath /home/acm/go/Data/mongo.log
 cd $OJ_HOME/
-restweb run GoOnlineJudge &
-cd $GOPATH/src/GoOnlineJudge
+restweb run ojapi &
+cd $GOPATH/src/ojapi
 RunServer &

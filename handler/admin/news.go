@@ -1,11 +1,12 @@
 package admin
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/middleware"
-	"GoOnlineJudge/model"
 	"github.com/zenazn/goji/web"
+	"ojapi/config"
+	"ojapi/middleware"
+	"ojapi/model"
 
+	"encoding/json"
 	"html/template"
 	"net/http"
 )
@@ -21,9 +22,18 @@ func PostNews(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	in := struct {
+		Title   string
+		Content string
+	}{}
+	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	one := model.News{}
-	one.Title = r.FormValue("title")
-	one.Content = template.HTML(r.FormValue("content"))
+	one.Title = in.Title
+	one.Content = template.HTML(in.Content)
 
 	newsModel := model.NewsModel{}
 	err := newsModel.Insert(one)
@@ -33,6 +43,7 @@ func PostNews(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(201)
+	json.NewEncoder(w).Encode(one)
 }
 
 //@URL: /news/:nid/status @method: PUT
@@ -87,7 +98,7 @@ func DeleteNews(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusNoContent)
 }
 
 //@URL: /admin/news/(\d+)/ @method: PUT
@@ -102,10 +113,19 @@ func PutNews(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	in := struct {
+		Title   string
+		Content string
+	}{}
+	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	one := model.News{}
 	newsModel := model.NewsModel{}
-	one.Title = r.FormValue("title")
-	one.Content = template.HTML(r.FormValue("content"))
+	one.Title = in.Title
+	one.Content = template.HTML(in.Content)
 
 	err := newsModel.Update(news.Nid, one)
 	if err != nil {

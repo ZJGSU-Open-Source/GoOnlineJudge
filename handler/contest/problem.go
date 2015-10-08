@@ -1,8 +1,8 @@
 package contest
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model"
+	"ojapi/config"
+	"ojapi/model"
 
 	"restweb"
 

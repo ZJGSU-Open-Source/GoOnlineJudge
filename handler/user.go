@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/middleware"
-	"GoOnlineJudge/model"
+	"ojapi/config"
+	"ojapi/middleware"
+	"ojapi/model"
 
 	"github.com/zenazn/goji/web"
 
@@ -19,12 +19,12 @@ func PostUser(c web.C, w http.ResponseWriter, r *http.Request) {
 	userModel := model.UserModel{}
 
 	in := struct {
-		Handle   string
-		Nick     string
-		Password string
-		Mail     string
-		School   string
-		Motto    string
+		Handle   string `json:"handle"`
+		Nick     string `json:"nick"`
+		Password string `json:"password"`
+		Mail     string `json:"mail"`
+		School   string `json:"school"`
+		Motto    string `json:"motto"`
 	}{}
 	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
 		w.WriteHeader(400)
@@ -106,7 +106,53 @@ func GetProfile(c web.C, w http.ResponseWriter, r *http.Request) {
 //@URL: /api/profile @method: PUT
 func PutUser(c web.C, w http.ResponseWriter, r *http.Request) {
 
-	var one model.User
+	var (
+		user = middleware.ToUser(c)
+	)
+
+	if user == nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	in := struct {
+		Nick      string `json:"nick"`
+		Mail      string `json:"mail"`
+		School    string `json:"school"`
+		Motto     string `json:"motto"`
+		ShareCode bool   `json:"share_code"`
+	}{}
+
+	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+		w.WriteHeader(400)
+		return
+	}
+
+	user.Nick = in.Nick
+	user.Mail = in.Mail
+	user.School = in.School
+	user.Motto = in.Motto
+	user.ShareCode = in.ShareCode
+
+	if user.Nick == "" {
+		hint := make(map[string]string)
+		hint["nick"] = "Nick should not be empty."
+		w.WriteHeader(400)
+		json.NewEncoder(w).Encode(hint)
+	} else {
+		userModel := model.UserModel{}
+		err := userModel.Update(user.Uid, *user)
+		if err != nil {
+			w.WriteHeader(500)
+			return
+		}
+		w.WriteHeader(200)
+	}
+
+}
+
+//@URL: /api/account @method: PUT
+func Password(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	var (
 		user = middleware.ToUser(c)
@@ -118,68 +164,28 @@ func PutUser(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	in := struct {
-		Handle    string
-		Nick      string
-		Mail      string
-		School    string
-		Motto     string
-		ShareCode string
+		oldPwd string `json:"old_password"`
+		newPwd string `json:"new_password"`
 	}{}
+
 	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
 		w.WriteHeader(400)
 		return
 	}
 
-	if one.Nick == "" {
-		hint := make(map[string]string)
-		hint["nick"] = "Nick should not be empty."
+	userModel := model.UserModel{}
+	ret, err := userModel.Login(user.Uid, in.oldPwd)
+	if err != nil || ret.Uid == "" {
 		w.WriteHeader(400)
-		json.NewEncoder(w).Encode(hint)
-	} else {
-		userModel := model.UserModel{}
-		err := userModel.Update(user.Uid, one)
-		if err != nil {
-			w.WriteHeader(500)
-			return
-		}
-		w.WriteHeader(200)
+		return
 	}
 
+	err = userModel.Password(user.Uid, in.newPwd)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
+	w.WriteHeader(200)
+
 }
-
-// //@URL: /api/account @method: PUT
-// func Password(c web.C, w http.ResponseWriter, r *http.Request) {
-
-//     uid := ""
-//     // valid.AppendError("uid", uid)
-
-//     oldPwd := uc.Input.Get("user[oldPassword]")
-//     newPwd := uc.Input.Get("user[newPassword]")
-//     confirmPwd := uc.Input.Get("user[confirmPassword]")
-
-//     userModel := model.UserModel{}
-//     ret, err := userModel.Login(uid, oldPwd)
-//     if err != nil {
-//         uc.Error(err.Error(), 500)
-//         return
-//     }
-
-//     if ret.Uid == "" {
-//         valid.AppendError("oldPassword", "Old Password is Incorrect.")
-//     }
-
-//     if !valid.HasError {
-//         err := userModel.Password(uid, newPwd)
-//         if err != nil {
-//             uc.Error(err.Error(), 400)
-//             return
-//         }
-
-//         uc.W.WriteHeader(200)
-//     } else {
-//         uc.W.WriteHeader(400)
-//     }
-//     hint := valid.RenderErrMap()
-//     b, _ := json.Marshal(&hint)
-//     uc.W.Write(b)
-// }

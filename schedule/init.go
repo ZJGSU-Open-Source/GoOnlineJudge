@@ -1,8 +1,8 @@
 package schedule
 
 import (
-	"GoOnlineJudge/config"
-	"GoOnlineJudge/model"
+	"ojapi/config"
+	"ojapi/model"
 	"time"
 )
 

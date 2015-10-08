@@ -15,4 +15,4 @@ RunServer&
 
 # Start GoOnineJudge
 cd $GOPATH/src
-restweb run GoOnlineJudge &
+restweb run ojapi &

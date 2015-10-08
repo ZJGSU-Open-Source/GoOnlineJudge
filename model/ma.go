@@ -1,7 +1,7 @@
 package model
 
 import (
-	"GoOnlineJudge/model/class"
+	"ojapi/model/class"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"

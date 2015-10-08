@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"GoOnlineJudge/model"
+	"ojapi/model"
 
 	"github.com/zenazn/goji/web"
 )

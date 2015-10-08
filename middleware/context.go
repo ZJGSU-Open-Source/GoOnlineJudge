@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"GoOnlineJudge/model"
+	"ojapi/model"
 
 	"github.com/zenazn/goji/web"
 )

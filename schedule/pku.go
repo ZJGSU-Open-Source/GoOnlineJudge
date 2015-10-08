@@ -1,11 +1,11 @@
 package schedule
 
 import (
-	"GoOnlineJudge/model"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"ojapi/model"
 	"os"
 	"regexp"
 	"strconv"

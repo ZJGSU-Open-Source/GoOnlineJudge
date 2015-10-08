@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"GoOnlineJudge/model"
 	"github.com/zenazn/goji/web"
+	"ojapi/model"
 
 	"encoding/json"
 	"net/http"

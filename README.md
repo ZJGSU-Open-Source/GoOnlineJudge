@@ -1,47 +1,47 @@
-#GoOnlineJudge
+#ojapi
 
-GoOnlineJudge is an ACM/ICPC online judge platform.
+ojapi is an ACM/ICPC online judge platform.
 
 [**Demo**](http://acm.zjgsu.edu.cn)
 
 ##API
 
-This branch is an api server of GoOnlineJudge.
+This branch is an api server of ojapi.
 
 ##Contents
-+ [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
-	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
-	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
-	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
-	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
-+ [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#maintainers)
-+ [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#contributions)
-+ [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
++ [Installation](https://github.com/ZJGSU-Open-Source/ojapi#installation)
+	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/ojapi#prerequisites)
+	+ [Quick Start](https://github.com/ZJGSU-Open-Source/ojapi#quick-start)
+	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/ojapi#manual-installation)
+	+ [Tips](https://github.com/ZJGSU-Open-Source/ojapi#tips)
++ [Maintainers](https://github.com/ZJGSU-Open-Source/ojapi#maintainers)
++ [Contributions](https://github.com/ZJGSU-Open-Source/ojapi#contributions)
++ [License](https://github.com/ZJGSU-Open-Source/ojapi#license)
 
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
+ojapi works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
 
 If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Quick Start
-GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
+ojapi is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
 
 ####via curl
 ```bash
-curl -L https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
+curl -L https://raw.githubusercontent.com/ZJGSU-Open-Source/ojapi/master/install.sh | sh
 ```
 
 ####via wget
 ```bash
-wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
+wget https://raw.githubusercontent.com/ZJGSU-Open-Source/ojapi/master/install.sh | sh
 ```
 
 ###Manual Installation
 ####Dependences
 + Go
-  + GoOnlineJudge is mainly written in Go. 
+  + ojapi is mainly written in Go. 
   + Get Go from [golang.org](http://golang.org)
 
 + MongoDB
@@ -85,7 +85,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
 
 Obtain latest version via `git`, source codes will be in your $GOPATH/src. 
 ```bash
-git clone https://github.com/ZJGSU-Open-Source/GoOnlineJudge.git $GOPATH/src/GoOnlineJudge
+git clone https://github.com/ZJGSU-Open-Source/ojapi.git $GOPATH/src/ojapi
 git clone https://github.com/ZJGSU-Open-Source/RunServer.git $GOPATH/src/RunServer
 git clone https://github.com/ZJGSU-Open-Source/vjudger.git $GOPATH/src/vjudger
 git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
@@ -114,7 +114,7 @@ Make sure you have these directories in your $GOPATH/src:
 
 ```
 github.com/  
-GoOnlineJudge/  
+ojapi/  
 RunServer/  
 gopkg.in/  
 restweb/  
@@ -133,7 +133,7 @@ Now, it's time for compilation.
 cd $GOPATH/src/restweb
 go install ./...
 cd $GOPATH/src
-restweb build GoOnlineJudge
+restweb build ojapi
 cd $GOPATH/src/RunServer
 ./make.sh
 ```
@@ -142,7 +142,7 @@ Start OJ
 ```bash
 RunServer&
 cd $GOPATH/src
-restweb run GoOnlineJudge &
+restweb run ojapi &
 ```
 Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
