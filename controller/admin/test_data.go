@@ -57,7 +57,7 @@ func (tc *AdminTestdata) Upload(pid string) {
     r := tc.R
     r.ParseMultipartForm(32 << 20)
     fhs := r.MultipartForm.File["testfiles"]
-    os.Mkdir(config.Datapath+pid, os.ModePerm)
+    os.Mkdir(config.Datapath+"/"+pid, os.ModePerm)
     for _, fheader := range fhs {
         filename := fheader.Filename
         file, err := fheader.Open()
