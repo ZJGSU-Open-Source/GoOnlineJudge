@@ -29,7 +29,6 @@ func (tc *AdminTestdata) List(pid string) {
     files, err := dir.Readdir(-1)
     if err != nil {
         restweb.Logger.Debug(config.Datapath+"/"+pid, err)
-        return
     } else {
         for _, fi := range files {
             if !fi.IsDir() {
