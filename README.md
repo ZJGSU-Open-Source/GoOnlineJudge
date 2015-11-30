@@ -6,8 +6,8 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 
 ##Contents
 + [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
-	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
 	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
+	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
 	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
 	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
 	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
@@ -113,7 +113,8 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```bash
 # Set $OJ_HOME variable
 export OJ_HOME="yourself oj home"
-
+export JUDGE_HOST=your_judge_host
+export MONGODB_PORT_27017_TCP_ADDR=127.0.0.1
 export PATH=$PATH:$GOPATH/bin
 
 #directory for MongoDB Data
