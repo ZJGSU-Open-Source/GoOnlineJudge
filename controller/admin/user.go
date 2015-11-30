@@ -65,7 +65,7 @@ func (uc *AdminUser) Pagepassword() {
 }
 
 //设置用户密码
-//@URL: /admin/users/password @method: POST
+//@URL: /admin/users/password @method: PUT
 func (uc *AdminUser) Password() {
 	restweb.Logger.Debug("Admin Password")
 
