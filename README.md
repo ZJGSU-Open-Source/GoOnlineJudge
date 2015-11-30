@@ -13,6 +13,7 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
 + [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#maintainers)
 + [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#contributions)
++ [Roadmap](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#roadmap)
 + [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
 
 ##Installation
@@ -182,6 +183,12 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 + clarkzjw
 
 + rex-zed
+
+##Roadmap
++ Binary packaging on mainstream distributions
++ Maybe a built-in simple blog
++ Rebase RESTful API
++ Modern design front-end
 
 ##Contributions
 + We are open for all kinds of pull requests!
