@@ -6,13 +6,14 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 
 ##Contents
 + [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
-	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
 	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
+	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
 	+ [Quick Start](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#quick-start)
 	+ [Manual Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#manual-installation)
 	+ [Tips](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#tips)
 + [Maintainers](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#maintainers)
 + [Contributions](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#contributions)
++ [Roadmap](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#roadmap)
 + [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
 
 ##Installation
@@ -113,7 +114,8 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 ```bash
 # Set $OJ_HOME variable
 export OJ_HOME="yourself oj home"
-
+export JUDGE_HOST=your_judge_host
+export MONGODB_PORT_27017_TCP_ADDR=127.0.0.1
 export PATH=$PATH:$GOPATH/bin
 
 #directory for MongoDB Data
@@ -181,6 +183,12 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 + clarkzjw
 
 + rex-zed
+
+##Roadmap
++ Binary packaging on mainstream distributions
++ Maybe a built-in simple blog
++ Rebase RESTful API
++ Modern design front-end
 
 ##Contributions
 + We are open for all kinds of pull requests!
