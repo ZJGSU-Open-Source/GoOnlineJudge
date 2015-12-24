@@ -94,7 +94,7 @@ func requireContest(ctx *restweb.Context) bool {
 				userlist := strings.Split(ContestDetail.Argument.(string), "\r\n")
 				flag := false
 				for _, user := range userlist {
-					if user == Uid {
+					if strings.TrimSpace(user) == Uid {
 						flag = true
 						break
 					}
