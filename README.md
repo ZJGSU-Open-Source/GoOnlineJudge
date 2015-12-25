@@ -32,7 +32,7 @@ docker run --link your_mongo:mongodb --name oj  -e DATA_PATH=your_data_path -e J
 
 If you installed mongodb on your host os, use script like this:
 ```bash
-cat > env_file << EOF
+cat > env_file <<EOF
 MONGODB_USERNAME=test
 MONGODB_PASSWORD=password
 MONGODB_PORT_27017_TCP_ADDR=192.168.1.1
