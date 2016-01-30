@@ -94,6 +94,13 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
   sudo apt-get install build-essential
   ``` 
 
++ [OpenJDK](http://openjdk.java.net/)
+  + OpenJDK is Oracle's implementation of the next version of the Java SE platform.
+  + OpenJDK is used to judge Java code.
+  ```bash
+  sudo apt-get install openjdk-7-jdk
+  ```
+
 + iconv-go
   + iconv-go provides iconv support for Go.
   + Get iconv-go via
@@ -113,8 +120,11 @@ git clone https://github.com/sakeven/restweb.git $GOPATH/src/restweb
 
 ```bash
 # Set $OJ_HOME variable
-export OJ_HOME="yourself oj home"
-export JUDGE_HOST=your_judge_host
+export OJ_HOME="yourself oj home" #e.g. export OJ_HOME=/$GOPATH/src
+export DATA_PATH=$OJ_HOME/Data
+export LOG_PATH=$OJ_HOME/log
+export RUN_PATH=$OJ_HOME/run
+export JUDGE_HOST=your_judge_host #e.g. export JUDGE_HOST="http://127.0.0.1:8888"
 export MONGODB_PORT_27017_TCP_ADDR=127.0.0.1
 export PATH=$PATH:$GOPATH/bin
 
