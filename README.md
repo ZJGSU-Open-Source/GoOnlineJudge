@@ -19,11 +19,12 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04 and Arch Linux. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
 
 If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Docker
+Be careful! This section might be out-of-date.  **Always** check the Manual Installation guide for your safety.
 
 ```bash
 docker build -t oj .
@@ -46,12 +47,9 @@ docker run --env-file env_file --name oj -v your_data_path:your_data_path -d -p 
 ```
 
 ### Quick Start
-GoOnlineJudge is installed by running one of the following commands in your terminal. You can install it via the command-line with either `curl` or `wget`.
+Be careful! This section might be out-of-date. **Always** check the Manual Installation guide for your safety.
 
-####via curl
-```bash
-curl -L https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
-```
+GoOnlineJudge is installed by running the following commands in your terminal. You can install it via the command-line with  'wget`.
 
 ####via wget
 ```bash
