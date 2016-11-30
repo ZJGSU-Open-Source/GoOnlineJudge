@@ -19,32 +19,11 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 ##Installation
 ###Prerequisites
 **Disclaimer**:
-GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
-
-If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
+GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04+. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
 
 ### Docker
-Be careful! This section might be out-of-date.  **Always** check the Manual Installation guide for your safety.
 
-```bash
-docker build -t oj .
-docker run --link your_mongo:mongodb --name oj  -e DATA_PATH=your_data_path -e JUDGE_HOST=your_judge_host -v your_data_path:your_data_path -d -p 80:8080 oj
-```
-
-If you installed mongodb on your host os, use script like this:
-```bash
-cat > env_file <<EOF
-MONGODB_USERNAME=test
-MONGODB_PASSWORD=password
-MONGODB_PORT_27017_TCP_ADDR=192.168.1.1
-MONGODB_PORT_27017_TCP_PORT=27017
-MONGODB_INSTANCE_NAME=test
-DATA_PATH=your_data_path
-JUDGE_HOST=your_judge_host
-EOF
-
-docker run --env-file env_file --name oj -v your_data_path:your_data_path -d -p 80:8080 oj
-```
+If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Quick Start
 Be careful! This section might be out-of-date. **Always** check the Manual Installation guide for your safety.
@@ -184,6 +163,7 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 + If you want to visit OJ at 80 port, [nginx](http://nginx.org), the HTTP and reverse proxy server is recommended.
 
 ##Maintainers
+
 + memelee
 
 + sakeven
