@@ -1,10 +1,10 @@
-#GoOnlineJudge
+# GoOnlineJudge
 
 GoOnlineJudge is an ACM/ICPC online judge platform.
 
 [**Demo**](http://acm.zjgsu.edu.cn)
 
-##Contents
+## Contents
 + [Installation](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#installation)
 	+ [Prerequisites](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#prerequisites)
 	+ [Docker](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#docker)
@@ -16,9 +16,11 @@ GoOnlineJudge is an ACM/ICPC online judge platform.
 + [Roadmap](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#roadmap)
 + [License](https://github.com/ZJGSU-Open-Source/GoOnlineJudge#license)
 
-##Installation
-###Prerequisites
+## Installation
+### Prerequisites
+
 **Disclaimer**:
+
 GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04+. Windows and Mac OS X are **not** recommended because [**RunServer**](https://github.com/ZJGSU-Open-Source/RunServer) cannot be built on both of them. 
 
 ### Docker
@@ -26,17 +28,18 @@ GoOnlineJudge works best on GNU/Linux and has been tested on Ubuntu 14.04+. Wind
 If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.com/ZJGSU-Open-Source/docker-oj), based on docker image and works out of the box.
 
 ### Quick Start
+
 Be careful! This section might be out-of-date. **Always** check the Manual Installation guide for your safety.
 
 GoOnlineJudge is installed by running the following commands in your terminal. You can install it via the command-line with  'wget`.
 
-####via wget
+#### via wget
 ```bash
 wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
 ```
 
-###Manual Installation
-####Dependences
+### Manual Installation
+#### Dependences
 + Go
   + GoOnlineJudge is mainly written in Go. 
   + Get Go from [golang.org](http://golang.org)
@@ -85,7 +88,7 @@ wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/in
   go get github.com/djimenez/iconv-go
   ```
 
-####Install
+#### Install
 
 Obtain latest version via `git`, source codes will be in your $GOPATH/src. 
 ```bash
@@ -105,16 +108,16 @@ export JUDGE_HOST=your_judge_host #e.g. export JUDGE_HOST="http://127.0.0.1:8888
 export MONGODB_PORT_27017_TCP_ADDR=127.0.0.1
 export PATH=$PATH:$GOPATH/bin
 
-#directory for MongoDB Data
+# directory for MongoDB Data
 mkdir $OJ_HOME/Data
 
-#directory for problem set
+# directory for problem set
 mkdir $OJ_HOME/ProblemData
 
-#directory for running user's code
+# directory for running user's code
 mkdir $OJ_HOME/run
 
-#directory for log
+# directory for log
 mkdir $OJ_HOME/log
 ```
 
@@ -154,7 +157,7 @@ restweb run GoOnlineJudge &
 ```
 Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
-####Tips
+#### Tips
 
 + You should always run MongoDB first then followed by OJ.
 
@@ -162,7 +165,7 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
 + If you want to visit OJ at 80 port, [nginx](http://nginx.org), the HTTP and reverse proxy server is recommended.
 
-##Maintainers
+## Maintainers
 
 + memelee
 
@@ -172,16 +175,16 @@ Now,you can visit OJ on [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
 + rex-zed
 
-##Roadmap
+## Roadmap
 + Binary packaging on mainstream distributions
 + Maybe a built-in simple blog
 + Rebase RESTful API
 + Modern design front-end
 
-##Contributions
+## Contributions
 + We are open for all kinds of pull requests!
 
 + Just please follow the [Golang style guide](./docs/Golang_Style_Guide.md).
 
-##License
+## License
 See [LICENSE](LICENSE)
