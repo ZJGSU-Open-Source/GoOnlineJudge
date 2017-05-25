@@ -31,11 +31,11 @@ If you are Windows or Mac OS X user, you can try out [docker-oj](https://github.
 
 Be careful! This section might be out-of-date. **Always** check the Manual Installation guide for your safety.
 
-GoOnlineJudge is installed by running the following commands in your terminal. You can install it via the command-line with  'wget`.
+GoOnlineJudge is installed by running the following commands in your terminal. You can install it via the command-line with  'curl`.
 
-#### via wget
+#### via curl
 ```bash
-wget https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
+curl -sSL https://raw.githubusercontent.com/ZJGSU-Open-Source/GoOnlineJudge/master/install.sh | sh
 ```
 
 ### Manual Installation
